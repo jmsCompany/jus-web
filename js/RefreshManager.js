@@ -30,7 +30,7 @@
         });
     };
     //刷新立即执行
-    refreshFunc();
+   // refreshFunc();
 
     window['RefreshManager'] = refreshFunc;
 }());
