@@ -208,21 +208,22 @@
 			//groupId也可以标示页面
 			viewId=params['viewId']||params['groupId'];
 		}else{
-			viewId='welcome'
+			viewId='materialList'
 		}
-		var renderUrl = "views/"+viewId+".html?_=" + Math.random();
+		var renderUrl = "views/"+viewId+".html";
 		$.get(renderUrl,function(data){
 			$("#body").html(data);
 			var groupId = params['groupId'] || viewId;
 			setTimeout(function(){
-				$(".menu_left li").each(function(e){
-					if($(this).attr("page-name")==groupId){
-						$(".child").hide();
-						$(this).parent("ul").show();
-						$(this).addClass("active").siblings().removeClass("active");
-					}
+				$(".menu-img").each(function(){
+					var tid=this.id;
+					tid =tid.substring(4,tid.length);
+					$(this).attr("src", "images/menu/"+tid+".png");
+					$("#"+tid).attr("style","color:#000000;");
 				});
-			},0);
+				$("#img_"+groupId).attr("src", "images/menu/"+groupId+"_c.png");
+				$("#"+groupId).attr("style","color:#FF9900;");
+			},0)
 		});
 
 
