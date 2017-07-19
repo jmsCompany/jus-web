@@ -1,0 +1,637 @@
+<script type="text/template" id="poOrderMain">
+    <div class="container-fluid" id="container-po-order-main">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <form id="poForm" method="post" action="index.html" class="form-inline">
+                    <div class="alert alert-success" style="display: none;"></div>
+                    <div class="body-head-title">
+                        <span class="h-title" id="po01">采购订单</span>
+                        <span class="h-title" id="modifyTitles"><b>维护采购订单</b></span>
+                        <span class="h-title" id="cocoMpany">供应商</span>
+                        <span class="h-title" id="createCocompany">新建供应商</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">订单编码</label>
+                                <input type="text" class="form-control input-w-3" name="codePo" id="codePo">
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">供应商</label>
+                                <select class="input-w-3 select-cs1 form-control" name="sCompanyCoId:number" id="sCompanyCoId">
+                                <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">创建日期</label>
+                                <input type="date" class="form-control input-w-3" name="dateOrder" id="dateOrder" readOnly="true">
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">下单员</label>
+                                <input type="text" class="form-control input-w-3" name="userName" id="userName" readOnly="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">货运条款</label>
+                                <select class="input-w-3 select-cs1 form-control" name="freightTermId:number" id="freightTermId">
+                                    <option value="">货运条款</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">付款条件</label>
+                                <select class="input-w-3 select-cs1 form-control" name="paymentTermId:number" id="paymentTermId">
+                                    <option value="">付款条件</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">汇率</label>
+                                <input type="text" class="form-control input-w-3 pay" name="exchange" id="exchange">
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">税率(%)</label>
+                                <input type="text" class="form-control input-w-3" name="taxRate" id="taxRate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">币别</label>
+                                <select class="input-w-3 select-cs1 form-control" name="sCurrencyTypeId:number" id="sCurrencyTypeId">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">状态</label>
+                                <select class="input-w-3 select-cs1 form-control" name="sStatusId:number" id="sStatusId">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">总价</label>
+                                <input type="text" class="form-control input-w-3" name="totalAmount" id="totalAmount" readonly="true">
+                            </div>
+                        </div>
+                        <!--<div class="col-md-5 mar-top-20px">-->
+                            <!--<div class="form-group">-->
+                                <!--<label for="" class="input-w-160">上传附件</label>-->
+                                <!--<input type="file" value="" class="inherit " name="idAttachment" id="idAttachment" style="width:180px" />-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                    <!-- +\- start -->
+                    <div class="col-md-10 col-md-offset-1 mar-top-20px" style="text-align: center;">
+                        <div class="form-group" id="matlist">
+                            <ul class="new-income-list-nav">
+                                <li style="min-width:68px;">物料</li>
+                                <li>单位</li>
+                                <li>单价</li>
+                                <li>数量</li>
+                                <li>总价</li>
+                                <li>交货日期</li>
+                                <li>备注</li>
+                                <li>缺料单号</li>
+								<li>操作</li>
+                            </ul>
+                            <dl class="matlist" id="item0">
+                                <dd>
+                                    <select class="select-cs1 j" name="poItems[item0][sMaterialId]:number" id="poItems.item0.sMaterialId"><option value="">请选择</option></select>
+                                    <input type="text" class="a" name="poItems[item0][unitPur]" id="poItems.item0.unitPur" placeholder="单位" readonly="true">
+                                    <input type="text" class="b pay" name="poItems[item0][uprice]:number" id="poItems.item0.uprice" placeholder="单价" />
+                                    <input type="text" class="c pay" name="poItems[item0][qtyPo]:number" id="poItems.item0.qtyPo" placeholder="数量" />
+                                    <input type="text" class="d pay" name="poItems[item0][totalPrice]:number" id="poItems.item0.totalPrice" placeholder="总价"
+                                        readonly="true">
+                                    <input type="text" class="e" name="poItems[item0][deliveryDate]" id="poItems.item0.deliveryDate" placeholder="交货日期">
+                                    <input type="text" class="f" name="poItems[item0][remark]" id="poItems.item0.remark" placeholder="备注">
+                                    <input type="text" class="g" name="" id="" placeholder="缺料单号">
+                                    <input type="text" class="k" name="poItems[item0][qtyReceived]:number" id="poItems.item0.qtyReceived" placeholder="已收货数量" readonly="true">
+                                    <span class="action">
+                                        <a class="button-sytle1 po-add">+</a>
+                                        <a class="button-sytle1 po-del">-</a>
+                                    </span>
+                                    <input type="hidden" class="h" id="poItems.item0.idPoMaterial" name="poItems[item0][idPoMaterial]:number" />
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <!-- +\- over -->
+                    <div style="clear: both"></div>
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">备注</label>
+                                <textarea name="remark" id="remark" class="form-control" style="width: 600px;height: 80px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="save">保存</button>
+                            <button type="reset" class="btn btn-info" id="return">返回</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="idPo" name="idPo:number" />
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var jmstoken = store.get('JMS-TOKEN');
+    $('#body').html($('#poOrderMain').html());
+    var app={
+        init:function(){
+            this.bindEvents();
+            this.form();
+        },
+        operateRow:function() {
+            var self = this;
+            var rowCount = 1;
+            return {
+                updateCount: function(count) {
+                    if(count) {
+                        rowCount = count;
+                    } else {
+                        rowCount ++;
+                    }
+                },
+                delRow: function () {
+                    if (rowCount == 1) {
+                        return
+                    }
+                    else {
+                        this.parents('.matlist').remove();
+                        setTimeout(function () {
+                            rowCount--;
+                        }, 0)
+                    }
+                },
+                addRow: function () {
+                    var cloneSelectChildren = $('[id*="MaterialId"]').eq(0).html();
+                    var newRow = '<dl class="matlist" id="option"><dd><select class="select-cs1 j">' +
+                            cloneSelectChildren + '</select>&nbsp;' +
+                            '<input class="a" type="text" placeholder="单位" readonly="true">&nbsp;' +
+                            '<input type="text" class="pay b" name="uprice"  placeholder="单价" />&nbsp;' +
+                            '<input type="text" class="pay c" name="qtyPo"  placeholder="数量">&nbsp;' +
+                            '<input type="text" class="d pay" name="totalPrice" placeholder="总价"  readonly="true"/>&nbsp;' +
+                            '<input type="text" class="e" name="" id="" placeholder="交货日期">&nbsp;' +
+                            '<input type="text" class="f" name="" id="" placeholder="备注">&nbsp;' +
+                            '<input type="text" class="g" name="" id="" placeholder="缺料单号">&nbsp;' +
+                            '<a class="button-sytle1 po-add">+</a>&nbsp;' +
+                            '<a class="button-sytle1 po-del">-</a>' +
+                            '<input type="hidden" class="h" id="idPoMaterial" name="idPoMaterial"/></dd></dl>';
+
+                    $('#matlist').append(newRow);
+                    $('.matlist').each(
+                            function (i) {
+                                    //添加id
+                                    $(this).attr("id", "item" + i);
+                                    $(this).find(".j").attr("name", "poItems[item" + i + "][sMaterialId]:number");
+                                    $(this).find(".j").attr("id", "poItems.item" + i + ".sMaterialId");
+                                    $(this).find(".a").attr("name", "poItems[item" + i + "][unitPur]");
+                                    $(this).find(".a").attr("id", "poItems.item" + i + ".unitPur");
+                                    $(this).find(".b").attr("name", "poItems[item" + i + "][uprice]:number");
+                                    $(this).find(".b").attr("id", "poItems.item" + i + ".uprice");
+                                    $(this).find(".c").attr("name", "poItems[item" + i + "][qtyPo]:number");
+                                    $(this).find(".c").attr("id", "poItems.item" + i + ".qtyPo");
+                                    $(this).find(".d").attr("name", "poItems[item" + i + "][totalPrice]:number");
+                                    $(this).find(".d").attr("id", "poItems.item" + i + ".totalPrice");
+                                    $(this).find(".e").attr("name", "poItems[item" + i + "][deliveryDate]");
+                                    $(this).find(".e").attr("id", "poItems.item" + i + ".deliveryDate");
+                                    $(this).find(".f").attr("name", "poItems[item" + i + "][remark]");
+                                    $(this).find(".f").attr("id", "poItems.item" + i + ".remark");
+                                    $(this).find(".h").attr("name", "poItems[item" + i + "][idPoMaterial]:number");
+                                    $(this).find(".h").attr("id", "poItems.item" + i + ".idPoMaterial");
+                                    $(this).find(".k").attr("name", "poItems[item" + i + "][qtyReceived]:number");
+                                    $(this).find(".k").attr("id", "poItems.item" + i + ".qtyReceived");
+                            }
+                    );
+                    setTimeout(function () {
+                        rowCount++;
+                    }, 0)
+                }
+            }
+        },
+        bindEvents:function() {
+            var $cnt = $('#container-po-order-main');
+            
+            $('#matlist').on("click",".button-bina",function(){
+                var optid = $(this).parent().parent().attr("id");
+                delRow(optid);
+                sum();
+            });
+            var self = this;
+            var operateRow =  self.operateRow();
+            
+            $cnt.on('focus', 'input, select, textarea', function(e) {
+                $(this).removeClass('error');
+                $('#save').removeAttr('disabled');
+            })
+
+            //增加行
+            $cnt.on('click','.po-add',function(e){
+                //避免事件传播
+                e.stopPropagation();
+                operateRow.addRow.call(this)
+            });
+            //删除行
+            $cnt.on('click','.po-del',function(){
+                operateRow.delRow.call($(this))
+            });
+            //计算
+            $cnt.on("change",".pay",function(){
+                var optid = $(this).parent().parent().attr("id");
+                pay(optid);
+                sum();
+            });
+            //日期控件
+            $cnt.on("click",".e",function () {
+                $("input[name*='deliveryDate']").datetimepicker({
+                    format:"YYYY-MM-DD"
+                });
+                $(this).focus();
+
+            });
+            //选择物料自动跳出单位
+            $cnt.on("change",".j",function () {
+                var materialInput = $(this).next();
+                var materialId=$(this).val();
+                $.materialInfo(materialId,jmstoken,function(data){
+                    if(data.sUnitDicByUnitPur) {
+                        materialInput.val(data.sUnitDicByUnitPur);
+                    }
+                });
+            });
+
+            $('#sCompanyCoId').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coCompanyType':1}});
+            $('#sCurrencyTypeId').selectautofill('s/currencyTypes',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('#freightTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'freight'}});
+            $('#paymentTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'payment'}});
+            $('#sStatusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_po'}});
+
+            var params = RouterManager.getParams();
+            var action = params['action'];
+            var idPo = params.orderId;
+            if (idPo) {
+                $("#order").show();
+                $.poInfo(idPo, jmstoken, function (data) {
+                    /*
+                    var uri = $clientURL + 'getFile/' + data['fileName'] + '/';
+                    var hrefTemp = '<a target="_blank" href="' + uri + '">查看已上传的文件附件</a>';
+                    if (data['fileName']) {
+                        //有数据的情况下展示链接下载
+                        $('#idAttachmentDownload').append(hrefTemp);
+                    }*/
+                    var size = $.JSONLength(data.poItems);
+                    for (var i = 1; i < size; i++) {
+                        var content = '<dl class="matlist" id="item{0}">' +
+                                '<dd>' +
+                                '<select class="select-cs1 j" name="poItems[item{0}][sMaterialId]:number" id="poItems.item{0}.sMaterialId">' +
+                                '<option value="">请选择</option>' +
+                                '</select>&nbsp;' +
+                                '<input type="text" class="a" name="poItems[item{0}][unitPur]" id="poItems.item{0}.unitPur" value="单位" readonly="true">&nbsp;' +
+                                '<input type="text" class="b pay" name="poItems[item{0}][uprice]:number" id="poItems.item{0}.uprice" placeholder="单价"/>&nbsp;' +
+                                '<input type="text" class="c pay" name="poItems[item{0}][qtyPo]:number" id="poItems.item{0}.qtyPo" placeholder="数量"/>&nbsp;' +
+                                '<input type="text" class="d pay" name="poItems[item{0}][totalPrice]:number" id="poItems.item{0}.totalPrice" placeholder="总价" readonly="true">&nbsp;' +
+                                '<input type="text" class="e" name="poItems[item{0}][deliveryDate]" id="poItems.item{0}.deliveryDate" placeholder="交货日期">&nbsp;' +
+                                '<input type="text" class="f" name="poItems[item{0}][remark]" id="poItems.item{0}.remark" placeholder="备注">&nbsp;' +
+                                '<input type="text" class="g" name="" id="" placeholder="缺料单号">&nbsp;<input type="text" class="k" name="poItems[item{0}][qtyReceived]:number" id="poItems.item{0}.qtyReceived" placeholder="已收货数量" readonly="true">' +
+                                '<a class="button-sytle1 po-add">+</a>&nbsp;<a class="button-sytle1 po-del">-' +
+                                '</a>&nbsp;<input type="hidden" class="h" id="poItems.item{0}.idPoMaterial" name="poItems[item{0}][idPoMaterial]:number"/>' +
+                                '</dd></dl>';
+                        $('#matlist').append($.format(content, "" + i));
+                    }
+                    var mapPool = function () {
+                        $('#poForm').populate(data, true);
+                        $('#poForm').find('.matlist').each(self.updateMaterialInfo);
+                        operateRow.updateCount($('#poForm').find('.matlist').length);
+                        /**
+                         * 更新界面，如果为编辑状态则删除`已收货量`
+                         */
+                        if (action == 'detail') {
+                            $('input,select,textarea', $('#poForm')).prop('readonly', true);
+                            $("input:not(:button,:hidden)").prop("disabled", 'disabled');
+                            $('select', $('#poForm')).prop("disabled", 'disabled');
+                            $('#save').hide();
+                            $('.button-sytle1').remove();
+
+                        }
+                        else {
+                            //如果是编辑页面，去除收货数量显示
+                            $('[id*="qtyReceived"]').remove();
+                        }
+                    };
+                    $(".j").selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}}, mapPool);
+                });
+            } else {
+                $('#modifyTitles').html('<b>新建采购订单</b>');
+                //如果是编辑页面，去除收货数量显示
+                $('[id*="qtyReceived"]').remove();
+                $('.j').selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            }
+            /**
+             * 主体头部系列按钮
+             */
+
+            // 采购订单
+            $('#po01').click(function(){
+                $.get("views/po.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'po'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            // 供应商
+            $('#cocoMpany').click(function(){
+                $.get("views/cocompany.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'po',
+                        viewId:'cocompany',
+                        companyCoTypeId:'1'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            // 新建供应商
+            $('#createCocompany').click(function(){
+                $.get("views/cocompany-create-body.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'po',
+                        viewId:'cocompany-create-body',
+                        companyCoTypeId:'1'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            $('#return').click(function(){
+//                $.get("views/po-order.html",function(data){
+//                    $("#body").html(data);
+//                });
+                history.go(-1);
+            });
+        },
+        updateMaterialInfo: function(i) {
+            var $item = $('#item' + i);
+            var $materialSelect = $item.find('.j');
+            var $materialInput = $materialSelect.next();
+            var materialId=$materialSelect.val();
+            $.materialInfo(materialId,jmstoken,function(data){
+                if(data.sUnitDicByUnitPur) {
+                    $materialInput.val(data.sUnitDicByUnitPur);
+                }
+            });
+        },
+        form: function() {
+            var self = this;
+            $('#poForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'sCompanyCoId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择供应商'
+                            }
+                        }
+                    },
+                    'sCurrencyTypeId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择币别'
+                            }
+                        }
+                    },
+                    'freightTermId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择货运条款'
+                            }
+                        }
+                    },
+                    'paymentTermId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择付款条件'
+                            }
+                        }
+                    },
+                    codePo: {
+                        validators: {
+                            notEmpty: {
+                                message: '请输入正确的编码'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_]+$/,
+                                message: '请输入正确的编码'
+                            }
+                        }
+                    },
+                    exchange: {
+                        validators: {
+                            notEmpty: {
+                                message: '汇率请填写数据'
+                            },
+                            regexp: {
+                                regexp: /^\d+$/,
+                                message: '汇率请填写数据'
+                            }
+                        }
+                    },
+                    taxRate: {
+                        validators: {
+                            notEmpty: {
+                                message: '税率请填写数据'
+                            },
+                            regexp: {
+                                regexp: /^\d+$/,
+                                message: '税率请填写数据'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                /*手动验证日期*/
+                var dateExp = /^(\d)*-.*/;
+//                if(!dateExp.test($('[id*="deliveryDate"]').val())){
+//                    alert('请填写物料交货时间');
+//                    $('#save').removeAttr('disabled');
+//                    return false
+//                }
+                if(!self.validateMatlist()) {
+                    alert('确认物料数据是否正确');
+                        return;
+                    }
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var po =JSON.stringify($('#poForm').serializeJSON());
+
+//                $.savePo(po,jmstoken,function(data){
+//                    if(data['jmsError']){
+//                        alert('数据更新出错~');
+//                        $('#save').removeAttr('disabled');
+//                        return false
+//                    }
+//
+//                    if(!self.validateMatlist()) {
+//                        return;
+//                    }
+//                    var $form = $(e.target),
+//                        validator = $form.data('bootstrapValidator');
+//                    var po =JSON.stringify($('#poForm').serializeJSON());
+                    
+                    $.savePo(po,jmstoken,function(data){
+                        if(data['jmsError']){
+                            alert('数据更新出错~');
+                            $('#save').removeAttr('disabled');
+                        }else{
+//                            var formData = new FormData();
+//                            formData.append('idAttachment',$('#idAttachment')[0].files[0]);
+//                            formData.append('spoId',data['idPo']);
+//                            if($('#idAttachment').val()){
+//                                $.savePoFile(formData,jmstoken,function(res){
+//                                    alert('文件上传成功');
+//                                    $.get("views/po.html",function(data){
+//                                        RouterManager.setUrl({
+//                                            groupId:'po'
+//                                        });
+//                                        $("#body").html(data);
+//                                    });
+//                                });
+//                            }else{
+                                $.get("views/po.html",function(data){
+                                    RouterManager.setUrl({
+                                        groupId:'po'
+                                    });
+                                    $("#body").html(data);
+                                });
+                            }
+//                        }
+                    });
+//                });
+            })
+        },
+        validateMatlist: function() {
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            var flag = true;
+            
+            if(!$items.length) {
+                flag = false;
+            }
+            
+            $items.each(function(i) {
+                var $t = $(this);
+                
+                if(!$t.find('.j').val()) {
+                    $t.find('.j').addClass('error');
+                    flag = false;
+                }
+                
+                if(!parseInt($t.find('.b').val())) {
+                    $t.find('.b').addClass('error').val('');
+                    flag = false;
+                }
+                
+                if(!parseInt($t.find('.c').val())) {
+                    $t.find('.c').addClass('error').val('');
+                    flag = false;
+                }
+                
+                if(!$t.find('.e').val()) {
+                    $t.find('.e').addClass('error');
+                    flag = false;
+                }
+            });
+            
+            return flag;
+        }
+    };
+    
+    $(function() {
+        app.init();
+    });
+
+    // 增加删除、计算总价
+    function pay(optionId) {
+        var resultPrice = $("#"+optionId+" input[name*='uprice']");
+        var resultNum = $("#"+optionId+" input[name*='qtyPo']");
+        var resultPay = $("#"+optionId+" input[name*='totalPrice']");
+        if(resultPrice.val() == "") {
+            // alert("物品单价不能为空!");
+            // document.getElementById("totalPrice").value = "";
+            resultPay.val("");
+            return false;
+        }
+        if(isNaN(resultPrice.val()) || resultPrice.val() < 0) {
+            // alert("非法的商品单价!");
+            // document.getElementById("totalPrice").value = "";
+            resultPay.val("");
+            return false;
+        }
+        if(resultNum.val() == "") {
+            // alert("物品数量不能为空!");
+            // document.getElementById("totalPrice").value = "";
+            resultPay.val("");
+            return false;
+        }
+        if(!checkNum(resultNum.val())) {
+            // alert("非法的商品数量!");
+            // document.getElementById("totalPrice").value = "";
+            resultPay.val("");
+            return false;
+        }
+        var resultPayValue = parseFloat(resultPrice.val())*parseInt(resultNum.val());
+        resultPay.val(resultPayValue);
+    }
+    function checkNum(num) {
+        var re = /^\d+$/;
+        return re.exec(num) != null;
+    }
+    function sum(){
+        var total = 0;
+        $('.matlist').each(
+            function(i){
+                x=$(this).children().children(".d").val();
+                if(isNaN(x)){
+                }
+                else{total=parseFloat(total)+parseFloat(x);}
+            }
+        );
+        $("#totalAmount").val(total);
+    }
+
+</script>

@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>工作管理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="css/reg.css" rel="stylesheet" type="text/css">
+	<link href="css/jms.css" rel="stylesheet" type="text/css">
+	
+	<script type="text/javascript" src="js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/layout/jquery.layout.js"></script>
+        <script type="text/javascript" src="js/form/jquery.serializejson.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css"/>
+    <link rel="stylesheet" href="css/bootstrap/bootstrapValidator.css"/>
+     <script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/bootstrapValidator.js"></script>
+    <script type="text/javascript" src="js/bootstrap/language/zh_CN.js"></script>
+     <script type="text/javascript" src="js/jms/jmsclient.js"></script>
+<script type="text/javascript" charset="UTF-8" src="js/lib/jquery.blockUI.js"></script>
+	<!-- End_Exclude -->
+	<script type="text/javascript">
+	var myLayout; 
+        var middleLayout;
+	$(document).ready(function () {
+		myLayout = $('body').layout({
+                       
+                        north__size:50
+						,south__size:30
+                        ,north__spacing_open:2
+                        ,south__spacing_open:2
+		});
+        
+		
+          $.get("layout/pre/top.html",function(data){
+	        $("#top").html(data);
+	   });
+          //$.get("layout/menu.html",function(data){
+	      //  $("#menu").html(data);
+	  // });
+	  $.get("layout/footer.html",function(data){
+	        $("#footer").html(data);
+	   });
+         //  var body = getUrlParam('body');
+          // if(body==null)
+          // body="calendar";
+	   $.get("views/reg-body.html",function(data){
+	        $("#body").html(data);
+	   });
+        
+ 	});
+     //   function getUrlParam(name) {
+      //      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+       //     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+       //     if (r != null) return unescape(r[2]); return null; //返回参数值
+       // }
+	</script>
+
+
+</head>
+<body>
+
+
+<div class="ui-layout-north" id="top">
+	
+</div>
+
+
+<div class= "ui-layout-south" id="footer" >
+	
+</div>
+
+
+<div class="ui-layout-center" id="body-center">
+	<div class="ui-layout-center" id="body">
+       
+	</div> 
+</div>
+
+</body>
+</html>

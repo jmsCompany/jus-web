@@ -1,0 +1,195 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="dimensionReportForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idDimensionReport" />
+							<fieldset>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件名称</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="matDes" id="matDes"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="pno" id="pno"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">版本号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="rev" id="rev"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">供应商</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="cocompanyName" id="cocompanyName"></label>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="opDate" id="opDate"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">订单号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="codePo" id="codePo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">批次号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="lotNo" id="lotNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">送货数量</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="totalQty" id="totalQty"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">抽检数量</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="inspQty" id="inspQty"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">箱号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="boxNo" id="boxNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            	<label class="col-lg-3 control-label">附件</label>
+                            	<div class="col-lg-5">
+                                	<input name="idAttachment" id="idAttachment" type="file" value="添加附件"> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>项目</th>
+                                            <th>名义尺寸</th>
+                                            <th>公差</th>
+                                            <th>检具</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>3</th>
+                                            <th>4</th>
+                                            <th>5</th>
+                                            <th>6</th>
+                                            <th>7</th>
+                                            <th>8</th>
+                                            <th>9</th>
+                                            <th>10</th>
+                                            <th>11</th>
+                                            <th>12</th>
+                                            <th>判断</th>
+                                            <th>+</th>
+                                            <th>-</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            <form action="" method="get"> 
+                                <label class="col-lg-3 control-label">结论</label>
+                                <label><input name="result" type="radio" value="" />合格 </label> 
+                                <label><input name="result" type="radio" value="" />不合格 </label> 
+                            </form>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">检验员</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="inspector" id="inspector"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">核对</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="checkBy" id="checkBy"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="remark" id="remark"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="button" class="btn btn-primary" id="return">返回</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var idDimensionReport = $('#_key24').val();
+	$.dimensionReportInfo({"id":idDimensionReport},token,function(data){
+		$('#matDes').html(data.matDes);
+		$('#pno').html(data.pno);
+		$('#rev').html(data.rev);
+		$('#cocompanyName').html(data.cocompanyName);
+		$('#opDate').html(data.opDate);
+		$('#codePo').html(data.codePo);
+		$('#lotNo').html(data.lotNo);
+		$('#totalQty').html(data.totalQty);
+		$('#inspQty').html(data.inspQty);
+		$('#idAttachment').html(data.idAttachment);
+		$('#result').html(data.result);
+		$('#inspector').html(data.inspector);
+		$('#checkBy').html(data.checkBy);
+		$('#remark').html(data.remark);
+	});
+	
+	$('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+	
+ 	   $('#return').click(function(){
+	 		$.get("views/q-dimensionReportList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    
+
+
+

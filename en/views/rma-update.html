@@ -1,0 +1,191 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="rmaForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idRma" />  <!-- 销售订单退货单信息编号-->
+							<fieldset>
+							<legend>编辑销售退货单</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">客户</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="codeCo:number" id="codeCo.id">
+                                    </select>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">销售单编码</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="soNo" id="soNo"/>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label class="col-lg-3 control-label">货运条款</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term1.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">付款条件</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term2.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">收货仓库</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="stk:number" id="stk.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">总价</label>
+                                <div class="col-lg-5">
+                                        <input type="text" class="form-control" name="total_price" id="total_price"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">税率</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="tax_rate" id="tax_rate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">汇率</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="exchange" id="exchange"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                    <textarea name="remark" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">状态</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="status[idDic]:number" id="status.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            	<div class="col-lg-5">
+                                	<input name="att" type="file" value="添加附件"> 
+                                </div>
+                            </div>   -->                      
+<br> 
+<br> 
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        	<th>物行号</th>
+                                            <th>物料编码</th>
+                                            <th>版本</th>
+                                            <th>描述</th>
+                                            <th>单位</th>
+                                            <th>数量</th>
+                                            <th>交货日期</th>
+                                            <th>发货数量</th>
+                                            <th>备注</th>
+                                            <th>已退数量</th>
+                                            <th>退货数量</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            <br>
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                                <button type="submit" class="btn btn-primary" id="cancel">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+$(document).ready(function() {
+	$('#codeCo\\.idDic').selectautofill('dic/codeCo');
+	$('#soNo\\.idDic').selectautofill('dic/soNo');
+	
+	var idRma = $('#_key15').val();
+	$.rmaInfo({"id":idRma},token,function(data){
+		$('#rmaForm').populate(data,true);
+	});
+	
+    $('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+        },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+    
+    $('#rmaForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'qty': {
+                	validators: {
+                    	notEmpty: {
+                        	message: '退货数量不能为空'
+                    	}
+                	}	
+            	}
+			}
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var rma =JSON.stringify($('#rmaForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createRma(rma,jmstoken,function(data){
+		 		//返回上一页
+			      	//$.get("views/so.html",function(data){
+	                //    $("#body").html(data);
+	             	});
+			});
+ 	   }); 
+ 	   
+ 	   $('cancel').click(function(){
+ 	   	// 返回上一页
+	 		//$.get("views/so.html",function(data){
+	        //     $("#body").html(data);
+	     	});
+	 	});
+
+} );
+</script>

@@ -1,0 +1,233 @@
+<div class="body-head-title">
+    <span class="h-title" data-view-id="subcontract">公司流转</span>
+    <span class="h-title-selected" data-view-id="s-company-report">公司往来报告</span>
+    <span class="h-title" data-view-id="s-company-setting">公司往来设置</span>
+    <span class="h-title" data-view-id="s-company-list">往来物料清单</span>
+    <span class="h-title" data-view-id="s-po-list">往来采购订单</span>
+</div>
+
+<div class="cont">
+    <div class="r-header-body">
+        <div class="filter pull-left">
+            <div class="btn-group" role="group" aria-label="...">
+                <a id="id_summary" class="btn btn-default active" data-page="summary">汇总</a>
+                <a class="btn btn-default" data-page="type">明细</a>
+            </div>
+        </div>
+        <select class="input-w-3 select-cs1" name="idCompany2">
+            <option value="">公司名称</option>
+        </select>
+        <input type="text" name="q" placeholder="物料" style="margin: 0 10px;">
+        <div class="btn-group btn-group-left" id="issue" style="margin-left: 20px;margin-right: 0">
+            <div class="btn-group btn-group-left">
+                <label>日期：</label><input name="fromDay" type="text" class="datetime-picker" style="width:90px"> - <input name="toDay" type="text" class="datetime-picker" style="width:90px">
+            </div>
+        </div>
+        <div class="right-list">
+            <button id="search" class="button-sytle1">查询</button>
+        </div>
+    </div>
+
+    <div class="table-wrap" id="page"></div>
+</div>
+
+<script id="table-tpl" type="text/html">
+        <table class="display" id="summary" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>公司名</th>
+                <th>物料</th>
+                <th>收货</th>
+                <th>发货</th>
+                <th>库存</th>
+            </tr>
+            </thead>
+        </table>
+</script>
+<script id="table-tpl1" type="text/html">
+    <table class="display"  id="detail" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>从公司</th>
+            <th>到公司</th>
+            <th>日期</th>
+            <th>物料</th>
+            <th>数量</th>
+        </tr>
+        </thead>
+    </table>
+</script>
+
+<script>
+    var jmstoken= store.get('JMS-TOKEN');
+    var historyOptions={
+        groupId:'subcontract'
+    };
+    $(".body-head-title span").on('click',function(){
+        var viewId = $(this).data('view-id');
+        if (viewId=='subcontract'){}
+        else{
+            historyOptions.viewId = viewId;
+        }
+        $.get("views/" + viewId + ".html",function(data){
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+
+
+    $('.r-header-body').on('click', '[data-page]', function (e) {
+        var _params = $(this).data();
+        if (_params.page == 'type') {
+            $(this).addClass('active').siblings('.active').removeClass('active');
+            loadDetailPage();
+        }
+    });
+    function loadDetailPage() {
+        $.get("views/s-company-report-detail.html", function (data) {
+            RouterManager.setUrl({
+                groupId:'subcontract',
+                viewId:'s-company-report',
+                action:'detail'
+            });
+            $("#page").html(data);
+
+        });
+    }
+
+    $('.datetime-picker').datetimepicker({format:"YYYY-MM-DD"});
+    loadTable('summary');
+
+    $('.r-header-body').on('click', '[data-page]', function (e) {
+        var _params = $(this).data();
+        $(this).addClass('active').siblings('.active').removeClass('active');
+        loadTable(_params.page);
+    });
+
+    function loadTable(action) {
+        currAction = action;
+        if (action=='summary'){
+            $('#page').html($('#table-tpl').html());
+            var summaryTable = $('#summary').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "s/getSmtfCSum",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN': jmstoken},
+                    "beforeSend": jmsGlobalBlock,
+                    "complete": jmsGlobalUnBlock,
+                    "error": jmsGlobalUnBlock,
+                    "data": {
+                        q: $('[name=q]').val()
+                    ,   idCompany2:  $('[name=idCompany2]').val()/1
+                    ,   fromDay:  $('[name=fromDay]').val()
+                    ,   toDay:  $('[name=toDay]').val()
+                    }
+                },
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength: "50"
+            });
+        }
+        else{
+            $('#page').html($('#table-tpl1').html());
+            var detailTable = $('#detail').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "s/getSmtfCList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN': jmstoken},
+                    "beforeSend": jmsGlobalBlock,
+                    "complete": jmsGlobalUnBlock,
+                    "error": jmsGlobalUnBlock,
+                    "data": {
+                        q: $('[name=q]').val()
+                        ,   idCompany2:  $('[name=idCompany2]').val()/1
+                        ,   fromDay:  $('[name=fromDay]').val()
+                        ,   toDay:  $('[name=toDay]').val()
+                    }
+                },
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength: "50"
+            });
+        }
+    }
+
+$('[name=idCompany2]').selectautofill('s/myCoCompanies',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+
+$('#search').click(function(){
+//    loadTable('summary');
+    if($('#id_summary').hasClass('active'))
+    {
+        loadTable('summary');
+    }
+    else
+    {
+        loadTable('type');
+    }
+});
+    
+//     $(function () {
+
+//         $('.filter').on('click', '.btn', function () {
+//             $(this).addClass('active').siblings('.active').removeClass('active');
+//             var type = $(this).data('type');
+//             $('.table-wrap .dataTables_wrapper').hide().eq($(this).index()).show();
+//         });
+
+//         var summaryTable = $('#summary').DataTable({
+//             "processing": true,
+//             "serverSide": true,
+//             "stateSave": true,
+//             "stateDuration": -1,
+//             "ajax": {
+//                 "type": 'POST',
+//                 "url": $clientURL + "s/getSmtfCSum",
+//                 "dataType": "json",
+//                 headers: {'JMS-TOKEN': jmstoken},
+//                 "beforeSend": jmsGlobalBlock,
+//                 "complete": jmsGlobalUnBlock,
+//                 "error": jmsGlobalUnBlock
+//             },
+//             "language": {
+//                 "url": "js/datatable/chinese.json"
+//             },
+//             dom: "tip",
+//             pageLength: "50"
+//         });
+
+//         var detailTable = $('#detail').DataTable({
+//             "processing": true,
+//             "serverSide": true,
+//             "stateSave": true,
+//             "stateDuration": -1,
+//             "ajax": {
+//                 "type": 'POST',
+//                 "url": $clientURL + "s/getSmtfCList",
+//                 "dataType": "json",
+//                 headers: {'JMS-TOKEN': jmstoken},
+//                 "beforeSend": jmsGlobalBlock,
+//                 "complete": jmsGlobalUnBlock,
+//                 "error": jmsGlobalUnBlock
+//             },
+//             "language": {
+//                 "url": "js/datatable/chinese.json"
+//             },
+//             dom: "tip",
+//             pageLength: "50"
+//         });
+// });
+</script>

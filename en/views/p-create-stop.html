@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>新建停机</title>
+	</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="as">实际停机</span>
+	<span class="h-title" id="us">非计划停机</span>
+	<!--<span class="h-title" id="sr">停机编码</span>-->
+	<span class="h-title"><b>新建停机</b></span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+	<div class="btn-group btn-group-left">
+      <button class="btn btn-default" type="button">机器</button>
+      <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+        <span class="caret"></span>
+        <span class="sr-only">请选择</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">机器-类别1</a></li>
+        <li><a href="#">机器-类别2</a></li>
+        <li><a href="#">机器-类别3</a></li>
+      </ul>
+    </div>
+</div>  
+
+<table id="" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>机器</th>
+                <th>主原因</th>
+                <th>描述</th>
+                <th>计划开始时间</th>
+                <th>计划停止时间</th>
+                <th>实际开始</th> 
+                <th>实际结束</th>  
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+
+
+</div>
+
+	</body>
+</html>
+<script type="text/javascript">
+$('#as').click(function(){
+$.get("views/p-actStopPlanList.html",function(data){
+$("#body").html(data);
+});
+});
+//$('#sr').click(function(){
+//    $.get("views/p-stop-reason.html",function(data){
+//        $("#body").html(data);
+//    });
+//});
+$('#us').click(function(){
+$.get("views/p-unplannedStop.html",function(data){
+$("#body").html(data);
+});
+});
+</script>

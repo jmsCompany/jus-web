@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).show();	
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+var jmstoken= store.get('JMS-TOKEN');
+var mainDetail = {
+	init:function(){
+		var self = this;
+		this.bindEvents();
+		this.form();
+	},
+	loadTable:function(){
+		var table=$('#mainDetailList').DataTable( {
+//      deferRender:  true,
+		"processing": true,
+		"serverSide": true,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+		"ajax": {
+			"url": $clientURL + "s/mainDetailList",
+			"dataType": "json",
+			"headers":{'JMS-TOKEN':jmstoken}
+		},
+		"columnDefs": [ {
+			"targets": -1,
+			"data": null,
+			"defaultContent": '<button class=button-bin>查看</button><button class=button-edit>编辑</button><button class=button-delete>导出excel</button>'
+		} ],
+		"language": {
+			"url": "js/datatable/chinese.json"
+		},
+		dom: "tip",
+		pageLength:"50"
+	} );
+		$('#mainDetailList tbody').on( 'click', 'button', function () {
+			var data = table.row( $(this).parents('tr') ).data();
+			var clazz=$(this).attr('class');
+			if(clazz=='button-bin'){
+//      	??
+			}
+			else if(clazz=='button-edit'){
+				showObj('.tcbox');
+				var idMainDetail = data[5];
+				$.mainDetailInfo(idMainDetail,jmstoken,function(data){
+					$('#mainDetailForm').populate(data,true);
+				});
+			}
+			else{
+				$.deleteMainDetail(data[5],jmstoken,function(data){
+					$.get("views/m-main-detail.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			}
+		} );
+	},
+	form:function(){
+		$('#mainForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'idResult': {
+					validators: {
+						notEmpty: {
+							message: '检查结果不能为空'
+						}
+					}
+				}
+
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			var $form     = $(e.target),
+					validator = $form.data('bootstrapValidator');
+			var main =JSON.stringify($('#mainForm').serializeJSON());
+			$.saveMain(main,jmstoken,function(data){
+				$.get("views/main.html",function(data){
+					$("#body").html(data);
+				});
+			});
+		});
+	},
+	bindEvents:function(){
+		$('#wul1').click(function(){
+			$.get("views/m-main.html",function(data){
+				$("#body").html(data);
+			})
+		});
+	}
+};
+	mainDetail.init();
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="wul1">明细</span>
+	<span class="h-title"><b>汇总</b></span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="btn-group btn-group-left">
+			<div class="btn-group btn-group-left">
+       			<label>日期：</label><input type="text" id='date'>
+       			<script type="text/javascript">
+				$(function () {
+					$('#date').datetimepicker();
+				});
+				</script>
+			</div>
+      		<button class="btn btn-default" type="button" name="idDept:number" id="idDept">部门</button>
+      		<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+        		<span class="caret"></span>
+        		<span class="sr-only">设备编号</span>
+      		</button>
+      		<ul class="dropdown-menu">
+        		<li><a href="#">类别1</a></li>
+        		<li><a href="#">类别2</a></li>
+        		<li><a href="#">类别3</a></li>      
+      		</ul>
+    	</div>
+		<div class="right-list">
+    		<!--搜索框-->
+    		<div class="sousuo">
+    			<div class="ss-input">    		
+    				<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>
+    			</div>
+    			<a href=""><span class="icon-ss-bg"></span>搜索</a>
+    		</div>
+    	</div>
+   </div>
+
+ 	<table id="mainList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <!--<th>序号</th>-->
+                <th>设备编号</th>
+                <th>设备名称</th> 
+                <th>年月</th>
+                <th>备注</th>
+                <th>操作</th>	
+            </tr>
+        </thead>
+	</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+			<span class="h-title">编辑检查记录</span>
+		</div>
+      <input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+     <form id="mainDetailForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>设备编号</label>
+				    	<input type="text" class="form-control"  name="code" id="code" readonly="true">
+				    </div>
+					<div class="form-group">
+				    	<label>设备名称</label>
+				    	<select  class="form-control" name="name" id="name" readonly="true">
+                        </select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>年月</label>
+				    	<select  class="form-control" name="year" id="year" readonly="true">
+                        </select>
+				    </div>
+					<div class="form-group">
+				    	<label>备注</label>
+				    	<textarea class="form-control input-w-300" rows="3" name="remark" id="remark"></textarea>
+					</div>
+                </div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="reset" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idMainDetail" name="idMainDetail:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+
+</body>
+</html>

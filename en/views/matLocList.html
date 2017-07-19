@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+        function showObj(objid){
+            $(objid).draggable().show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.name || repo.text;
+        }
+        var jmstoken= store.get('JMS-TOKEN');
+        var matLocation={
+            init:function(){
+                var self = this;
+                this.bindEvents();
+                this.autoFill();
+                this.form();
+                this.loadTable();
+                this.fillBin();
+            },
+            autoFill:function(){
+                var self = this;
+                self.fillMaterialId();
+                $('#idStk').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
+            },
+            fillMaterialId: function(callback) {
+                $('.js-data-example-ajax').select2({
+                    ajax: {
+                        url: $clientURL + 's/getMaterialListObjs',
+                        dataType: 'json',
+                        headers: {'JMS-TOKEN': jmstoken},
+                        delay: 200,
+                        data: function (params) {
+                            return {
+                                q: params.term
+                            }
+                        },
+                        processResults: function (data, params) {
+                            return {
+                                results: data,
+                                pagination: null
+                            }
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    minimumInputLength: 1,
+                    width: 200,
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
+                }).on('select2:open',function(evt){
+                    $('#select2-js-data-example-ajax-container').html('');
+                    $('#js-data-example-ajax').empty();
+                });
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+                callback && callback();
+            },
+            fillBin:function(callback){
+                var idStk = $('#idStk').val();
+                $('#idBin').empty();
+                $('#idBin').selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, function(){
+                    $('#idBin').combobox();
+                    var bin = $('#idBin').find("option:selected").text();
+                    $('.matLocCreate .custom-combobox input').val(bin);
+                    callback;
+                });
+//                callback && callback();
+            },
+            bindEvents:function(){
+                var self = this;
+                var frameContainer = $('#matLocForm');
+                frameContainer.on("change","#idStk", self.fillBin.bind());
+                $('.tcbox').on('click','.tc_close,#return',function(){
+                    $('.tcbox').hide();
+                    $('#matLocForm')[0].reset();
+                    $('.select2-selection__rendered').html('');
+                });
+                var historyOptions={
+                    groupId:'stk'
+                };
+                $('#return').click(function(){
+                    $.get("views/matLocList.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+                $('#wul1').click(function(){
+                    $.get("views/stk.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#matCategory').click(function(){
+                    historyOptions.viewId='materialListCategory';
+                    $.get("views/materialListCategory.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+            },
+            loadTable:function(){
+                var self = this;
+//                var data = {};
+//                var materialId = $('#js-data-example-ajax').val();
+//                if (materialId) {
+//                    data.materialId = materialId;
+//                }
+//
+//                if (this.table) {
+//                    this.table.destroy();
+//                }
+
+                var table = $('#tableMatLoc').DataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "s/materialBinList",
+                        "dataType": "json",
+                        headers: {'JMS-TOKEN':jmstoken}
+                    },
+                    "columnDefs": [ {
+                        "targets": -1,
+                        "data": null,
+                        "defaultContent": '<button class=button-delete>Delete</button>'
+                    } ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength:"50"
+                } );
+                $('#tableMatLoc tbody').on( 'click', 'button', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                    var matLoc = data[3];
+                    arr = matLoc.split('_');
+                    var matBin = {};
+                    matBin.materialId = parseInt(arr[0]);
+                    matBin.binId = parseInt(arr[1]);
+                    $.deleteMatBin(matBin,jmstoken,function(data){
+                        $.get("views/matLocList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                } );
+            },
+            form:function(){
+                var self = this;
+                $('#matLocForm').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'idMaterial:number': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Material cannot be empty.'
+                                }
+                            }
+                        },
+                        'idStk:number': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Stock cannot be empty.'
+                                }
+                            }
+                        },
+                        'idBin:number': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Bin cannot be empty.'
+                                }
+                            }
+                        }
+                    }
+                }).on('success.form.bv', function(e) {
+                    e.preventDefault();
+                    var $form     = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                    var matBin =JSON.stringify($('#matLocForm').serializeJSON());
+                    debugger;
+                    $.saveMatBin(matBin,jmstoken,function(data){
+                        debugger;
+                        $.get("views/matLocList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+
+                });
+            }
+        };
+        matLocation.init();
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="wul1">Stock management</span>
+    <span class="h-title" id="matCategory">Material category</span>
+    <span class="h-title-selected"><b>Material location</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <select class="js-data-example-ajax" id="js-data-example-ajax">
+                <option value="">Material</option>
+            </select>
+            <button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">Create</button>
+        </div>
+        <!--<div class="right-list">-->
+        <!--</div>-->
+    </div>
+
+    <table id="tableMatLoc" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>Material</th>
+            <th>Stock</th>
+            <th>Bin</th>
+            <th>Operation</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid matLocCreate" id="draggable1">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">Create/edit material location</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="matLocForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-80">Material</label>
+                    <select  class="js-data-example-ajax" name="idMaterial:number" id="idMaterial">
+                        <option value="">Material</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-80">Stock</label>
+                    <select  class="form-control" style="width:198px;"  name="idStk:number" id="idStk">
+                        <option value="">Stock</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" class="input-w-80">Bin</label>
+                    <select  class="form-control" style="width:198px;" name="idBin:number" id="idBin">
+                        <option value="">Bin</option>
+                    </select>
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary ">Save</button>
+                    <button id="return" type="button" class="btn  btn-info">Return</button>
+                </div>
+            </div>
+            <input type="hidden" id="id" name="id:number"/>
+        </form>
+    </div>
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+
+
+
+

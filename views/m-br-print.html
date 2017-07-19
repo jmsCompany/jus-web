@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>设备故障率打印</title>
+    <link rel="stylesheet" type="text/css" href="../css/jms.css">
+    <link rel="stylesheet" type="text/css" href="../css/datatable/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.css"/>
+    <link rel="stylesheet" href="js/chart/highcharts.js" />
+    <link rel="stylesheet" href="js/chart/modules/data.js" />
+    <script type="text/javascript" charset="UTF-8" src="../js/jquery/jquery.js"></script>
+</head>
+
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+
+    function count(o){
+        var t = typeof o;
+        if(t == 'string'){
+            return o.length;
+        }else if(t == 'object'){
+            var n = 0;
+            for(var i in o){
+                n++;
+            }
+            return n;
+        }
+        return false;
+    }
+    var mbrPrint={
+        init:function(){
+            var self = this;
+            this.bindEnvents();
+        },
+        bindEnvents:function(){
+            var self = this;
+            $('.button').click(function(){
+                // 显示保养单
+            });
+            $('.mbr_tablefoot tr:even').css("color","#0b6bf9");
+            $('.mbr_tablefoot tr:odd').css("color","#f00");
+
+
+            var routeParams = RouterManager.getParams();
+            var year = routeParams.year;
+            $.mbrInfo(year,jmstoken, function (data) {
+                if(count(data)>0){
+                    var x = new Array();
+                    var y = new Array();
+                    var target = new Array();
+                    _(data).each(function(item,i) {
+                        x[i] = item.x;
+                        y[i] = item.y;
+                        target[i] = item.target;
+                    });
+
+                }
+
+                debugger;
+                self.columnBasic(x, y ,target );
+            });
+        },
+        columnBasic:function(x,y,target){
+            debugger;
+            $('#mbr').highcharts({
+                title: {
+                    text: null
+                },
+                subtitle: {
+                    text: null
+                },
+                xAxis: {
+//                    tickInterval: 7 * 24 * 3600 * 1000, // one week
+//                    tickWidth: 0,
+                    categories: x,
+//                    gridLineWidth: 1,
+//                    labels: {
+//                        align: 'left',
+//                        x: 3,
+//                        y: -3
+//                    }
+                },
+                yAxis: [{ // left y axis
+                    title: {
+                        text: null
+                    },
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        y: 16,
+                        format: '{value:.,0f}'
+                    },
+                    showFirstLabel: false
+                }],
+                legend: {
+                    align: 'left',
+                    verticalAlign: 'top',
+                    y: 20,
+                    floating: true,
+                    borderWidth: 0
+                },
+                tooltip: {
+                    shared: true,
+                    crosshairs: true
+                },
+                plotOptions: {
+                    series: {
+                        cursor: 'pointer',
+//                        point: {
+//                            events: {
+//                                click: function (e) {
+//                                    hs.htmlExpand(null, {
+//                                        pageOrigin: {
+//                                            x: e.pageX || e.clientX,
+//                                            y: e.pageY || e.clientY
+//                                        },
+//                                        headingText: this.series.name,
+//                                        maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+//                                        this.y + ' visits',
+//                                        width: 200
+//                                    });
+//                                }
+//                            }
+//                        },
+                        marker: {
+                            lineWidth: 1
+                        }
+                    }
+
+
+//                    column: {
+//                        pointPadding: 0.2,
+//                        borderWidth: 0
+//                    }
+                },
+//                series:series
+                series: [{
+                    name: 'Actual',
+                    lineWidth: 4,
+                    marker: {
+                        radius: 4
+                    },
+                    data:y
+                },
+                    {
+                        name: 'Target%',
+                        data:target
+                    }]
+            });
+        }
+    };
+    mbrPrint.init();
+
+
+
+
+</script>
+
+<body>
+<div class="cont">
+    <button id="print" class="button-sytle1">打印</button>
+</div>
+<div class="mbr_cont">
+    <table cellpadding="0" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th colspan="2">Sandvik</th>
+            <th colspan="2">Roller Line Breakdown Rate<br/>设备故障率 (%)</th>
+            <th>Roller Line</th>
+        </tr>
+        <tr>
+            <td>Unit：%</td>
+            <td>Year：<input type="text"></td>
+            <td>Month：<input type="text"></td>
+            <td>Prepared by：<input type="text"></td>
+            <td>Period：<input type="text"></td>
+        </tr>
+        </thead>
+    </table>
+    <div class="mbr_boxmid" id="mbr">
+
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="mbr_tablefoot">
+        <tbody>
+        <tr>
+            <th>weekly</th><th>wk1</th><th>wk2</th><th>wk3</th><th>wk4</th><th>wk5</th><th>wk6</th><th>wk7</th><th>wk8</th><th>wk9</th><th>wk10</th><th>wk11</th><th>wk12</th>
+            <th>wk13</th><th>wk14</th><th>wk15</th><th>wk16</th><th>wk17</th><th>wk18</th><th>wk19</th><th>wk20</th><th>wk21</th><th>wk22</th><th>wk23</th><th>wk24</th><th>wk25</th><th>wk26</th>
+        </tr>
+        <tr>
+            <td><b>Actural</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr>
+            <td><b>Target %</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

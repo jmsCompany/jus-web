@@ -1,0 +1,373 @@
+<script type="text/html" id="personnelCreateBody">
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+				<div class="body-head-title">
+						<span class="h-title"><b>Create or edit shift</b></span>
+				</div>
+				<form id="personnelForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                     <!--<div class="form-group">                	-->
+                		<!--<label for="" class="input-w-160">人事计划编号</label>-->
+                        <!--<input type="text" class="form-control input-w-3" name="shiftPlanNo" id="shiftPlanNo"/>-->
+                      <!--</div>  -->
+                      <div class="form-group"> 
+                		<label for="" class="input-w-160">Name</label>
+                        <input type="text" class="form-control input-w-3" name="name" id="name">
+                      </div>
+					<div class="form-group"  style="display: none;" id="status">
+						<label class="input-w-160">Status</label>
+						<select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+						</select>
+					</div>
+                      <!--<div class="form-group"> -->
+                		<!--<label for="" class="input-w-160">有效期</label>-->
+                        <!--<input type="text" class="form-control input-w-3" name="validityTime" id="validityTime">-->
+                      <!--</div>-->
+                </div>
+                <div class="col-xs-12 mar-top-20px">  
+                     <div class="form-group">              	
+                		<label for="" class="input-w-160">Effective Time</label>
+                		<input type="text" class="form-control input-w-3 a" name="st" id="st"/>
+                     </div>
+                     <div class="form-group">  
+                		<label for="" class="input-w-160">Failure Time</label>
+                		<input type="text" class="form-control input-w-3 a" name="ft" id="ft"/>
+                     </div>
+                </div>
+               
+               <!-- +\- start -->
+					<!--<div class="col-xs-12 mar-top-20px">-->
+						<!--<div class="form-group" id="matlist">-->
+							<!--<ul class="new-income-list-nav">-->
+								<!--<li>班次</li>-->
+								<!--<li>描述</li>-->
+								<!--<li>开始时间</li>-->
+								<!--<li>结束时间</li>-->
+								<!--<li>操作</li>-->
+							<!--</ul>-->
+						<!--</div>-->
+					<!--</div> &lt;!&ndash; +\- over &ndash;&gt;-->
+					<div class="col-xs-12 mar-top-20px changerep_cont">
+						<table id="" cellpadding="0" cellspacing="0" width="585px">
+							<tr>
+								<th width="120px"> Shift</th>
+								<th width="120px"> Description</th>
+								<th width="120px"> Start Time</th>
+								<th width="120px"> Finish Time</th>
+								<th width="105px" id="operation"> Opeartion</th>
+							</tr>
+						</table>
+
+						<div class="form-group" id="matlist">
+						</div>   <!-- +\- over -->
+					</div>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                        <button class="btn btn-primary"  type="submit" id="save">Save</button>
+                 		<button class="btn  btn-info" type="button" id="return01">Return</button>
+                 	</div>
+                 </div>
+
+				 <input type="hidden" id="idShiftPlan" name="idShiftPlan:number"/>
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+<div class="tcbox container-fluid" id="nullAlert">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label id="info"></label>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+<script type="text/html" id="shiftItem">
+	<dl class="matlist" id="item<%= item %>">
+		<dd class="shiftPlan-create-list">
+			<input type="text" class="b" style="width:120px" value="<%= data.shift %>" name="shifPlanItems[item<%= item %>][shift]" id="shifPlanItems.item<%= item %>.shift" placeholder="Shift">
+			<input type="text" class="c" style="width:117px" value="<%= data.des %>" name="shifPlanItems[item<%= item %>][des]" id="shifPlanItems.item<%= item %>.des" placeholder="Description">
+			<input type="text" class="d" style="width:117px" value="<%= data.st %>" name="shifPlanItems[item<%= item %>][st]" id="shifPlanItems.item<%= item %>.st" placeholder="Start Time">
+			<input type="text" class="e" style="width:117px" value="<%= data.ft %>" name="shifPlanItems[item<%= item %>][ft]" id="shifPlanItems.item<%= item %>.ft" placeholder="Finish Time">
+			<% if(action == 'detail') { %>
+			<% } else { %>
+			<a class="button-sytle1 personnel-add">+</a>
+			<a class="button-sytle1 personnel-del">-</a>
+			<% } %>
+		</dd>
+	</dl>
+</script>
+<script type="text/javascript">
+
+	var jmstoken= store.get('JMS-TOKEN');
+	//弹窗
+	function showObj(objid){
+		$(objid).show();
+
+	}
+	function hideObj(objid){
+		$(objid).hide();
+	}
+	var newIncomeListEntry={
+		init:function(){
+			var self = this;
+			this.shiftItem = _.template($('#shiftItem').html());
+			$('#body').html($('#personnelCreateBody').html());
+			$('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_shift_plan'}});
+			//绑定事件
+			var params = this.params = RouterManager.getParams();
+			var action = params['action'];
+			var idShiftPlan = params['shiftId'];
+			this.$matList = $('#matlist');
+			if(idShiftPlan) {
+				this.loadDetail(idShiftPlan,action);
+			}
+			else {
+				this.$matList.append(this.createRow());
+
+//                this.updateDatePicker();
+			}
+			this.bindEvents();
+			this.form();
+		},
+		loadDetail: function(idShiftPlan,action, callback) {
+			var self = this;
+			$("#status").show();
+			$.shiftPlanInfo(idShiftPlan,jmstoken,function(data){
+				$('#personnelForm').populate(data,true);
+				var shiftItems = '';
+				_(data.shifPlanItems).each(function(item) {
+					shiftItems += self.createRow(item);
+				});
+				self.$matList.append(shiftItems);
+				if(action == 'detail'){
+					//如果是详情页面的话
+					$('input',$('#personnelForm')).prop('disabled',true);
+					$('select',$('#personnelForm')).prop('disabled',true);
+					$("input:not(:button,:hidden)").prop("disabled", true);
+					$('#save').hide();
+					$('a',$('#personnelForm')).hide();
+					$(".h-title").html('<b>Shift Detail</b>');
+					$('#operation').hide();
+					$('table','#personnelForm').attr('width','485px');
+				}
+			});
+		},
+		defaultData: { },
+		createRow: function(data) {
+			var self = this;
+			var row = parseInt(self.$matList.data('row'));
+			if(!row) {
+				row = 1;
+			}
+
+			if(!data) {
+				data = self.defaultData;
+			}
+
+			var param = {
+				data: data,
+				item: row,
+				action: self.params.action
+			}
+
+			var html = self.shiftItem(param);
+			self.$matList.data('row', row + 1);
+
+			return html;
+		},
+		addRow: function(e) {
+			var self = this;
+            e.stopPropagation();
+
+			var $t = $(e.target);
+			var html = this.createRow();
+
+			$t.closest('dl').after(html);
+//            setTimeout(function() {
+//                self.updateDatePicker();
+//            }, 10);
+		},
+		delRow: function(e) {
+			var $t = $(e.target);
+			if(this.$matList.find('.matlist').length == 1) {
+				return;
+			}
+			$t.closest('dl').remove();
+		},
+		/*
+        updateDatePicker: function() {
+            var self = this;
+
+            $('#matlist').find('.d, .e').datetimepicker({
+//                format:"YYYY-MM-DDTHH:mm:ss.SSSZ"
+				format:"HH:mm"
+            });
+        },
+        */
+		/**
+		 * 绑定事件逻辑
+		 */
+		bindEvents:function() {
+			var self = this;
+			var frameContainer = $('.container-fluid');
+			//增加行
+			frameContainer.on('click','.personnel-add',self.addRow.bind(self));
+			//删除行
+			frameContainer.on('click','.personnel-del', self.delRow.bind(self));
+
+			$('#return01').click(function(){
+				history.go(-1);
+			});
+			frameContainer.on("click",".a",function () {
+				$(".a").datetimepicker({
+					format:"YYYY-MM-DD"
+				});
+				$(this).focus();
+			});
+
+			frameContainer.on("click",".d, .e",function () {
+				$(".d, .e").datetimepicker({
+					format:"HH:mm"
+				});
+				$(this).focus();
+			});
+
+			$(".a, .d, .e").on("dp.change", function (e) {
+				var isEmpty = $(this).val() == '';
+				$('#personnelForm').bootstrapValidator('enableFieldValidators', 'st', !isEmpty);
+				$('#personnelForm').bootstrapValidator('enableFieldValidators', 'ft', !isEmpty);
+			});
+			frameContainer.on('focus', 'select, input', function() {
+				$('#save').attr('disabled', false);
+				$(this).removeClass('error');
+			});
+		},
+		form:function(){
+			var self = this;
+			$('#personnelForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'name': {
+						validators: {
+							notEmpty: {
+								message: 'Personnel plan name cannot be empty'
+							},
+							regexp: {
+								regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+									message: 'Only Chinese, English letters, number and horizontal lines.'
+							},
+						}
+					},
+					'st': {
+						validators: {
+							notEmpty: {
+								message: 'Effective time cannot be empty'
+							}
+						}
+					},
+					'ft': {
+						validators: {
+							notEmpty: {
+								message: 'Failure time cannot be empty'
+							}
+						}
+					},
+					'ft': {
+						validators: {
+							notEmpty: {
+								message: 'Failure time cannot be empty'
+							}
+						}
+					},
+					'ft': {
+						validators: {
+							notEmpty: {
+								message: 'Failure time cannot be empty'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				if(!self.validateShift()) {
+					var top = $('#body').scrollTop();
+					$('#nullAlert').css({
+						top: $(window).height() * 0.2 + top
+					}).show();
+					$('#info').empty();
+					$('#info').append('Authentication does not pass');
+//					alert('验证不通过');
+					return;
+				}
+				var $form = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var shiftPlan =JSON.stringify($('#personnelForm').serializeJSON());
+				$.saveShiftPlan(shiftPlan,jmstoken,function(data){
+					history.go(-1);
+					$.get("views/p-personnelPlanList.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			});
+		},
+		validateShift: function() {
+			var $list = $('#matlist');
+			var $items = $list.find('.matlist');
+			var flag = true;
+			var reg =/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
+
+			if($('#st').val() > $('#ft').val()) {
+				$('#st').addClass('error');
+				$('#ft').addClass('error');
+				flag = false;
+			}
+
+			if(!$items.length) {
+				flag = false;
+			}
+
+			$items.each(function(i) {
+				var $t = $(this);
+
+				var shiftD = $t.find('.b').val();
+				if(!shiftD||reg.test(shiftD)==false) {
+					$t.find('.b').addClass('error');
+					flag = false;
+				}
+
+//				var desD = $t.find('.c').val();
+//				if(reg.test(desD)==false){
+//					$t.find('.c').addClass('error');
+//					flag = false;
+//				}
+
+				if(!parseInt($t.find('.d').val())) {
+					$t.find('.d').addClass('error');
+					flag = false;
+				}
+
+				if(!parseInt($t.find('.e').val())) {
+					$t.find('.e').addClass('error').val('');
+					flag = false;
+				}
+			});
+
+			return flag;
+		}
+	};
+	newIncomeListEntry.init();
+</script>

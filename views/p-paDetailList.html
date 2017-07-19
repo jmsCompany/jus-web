@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#tablePa').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+		//	新建
+		$('').click(function(){
+			$('#_key12').val('?');
+	 		$.get("views/p-paList-create.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+		// 详情
+		$('').click(function(){
+			$('#_key12').val('?');
+	 		$.get("views/p-paList-detail.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+		
+} );
+</script>
+
+</head>
+<body>
+<div class="form-group">
+	<a href="javascript:" id="all">所有生产</a>
+	<a href="javascript:" id="processing">生产中</a>
+	<a href="javascript:" id="finished">已完成</a>
+   
+</div>
+ <table id="tablePo" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>产线</th>
+                <th>工单号</th>
+                <th>工艺</th>
+                <th>产品</th>
+                <th>版本</th>
+                <th>计划数量</th>
+                <th>日计划数</th>
+                <th>差异</th>
+                <th>状态</th>
+                <th>操作</th>  <!--编辑、详情-->
+            </tr>
+        </thead>
+</table>
+</body>
+</html>
+

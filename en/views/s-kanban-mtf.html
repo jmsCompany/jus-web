@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>看板物料流转</title>
+	</head>
+	<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="mtfForm" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+						<span class="h-title"><b>看板物料流转</b></span>
+				</div>
+  
+                <div class="col-xs-12 mar-top-20px">
+                     <div class="form-group">                	
+                		<label for="" class="input-w-160">流转单号</label>
+                        <input type="text" class="form-control input-w-3" name="mtNo" id="mtNo" readOnly="true">      
+                     </div>  
+                     <div class="form-group">  
+                		<label for="" class="input-w-160">流转人</label>
+                		<input type="text" class="form-control input-w-3" name="empMt" id="empMt" readOnly="true">
+                    </div>
+                    <div class="form-group"> 
+                        <label for="" class="input-w-160">流转日期：</label>
+                        <input type="date" class="form-control input-w-3" name="dateMt" id="dateMt">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                     <div class="form-group">                 	
+                		<label for="" class="input-w-160">从仓库</label>
+                		<select class="input-w-3 select-cs1 form-control" name="fromStk:number" id="fromStk">
+                		</select> 
+                      </div>
+                      <div class="form-group"> 
+                		<label for="" class="input-w-160">到仓库</label>
+                		<select class="input-w-3 select-cs1 form-control" name="toStk:number" id="toStk">
+                			<option value="">到仓库</option>
+                		</select> 
+                      </div>
+                </div>
+               <!-- +\- start --> 
+               <div class="col-xs-12 mar-top-20px"> 
+                   <div class="form-group" id="matlist">
+                   <dl class="matlist" id="option">
+                   <dt>物料</dt>
+                   <dd> 
+                   <input type="text" name="material" id="material" value="物料编码+版本+描述" style="width:125px;">
+                   <!--<span id="toggleList">-->
+                   <select class="select-cs1" name="toBin" id="toBin"><option value="">到货架</option></select>
+                   <input type="text" class="" name="qty" id="qty" value="需求数量">
+                   <input type="text" class="" name="totalQty" id="totalQty" value="总数">
+                   <!--</span>-->
+                   <span>
+                   <input type="text" class="" name="lotNo" id="lotNo" value="批号">
+                   <select class="select-cs1" name="fromBin" id="fromBin"><option value="">从货架</option></select>
+                   <input type="text" class="" name="box" id="box" value="箱数">
+                   <input type="text" class="" name="uQty" id="uqty" value="每箱数量">
+                   <input type="text" class="" name="sum" id="sum" value="合计">
+                   <a class="button-sytle1" onclick="addRow()">+</a>
+                   <a class="button-sytle1" onclick="delRow()">-</a>  
+                   </span>
+                   </dd>
+                   </dl>
+                   </div>   
+               </div> <!-- +\- over --> 
+               
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                        <button class="btn btn-primary">保存</button>
+                 		<button class="btn  btn-info" id="return">返回</button>
+                 	</div>
+                 </div>
+                 
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+    
+<script type="text/javascript">
+
+	var rowCount=1;
+    //增加行  
+    function addRow(){  
+        rowCount++;  
+//      var newRow='<dl class="matlist" id="option'+rowCount+'"><dt>&nbsp;</dt><span id="toggleList"></span><dd style="float:right;"><input type="text" value="数量">&nbsp;<select class="select-cs1"><option>到货架</option></select>&nbsp;<input type="text" value="批号">&nbsp;<select class="select-cs1"><option>发货货架</option></select>&nbsp;<input type="text" value="箱数">&nbsp;<a class="button-sytle1" onclick=addRow()>+</a>&nbsp;<a class="button-sytle1" onclick=delRow('+rowCount+')>-</a></dd></dl>';  
+        var newRow='<dl class="matlist" id="option'+rowCount+'"><dt>&nbsp;</dt><span id="toggleList"></span><dd style="float:right;"><input type="text" class="" name="lotNo" id="lotNo" value="批号">&nbsp;<select class="select-cs1" name="fromBin" id="fromBin"><option value="">到货架</option></select>&nbsp;<input type="text" class="" name="box" id="box" value="箱数">&nbsp;<input type="text" class="" name="uQty" id="uqty" value="每箱数量">&nbsp;<input type="text" value="箱数">&nbsp;<input type="text" class="" name="sum" id="sum" value="合计">&nbsp;<a class="button-sytle1" onclick=addRow()>+</a>&nbsp;<a class="button-sytle1" onclick=delRow('+rowCount+')>-</a></dd></dl>';  
+        $('#matlist').append(newRow);  
+    }  
+      
+    //删除行  
+    function delRow(rowIndex){  
+        $("#option"+rowIndex).remove();  
+        rowCount--;  
+    }
+    
+    var idKanban = $('#_key32').val();
+	var jmstoken= store.get('JMS-TOKEN');
+//	选择看板记录中与该条记录的发起者一致的记录，填入表单？？
+		
+		
+//	$('#fromStk\\.idDic').selectautofill('dic/fromStk');
+//  $('#fromBin\\.idDic').selectautofill('dic/fromBin');
+
+	$('#mtfForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'fromStk': {
+                validators: {
+                    notEmpty: {
+                        message: '从仓库不能为空'
+                    }
+                }
+//              流转单子项至少有一条记录
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var mtf =JSON.stringify($('#mtfForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.saveMtf(mtf,jmstoken,function(data){
+			      	$.get("views/p-kanban.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+ 	   
+ 	   $('#return').click(function(){
+	 		$.get("views/p-kanban.html",function(data){
+	         	$("#body").html(data);
+			});
+		});
+
+	</script>
+
+	</body>
+</html>

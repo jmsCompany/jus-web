@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        var jmstoken= store.get('JMS-TOKEN');
+        var kpiPulley={
+            init:function(){
+                var self = this;
+                this.bindEvents();
+            },
+            bindEvents:function(){
+                $('#oee').click(function(){
+                    $.get("views/p-OE.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-OE'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                $('#pulleyOee').click(function(){
+                    $.get("views/p-OE-pulley.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-OE',
+                            viewId:'p-OE-pulley'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+
+                $('#kpiRoller').click(function(){
+                    $.get("views/p-kpi-roller.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-OE',
+                            viewId:'p-kpi-roller'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+            }
+        };
+        kpiPulley.init();
+    </script>
+</head>
+<body>
+
+<div class="body-head-title">
+    <span class="h-title" id="oee">roller Report</span>
+    <span class="h-title" id="pulleyOee">pulley Report</span>
+    <span class="h-title" id="kpiRoller">roller-KPI</span>
+    <span class="h-title-selected"><b>pulley-KPI</b></span>
+</div>
+<div class="cont">
+    <!--<div class="r-header-body">-->
+    <!--工单-->
+    <!--<div class="btn-group btn-group-left" id="wo-group">
+        <select name="none" id="wo-select" style="display: none;"></select>
+        <button class="btn btn-default" type="button" id="wo">工单</button>
+        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+            <span class="caret"></span>
+            <span class="sr-only">工单</span>
+        </button>
+        <ul class="dropdown-menu"></ul>
+    </div>-->
+    <!--</div>  -->
+
+    <form id="woForm" method="post" action="index.html">
+        <table class="kpi" cellspacing="0" width="100%">
+            <tr>
+                <th></th>
+                <th>Pulley</th>
+                <th>Sum(H)</th>
+                <th>Jan(H)</th>
+                <th>Feb(H)</th>
+                <th>Mar(H)</th>
+                <th>April(H)</th>
+                <th>May(H)</th>
+                <th>June(H)</th>
+                <th>July(H)</th>
+                <th>Aug(H)</th>
+                <th>Aep(H)</th>
+                <th>Oct(H)</th>
+                <th>Nov(H)</th>
+                <th>Dec(H)</th>
+            </tr>
+            <tr>
+                <th rowspan="2">SAP(planned Hour)</th><td>MD/HD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>LD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="15" style="text-align:left;padding-left:10px;"></th>
+            </tr>
+            <tr>
+                <th rowspan="2">Actual Hours</th><td>MD/HD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>LD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="15" style="text-align:left;padding-left:10px;"></th>
+            </tr>
+            <tr>
+                <th rowspan="3">Attendence Hours</th><td>PU</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>PU+Sick &<br> Annual leave</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>3rd Party</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="15" style="text-align:left;padding-left:10px;"></th>
+            </tr>
+            <tr>
+                <th>Rework Hours</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="15" style="text-align:left;padding-left:10px;"></th>
+            </tr>
+            <tr>
+                <th rowspan="2">Produced Volume</th><td>MD/HD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>LD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="15" style="text-align:left;padding-left:10px;"></th>
+            </tr>
+            <tr>
+                <th rowspan="2">Utilization level</th><td>MD/HD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td>LD</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="15" style="text-align:left;padding-left:10px;"></th>
+            </tr>
+            <tr>
+                <th colspan="3">OverAll Labor Efficiency MD/HD</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <th colspan="3">OverAll Labor Efficiency LD</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="foot-btn-box">
+    <div class="form-group">
+        <button class="btn btn-info" type="button" id="return01">返回</button>
+    </div>
+</div>
+</body>
+</html>

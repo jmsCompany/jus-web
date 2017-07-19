@@ -1,0 +1,133 @@
+<div class="container-fluid">
+	<div class="row">
+		<section>
+            <form id="stkForm" method="post" action="index.html" class="form-inline">
+           		<div class="body-head-title">
+					<span class="h-title-selected"><b>新建或修改仓库</b></span>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">仓库名称</label>
+				    	<input type="text" class="form-control input-w-3"  name="stkName" id="stkName">
+				    </div>
+					<div class="form-group">
+				    	<label for="" class="input-w-160">地址</label>
+				    	<input type="text" class="form-control input-w-3"  name="address" id="address">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+                    <div class="form-group">
+				    	<label for="" class="input-w-160">仓库类别</label>
+				    	<select  class="input-w-3 select-cs1 form-control" name="idStkType:number" id="idStkType">
+                		</select>
+                     </div>
+				    <div class="form-group">
+				    	<label for="exampleInputEmail1" class="input-w-160">状态</label>			    	
+				    	<input type="radio" name="status:number" id='status27' class="radio-w" value="27" checked/><label for="stateOn">有效</label>
+				    	<input type="radio" name="status:number" id='status28' class="radio-w" value="28" /><label for="stateOoff">无效</label>
+					</div>
+
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+				    	<label for="" class="input-w-160">描述</label>
+				    	<textarea class="form-control input-w-300" rows="3" name="des" id="des"></textarea>
+				</div>
+				<div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return01" type="button" class="btn  btn-info">返回</button>
+                 	</div>
+                 </div>
+                 <input type="hidden" id="idStk" name="idStk:number"/>
+           </form>         
+        </section>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = RouterManager.getParams();
+	var idStk = params['stkId'];
+	var isEdit = params['action']=='edit';
+	var jmstoken= store.get('JMS-TOKEN');
+	if(idStk!=null){
+	
+		$.stkInfo(idStk,jmstoken,function(data){
+		 	$('#stkForm').populate(data,true);
+			if(data.status==27){
+				$('#status27').attr('checked',true);
+			}
+			else{
+				$('#status28').attr('checked',true);
+			}
+			$('#idStkType').selectautofill('s/getStkTypeList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}}, function() {
+                    $('#idStkType').val(data.idStkType);
+                });
+		});
+	}
+	else{
+    	$('#idStkType').selectautofill('s/getStkTypeList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+	}
+    $('#stkForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'stkName': {
+                validators: {
+                    notEmpty: {
+                        message: '仓库名称不能为空'
+                    },
+					regexp: {
+						regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+						message: '只能是中文、字母、数字、下划线。'
+					},
+					remote: {
+						type: 'GET',
+						url: $clientURL+'s/checkStkName',
+						"headers":{'JMS-TOKEN':jmstoken},
+						data:{idStk:idStk},
+						message: '该仓库已经存在',
+						delay: 1000
+					}
+                }
+            },
+			'address': {
+				validators: {
+					regexp: {
+						regexp: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+						message: '只能是中文、字母、数字、下划线。'
+					},
+				}
+			}
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var stk =JSON.stringify($('#stkForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.saveStk(stk,jmstoken,function(data){
+			   // alert('成功保存： ' + JSON.stringify(data));
+				history.go(-1);
+			  	$.get("views/stk.html",function(data){
+	                   $("#body").html(data);
+	            });
+			     
+			});
+    	
+        });
+		$('#return01').click(function(){
+			history.go(-1);
+	 		$.get("views/stk.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+});
+</script>
+
+
+

@@ -1,0 +1,371 @@
+<script type="text/html" id="calendarListCnt">
+    <div class="body-head-title">
+        <span class="h-title" id="cpp">Daily plan</span>
+        <!--<span class="h-title" id="spp">总计划</span>-->
+        <span class="h-title" id="cp">Check plan</span>
+        <span class="h-title" id="set">Check set</span>
+        <span class="h-title" id="sp">Stop plan</span>
+        <span class="h-title-selected"><b>Working calendar</b></span>
+        <span class="h-title" id="overtime">Overtime plan</span>
+		<span class="h-title" id="importCp">Import daily plan</span>
+    </div>
+
+    <div class="cont">
+        <div class="r-header-body">
+            <div class="btn-group btn-group-left">
+                <div class="btn-group btn-group-left">
+                    <label>Year：</label><input type="text" id='year01'>
+                </div>
+            </div>
+            <div class="right-list">
+                <!--搜索框-->
+                <!--<div class="sousuo">-->
+                <!--<div class="ss-input">-->
+                <!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容" />-->
+                <!--</div>-->
+                <!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+                <!--</div>-->
+                <button id="view" class="button-sytle1">Search</button>
+                <input type="button" class="button-sytle1" id="create" value="Create">
+            </div>
+        </div>
+        <table id="calendarList" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Year</th>
+                <th>Date</th>
+                <!--<th>描述</th>-->
+                <th>Type</th>
+                <th>Name</th>
+                <th>Operation</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- 弹窗 start -->
+    <div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible;">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">Create/edit working calendar</span>
+            </div>
+            <input type="button" class="tc_close" id="tcbox-close">
+            <form id="calendarForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" id="name">
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="text" class="form-control" name="year" id="year">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="text" class="form-control" name="date" id="date">
+                    </div>
+                    <label>Type</label>
+                    <select class="form-control" name="idOCalendarType:number" id="idOCalendarType">
+                        <option>Type</option>
+                    </select>
+                </div>
+                <!--<div class="col-xs-12 mar-top-20px">-->
+                    <!--<div class="form-group">-->
+                        <!--<label>班别</label>-->
+                        <!--<select class="form-control" name="idShiftD:number" id="idShiftD">-->
+                            <!--<option>类别</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button id="save" type="submit" class="btn btn-primary">Save</button>
+                        <button id="return" type="button" class="btn  btn-info">Return</button>
+                    </div>
+                </div>
+                <input type="hidden" id="idCalendar" name="idCalendar:number" />
+            </form>
+        </div>
+    </div>
+
+    <!-- 弹窗 over -->
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label id="info"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    //弹窗
+    function showObj(objid){
+        $(objid).draggable().show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    var jmstoken= store.get('JMS-TOKEN');
+    var app = {
+        init: function() {
+            var self = this;
+            $('#body').html($('#calendarListCnt').html());
+            var now = new Date();
+            $('#year01').val(now.getFullYear());
+//            this.drowTable();
+            this.bindEvents();
+            this.autoFill();
+            this.form();
+            this.drowTable();
+        },
+        nullAlertShow:function(information){
+            var top = $('#body').scrollTop();
+            $('#nullAlert').css({
+                top: $(window).height() * 0.2 + top
+            }).draggable().show();
+            $('#info').empty();
+            $('#info').append(information);
+        },
+        drowTable: function() {
+            var self = this;
+            var data = {};
+            var year = $('#year01').val();
+            if (year) {
+//                data.year = new Date(year).getTime();
+                data.year = parseInt(year);
+            }
+            else{
+                self.nullAlertShow('Please enter the year！');
+                return
+            }
+            if (this.table) {
+                this.table.destroy();
+            }
+            this.table = $('#calendarList').DataTable( {
+                // deferRender:  true,
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                // scrollY:"350px",
+                // scrollCollapse: true,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "o/getWSOCalendarList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken},
+                    data:data
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-bin>Edit</button><button class=button-delete>Delete</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+
+                dom: "tip",
+                pageLength:"50"
+            } );
+
+            $('#calendarList tbody').on( 'click', 'button', function () {
+                var data = self.table.row( $(this).parents('tr') ).data();
+                var clazz =$(this).attr('class');
+                if(clazz=='button-bin'){
+                    var top = $('#body').scrollTop();
+                    $('#tcbox-pcpplist').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+//				showObj('.tcbox');
+                    var idCalendar = data[4];
+                    self.loadDetail(idCalendar);
+                }
+                else if(clazz=='button-delete'){
+                    $.deleteCalendar(data[4],jmstoken,function(data){
+                        $.get("views/p-calendar.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+//			else {
+//				$("#_key13").val(data[5]);
+//				$.get("views/p-actStopPlanList.html",function(data){
+//					$("#body").html(data);
+//				});
+//			}
+            } );
+        },
+        autoFill:function(){
+            var jmstoken= store.get('JMS-TOKEN');
+            $('#idOCalendarType').selectautofill('o/getOCalendarTypes',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            var dataPickerOpt = {
+                format: "YYYY-MM-DD"
+            }
+            $('#date').datetimepicker(dataPickerOpt);
+
+        },
+        bindEvents: function() {
+            var self = this;
+
+            $("#year01").keydown(function() {
+                if (event.keyCode == "13") {//keyCode=13是回车键
+                    self.drowTable();
+                }
+            });
+            $('#view').click(function(){
+                self.drowTable();
+            });
+
+            $('#cpp').click(function(){
+                $.get("views/p-cppList.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-cppList'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            $('#cp').click(function(){
+                $.get("views/p-checkPlan.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-checkPlan'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            $('#set').click(function(){
+                $.get("views/p-checkSet.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-checkSet'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#sp').click(function () {
+                $.get("views/p-stopPlanList.html", function (data) {
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-stopPlanList'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            $('#overtime').click(function () {
+                $.get("views/p-overtime.html", function (data) {
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-overtime'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#importCp').click(function () {
+                $.get("views/p-import.html", function (data) {
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-import'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#spp').click(function(){
+                $.get("views/p-sppList.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-cppList',
+                        viewId:'p-sppList'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#create').on('click', function(e) {
+                $('#tcbox-pcpplist').draggable().show();
+            })
+            $('#return, #tcbox-close').click(function(){
+//	 		$('#tcbox-pcpplist').hide();
+                $.get("views/p-calendar.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+        },
+        form: function() {
+            var self = this;
+            $('#calendarForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Name cannot be empty.'
+                            }
+                        }
+                    },
+                    'year': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Year cannot be empty.'
+                            }
+                        }
+                    },
+                    'date': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Date cannot be empty.'
+                            }
+                        }
+                    },
+                    'idOCalendarType:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Type cannot be empty.'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+				var calendar =JSON.stringify($('#calendarForm').serializeJSON());
+                $.saveCalendar(calendar,jmstoken,function(data){
+                    $.get("views/p-calendar.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+
+            });
+        },
+        loadDetail:function(idCalendar){
+            $.calendarInfo(idCalendar,jmstoken,function(data){
+                $('#calendarForm').populate(data,true);
+//				$('#machineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+//					$('#machineId').val(data.machineId);
+//				});
+//
+            });
+
+
+        }
+    }
+    app.init();
+
+</script>

@@ -1,0 +1,291 @@
+<div class="container-fluid">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title" id="list">物料清单列表</span>
+                    <span class="h-title"><b>新建物料清单</b></span>
+                </div>
+
+            	<form id="bomForm" method="post" action="index.html" class="form-inline">
+
+                    <div class="col-xs-12 mar-top-20px">
+							<div class="form-group">
+                                <label class="input-w-160">产品编码</label>
+                                <select class="input-w-2 select-cs1 form-control" name="materialId:number" id="materialId">
+                                     <option value="">产品编码</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display: none;" id="status1">
+                                <label class="input-w-160">状态</label>
+                                <select class="input-w-2 select-cs1 form-control" name="statusId:number" id="statusId">
+                                </select>
+                            </div>
+                     </div>
+                    <div class="col-xs-12 mar-top-20px" id="order" style="display: none;">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">创建日期</label>
+                            <input type="text" class="form-control input-w-3" name="creationTime" id="creationTime">
+                            <label for="" class="input-w-160">创建人</label>
+                            <input type="text" class="form-control input-w-3" name="creator" id="creator">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group" id="matlist">
+                            <ul class="new-income-list-nav">
+                                <li style="width:100px">物料</li>
+                                <li style="width:75px">单位</li>
+                                <li style="width:75px">重量</li>
+                                <li style="width:75px">成本</li>
+                                <li style="width:85px">工作中心</li>
+                                <li style="width:75px">级别</li>
+                                <li style="width:75px">排序</li>
+                                <li style="width:75px">单位用料</li>
+                                <li style="width:75px">损耗</li>
+                                <li style="width:100px">操作</li>
+                            </ul>
+                            <dl class="matlist" id="item0">
+                                <dd class="income-create-list">
+                                    <select class="select-cs1 a" name="bomItems[item0][materialId]:number" id="bomItems.item0.materialId"><option>请选择物料</option></select>
+                                    <input type="text" class="b" name="bomItems[item0][sUnitDicByUnitInf]" id="bomItems.item0.sUnitDicByUnitInf" value="单位" readOnly="true"/>
+                                    <input type="text" class="c" name="bomItems[item0][weight]" id="bomItems.item0.weight" value="重量" readOnly="true"/>
+                                    <input type="text" class="d" name="bomItems[item0][cost]" id="bomItems.item0.cost" value="成本" readOnly="true"/>
+                                    <select class="select-cs1 e" name="bomItems[item0][workCenterId]:number" id="bomItems.item0.workCenterId"><option value="">工作中心</option></select>
+                                    <input type="text" class="f" name="bomItems[item0][lvl]:number" id="bomItems.item0.lvl" placeholder="级别"/>
+                                    <input type="text" class="g" name="bomItems[item0][orderBy]:number" id="bomItems.item0.orderBy" placeholder="排序"/>
+                                    <input type="text" class="h" name="bomItems[item0][qpu]:number" id="bomItems.item0.qpu" placeholder="单位用料"/>
+                                    <input type="text" class="i" name="bomItems[item0][wastage]:number" id="bomItems.item0.wastage" placeholder="损耗"/>
+                                    <a class="button-sytle1  new-income-add">+</a>
+                                    <a class="button-sytle1 new-income-delete">-</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div> <!-- +\- over -->
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="save">保存</button>
+                            <button class="btn  btn-info" type="reset" id="return">返回</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idBomLabel" name="idBomLabel:number"/>
+
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+<script type="text/javascript">
+
+    $("#list").click(function(){
+        $.get("views/p-bomList.html",function(data){
+            $("#body").html(data);
+        });
+    });
+
+    $('return').click(function(){
+        $.get("views/p-bomList.html",function(data){
+            $("#body").html(data);
+        });
+    });
+
+
+    //仅仅是为了模块化而已
+    var newIncomeListEntry={
+        init:function(){
+            //绑定事件
+            this.bindEvents();
+//            this.dealAutoFill();
+        },
+        /**
+         * 显示具体选项的细节
+         */
+        operateRow:function(){
+            var self =this;
+            var rowCount=1;
+            return {
+                delRow:function(){
+                    if(rowCount==1){
+                        return
+                    }
+                    else{
+                        this.parents('.matlist').remove();
+                        setTimeout(function(){
+                            rowCount--;
+                        },0)
+                    }
+                },
+                addRow:function(){
+                    var cloneSelectChildren1 = $('.a').eq(0).html();
+                    var cloneSelectChildren2 = $('.e').eq(0).html();
+                    var newRow='<dl class="matlist" id="item'+rowCount+'">'+
+                            '<dd class="income-create-list">'+
+                            '<select class="select-cs1 a" name="bomItems[item0][materialId]:number" id="bomItems.item0.materialId">' +
+                            cloneSelectChildren1+'</select>&nbsp;'+
+                            '<input type="text" class="b" name="bomItems[item0][sUnitDicByUnitInf]" id="bomItems.item0.sUnitDicByUnitInf" value="单位" readOnly="true"/>&nbsp;'+
+                            '<input type="text" class="c" name="bomItems[item0][weight]" id="bomItems.item0.weight" value="重量" readOnly="true"/>&nbsp;'+
+                            '<input type="text" class="d" name="bomItems[item0][cost]" id="bomItems.item0.cost" value="成本" readOnly="true"/>&nbsp;'+
+                            '<select class="select-cs1 e" name="bomItems[item0][workCenterId]:number" id="bomItems.item0.workCenterId">'+
+                            cloneSelectChildren2+'</select>&nbsp;'+
+                            '<input type="text" class="f" name="bomItems[item0][lvl]:number" id="bomItems.item0.lvl" placeholder="级别"/>&nbsp;'+
+                            '<input type="text" class="g" name="bomItems[item0][orderBy]:number" id="bomItems.item0.orderBy" placeholder="排序"/>&nbsp;'+
+                            '<input type="text" class="h" name="bomItems[item0][qpu]:number" id="bomItems.item0.qpu" placeholder="单位用料"/>&nbsp;'+
+                            '<input type="text" class="i" name="bomItems[item0][wastage]:number" id="bomItems.item0.wastage" placeholder="损耗"/>&nbsp;'+
+                            '<a class="button-sytle1  new-income-add">+</a>&nbsp;'+
+                            '<a class="button-sytle1 new-income-delete">-</a>'+
+                            '</dd></dl>';
+                    $('#matlist').append($(newRow));
+                    $('.matlist').each(
+                            function(i){
+                                //添加id
+                                $(this).attr("id","item"+i);
+                                $(this).find(".a").attr("name","bomItems[item"+i+"][materialId]:number");
+                                $(this).find(".a").attr("id","bomItems.item"+i+".materialId");
+                                $(this).find(".b").attr("name","bomItems[item"+i+"][sUnitDicByUnitInf]:number");
+                                $(this).find(".b").attr("id","bomItems.item"+i+".sUnitDicByUnitInf");
+                                $(this).find(".c").attr("name","bomItems[item"+i+"][weight]");
+                                $(this).find(".c").attr("id","bomItems.item"+i+".weight");
+                                $(this).find(".d").attr("name","bomItems[item"+i+"][cost]:number");
+                                $(this).find(".d").attr("id","bomItems.item"+i+".cost");
+                                $(this).find(".e").attr("name","bomItems[item"+i+"][workCenterId]");
+                                $(this).find(".e").attr("id","bomItems.item"+i+".workCenterId");
+                                $(this).find(".f").attr("name","bomItems[item"+i+"][lvl]");
+                                $(this).find(".f").attr("id","bomItems.item"+i+".lvl");
+                                $(this).find(".g").attr("name","bomItems[item"+i+"][orderBy]");
+                                $(this).find(".g").attr("id","bomItems.item"+i+".orderBy");
+                                $(this).find(".h").attr("name","bomItems[item"+i+"][qpu]");
+                                $(this).find(".h").attr("id","bomItems.item"+i+".qpu");
+                                $(this).find(".i").attr("name","bomItems[item"+i+"][wastage]");
+                                $(this).find(".i").attr("id","bomItems.item"+i+".wastage");
+                            }
+                    );
+                    setTimeout(function(){
+                        rowCount++;
+                    },0)
+                }
+            }
+        },
+        /**
+         * 绑定事件逻辑
+         */
+        bindEvents:function(){
+            var self = this;
+            this.dealAutoFill();
+            var operateRow =  self.operateRow();
+            var frameContainer= $('.container-fluid');
+            //增加行
+            frameContainer.on('click','.new-income-add',function(){
+                operateRow.addRow.call(this);
+            });
+            //删除行
+            frameContainer.on('click','.new-income-delete',function(){
+                operateRow.delRow.call($(this))
+            });
+
+            //改变物料
+            frameContainer.on("change",".a",function(){
+                var unitInput =  $(this).next();
+                var weightInput =  unitInput.next();
+                var costInput =  weightInput.next();
+                var materialId=$(this).val();
+                var jmstoken= store.get('JMS-TOKEN');
+                $.materialInfo(materialId,jmstoken,function(data){
+                    unitInput.val(data.sUnitDicByUnitInf);
+                    weightInput.val(data.weight);
+                    costInput.val(data.cost);
+                });
+            });
+        },
+        dealAutoFill:function(){
+            var jmstoken= store.get('JMS-TOKEN');
+            $('#materialId').selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_bom_label'}});
+            $('.a').selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('.e').selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            var params= RouterManager.getParams();
+            var idBom =params['bomId'];
+            var action=params['action'];
+            if(idBom && idBom.length>0){
+                $("#status1").show();
+                $("#order").show();
+                $.bomInfo(idBom,jmstoken,function(data){
+                    debugger;
+                    var size=$.JSONLength(data.bomItems);
+                    for(var i=1;i<size;i++){
+                        var cloneSelectChildren1 = $('.a').eq(0).html();
+                        var cloneSelectChildren2 = $('.e').eq(0).html();
+                        var content='<dl class="matlist" id="item{0}">' +
+                                '<dd class="income-create-list">' +
+                                '<select class="select-cs1 a" name="bomItems[item{0}][materialId]:number" id="bomItems.item{0}.materialId">&nbsp;' +
+                                cloneSelectChildren1+'</select>&nbsp;' +
+                                '<input type="text" class="b" name="bomItems[item{0}][sUnitDicByUnitInf]" id="bomItems.item{0}.sUnitDicByUnitInf" value="单位" readOnly="true"/>&nbsp;' +
+                                '<input type="text" class="c" name="bomItems[item{0}][weight]" id="bomItems.item{0}.weight" value="重量" readOnly="true"/>&nbsp;' +
+                                '<input type="text" class="d" name="bomItems[item{0}][cost]" id="bomItems.item{0}.cost" value="成本" readOnly="true"/>&nbsp;' +
+                                '<select class="select-cs1 e" name="bomItems[item{0}][workCenterId]:number" id="bomItems.item{0}.workCenterId">'+
+                                cloneSelectChildren2+'</select>&nbsp;' +
+                                '<input type="text" class="f" name="bomItems[item{0}][lvl]:number" id="bomItems.item{0}.lvl" placeholder="级别"/>&nbsp;' +
+                                '<input type="text" class="g" name="bomItems[item{0}][orderBy]:number" id="bomItems.item{0}.orderBy" placeholder="排序"/>&nbsp;' +
+                                '<input type="text" class="h" name="bomItems[item{0}][qpu]:number" id="bomItems.item{0}.qpu" placeholder="单位用料"/>&nbsp;' +
+                                '<input type="text" class="i" name="bomItems[item{0}][wastage]:number" id="bomItems.item{0}.wastage" placeholder="损耗"/>&nbsp;' +
+                                '<a class="button-sytle1  new-income-add">+</a>&nbsp;' +
+                                '<a class="button-sytle1 new-income-delete">-</a>&nbsp;' +
+                                '</dd></dl>' ;
+                        $('#matlist').append($.format(content,""+i));
+                    }
+                    var mapPool = function(){
+                        $('#bomForm').populate(data,true);
+                        if(action=='detail'){
+                            //如果是详情页面的话
+                            $("#order").show();
+                            $('input,select,textarea',$('#incomeForm')).prop('readonly',true);
+                            $("input:not(:button,:hidden)").prop("readonly", true);
+                            $('.new-income-add').remove();
+                            $('.new-income-delete').remove();
+                            $('#save').remove();
+                        };
+                    };
+                    $(".a").selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},mapPool);
+                });
+            }
+
+            $('#bomForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'materialId': {
+                        validators: {
+                            notEmpty: {
+                                message: '产品编码不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var bom =JSON.stringify($('#bomForm').serializeJSON());
+                $.saveBom(bom,jmstoken,function(data){
+                    if(data['idBomLabel']==0)
+                    {
+                        alert("该物料清单已经存在。");
+                        return;
+                    }
+
+                    $.get("views/p-bomList.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+
+        }
+
+    };
+    newIncomeListEntry.init();
+</script>

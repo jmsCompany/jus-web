@@ -1,0 +1,202 @@
+<script type="text/html" id="pRoutineMain">
+    <div class="body-head-title">
+        <span class="h-title" id="list01">Routine List</span>
+        <span class="h-title" id="route">Create Routine</span>
+        <span class="h-title-selected"><b>Standard Routine</b></span>
+    </div>
+    <div class="cont">
+
+        <div class="r-header-body">
+            <div class="right-list">
+                <button id="create" type="button" class="btn  btn-info" onClick="javascript:showObj('#updateRoutine');">Create</button>
+            </div>
+        </div>
+        <table id="tableRoutine" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Queue</th>
+                <th>Name</th>
+                <th>Work Center</th>
+                <th>Operation</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tcbox container-fluid" id="updateRoutine">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">Create or edit standard routine</span>
+            </div>
+            <input type="button" class="tc_close">
+            <form id="routineDForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Queue</label>
+                        <input type="text" class="form-control"  name="oederBy:number" id="oederBy">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Name</label>
+                        <input type="text" class="form-control"  name="name" id="name">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Work Center</label>
+                        <select  class="form-control" style="width:182px;" name="idWorkcenter:number" id="idWorkcenter">
+                        </select>
+                    </div>
+                </div>
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary " id="save01">Save</button>
+                        <button id="return01" type="button" class="btn  btn-info">Return</button>
+                    </div>
+                </div>
+                <input type="hidden" id="idStandardRoutined" name="idStandardRoutined:number"/>
+            </form>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    //弹窗
+    function showObj(objid){
+        $(objid).draggable().show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    $('#body').html($('#pRoutineMain').html())
+    var app={
+        init:function(){
+            this.bindEvents();
+            this.autoFill();
+            this.form();
+        },
+        autoFill:function(){
+            $('#idWorkcenter').selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+        },
+        bindEvents:function(){
+            var table =$('#tableRoutine').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "p/getPStandardRoutineDList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>Edit</button><button class=button-delete>Delete</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+            $('#tableRoutine tbody').on( 'click', 'button', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                var clazz=$(this).attr('class');
+                if(clazz=='button-edit'){
+                    var top = $('#body').scrollTop();
+                    $('.tcbox').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+                    $.stdRoutineInfo(data[3],jmstoken,function(data){
+                        $('#routineDForm').populate(data,true);
+                    });
+                }
+                else{
+                    $.deleteStdRoutine(data[3],jmstoken,function(data){
+                        $.get("views/p-standardRoute.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            } );
+
+            $('#route').click(function(){
+                $.get("views/p-routine-create.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-routineList',
+                        viewId:'p-routine-create'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#updateRoutine').on('click','.tc_close,#return01',function(){
+                $.get("views/p-standardRoute.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+
+            $("#list01").click(function(){
+                $.get("views/p-routineList.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-routineList',
+                    });
+                    $("#body").html(data);
+                });
+            });
+        },
+        form:function() {
+            var self = this;
+            $('#routineDForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'oederBy:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Queue cannot be empty'
+                            }
+                        }
+                    },
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Name cannot be empty'
+                            }
+                        }
+                    },
+                    'idWorkcenter:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Work center cannot be empty'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var routineDStd = JSON.stringify($('#routineDForm').serializeJSON());
+                debugger;
+                $.saveStdRoutine(routineDStd,jmstoken,function(data){
+                    debugger;
+                    $.get("views/p-standardRoute.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+
+            });
+        },
+    };
+    app.init();
+
+</script>
+

@@ -1,0 +1,418 @@
+<script type="text/html" id="inProcessingListTmpl">
+        <div class="body-head-title">
+            <span class="h-title-selected"><b>文件列表</b></span>
+            <span class="h-title" id="qm01">新建文件</span>
+            <span class="h-title" id="templet">文件类型</span>
+        </div>
+
+        <div class="cont">
+            <div class="r-header-body">
+                <!--<div class="btn-group btn-group-left" style="width: 180px;">-->
+                    <!--<div class='input-group date' id='datetimepicker1'>-->
+                        <!--<input type='text' class="form-control" name="opDate" id="opDate" style="height: 30px;" />-->
+                        <!--<span class="input-group-addon">-->
+                                <!--<span class="glyphicon glyphicon-calendar"></span>-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="btn-group btn-group-left" id="issue">
+                    <div class="btn-group btn-group-left">
+                        <label>日期：</label><input type="text" id='datetimepicker1' style="width:85px"> -- <input type="text" id='datetimepicker2' style="width:85px">
+                    </div>
+                </div>
+                <div class="btn-group btn-group-left" id="type-group">
+                    <select name="none" id="type-select" style="display: none;"></select>
+                    <button class="btn btn-default" type="button" style="" id="mtfType">文件类型</button>
+                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle type01" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">文件类型</span>
+                    </button>
+                    <ul class="dropdown-menu"></ul>
+                </div>
+                <div class="btn-group btn-group-left">
+                    <!--搜索框-->
+                    <select class="js-data-example-ajax" id="js-data-example-ajax">
+                        <option value="">选择物料</option>
+                    </select>
+                </div>
+                <div class="btn-group btn-group-left" id="wo-group">
+                    <select name="none" id="wo-select" style="display: none;"></select>
+                    <button class="btn btn-default" type="button" style="" id="woNo">工单号</button>
+                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle wo01" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">文件类型</span>
+                    </button>
+                    <ul class="dropdown-menu"></ul>
+                </div>
+                <div class="btn-group btn-group-left" id="routineD-group">
+                    <select name="none" id="routineD-select" style="display: none;"></select>
+                    <button class="btn btn-default" type="button" style="" id="routineD">工序</button>
+                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle routineD01" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">工序</span>
+                    </button>
+                    <ul class="dropdown-menu"></ul>
+                </div>
+                <div class="btn-group btn-group-left">
+                    <select class="js-data-example-ajax" id="js-data-example-ajax1">
+                        <option value="">选择创建人</option>
+                    </select>
+                </div>
+
+                <div class="right-list">
+                    <input type="button" class="button-sytle1" id="search" value="查询">
+                </div>
+            </div>
+            <table id="qmList" class="display dataTable no-footer" cellspacing="0" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>文件编号</th>
+                        <th>文件类型</th>
+                        <th>产品编码</th>
+                        <th>工单号</th>
+                        <th>工序</th>
+                        <th>日期</th>
+                        <th>创建人</th>
+                        <th>操作</th>
+                        <!--编辑、详情-->
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="tcbox container-fluid" id="nullAlert">
+            <div class="tcbox_cont row">
+                <div class="body-head-title">
+                </div>
+                <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label id="info"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+</script>
+
+<script type="text/javascript">
+
+    var jmstoken = store.get('JMS-TOKEN');
+    function showObj(objid){
+        $(objid).show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var app = {
+        init: function() {
+            $('#body').html($('#inProcessingListTmpl').html());
+            this.bindEvents();
+            // this.loadTable();
+        },
+        fillRoutineD:function(idWo){
+            $('#routineD-select').empty();
+            $('#routineD-group').find('.dropdown-menu').empty();
+            $('#routineD-select').selectautofill('p/findRoutineDObjsByWoId', {headers: {'JMS-TOKEN': jmstoken}, data:{'woId':idWo}}, function (data) {
+                var _html = '';
+                _(data).each(function (d, i) {
+                    _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                });
+                $('#routineD-group').find('.dropdown-menu').append(_html);
+            });
+        },
+        bindEvents: function() {
+            var self = this;
+            var frame = $('#inProcessingListTmpl');
+
+            $('#datetimepicker1').datetimepicker();
+            $('#datetimepicker2').datetimepicker();
+
+            $("#qm01").click(function(){
+                $.get("views/q-qm-body.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'q-inProcessingList',
+                        viewId:'q-qm-body'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $("#templet").click(function(){
+                $.get("views/q-templet.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'q-inProcessingList',
+                        viewId:'q-templet'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            //物料模糊搜索
+            $('#js-data-example-ajax').select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers:{'JMS-TOKEN':jmstoken},
+                    delay: 200,
+                    data: function(params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[2,3]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+                    },
+                    processResults: function(data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt) {
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            //文件类型下拉框
+            $('#type-select').selectautofill('q/getQFileTypes', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+                var _html = '';
+                _(data).each(function (d, i) {
+                    _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                });
+                $('#type-group').find('.dropdown-menu').append(_html);
+            });
+            $('.type01').on('click',function(e){
+                $('#mtfType').html('文件类型');
+            });
+            $('#type-group').on('click', 'li a', function (e) {
+                var $t = $(this);
+                var id = $t.data('id');
+                $('#type-select').val(parseInt(id));
+                $('#mtfType').html($t.text());
+            });
+            //工单下拉框
+            $('#wo-select').selectautofill('p/getWoObjsList', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+                var _html = '';
+                _(data).each(function (d, i) {
+                    _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                });
+                $('#wo-group').find('.dropdown-menu').append(_html);
+            });
+            $('.wo01').on('click',function(e){
+                $('#woNo').html('工单号');
+            });
+            $('#wo-group').on('click', 'li a', function (e) {
+                var $t = $(this);
+                var id = $t.data('id');
+                $('#wo-select').val(parseInt(id));
+                $('#woNo').html($t.text());
+                self.fillRoutineD(id);
+            });
+            //工序下拉框
+//            frame.on('change','#woNo',function(){
+//                var idWo = $('#wo-select').val();
+//                debugger;
+//            });
+            $('.routineD01').on('click',function(e){
+                $('#routineD').html('工序');
+            });
+            $('#routineD-group').on('click', 'li a', function (e) {
+                var $t = $(this);
+                var id = $t.data('id');
+                $('#routineD-select').val(parseInt(id));
+                $('#routineD').html($t.text());
+            });
+            //创建人模糊搜索
+            $('#js-data-example-ajax1').select2({
+                ajax: {
+                    url: $clientURL + 'u/getUsersByQ',
+                    dataType: 'json',
+                    headers:{'JMS-TOKEN':jmstoken},
+                    delay: 200,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        }
+                    },
+                    processResults: function(data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt) {
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax1').empty();
+            });
+
+
+            $('#search').on('click',function(){
+                self.loadTable();
+            });
+        },
+        nullAlertShow:function(information){
+            var top = $('#body').scrollTop();
+            $('#nullAlert').css({
+                top: $(window).height() * 0.2 + top
+            }).show();
+            $('#info').empty();
+            $('#info').append(information);
+        },
+        loadTable: function() {
+            var self = this;
+            var data = {};
+            var materialId = $('#js-data-example-ajax').val();
+            var creatorId = $('#js-data-example-ajax1').val();
+            var fromDay = $('#datetimepicker1').val();
+            var toDay = $('#datetimepicker2').val();
+            if (fromDay){
+                data.from = new Date(fromDay).getTime();
+            }
+
+            if (toDay){
+                data.to = new Date(toDay).getTime();
+            }
+
+            if ($('#mtfType').html() == '文件类型'){
+                data.fileTypeId = null;
+            }
+            else{
+                data.fileTypeId = $('#type-select').val();
+            }
+
+            if (!materialId){
+                data.materialId = null;
+            }
+            else{
+                data.materialId = materialId;
+            }
+
+            if ($('#woNo').html() == '工单号'){
+                data.woId = null;
+            }
+            else{
+                data.woId = $('#wo-select').val();
+            }
+
+            if ($('#routineD').html() == '工序'){
+                data.routineDId = null;
+            }
+            else{
+                data.routineDId = $('#routineD-select').val();
+            }
+//            else if(!toDay) {
+//                self.nullAlertShow('请输入截止日期！');
+//                return
+//            }
+//            else if($('#mtfType').html() == '文件类型'){
+//                self.nullAlertShow('请选择文件类型！');
+//                return
+//            }
+//            else if(!materialId){
+//                self.nullAlertShow('请选择物料！');
+//                return
+//            }
+//            if($('#woNo').html() == '工单号'){
+//                data.woId = $('#wo-select').val();
+//                self.nullAlertShow('请选择工单号！');
+//                return
+//            }
+//            else if($('#routineD').html() == '工序'){
+//                self.nullAlertShow('请选择工序！');
+//                return
+//            }
+//            else{
+//                data.materialId = materialId;
+//                data.creatorId = creatorId;
+//                data.from = new Date(fromDay).getTime();
+//                data.to = new Date(toDay).getTime();
+//                data.fileTypeId = $('#type-select').val();
+//                data.woId = $('#wo-select').val();
+//                data.routineDId = $('#routineD-select').val();
+//            }
+            debugger;
+            if (this.table) {
+                this.table.destroy();
+            }
+            this.table = $('#qmList').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "q/getQFileManagementList",
+                    "dataType": "json",
+                    "data":data,
+                    "headers":{'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>编辑</button><button class=button-bin>详情</button><button class=button-delete>删除</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            });
+            $('#qmList tbody').on( 'click', 'button', function () {
+                var data = self.table.row( $(this).parents('tr') ).data();
+                var historyOptions = {
+                    groupId:'q-inProcessingList',
+                    qmId:data[7],
+                    viewId:'q-qm-body'
+                };
+                var clazz=$(this).attr('class');
+                if(clazz=='button-edit'){
+                    historyOptions.action='edit';
+                    $.get("views/q-qm-body.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                }
+                else if(clazz=='button-bin'){
+                    historyOptions.action='detail';
+                    $.get("views/q-qm-body.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                }
+                else{
+                    $.deleteQm(data[7],jmstoken,function(data){
+                        $.get("views/q-qm-body.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            } );
+        }
+    }
+    
+    app.init();
+
+</script>

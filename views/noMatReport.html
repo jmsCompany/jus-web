@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.select {
+			background: #fff;
+			height: 28px;
+			padding: 0 4px;
+			margin-right: 14px;
+		}
+		.tab-btns {
+			padding: 10px 0;
+		}
+	</style>
+	<script type="text/javascript">
+		function showObj(objid) {
+			$(objid).show();
+
+		}
+
+		function hideObj(objid) {
+			$(objid).hide();
+		}
+		function formatRepo(repo) {
+			if (repo.loading) return repo.text;
+
+			var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+			return markup;
+		}
+
+		function formatRepoSelection(repo) {
+			return repo.name || repo.text;
+		}
+		//	function startrequest()
+		//	{
+		//		$("#date").text((new date()).tostring());
+		//	}
+		$(document).ready(function() {
+			var jmstoken = store.get('JMS-TOKEN');
+			//	setinterval("startrequest()",3000);
+			// $.fn.dataTable.ext.errMode = 'throw';
+			$('#mat-ajax').select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {
+						'JMS-TOKEN': jmstoken
+					},
+					delay: 200,
+					data: function(params) {
+						var paramsObj = {
+							q: params.term,
+							types: [2]
+						};
+						var params = $.param(paramsObj, true);
+						return params;
+					},
+					processResults: function(data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function(markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 182,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open', function(evt) {
+				$('#mat-ajax').empty();
+			});
+			$('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
+			$('#datetimepicker2').datetimepicker({format:"YYYY-MM-DD"});
+			console.log($("#mat-ajax").val());
+			var data = {
+				fromDay:$('#datetimepicker1').val(),
+				toDay:$('#datetimepicker2').val(),
+				time:$('#time').val(),
+				level:$('#time').val(),
+				materialId:$("#mat-ajax").val()
+			};
+			var table = {}
+			function loadTable(){
+				table = $('#materials').DataTable({
+					//  deferRender:  true,
+					"processing": true,
+					"serverSide": true,
+					"stateSave": true,
+					"stateDuration": -1,
+					//scrollY:"350px",
+					//scrollCollapse: true,
+					"ajax": {
+						"type": 'POST',
+						"url": $clientURL + "s/mrp/noMatReportList",
+						"dataType": "json",
+						headers: {
+							'JMS-TOKEN': jmstoken
+						},
+						data:{
+							fromDay:$('#datetimepicker1').val(),
+							toDay:$('#datetimepicker2').val(),
+							time:$('#time').val(),
+							level:$('#time').val(),
+							materialId:$("#mat-ajax").val()
+						}
+						// "data":data
+					},
+					"columnDefs": [
+						{
+							"targets": 0,
+							"data": null,
+							"defaultContent": '<input class="checkbox" type="checkbox"/>'
+						}
+					],
+					"language": {
+						"url": "js/datatable/chinese.json"
+					},
+					dom: "tip",
+					pageLength: "50"
+
+				});
+			}
+			loadTable()
+			$("#search").on('click',function(){
+				table.destroy()
+				loadTable()
+			})
+			var historyOptions = {
+				groupId: 'mrp'
+			};
+			$("#materials").on('change','.checkbox',function(){
+				$(".check-btn").attr('disabled',true)
+				$('.checkbox').each(function(){
+					if($(this)[0].checked){
+						$(".check-btn").attr('disabled',false)
+					}
+				})
+			})
+			$(".save").on('click',function(){
+				var data = []
+				$('.checkbox').each(function(){
+					var rowData = table.row($(this).parents('tr')).data()
+					data.push({
+						materia:rowData[2],
+						invUnit:rowData[3],
+						reqDate:rowData[4],
+						finDate:rowData[5],
+						reqQty:rowData[6],
+						buyQty:rowData[7],
+						status:rowData[8],
+					})
+				})
+				$.saveMatReportList(JSON.stringify(data),jmstoken,function(data){
+					if(data.valid){
+						alert('保存成功')
+					}else {
+						alert(data.msg)
+					}
+				})
+			})
+			$(".create").on('click',function(){
+				var data = []
+				$('.checkbox').each(function(){
+					var rowData = table.row($(this).parents('tr')).data()
+					data.push({
+						materia:rowData[2],
+						invUnit:rowData[3],
+						reqDate:rowData[4],
+						finDate:rowData[5],
+						reqQty:rowData[6],
+						buyQty:rowData[7],
+						status:rowData[8],
+					})
+				})
+				$.exportMatReportList(JSON.stringify(data),jmstoken,function(data){
+					if(data.valid){
+						alert('生成成功')
+					}else {
+						alert(data.msg)
+					}
+				})
+			})
+			$('#detail').click(function() {
+				historyOptions.viewId = 'noMatReport-detail';
+				$.get("views/noMatReport-detail.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+
+			$('#sourcingPrice').click(function() {
+				historyOptions.viewId = 'mrp';
+				$.get("views/mrp.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#tempSourcing').click(function() {
+				historyOptions.viewId = 'tempSourcing';
+				$.get("views/tempSourcing.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#purchaseDict').click(function() {
+				historyOptions.viewId = 'purchaseDict';
+				$.get("views/purchaseDict.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+		});
+	</script>
+
+</head>
+
+<body>
+	<div class="body-head-title">
+		<span class="h-title" id="sourcingPrice"><b>采购价格</b></span>
+		<!-- <span class="h-title" id="purchaseDict">采购字典</span> -->
+		<span class="h-title-selected">缺料报告</span>
+		<span class="h-title" id="tempSourcing">临时采购单</span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+			<div class="right-list">
+				<div class="btn-group btn-group-left">
+					<label>日期：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+				</div>
+				<select class="mat-ajax" id="mat-ajax">
+					<option value="">选择原料</option>
+				</select>
+				<label>
+					采购分期：
+					<select class="select" name="time" id="time">
+						<option value="">无</option>
+						<option value="1">天</option>
+						<option value="2">周</option>
+						<option value="3">月</option>
+						<option value="4">季</option>
+						<option value="5">年</option>
+					</select>
+				</label>
+				<label>
+					分期物料级别：
+					<select class="select" name="level" i="level">
+						<option value="">全部</option>
+						<option value="1">A</option>
+						<option value="2">B</option>
+						<option value="3">C</option>
+					</select>
+				</label>
+				<button id="search" class="button-sytle1">查询</button>
+				<button id="refresh" class="button-sytle1">刷新</button>
+				<button id="export" class="button-sytle1">导出</button>
+			</div>
+		</div>
+		<div class="tab-btns">
+			<button id="summary" class="btn btn-primary">汇总</button>
+			<button id="detail" class="btn btn-default">明细</button>
+		</div>
+		<!--检索结束-->
+	</div>
+	<table id="materials" class="display" cellspacing="0" cellpadding="0" width="100%">
+		<thead>
+			<tr>
+				<th>选择</th>
+				<th>序号</th>
+				<th>原料</th>
+				<th>库存单位</th>
+				<th>需料日期</th>
+				<th>完成日期</th>
+				<th>缺料数量</th>
+				<th>采购数量</th>
+				<th>状态</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+	<div class="btns">
+		<button type="button" class="btn btn-primary check-btn save" name="button" disabled>保存确认</button>
+		<button type="button" class="btn btn-primary check-btn create" name="button" disabled>生成临时PO</button>
+	</div>
+</body>
+
+</html>

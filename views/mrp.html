@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		.left-list {
+			float: left;
+		}
+
+		.mat-box {
+			width: 700px;
+			margin-left: -350px;
+			left: 50%;
+		}
+
+		.tbody input {
+			width: 70px;
+		}
+
+		.sup-co {
+			width: 150px;
+		}
+
+		.btn-icon {
+			cursor: pointer;
+			font-size: 20px;
+			line-height: 28px;
+			text-align: center;
+			text-indent: 0;
+		}
+
+		.sup-item td {
+			padding: 4px 0 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="body-head-title">
+		<span class="h-title-selected"><b>采购价格</b></span>
+		<!-- <span class="h-title" id="purchaseDict">采购字典</span> -->
+		<span class="h-title" id="noMatReport">缺料报告</span>
+		<span class="h-title" id="tempSourcing">临时采购单</span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+			<div class="right-list">
+				<select id="mat-ajax">
+					<option value="">选择物料</option>
+				</select>
+				<input type="text" id='supplier' placeholder="供应商">
+				<button id="search" class="button-sytle1">查询</button>
+				<button id="create" class="button-sytle1">新建</button>
+				<button id="load" class="button-sytle1">导入</button>
+
+			</div>
+		</div>
+		<!--检索结束-->
+	</div>
+	<table id="materialsl" class="display" cellspacing="0" cellpadding="0" width="100%">
+		<thead>
+			<tr>
+				<th>物料编码</th>
+				<th>物料描述</th>
+				<th>版本</th>
+				<th>供应商代码</th>
+				<th>供应商名称</th>
+				<th>采购百分比</th>
+				<th>采购单位</th>
+				<th>采购价格</th>
+				<th>是否主供应商</th>
+				<th>货运期（天）</th>
+				<th>运费单价</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+	</table>
+	<!-- 弹窗 start -->
+	<div class="tcbox container-fluid mat-box" id="draggable1">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">新建采购价格</span>
+			</div>
+			<input type="button" class="tc_close">
+			<form id="poForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">物料</label>
+						<select id="mat-ajax-create">
+							<option value="">选择物料</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">库存单位</label>
+						<input type="text" class="form-control input-w-3" id="sUnitDicByUnitInf" readonly />
+					</div>
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">采购单位</label>
+						<input type="text" class="form-control input-w-3" id="sUnitDicByUnitPur" readonly />
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<table id="priceList" class="display" cellspacing="0" cellpadding="0" width="100%">
+						<th>供应商</th>
+						<th>百分比（%）</th>
+						<th>是否主采购</th>
+						<th>采购价格</th>
+						<th>货运期（天）</th>
+						<th>运费单价</th>
+						<th>操作</th>
+						<tbody class="tbody">
+						</tbody>
+					</table>
+				</div>
+				<div class="aligncenter">
+					<div class="form-group">
+						<button type="button" id="save" class="btn btn-primary ">保存</button>
+						<button id="return" type="reset" class="btn  btn-info">返回</button>
+					</div>
+				</div>
+				<input type="hidden" id="idPo" name="idPo:number" />
+			</form>
+		</div>
+	</div>
+	<script type="text/html" id="poMatItem">
+		<tr class="sup-item">
+			<td>
+				<select class="sup-co idCocompany sup-select<%= id %>" data-id="<%= idCocompany %>">
+					<option value="<%= idCocompany %>"><%= companyName %></option>
+				</select>
+			</td>
+			<td>
+				<input type="text" class="perc" id="" placeholder="百分比" unselectable="on" value="<%= perc %>" />
+			</td>
+			<td>
+				<select class="isPrim sup-isPrim<%= id %>" data-id="<%= isPrim %>">
+					<option value="1">是</option>
+					<option value="0">否</option>
+				</select>
+			</td>
+			<td>
+				<input type="text" class="b pay price" placeholder="单价" value="<%= price %>" />
+			</td>
+			<td>
+				<input type="text" class="e days" placeholder="货运期" value="<%= days %>" />
+			</td>
+			<td>
+				<input type="text" class="f meth" placeholder="运费单价" value="<%= carriage %>" />
+			</td>
+			<td>
+				<span class="action">
+	        <a class="button-sytle1 btn-icon po-add">+</a>
+	        <a class="button-sytle1 btn-icon po-del">-</a>
+	      </span>
+			</td>
+		</tr>
+	</script>
+	<script type="text/javascript">
+		function showObj(objid) {
+			$(objid).show();
+
+		}
+
+		function hideObj(objid) {
+			$(objid).hide();
+		}
+
+		function formatRepo(repo) {
+			if (repo.loading) return repo.text;
+
+			var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+			return markup;
+		}
+
+		function formatRepoSelection(repo) {
+			return repo.name || repo.text;
+		}
+
+		function selectInit(el) {
+			el.selectautofill('s/getCompanyCoList', {
+				headers: {
+					'JMS-TOKEN': store.get('JMS-TOKEN')
+				},
+				data: {
+					'coCompanyType': 1
+				}
+			}, function() {
+				el.val(el.data('id'))
+			});
+		}
+		//	function startrequest()
+		//	{
+		//		$("#date").text((new date()).tostring());
+		//	}
+		$(document).ready(function() {
+			var jmstoken = store.get('JMS-TOKEN');
+			//	setinterval("startrequest()",3000);
+			var listLength = 0;
+			var materialId = '';
+			[$("#mat-ajax-create"), $('#mat-ajax')].map(function(item) {
+				item.select2({
+					ajax: {
+						url: $clientURL + 's/getMaterialListObjs',
+						dataType: 'json',
+						headers: {
+							'JMS-TOKEN': jmstoken
+						},
+						delay: 200,
+						data: function(params) {
+							var paramsObj = {
+								q: params.term,
+								types: [2]
+							};
+							var params = $.param(paramsObj, true);
+							return params;
+						},
+						processResults: function(data, params) {
+							return {
+								results: data,
+								pagination: null
+							}
+						},
+						cache: true
+					},
+					escapeMarkup: function(markup) {
+						return markup;
+					},
+					minimumInputLength: 1,
+					width: 182,
+					templateResult: formatRepo,
+					templateSelection: formatRepoSelection
+				}).on('select2:open', function(evt) {
+					item.empty();
+				});
+			})
+			var template = _.template($("#poMatItem").html())
+			$("#return,.tc_close").on('click', function() {
+				$('.tcbox').hide();
+				$("#mat-ajax-create").val('')
+				$("#select2-mat-ajax-create-container").text('选择物料')
+				$(".tbody").empty()
+			})
+			var itemBox = $("#tbody");
+			$('#mat-ajax-create').on('change', function(e) {
+				var id = $('#mat-ajax-create').val()
+				materialId = id;
+				$(".tbody").empty()
+				$.materialInfo(id, jmstoken, function(data) {
+					$("#sUnitDicByUnitInf").val(data.sUnitDicByUnitInf)
+					$("#sUnitDicByUnitPur").val(data.sUnitDicByUnitPur)
+				})
+				$.getMaterialPriceList(id, jmstoken, function(data) {
+					listLength = data.length
+					data.map(function(item) {
+						var html = template(item)
+						$(".tbody").append(html)
+						selectInit($('.sup-select' + item.id))
+						$('.sup-isPrim' + item.id).val($('.sup-isPrim' + item.id).data('id'))
+					})
+				})
+			})
+			$(".tbody").on('click','.po-add', function() {
+				listLength++;
+				var html = template({
+					companyName:"",
+					days: '',
+					id: listLength,
+					idCocompany: '',
+					isPrim: '',
+					carriage: "",
+					perc: '',
+					price: ''
+				})
+				$(".tbody").append(html)
+			})
+			$(".tbody").on('click','.po-del', function() {
+				$(this).parents('.sup-item').remove()
+			})
+			$("#save").on('click', function() {
+				var list = $('.sup-item')
+				var form=[]
+				var isPrim=0
+				var percent = 0
+				for (var i = 0; i < list.length; i++) {
+					var data = {
+						days: list.eq(i).find('.days').val(),
+						idCocompany: list.eq(i).find('.idCocompany').val(),
+						isPrim: list.eq(i).find('.isPrim').val(),
+						carriage: list.eq(i).find('.meth').val(),
+						perc: list.eq(i).find('.perc').val(),
+						price: list.eq(i).find('.price').val(),
+						materialId:materialId
+					}
+					form.push(data)
+				}
+				form.map(function(item){
+					percent+=+item.perc
+					console.log(item.isPrim+'.......'+isPrim);
+					if(+item.isPrim==1&&isPrim==0){
+						isPrim=1
+					}else if(+item.isPrim==1&&isPrim==1){
+						isPrim=3
+					}
+				})
+				if(!materialId){
+					return alert('请选择物料！')
+				}
+				if(isPrim==3){
+					return alert('只能有一个主采购，请修改！')
+				}
+				if(percent>100){
+					return alert('百分比之和大于100，请修改！')
+				}
+				$.saveMaterialPriceList(JSON.stringify(form),jmstoken,function(data){
+					console.log(data);
+				})
+			})
+			var table = {}
+
+			function loadTable(){
+				table = $('#materialsl').DataTable({
+
+					//  deferRender:  true,
+					"processing": true,
+					"serverSide": true,
+					"stateSave": true,
+					"stateDuration": -1,
+					//scrollY:"350px",
+					//scrollCollapse: true,
+					"ajax": {
+						"type": 'POST',
+						"url": $clientURL + "s/mrp/sourcingPriceList",
+						"dataType": "json",
+						"data": {
+							q:$("#supplier").val(),
+							materialId:$("#mat-ajax").val()
+						},
+						headers: {
+							'JMS-TOKEN': jmstoken
+						}
+					},
+					"columnDefs": [{
+						"targets": -1,
+						"data": null,
+						"defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+					}],
+					"language": {
+						"url": "js/datatable/chinese.json"
+					},
+					dom: "tip",
+					pageLength: "50"
+
+				});
+			}
+			loadTable()
+			$("#search").on("click",function(){
+				table.destroy()
+				loadTable()
+			})
+			var historyOptions = {
+				groupId: 'mrp'
+			};
+			$("#materialsl").on('click',"button",function(){
+				var rowData = table.row($(this).parents('tr')).data()
+				var clazz = $(this).attr('class');
+				if (clazz == 'button-delete') {
+					console.log(rowData[rowData.length-2]);
+					$.deleteMatPrice({id:rowData[rowData.length-2]},jmstoken,function(data){
+						if(!data.valid){
+							alert(data.valid)
+						}else {
+							table.destroy()
+							loadTable()
+						}
+					})
+				}
+				if (clazz == 'button-edit') {
+					$("#mat-ajax-create").prop("disabled", true);
+					$("#select2-mat-ajax-create-container").text(rowData[0]+'_'+rowData[2]+'_'+rowData[1])
+					$.materialInfo(rowData[rowData.length-1], jmstoken, function(data) {
+						$("#sUnitDicByUnitInf").val(data.sUnitDicByUnitInf)
+						$("#sUnitDicByUnitPur").val(data.sUnitDicByUnitPur)
+					})
+					$.getMaterialPriceList(rowData[rowData.length-1], jmstoken, function(data) {
+						listLength = data.length
+						data.map(function(item) {
+							var html = template(item)
+							$(".tbody").append(html)
+							selectInit($('.sup-select' + item.id))
+							$('.sup-isPrim' + item.id).val($('.sup-isPrim' + item.id).data('id'))
+						})
+					})
+					$('.tcbox').css({
+						top: $(window).height() * 0.2 + top
+					}).draggable().show();
+				}
+			})
+
+			$('#create').click(function() {
+				$("#mat-ajax-create").prop("disabled", false);
+				$('.tcbox').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+			});
+
+			$('#noMatReport').click(function() {
+				historyOptions.viewId = 'noMatReport';
+				$.get("views/noMatReport.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#tempSourcing').click(function() {
+				historyOptions.viewId = 'tempSourcing';
+				$.get("views/tempSourcing.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#purchaseDict').click(function() {
+				historyOptions.viewId = 'purchaseDict';
+				$.get("views/purchaseDict.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+
+
+			//导入供应商价格
+			$('#load').click(function(){
+				$.get("views/comprice-import.html",function(data){
+					$("#body").html(data);
+					RouterManager.setUrl({
+						groupId:'mrp',
+						viewId:'comprice-import'
+					});
+				});
+			});
+
+
+
+		});
+	</script>
+</body>
+
+</html>

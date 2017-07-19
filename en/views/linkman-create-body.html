@@ -1,0 +1,213 @@
+<script type="text/template" id="linkmanCreateBody">
+    <div class="container-fluid">
+        <div class="row">
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title"><b>Maintain linkman</b></span>
+                </div>
+                <form id="editlinkmanForm" method="post" action="index.html" class="form-inline">
+                    <div class="form-box">
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputName" class="input-w-160">Name</label>
+                                <input type="text" class="form-control input-w-300"  placeholder="" name="name" id="name">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputSex" class="input-w-160">Gender</label>
+                                <input type="radio" name="genderId:number" class="radio-w" value="1" checked/><label for="">Male</label>
+                                <input type="radio" name="genderId:number" class="radio-w" value="2" /><label for="">Female</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputWork" class="input-w-160">Position</label>
+                                <input type="text" class="form-control input-w-300" placeholder="" name="position" id="position">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputTel" class="input-w-160" name="exampleInputTel" id="exampleInputTel">Phone number<</label>
+                                <input type="Tel" class="form-control input-w-300" placeholder="" name="phoneNo" id="phoneNo">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">Email</label>
+                                <input type="text" class="form-control input-w-3" id="email" name="email" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputQq" class="input-w-160">qq</label>
+                                <input type="text" class="form-control input-w-3" id="qq" name="qq" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputWexin" class="input-w-160">We-chat</label>
+                                <input type="text" class="form-control input-w-3" id="weChat" name="weChat" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputWang" class="input-w-160">Wang wang</label>
+                                <input type="text" class="form-control input-w-300" id="wangwang" name="wangwang" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputState" class="input-w-160">Status</label>
+                                <input type="radio" name="statusId:number" class="radio-w" value="27" checked/><label for="stateOn">Valid</label>
+                                <input type="radio" name="statusId:number" class="radio-w" value="28" /><label for="stateOoff">Invalid</label>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputRemarks" class="input-w-160">Remark</label>
+                                <textarea class="form-control input-w-300" rows="3" id="remark" name="remark"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputAutoremarks" class="input-w-160">Auto remak</label>
+                                <textarea class="form-control input-w-300" rows="3" id="autoRemark" name="autoRemark"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button id="save" type="submit" class="btn btn-primary ">Save</button>
+
+
+                            <button id="return01" type="button" class="btn  btn-info">Return</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idLinkman" name="idLinkman:number"/>
+                    <input type="hidden" id="coCompanyId" name="coCompanyId:number"/>
+                </form>
+                <!--<input type="button" id="return" value="返回" class="button-bin"/>-->
+            </section>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var app={
+        init:function(){
+            $('#body').html($('#linkmanCreateBody').html());
+            var self=this;
+            setTimeout(self.bindEvents,0);
+        },
+        bindEvents:function(){
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+            //处理页面操作
+            var params = RouterManager.getParams();
+            var idLinkman = params.linkmanId ;
+            $('#idLinkman').val(idLinkman);
+            var coCompanyId = params.coCompanyId;
+            $('#coCompanyId').val(coCompanyId);
+            var jmstoken= store.get('JMS-TOKEN');
+            if(idLinkman!=null){
+                $.linkmanInfo(idLinkman	,jmstoken,function(data){
+                    $('#editlinkmanForm').populate(data,true);
+                });
+                if(params.action=='detail'){
+                    $('input,select,textarea',$('#editlinkmanForm')).prop('readonly',true);
+                    $("input:not(:button,:hidden)").prop("readonly", true);
+                    $(".radio-w").prop("disabled", true);
+                    $('#save').hide();
+                    $('.h-title').html('<b>Linkman detail</b>');
+                }
+            }
+
+            $('#editlinkmanForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Name can not be empty.'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                                message: 'Only Chinese characters or letters.'
+        }
+                        }
+                    },
+                    'position': {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+                                message: 'Only Chinese characters, letters, Numbers, underscores.'
+                            },
+                        }
+                    },
+                    'phoneNo': {
+                        validators: {
+                            phone: {
+                                message: 'The phone number is illegal.',
+                                country: 'CN'
+                            }
+                        }
+                    },
+                    'email': {
+                        validators: {
+                            emailAddress: {
+                                message: 'The format is illegal.'
+                            }
+                        }
+                    },
+                    'qq': {
+                        validators: {
+                            digits: {
+                                message: 'The format is illegal.'
+                            },
+                        }
+                    },
+                    'weChat': {
+                        validators: {
+                            regexp: {
+                                regexp: /^([a-z_A-Z-.+0-9]+)$/,
+                                message: 'The format is illegal.'
+                            }
+                        }
+                    },
+                    'wangwang': {
+                        validators: {
+                            regexp: {
+                                regexp: /^([a-z_A-Z-.+0-9]+)$/,
+                                message: 'The format is illegal.'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var linkman =JSON.stringify($('#editlinkmanForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                $.saveLinkman(linkman,jmstoken,function(data){
+//                    $.get("views/linkman-body.html",function(data){
+//                        $("#body").html(data);
+//                    });
+                    history.go(-1);
+                });
+
+            });
+        }
+    };
+    app.init();
+</script>

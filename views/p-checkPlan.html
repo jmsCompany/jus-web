@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>检查计划</title>
+
+<script type="text/javascript">
+
+var jmstoken= store.get('JMS-TOKEN');
+$(document).ready(function() {
+
+$('#tableCheckPlan').DataTable( {
+//      deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+    "stateSave": true,
+    "stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+        "ajax": {
+            "type": 'POST',
+            "url": $clientURL + "p/getCheckPlanList",
+            "dataType": "json",
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      	dom: "tip",
+		pageLength:"50"
+    } );
+
+    	$('#cpp').click(function(){
+	 		$.get("views/p-cppList.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'p-cppList'
+                });
+	             $("#body").html(data);
+	     	});
+	 	});
+		$('#spp').click(function(){
+	 		$.get("views/p-sppList.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'p-cppList',
+                    viewId:'p-sppList'
+                });
+	             $("#body").html(data);
+	     	});
+	 	});
+		$('#set').click(function(){
+	 		$.get("views/p-checkSet.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'p-cppList',
+                    viewId:'p-checkSet'
+                });
+	             $("#body").html(data);
+	     	});
+	 	});
+		$('#sp').click(function(){
+	 		$.get("views/p-stopPlanList.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'p-cppList',
+                    viewId:'p-stopPlanList'
+                });
+	             $("#body").html(data);
+	     	});
+	 	});
+
+    $('#calendar').click(function () {
+        $.get("views/p-calendar.html", function (data) {
+            RouterManager.setUrl({
+                groupId:'p-cppList',
+                viewId:'p-calendar'
+            });
+            $("#body").html(data);
+        });
+    });
+
+    $('#overtime').click(function () {
+        $.get("views/p-overtime.html", function (data) {
+            RouterManager.setUrl({
+                groupId:'p-cppList',
+                viewId:'p-overtime'
+            });
+            $("#body").html(data);
+        });
+    });
+
+    $('#importCp').click(function () {
+        $.get("views/p-import.html", function (data) {
+            RouterManager.setUrl({
+                groupId:'p-cppList',
+                viewId:'p-import'
+            });
+            $("#body").html(data);
+        });
+    });
+} );
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="cpp">排产计划</span>
+	<!--<span class="h-title" id="spp">总计划</span>-->
+	<span class="h-title-selected"><b>检查计划</b></span>
+	<span class="h-title" id="set">检查设置</span>
+    <span class="h-title" id="sp">停工计划</span>
+    <span class="h-title" id="calendar">工作日历</span>
+    <span class="h-title" id="overtime">加班计划</span>
+    <span class="h-title" id="importCp">排产计划导入</span>
+</div>
+
+<div class="cont">
+<!--<div class="r-header-body">-->
+
+  	<!--<div class="btn-group btn-group-left">-->
+      <!--<button class="btn btn-default" type="button" name="pstatus" id="pstatus">状态</button>-->
+      <!--<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">-->
+        <!--<span class="caret"></span>-->
+        <!--<span class="sr-only">状态</span>-->
+      <!--</button>-->
+      <!--<ul class="dropdown-menu">-->
+        <!--<li><a href="#">状态1</a></li>-->
+        <!--<li><a href="#">状态2</a></li>-->
+        <!--<li><a href="#">状态3</a></li>-->
+       <!---->
+      <!--</ul>-->
+    <!--</div>&lt;!&ndash;状态结束&ndash;&gt;-->
+ <!--&lt;!&ndash;日期&ndash;&gt;-->
+<!--<div class="btn-group btn-group-left">-->
+       <!--<label>日期：</label><input type="text" id='datetimepicker1'>-->
+       		<!--<script type="text/javascript">-->
+				<!--$(function () {-->
+					<!--$('#datetimepicker1').datetimepicker();-->
+					<!--$('#datetimepicker2').datetimepicker();-->
+				<!--});-->
+			<!--</script>-->
+            <!--&#45;&#45; <input type="text" id='datetimepicker2'>-->
+<!--</div>-->
+    <!--&lt;!&ndash;右边&ndash;&gt;-->
+  <!--<div class="right-list">-->
+    <!--&lt;!&ndash;搜索框&ndash;&gt;-->
+    <!--<div class="sousuo">-->
+    	<!--<div class="ss-input">    		-->
+    	<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    	<!--</div>-->
+    	<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    <!--</div>-->
+    <!--</div>&lt;!&ndash;检索结束&ndash;&gt;-->
+
+<!--</div> -->
+
+ <table id="tableCheckPlan" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+            	<!--<th>编号</th>-->
+                <th>工作单</th>
+                <th>工序</th>
+                <th>产品</th>
+                <th>班次</th>
+                <th>机器</th>
+                <th>操作者</th>
+                <th>计划检查时间</th>
+                <th>检查数量</th>
+                <th>实际检查时间</th>
+                <th>实际检查数量</th>
+                <th>需完成数量</th>
+                <!--<th>偏差</th>-->
+        </thead>
+</table>
+</div>
+
+</body>
+</html>

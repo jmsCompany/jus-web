@@ -1,0 +1,138 @@
+<div class="container-fluid">
+	<div class="row">
+		<section>
+            	<div class="body-head-title">
+					<span class="h-title"><b>新建维修历史</b></span>
+				</div>
+				<form id="historyForm" method="post" action="index.html" class="form-inline">
+					<div class="col-xs-12 mar-top-20px">
+						<div class="form-group">
+							<label for="" class="input-w-160">机台</label>
+							<select class="input-w-3 select-cs1 form-control" name="machineId:number" id="machineId">
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="" class="input-w-160">操作员</label>
+							<select class="input-w-3 select-cs1 form-control" name="opId:number" id="opId">
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-12 mar-top-20px"  id="order">
+						<div class="form-group" style="position:relative;">
+							<label for="" class="input-w-160">报修时间</label>
+							<input type="text" class="form-control input-w-3" name="repairTime" id="repairTime">
+						</div>
+						<div class="form-group">
+							<label for="" class="input-w-160">确认者</label>
+							<select class="input-w-3 select-cs1 form-control" name="confirmorId:number" id="confirmorId">
+							</select>
+						</div>
+					</div>
+				<div class="col-md-10 col-md-offset-1">
+					<div class="row">
+						<div class="col-md-8">
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">故障描述</label>
+								<textarea class="col-md-10" rows="3" name="issueDes" id="issueDes"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+
+						<div class="clearfix"></div>
+						<div class="foot-btn-box">
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary">保存</button>
+								<button type="button" class="btn btn-info" id="return01">返回</button>
+							</div>
+						</div>
+				<!--<input type="hidden" class="form-control" name="idRepairHistory:number" id="idRepairHistory"/>-->
+                </form>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+	var jmstoken= store.get('JMS-TOKEN');
+	var historyCreate = {
+		init:function(){
+			this.autoFill();
+			this.bindEvents();
+			this.form();
+		},
+		autoFill:function(){
+			var dataPickerOpt = {
+				format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+			}
+			$('#repairTime').datetimepicker(dataPickerOpt);
+			$('#machineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':jmstoken}});
+			$('#opId').selectautofill('group/op/members',{headers:{'JMS-TOKEN':jmstoken}});
+		},
+		bindEvents:function(){
+			var self = this;
+			var $cnt = $('#historyForm');
+			$('#cancel').click(function(){
+				$.get("views/m-historyList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+
+		},
+		form:function(){
+			$('#historyForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'machineId:number': {
+						validators: {
+							notEmpty: {
+								message: '设备编号不能为空'
+							}
+						}
+					},
+					'opId:number': {
+						validators: {
+							notEmpty: {
+								message: '报修者不能为空'
+							}
+						}
+					},
+					'repairTime': {
+						validators: {
+							notEmpty: {
+								message: '报修时间不能为空'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				var $form     = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var history =JSON.stringify($('#historyForm').serializeJSON());
+				var jmstoken= store.get('JMS-TOKEN');
+				debugger;
+				$.saveHistory(history,jmstoken,function(data){
+					debugger;
+					$.get("views/m-historyList.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			});
+		}
+	}
+
+	historyCreate.init();
+
+</script>
+
+<style>
+	#repairTime{text-align:left;}
+</style>
+
+
+

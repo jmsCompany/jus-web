@@ -1,0 +1,187 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="materialForm" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title">编辑物料</span>
+				</div>
+				<div class="ht25"></div>
+                <div class="col-xs-8">
+                	<div class="form-group mar-top-20px">
+					    <label for="" class="input-w-160">物料编码</label>
+					    <input type="text" class="form-control input-w-300" name="pno" id="pno" >
+					</div>
+					<div class="form-group mar-top-20px">
+					    <label for="" class="input-w-160">版本</label>
+					    <input type="text" class="form-control input-w-300" name="rev" id="rev">
+					</div>
+					<div class="form-group mar-top-20px">
+					    <label for="" class="input-w-160">描述</label>
+					    <textarea class="form-control input-w-300" rows="3" name="des" id="des"></textarea>
+					</div>
+                </div>
+                <div class="col-xs-4">
+                	<a href="" class="a-upload bg-img">
+                		<input type="file" src="" name="idPic" id="idPic" class="form-control"/>
+                		<!--<img src="images/wuliao.png"/>-->
+                	</a>
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">大类</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="materialType[idDic]:number" id="materialType.idDic">
+                			<option value="">大类</option>
+                		</select> 
+                		<label for="" class="input-w-160">小类</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="materialCategory[idDic]:number" id="materialCategory.idDic">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">品牌</label>
+                		<input type="text" class="form-control input-w-3" name="" id=""> 
+                		<label for="" class="input-w-160">重量</label>
+                		<input type="text" class="form-control input-w-3" name="weight" id="weight">
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">采购单位</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="unit[idDic]:number" id="unitPur">
+                			<option value="">大类</option>
+                		</select> 
+                		<label for="" class="input-w-160">库存单位</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="unit[idDic]:number" id="unitInf">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">单价</label>
+                		<input type="text" class="form-control input-w-3 " name="unit[idDic]:number" id="unitPur">
+                		<label for="" class="input-w-160">状态</label>
+                		<select name="" class="form-control select-cs1 " name="status[idDic]:number" id="status.idDic">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">最小起订量</label>
+                		<input type="text" class="form-control input-w-3" name="" id=""> 
+                		<label for="" class="input-w-160">最小包装量</label>
+                		<input type="text" class="form-control input-w-3" name="mpq" id="mpq">
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">安全库存</label>
+                		<input type="text" class="form-control input-w-3" name="safetyInv" id="safetyInv">
+                		<label for="" class="input-w-160">成本中心</label>
+                		<select name="costCenter" id="costCenter" class="form-control select-cs1 " name="cost" id="cost">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px"> 
+                	<label for="" class="input-w-160">上传附件</label>
+                	<input type="file" name="" id="" value=""  class="inherit " name="idAttachment" id="idAttachment"/>
+                </div>
+                 <div class="col-xs-12 mar-top-20px"> 
+                 	<label for="" class="input-w-160">备注</label>
+                 	<textarea class="form-control input-w-300" rows="3" name="remark" id="remark"></textarea>
+                 </div>
+                 <div class="col-xs-12 mar-top-20px"> 
+                 	<label for="" class="input-w-160">自动备注</label>
+                 	<textarea class="form-control input-w-300" rows="3" name="remark" id="remark"></textarea>
+                 </div>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button type="reset" class="btn  btn-info">取消</button>
+                 	</div>
+                 </div>
+                 
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() { 
+   
+	//alert('idmat:'+idMat);
+	//$('#pno').val(idMat);
+	//$('#materialType\\.idDic').selectautofill('dic/materialType');
+    //$('#materialCategory\\.idDic').selectautofill('dic/materialCategory');
+	//$('#status\\.idDic').selectautofill('dic/status');
+    //$('#Stk').selectautofill('dic/Stk');
+    //$('#Bin').selectautofill('dic/Bin');
+    //$('#unit\\.idDic').selectautofill('dic/unit');
+  // var data1 = {"materialName":"电视机","id":"101"};
+	//	$('#des').html(data1.materialName);
+	var idMat = $('#_key1').val();
+	$.materialInfo({"id":idMat},token,function(data){
+		$('#materialForm').populate(data,true);
+	});
+	
+	$('#materialForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	'pno': {
+                validators: {
+                    notEmpty: {
+                        message: '物料编码不能为空'
+                    }, 
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/pno',
+                        name:'materialList',
+                        message: '该物料编码已存在',
+                        delay: 1000
+                    } 
+                }
+			},          
+            rev: {
+                validators: {
+                    notEmpty: {
+                        message: '版本号不能为空'
+                    }
+                }
+            },
+            des: {
+                validators: {
+                    notEmpty: {
+                        message: '描述不能为空'
+                    }
+                }
+            },
+            brand: {
+                validators: {
+                    notEmpty: {
+                        message: '品牌不能为空'
+                    }
+                }
+            },
+            moq: {
+                validators: {
+                    notEmpty: {
+                        message: '最小起订量不能为空'
+                    }
+                }
+            }
+		}
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var material =JSON.stringify($('#materialForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createMATERIAL(material,jmstoken,function(data){
+			   // $form.find('.alert-success').html('成功保存： ' + JSON.stringify(data)).show();
+			      	$.get("views/material.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+});
+</script>

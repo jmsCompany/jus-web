@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>成本中心</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title"><b>成本中心</b></span>
+</div>
+
+     	<form id="testForm" method="post" action="index.html" class="form-inline">
+		
+			<div id="materialList1">
+			<div><input name="id:number" id="id" type="text"/><input name="name" id="name" type="text" /></div>
+		   <!--<div><input type="text" id="tests.0.id" name="tests[0][id]:number"/>  <input type="text" id="tests.0.name" name="tests[0][name]"/></div>
+		    <div><input type="text" id="tests.1.id" name="tests[1][id]:number"/>  <input type="text" id="tests.1.name" name="tests[1][name]"/></div> 
+		     <div><input type="text" id="tests.2.id" name="tests[2][id]:number"/>  <input type="text" id="tests.2.name" name="tests[2][name]"/></div> 
+		      <div><input type="text" id="tests.3.id" name="tests[3][id]:number"/>  <input type="text" id="tests.3.name" name="tests[3][name]"/></div> 
+		       <div><input type="text" id="tests.4.id" name="tests[4][id]:number"/>  <input type="text" id="tests.4.name" name="tests[4][name]"/></div> -->
+		</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="reset" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+               
+           </form>  
+
+	
+	
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	var jmstoken= store.get('JMS-TOKEN');
+    $.testInfo(store.get('JMS-TOKEN'),function(data){
+    	var size=$.JSONLength(data.tests);
+    	            for(var i=0;i<size;i++){
+                        debugger;
+                         var content ='<div><input type="text" id="tests.{0}.id" name="tests[{0}][id]:number"/>  <input type="text" id="tests.{0}.name" name="tests[{0}][name]"/></div>';
+                        $('#materialList1').append($.format(content,""+i));
+                      //   $('#materialList1').append('<div><input name="line['+data[i].id +']testid" type="text" value="'+ data[i].id +'"><\/input>' +'<input type="text" name="line['+data[i].id +']testname" value="'+ data[i].name +'"><\/input><\/div>');
+//                       $('#materialList1').append('<div><input name="line['+data[i].id +'][testid]" type="text" value="'+ data[i].id +'"><\/input>' +'<input type="text" name="line['+data[i].id +'][testname]" value="'+ data[i].name +'"><\/input><\/div>');
+                     
+                    }	
+                    $('#testForm').populate(data,true);
+//  	        	alert(JSON.stringify(data));
+
+                 });
+
+              
+    $('#testForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var testing =JSON.stringify($('#testForm').serializeJSON());
+       		alert(testing);
+       		$.saveTesting(testing,jmstoken,function(data){
+			});
+	});
+
+        });
+                     
+  </script>

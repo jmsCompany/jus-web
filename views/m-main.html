@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+	var jmstoken = store.get('JMS-TOKEN');
+//弹窗
+function showObj(objid){
+	$(objid).show();
+	$(objid).draggable();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+	function formatRepo (repo) {
+		if (repo.loading) return repo.text;
+
+		var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+		return markup;
+	}
+
+	function formatRepoSelection (repo) {
+		return repo.name || repo.text;
+	}
+
+var main = {
+	init:function(){
+		var  self = this;
+		this.bindEvents();
+		this.form();
+		this.autoFill();
+	},
+	nullAlertShow:function(information){
+		var top = $('#body').scrollTop();
+		$('#nullAlert').css({
+			top: $(window).height() * 0.2 + top
+		}).show();
+		$('#info').empty();
+		$('#info').append(information);
+	},
+	autoFill:function(){
+		var self = this;
+		var $el = $('#idUser');
+		var dataPickerOpt = {
+			format: "YYYY-MM-DD"
+		};
+		$('#date1').datetimepicker(dataPickerOpt);
+		$('#date2').datetimepicker(dataPickerOpt);
+		$('#idResult').selectautofill('m/getMResults',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		self.fillUser($el);
+//		self.fillUser();
+	},
+
+	fillUser:function($el,callback) {
+		$el.select2({
+			ajax: {
+				url: $clientURL + 's/getMaterialListObjs',
+				dataType: 'json',
+				headers: {'JMS-TOKEN': jmstoken},
+				delay: 200,
+				data: function (params) {
+                        return {
+                            q: params.term
+                        }
+				},
+				processResults: function (data, params) {
+					return {
+						results: data,
+						pagination: null
+					}
+				},
+				cache: true
+			},
+			escapeMarkup: function (markup) {
+				return markup;
+			},
+			minimumInputLength: 1,
+			width: 150,
+			templateResult: formatRepo,
+			templateSelection: formatRepoSelection
+		}).on('select2:open',function(evt){
+			$('#select2-js-data-example-ajax-container').html('');
+			$('#js-data-example-ajax').empty();
+		});
+		callback && callback();
+		/*
+		$('#idUser').select2({
+			ajax: {
+				url: $clientURL + 'u/getUsersByQ',
+				dataType: 'json',
+				headers: {'JMS-TOKEN': jmstoken},
+				delay: 200,
+				data: function (params) {
+//					var paramsObj ={
+//						q: params.term,
+//						types:[2]
+//					};
+//					var params = $.param(paramsObj,true);
+//					return params;
+                        return {
+                            q: params.term
+                        }
+				},
+				processResults: function (data, params) {
+					return {
+						results: data,
+						pagination: null
+					}
+				},
+				cache: true
+			},
+			escapeMarkup: function (markup) {
+				return markup;
+			},
+			minimumInputLength: 1,
+			width: 150,
+			templateResult: formatRepo,
+			templateSelection: formatRepoSelection
+		}).on('select2:open',function(evt){
+			$('#select2-js-data-example-ajax-container').html('');
+			$('#js-data-example-ajax').empty();
+		});
+		callback && callback();*/
+	},
+	loadTable:function(){
+		var self = this;
+		var data = {};
+		data.idDept = 2;
+		var fromDay = $('#date1').val();
+		if (fromDay) {
+			data.date = new Date(fromDay).getTime();
+		}
+		else{
+			self.nullAlertShow('请输入日期！');
+			return
+		}
+
+//		var toDay = $('#date2').val();
+//		if (toDay) {
+//			data.toDay = new Date(toDay).getTime();
+//		}
+//		else{
+//			self.nullAlertShow('请输入日期！');
+//			return
+//		}
+
+		if ($('#machineNo').html() == '设备'){
+			data.idMachine = null;
+		}
+		else{
+			var idMachine = $('#machine-select').val();
+			data.idMachine = idMachine;
+		}
+		if (this.table) {
+			this.table.destroy();
+		}
+		this.table = $('#mainList').DataTable( {
+//      deferRender:  true,
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL + "m/mainRecordList",
+				"dataType": "json",
+				"data":data,
+				"headers":{'JMS-TOKEN':jmstoken}
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-edit>编辑</button>'
+			} ,
+				{
+					"targets": [ 0 ], //隐藏第六列，从第0列开始
+					"visible": false
+				} ],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+			dom: "tip",
+			pageLength:"50"
+		} );
+		$('#mainList tbody').on( 'click', 'button', function () {
+			var data = self.table.row( $(this).parents('tr') ).data();
+			showObj('#tcbox-pcpplist');
+			if(data[8]==-1){
+				$.mainPlanInfo(data[0],jmstoken,function(data){
+					debugger;
+					$('#mainForm').populate(data,true);
+					$('#mainItem').val(data.item);
+				});
+//				self.fillUser();
+			}
+			else{
+				$.mainInfo(data[8],jmstoken,function(data){
+					debugger;
+					$('#mainForm').populate(data,true);
+
+//					self.fillUser(function(){
+//						$('#idUser',$('#tcbox-pcpplist')).append('<option value="'+data.idUser+'"></option>');
+//						$('#idUser',$('#tcbox-pcpplist')).val(data.idUser);
+//					});
+//					$('#select2-idUser-container').html(data.user);
+					$('#time').val($.dateFormat.date(new Date(data.time), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+				});
+			}
+		});
+	},
+	form:function(){
+		var self = this;
+		$('#mainForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'idResult:number': {
+					validators: {
+						notEmpty: {
+							message: '检查结果不能为空'
+						}
+					}
+				}
+
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			var $form     = $(e.target),
+			validator = $form.data('bootstrapValidator');
+
+			var main = $('#mainForm').serializeJSON();
+			if(main.time){
+				main.time = main.time.replace('Z', '470+08:00');
+			}
+			main = JSON.stringify(main);
+
+//			var main =JSON.stringify($('#mainForm').serializeJSON());
+			main = '['+main+']';
+			debugger;
+			$.saveMain(main,jmstoken,function(data){
+				debugger;
+				hideObj('#tcbox-pcpplist');
+				self.loadTable();
+				$('#mainForm')[0].reset();
+				$('#save').removeAttr('disabled');
+			});
+		});
+	},
+	bindEvents:function(){
+		var self = this;
+		$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+			var _html = '';
+			_(data).each(function (d, i) {
+				_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+			});
+			$('#machine-group').find('.dropdown-menu').append(_html);
+		});
+		$('#machine-group').on('click', 'li a', function (e) {
+			var $t = $(this);
+			var id = $t.data('id');
+			$('#machine-select').val(parseInt(id));
+			$('#machineNo').html($t.text());
+		});
+		$('.machine').on('click',function(e){
+			$('#machineNo').html('设备');
+		});
+
+		$('#search').click(function(){
+			self.loadTable();
+		});
+
+		$('#tcbox-pcpplist').on('click','#return01,.tc_close',function(){
+			$('#mainForm')[0].reset();
+			$('#tcbox-pcpplist').hide();
+		});
+
+		$('#wul1').click(function(){
+			$.get("views/m-main-sum.html",function(data){
+				RouterManager.setUrl({
+					groupId:'m-main',
+					viewId:'m-main-sum'
+				});
+				$("#body").html(data);
+			})
+		});
+	}
+};
+	main.init();
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>明细</b></span>
+	<span class="h-title" id="wul1">汇总</span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="btn-group btn-group-left">
+			<div class="btn-group btn-group-left">
+       			<label>日期：</label><input type="text" id='date1'>
+				<!--&#45;&#45; <input type="text" id='date2'>-->
+       			<!--<script type="text/javascript">-->
+				<!--$(function () {-->
+					<!--$('#date').datetimepicker();-->
+				<!--});-->
+				<!--</script>-->
+			</div>
+         </div>
+		<!--<div class="btn-group btn-group-left" id="dept-group">-->
+			<!--<select name="none" id="dept-select" style="display: none;"></select>-->
+			<!--<button class="btn btn-default" type="button" name="machineNo:number" id="idDept">部门</button>-->
+			<!--<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">-->
+				<!--<span class="caret"></span>-->
+				<!--<span class="sr-only">部门</span>-->
+			<!--</button>-->
+			<!--<ul class="dropdown-menu"></ul>-->
+		<!--</div>-->
+		<div class="btn-group btn-group-left" id="machine-group">
+			<select name="none" id="machine-select" style="display: none;"></select>
+			<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">设备</button>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+				<span class="caret"></span>
+				<span class="sr-only">设备</span>
+			</button>
+			<ul class="dropdown-menu"></ul>
+		</div>
+		<div class="right-list">
+			<button id="search" class="button-sytle1">查询</button>
+    	</div>
+   </div>
+
+ 	<table id="mainList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+				<th></th>
+                <th>设备名称</th>
+                <th>设备编号</th>
+                <th>保养周期</th>
+                <th>保养项目</th>
+                <th>保养日期</th>
+                <th>保养人</th>
+                <th>检查结果</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+	</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible;">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+			<span class="h-title">编辑检查记录</span>
+		</div>
+      <input type="button" class="tc_close">
+     <form id="mainForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>设备</label>
+				    	<input type="text" class="form-control"  name="machine" id="machine" readonly="true">
+				    </div>
+					<div class="form-group">
+						<label>保养周期</label>
+						<input type="text" class="form-control"  name="mainCycle" id="mainCycle" readonly="true">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+				    	<label>保养项目</label>
+				    	<input type="text" class="form-control" name="mainItem" id="mainItem" readonly="true">
+					</div>
+					<div class="form-group">
+						<label>保养日期</label>
+						<input type="text" name='time' id='time'>
+						<script type="text/javascript">
+							$(function () {
+								$('#time').datetimepicker({
+									format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+								});
+							});
+						</script>
+					</div>
+                </div>
+                <div class="col-xs-12 mar-top-20px"> 
+					<div class="form-group">
+				    	<label>保养人</label>
+						<select  class="form-control" name="idUser:number" id="idUser">
+							<!--<option value="">保养人</option>-->
+						</select>
+				    </div>
+					<div class="form-group">
+				    	<label>检查结果</label>
+						<select  class="form-control" name="idResult:number" id="idResult">
+						</select>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary " id="save">保存</button>
+                 		<button id="return01" type="button" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+		 		<input type="hidden" id="idMainRecord" name="idMainRecord:number"/>
+		 		<input type="hidden" id="idMainItem" name="idMainItem:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+
+<div class="tcbox container-fluid" id="nullAlert">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label id="info"></label>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

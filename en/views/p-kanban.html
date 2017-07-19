@@ -1,0 +1,156 @@
+<div class="body-head-title">
+    <span class="h-title" id="mtf">物流查询</span>
+    <span class="h-title"><b>看板信息</b></span>
+    <span class="h-title" id="woMtf">工单流转</span>
+    <span class="h-title" id="create">手动创建</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group-left link-title">
+            <span id=""><a href="#">待处理</a></span>
+            <span id=""><a href="#">已完成</a></span>
+            <span id=""><a href="#">已作废</a></span>
+        </div>
+    </div>
+    <table id="tableKanban" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>物料编码</th>
+            <th>版本</th>
+            <th>描述</th>
+            <th>数量</th>
+            <th>批号</th>
+            <th>从货架</th>
+            <th>到货架</th>
+            <th>发起时间</th>
+            <th>完成时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">看板信息作废</span>
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+        <form id="mrForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">备注</label>
+                    <textarea class="form-control input-w-300" rows="3" name="remark" id="remark"></textarea>
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary ">保存</button>
+                    <button id="return" type="reset" class="btn btn-info">返回</button>
+                </div>
+            </div>
+            <input type="hidden" id="idKanban" name="idKanban:number"/>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+	var jmstoken= store.get('JMS-TOKEN');
+    var historyOptions={
+        groupId:'mtfList'
+    };
+    //物流查询
+    $('#mtf').click(function () {
+        $.get("views/mtfList.html", function (data) {
+            debugger;
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+    //工单流转
+    $('#woMtf').click(function () {
+        $.get("views/s-wo-mtf.html", function (data) {
+            historyOptions.viewId='s-wo-mtf';
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+    // 手动创建
+    $('#create').click(function(){
+        $.get("views/mtfList-body.html",function(data){
+            historyOptions.viewId='mtfList-body';
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+	/*
+    $('#tableKanban').DataTable( {
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": $clientURL + "s/getKanbanList",
+            "dataType": "json"
+        },
+    	"columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-bin>作废</button><button class=button-edit>处理</button>'
+        } ],
+        "language": {
+            "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "tip",
+		pageLength:"50"
+    } );
+    
+    $('#tableKanban tbody').on( 'click', 'button', function () {
+        var rowData = table.row( $(this).parents('tr') ).data();
+     	var clazz =$(this).attr('class');
+     	if(clazz=='button-bin'){
+        	showObj('.tcbox');
+     		$("#idKanban").val(rowData[7]);
+	 		
+     	}else {
+            $("#_key32").val(rowData[7]);
+            $.get("views/s-kanban-mtf.html", function (data) {
+                $("#body").html(data);
+            });
+        };
+    $('#mrForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'remark': {
+                validators: {
+                    notEmpty: {
+                        message: '备注不能为空'
+                    }  
+                }
+            }
+
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var mr =JSON.stringify($('#mrForm').serializeJSON());
+		 	$.saveMr(mr,jmstoken,function(data){
+			      	$.get("views/p-kanban.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+        });
+    })
+     */
+});
+</script>

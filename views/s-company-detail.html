@@ -1,0 +1,723 @@
+<script type="text/html" id="pBomCreate">
+<div class="container-fluid">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+				    <span class="h-title" data-view-id="subcontract">公司流转</span>
+				    <span class="h-title" data-view-id="s-company-report">公司往来报告</span>
+				    <span class="h-title" data-view-id="s-company-setting">公司往来设置</span>
+				    <span class="h-title-selected" data-view-id="s-company-list">往来物料清单</span>
+                </div>
+            	<form id="bomForm" method="post" action="index.html" class="form-inline">
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label class="input-w-160">产品编码</label>
+                                <select class="input-w-3 select-cs1 form-control" data-id="" name="materialId:number" id="materialId">
+                                    <option value="">产品编码</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group" id="status1">
+                                <label class="input-w-160">状态</label>
+                                <select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="order">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">创建日期</label>
+                                <input type="text" class="form-control input-w-3" name="creationTime" id="creationTime" readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">创建人</label>
+                                <input type="text" class="form-control input-w-3" name="creator" id="creator" readonly="true"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding:20px 0px;text-align: center;">                    	
+                    	<button class="button-sytle1" id="shareCompany" type="button">共享给往来公司</button>
+                    </div>
+                    <div class="col-xs-12 mar-top-20px changerep_cont">
+                        <table id="" cellpadding="0" cellspacing="0" width="919px">
+                            <tr>
+                                <th width="198px"> 物料</th>
+                                <th width="56px"> 单位</th>
+                                <th width="61px"> 重量</th>
+                                <th width="61px"> 成本</th>
+                                <th width="87px"> 工序</th>
+                                <th width="105px"> 工作中心</th>
+                                <th width="56px"> 级别</th>
+                                <th width="56px"> 排序</th>
+                                <th width="71px"> 单位用料</th>
+                                <th width="71px"> 损耗</th>
+                                <th width="97px" id="operation"> 操作</th>
+                            </tr>
+                        </table>
+
+                        <div class="form-group" id="matlist">
+                        </div>   <!-- +\- over -->
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="save">保存</button>
+                            <button class="btn  btn-info" type="button" id="return01">返回</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idBomLabel" name="idBomLabel"/>
+                    <input type="hidden" id="edit" value="true"/>
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+<!-- 共享给来往公司 弹框 start -->
+
+<div class="tcbox container-fluid" id="draggable1">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">选择共享的公司</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="companylist">
+        	<div id="cont-list" class="mar-top-20px"> 
+	        </div>
+            <div class="col-xs-12">
+                <div class="form-group mar-top-20px" style="text-align: center;font-size:12px;color:#666;">
+                    <label><input id="coverId" type="checkbox" name="" />&nbsp;&nbsp;覆盖已经共享的物料信息</label>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px" style="text-align: center;">
+            	<button type="button" class="button-sytle1" id="shareSure">共享</button>
+            </div>
+        </from>
+    </div>
+</div>
+<!-- 共享给来往公司 弹框 end -->
+
+</script>
+<script type="text/html" id="bomItem">
+    <dl class="matlist" id="item<%= item %>">
+        <dd class="income-create-list">
+            <select data-id="<%= data.materialId %>" class="select-cs1 a" style="width:196px" name="bomItems[item<%= item %>][materialId]:number" id="bomItems.item<%= item %>.materialId"><option value="" >请选择物料</option></select>
+            <input type="text" class="b" style="width:52px" name="bomItems[item<%= item %>][sUnitDicByUnitInf]" id="bomItems.item<%= item %>.sUnitDicByUnitInf" placeholder="单位" value="<%= data.sUnitDicByUnitInf %>" readOnly="true"/>
+            <input type="text" class="c" style="width:57px" name="bomItems[item<%= item %>][weight]" id="bomItems.item<%= item %>.weight" placeholder="重量" value="<%= data.weight %>" readOnly="true"/>
+            <input type="text" class="d" style="width:57px" name="bomItems[item<%= item %>][cost]" id="bomItems.item<%= item %>.cost" placeholder="成本" value="<%= data.cost %>" readOnly="true"/>
+            <select data-id="<%= data.idRoutineD %>" class="select-cs1 j" style="width:80px" name="bomItems[item<%= item %>][idRoutineD]:number" id="bomItems.item<%= item %>.idRoutineD"><option value="" >工序</option></select>
+            <select data-id="<%= data.workCenterId %>" class="select-cs1 e" style="width:101px" name="bomItems[item<%= item %>][workCenterId]:number" id="bomItems.item<%= item %>.workCenterId"><option value="">工作中心</option></select>
+            <input type="text" class="f" style="width:52px" name="bomItems[item<%= item %>][lvl]:number" id="bomItems.item<%= item %>.lvl" value="<%= data.lvl %>" placeholder="级别"/>
+            <input type="text" class="g" style="width:52px" name="bomItems[item<%= item %>][orderBy]:number" id="bomItems.item<%= item %>.orderBy" value="<%= data.orderBy %>" placeholder="排序"/>
+            <input type="text" class="h" style="width:67px" name="bomItems[item<%= item %>][qpu]:number" id="bomItems.item<%= item %>.qpu" value="<%= data.qpu %>" placeholder="单位用料"/>
+            <input type="text" class="i" style="width:67px" name="bomItems[item<%= item %>][wastage]:number" id="bomItems.item<%= item %>.wastage" value="<%= data.wastage %>" placeholder="损耗"/>
+            <% if(action == 'detail') { %>
+            <% } else { %>
+            <span class="action">
+                <a class="button-sytle1 new-income-add">+</a><a class="button-sytle1 new-income-delete">-</a>
+            </span>
+            <% } %>
+            <input type="hidden" class="idBom" name="bomItems[item<%= item %>][idBom]:number" id="bomItems.item<%= item %>.idBom" value="<%= data.idBom %>"/>
+        </dd>
+    </dl>
+</script>
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    //弹窗
+    function showObj(objid){
+        $(objid).show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var bom={
+    //仅仅是为了模块化而已
+        init:function(){
+            var self = this;
+            this.bomItem = _.template($('#bomItem').html());
+
+            $('#body').html($('#pBomCreate').html());
+
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var bomId = params['bomId'];
+
+            this.$matList = $('#matlist');
+
+            if(bomId) {
+                this.loadDetail(bomId,action);
+            } else {
+                $("#status1").hide();
+                $("#order").hide();
+                this.$matList.append(this.createRow());
+                this.dealAutoFill();
+            }
+
+            //绑定事件
+            this.bindEvents();
+            this.form();
+            this.form1();
+        },
+        loadDetail: function(bomId,action, callback) {
+            var self = this;
+            $.bomInfo(bomId,jmstoken,function(data){
+                $('#bomForm').populate(data,true);
+                $('#edit').val(data.edit);
+//                $('#materialId').selectautofill('s/materials',{headers:{'JMS-TOKEN':jmstoken}}, function() {
+//                    $('#materialId').val(data.materialId);
+//                });
+//                $('#materialId').attr('data-id',data.materialId);
+                var materialId = data.materialId;
+                self.fillMaterialId2(function(){
+//                    var materialId = parseInt($('#materialId').data('id'));
+                    $('#materialId').append('<option value="'+materialId+'"></option>');
+                    $('#materialId').val(materialId);
+                });
+                $('#select2-materialId-container').text(data.pno + '_' + data.rev + '_' + data.material);
+                $('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_bom_label'}}, function() {
+                    $('#statusId').val(data.statusId);
+                });
+                var bomItems = '';
+                _(data.bomItems).each(function(item) {
+                    bomItems += self.createRow(item);
+                });
+                self.$matList.append(bomItems);
+
+                $('#creationTime').val($.dateFormat.date(new Date(data.creationTime), 'yyyy-MM-dd'));
+
+                self.fillMaterialId(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.a').val(parseInt($(ml).find('.a').data('id')));
+                        self.loadMaterial($(ml).closest('dl'));
+                    });
+                });
+
+                self.fillWorkCenterId(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.e').val(parseInt($(ml).find('.e').data('id')));
+                    });
+                });
+                self.fillRoutineDId(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.j').val(parseInt($(ml).find('.j').data('id')));
+                    });
+                });
+                self.dealAction(action,data.edit);
+
+                callback && callback();
+            });
+        },
+        fillMaterialId: function($el, callback) {
+            if(!$el) {
+                $el = $('.a');
+            } else {
+                $el = $el.find('.a');
+            }
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            $el.select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[1,3]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+//                        return {
+//                            q: params.term,
+//                            types: [1, 3]
+//                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            callback && callback();
+        },
+        fillMaterialId2: function(callback) {
+            $('#materialId').select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[2]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+//                        return {
+//                            q: params.term,
+//                            types: [2, 3]
+//                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            callback && callback();
+        },
+        fillRoutineDId: function($el, callback) {
+            var materialId = $('#materialId').val();
+            if (!materialId) {
+                return;
+            }
+            if(!$el) {
+                $el = $('.j');
+            } else {
+                $el = $el.find('.j');
+            }
+            $el.empty();
+            $el.append('<option value="">工序</option>');
+            $el.selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':materialId}}, callback);
+        },
+        fillWorkCenterId: function($el, callback) {
+            if(!$el) {
+                $el = $('.e');
+            } else {
+                $el = $el.find('.e');
+            }
+            $el.selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+        },
+        loadMaterial: function($dl) {
+            var $unitInput =  $dl.find('.b');
+            var $weightInput =  $dl.find('.c');
+            var $costInput =  $dl.find('.d');
+            var materialId = $dl.find('.a').val()|| $dl.find('.a').data('id');
+            if(!$dl.find('.a').val()){
+                $dl.find('.a').append('<option value="'+materialId+'"></option>');
+                $dl.find('.a').val(materialId);
+            }
+            if(!materialId) {
+                return;
+            }
+            else{
+                $.materialInfo(materialId,jmstoken,function(data){
+                    $dl.find('.select2-selection__rendered').text(data.pno + '_' + data.rev + '_' + data.des);
+                    $unitInput.val(data.sUnitDicByUnitInf);
+                    $weightInput.val(data.weight);
+                    $costInput.val(data.cost);
+                });
+            }
+        },
+        dealAction: function(action,edit) {
+            // 如果是详情页面的话
+            if(action == 'detail') {
+                $('input,textarea',$('#bomForm')).prop('readonly',true);
+                $("select").prop("disabled", true);
+                $('.new-income-add').remove();
+                $('.new-income-delete').remove();
+                $('#save').remove();
+                $('#createBom').html('<b>物料清单详情</b>');
+                $('#operation').hide();
+                $('table','#bomForm').attr('width','');
+                $('.action a').remove();
+                $('.action').append('<a class="button-sytle1 editBom" href="">编辑</a>');
+            } else if(action == 'edit') {
+                $('#createBom').html('<b>编辑物料清单</b>');
+                if(edit == false){
+                    $('.action a').remove();
+                    $('.action').attr("class",'action action-txt');
+                    $('.action').append('<a class="button-sytle1 editBom" href="">编辑</a>');
+                    $('#operation').attr('width','60px');
+                    $('table','#bomForm').attr('width','');
+                    $("input:not(:button,:hidden)",$('#bomForm')).prop("disabled", true);
+                    $("select:not(#statusId)",$('#bomForm')).prop("disabled", true);
+                }
+            }
+        },
+        defaultData: { },
+        createRow: function(data) {
+            var self = this;
+            var row = parseInt(self.$matList.data('row'));
+            if(!row) {
+                row = 1;
+            }
+
+            if(!data) {
+                data = self.defaultData;
+            }
+            var param = {
+                data: data,
+                item: row,
+                action: self.params.action
+            }
+
+            var html = self.bomItem(param);
+            self.$matList.data('row', row + 1);
+
+            return html;
+        },
+        addRow: function(e) {
+            e.stopPropagation();
+
+            var $t = $(e.target);
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+
+            this.fillMaterialId($t.closest('dl').next());
+            this.fillWorkCenterId($t.closest('dl').next());
+            this.fillRoutineDId($t.closest('dl').next());
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
+        /**
+         * 绑定事件逻辑
+         */
+        bindEvents:function(){
+            var self = this;
+            var frameContainer= $('.container-fluid');
+            //增加行
+            frameContainer.on('click','.new-income-add',self.addRow.bind(self));
+            //删除行
+            frameContainer.on('click','.new-income-delete', self.delRow.bind(self));
+            frameContainer.on('focus', 'input, select, textarea', function(e) {
+                $(this).removeClass('error');
+                $('#save').removeAttr('disabled');
+            });
+            //改变物料
+            frameContainer.on("change",".a",function(){
+                var $dl = $(this).closest('dl');
+                self.loadMaterial($dl);
+            });
+            //改变成品
+            frameContainer.on("change","#materialId",function(){
+                var $list = $('#matlist');
+                var $items = $list.find('.matlist');
+                $items.each(function(i) {
+                    var $dl = $(this);
+                    self.fillRoutineDId($dl);
+                });
+            });
+
+
+            frameContainer.on("click",".editBom",function(e){
+                e.preventDefault();
+                var top = $('#body').scrollTop();
+                $('#editBomD').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                var idBom = $(this).closest('dl').find('.idBom').val();
+                $('#idBom').val(idBom);
+                $.bomDInfo(idBom,jmstoken,function(data){
+                    $('#bomDForm').populate(data,true);
+                    $('#idMaterial').html('<option value="' + data.materialId + '">' + data.pno +'_'+ data.rev +'_'+ data.material + '</option>');
+                    var produtionId = $('#materialId').val();
+                    $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':produtionId}}, function(){
+                        $('#idRoutineD').val(data.idRoutineD);
+                    });
+                });
+            });
+
+            $('#editBomD').on("click",".tc_close,#return02",function(){
+                $.get("views/p-bom-create.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+
+            var historyParams={
+                groupId:'p-bomList'
+            };
+            $("#list").click(function(){
+                $.get("views/p-bomList.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+
+            $('#return01').click(function(){
+                history.go(-1);
+            });            
+		    var historyOptions={
+		        groupId:'subcontract'
+		    };		           
+		    $(".body-head-title span").on('click',function(){
+		        var viewId = $(this).data('view-id');
+		        if (viewId=='subcontract'){}
+		        else{
+		            historyOptions.viewId = viewId;
+		        }
+		        $.get("views/" + viewId + ".html",function(data){
+		            RouterManager.setUrl(historyOptions);
+		            $("#body").html(data);
+		        });
+		    });
+		    //弹出框
+		    $('#shareCompany').on( 'click', function () {
+	            var top = $('#body').scrollTop();
+	            var left = $('#body').scrollLeft();
+	            $('.tcbox').css({
+	                top: $(window).height() * 0.2 + top,
+	                left:$(window).height() * 0.5 + left
+	        	}).draggable().show();
+	        	
+	        	$.coCompanise(jmstoken,function(data){
+	        		var str='';
+	        		for(a in data){
+	        			str+='<div class="col-xs-12"><div class="form-group" style="margin-bottom: 0;"><label><input type="checkbox" id="'+
+	        			data[a]["id"]+'" value="'+data[a]["id"]+'" name="'+data[a]["name"]+'"></label>&nbsp;&nbsp;'+data[a]["name"]+'</div></div>';
+	        		}
+	        		$("#cont-list").html(str);
+	        	});
+	        	
+		    });
+		    //点击共享
+		    $("#shareSure").on("click",function(){
+		    	var $c=$('#cont-list input[type=checkbox]:checked');
+		    	var coms=new Array();
+		    	$c.each(function(e){
+		    		coms[e]={"id":$(this).attr("id")};
+		    	});
+		    	var flag=0;
+		    	if($("input[id=coverId]").is(":checked")){
+		    		flag=1;
+		    	}
+		    	var param={idBom:RouterManager.getParams().bomId,coms:coms,flag:flag};
+		    	$.shareBom(JSON.stringify(param),jmstoken,function(data){
+                    debugger;
+		    		if(data["valid"]){
+		    			alert("共享成功！");
+				        $('.tcbox').hide();
+//				        $('#poForm')[0].reset();
+		    		}
+		    	});
+		    });
+		    
+		    //关闭编辑
+		    $('.tcbox').on('click','.tc_close',function(){
+		        $('.tcbox').hide();
+//		        $('#poForm')[0].reset();
+		    });
+        },
+        dealAutoFill:function() {
+            var self = this;
+//            $('#materialId').selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            self.fillMaterialId2();
+            $('#statusId').selectautofill('p/getPStatusList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')},data: {'source': 'p_bom_label'}});
+//            $('.a').selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            $('.e').selectautofill('p/getWorkCenterList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            self.fillMaterialId();
+        },
+        form1:function(){
+            var self = this;
+            $('#bomDForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'qpu': {
+                        validators: {
+                            notEmpty: {
+                                message: '单位用料不能为空'
+                            },
+                            regexp: {
+                                regexp: /^[1-9]\d*$/,
+                                message: '只能是正整数。'
+                            }
+                        }
+                    },
+                    'wastage': {
+                        validators: {
+                            regexp: {
+                                regexp: /^\d+$/,
+                                message: '只能是自然数。'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var bomD =JSON.stringify($('#bomDForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                debugger;
+                $.saveBomD(bomD,jmstoken,function(data){
+                    debugger;
+                    $.get("views/p-bom-create.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        },
+        form:function(){
+            var self = this;
+            $('#bomForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'materialId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '产品编码不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                if(!self.validateMatlist()) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).show();
+                    $('#info').empty();
+                    $('#info').append('验证不通过');
+//                    alert('验证不通过');
+                    return;
+                }
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var bom =JSON.stringify($('#bomForm').serializeJSON());
+                var edit = $('#edit').val();
+                if(edit == "true"){
+                    debugger;
+                    $.saveBom(bom,jmstoken,function(data){
+                        if(data.saved == false){
+                            var top = $('#body').scrollTop();
+                            $('#nullAlert').css({
+                                top: $(window).height() * 0.2 + top
+                            }).show();
+                            $('#info').empty();
+                            $('#info').append('该物料清单已存在');
+                            return;
+                        }
+                        debugger;
+                        history.go(-1);
+                        $.get("views/p-bomList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+                else{
+                    debugger;
+                    $.updateBom(bom,jmstoken,function(data){
+                        history.go(-1);
+                        $.get("views/p-bomList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            });
+        },
+        validateMatlist: function() {
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            var flag = true;
+            var reg =/^\d+$/;
+            var reg1 =/^([0-9])+(\.[0-9]+)?$/;
+
+            if(!$items.length) {
+                flag = false;
+            }
+
+            $items.each(function(i) {
+                var $t = $(this);
+
+                if(!$t.find('.a').val()) {
+                    $t.find('.a').addClass('error');
+                    flag = false;
+                }
+//                if(!$t.find('.j').val()) {
+//                    $t.find('.j').addClass('error');
+//                    flag = false;
+//                }
+
+                var qpu = $t.find('.h').val();
+                if(!qpu||reg.test(qpu)==false) {
+                    $t.find('.h').addClass('error');
+                    flag = false;
+                }
+
+                var lvl = $t.find('.f').val();
+                if(!lvl||reg.test(lvl)==false) {
+                    $t.find('.f').addClass('error');
+                    flag = false;
+                }
+
+                var orderBy = $t.find('.g').val();
+                if(!orderBy||reg.test(orderBy)==false) {
+                    $t.find('.g').addClass('error').val('');
+                    flag = false;
+                }
+
+                var wastage = $t.find('.i').val();
+                if(!wastage||reg1.test(wastage)==false) {
+                    $t.find('.i').addClass('error').val('');
+                    flag = false;
+                }
+            });
+
+            return flag;
+        }
+
+    };
+    bom.init();
+</script>

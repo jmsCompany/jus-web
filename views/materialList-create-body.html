@@ -1,0 +1,404 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="materialForm" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+            	<div class="body-head-title">
+					<span class="h-title" id="wul1">物料列表</span>
+					<span class="h-title-selected" id="modifyTitles"><b>维护物料</b></span>
+					<span class="h-title" id="importMat">物料导入</span>
+				</div>
+				<div class="ht25"></div>
+				<div class="col-md-10 col-md-offset-1">
+					<div class="row">
+						<div class="col-md-8">
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">物料编码</label>
+								<input type="text" class="col-md-10 " name="pno" id="pno" >
+							</div>
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">版本</label>
+								<input type="text" class="col-md-10" name="rev" id="rev">
+							</div>
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">描述</label>
+								<textarea class="col-md-10" rows="3" name="des" id="des"></textarea>
+							</div>
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">大类</label>
+								<select class="col-md-3 select-cs1" name="sMaterialTypeDicId:number" id="sMaterialTypeDicId">
+								</select> 
+								<label for="" class="col-md-2 col-md-offset-2">小类</label>
+								<select class="col-md-3 select-cs1" name="materialCategoryId:number" id="materialCategoryId">
+									<option value="">其它</option>
+								</select>
+							</div>
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">品牌</label>
+								<input type="text" class="col-md-3" name="brand" id="brand"> 
+								<label for="" class="col-md-2  col-md-offset-2">重量</label>
+								<input type="text" class="col-md-3" name="weight" id="weight">
+							</div>
+							<div class="row mar-top-20px">                	
+								<label for="" class="col-md-2">采购单位</label>
+								<select class="col-md-3 select-cs1" name="sUnitDicByUnitPurId:number" id="sUnitDicByUnitPurId">
+								</select> 
+								<label for="" class="col-md-2  col-md-offset-2">库存单位</label>
+								<select class="col-md-3 select-cs1" name="sUnitDicByUnitInfId:number" id="sUnitDicByUnitInfId">
+								</select> 
+							</div>
+							<div class="row mar-top-20px">                	
+									<label for="" class="col-md-2">成本</label>
+									<input type="text" class="col-md-3 " name="cost" id="cost">
+									<label for="" class="col-md-2  col-md-offset-2">状态</label>
+									<select class="col-md-3 select-cs1" name="sStatusDicId:number" id="sStatusDicId">
+									</select>   	
+							</div>
+							<div class="row mar-top-20px">                	
+									<label for="" class="col-md-2">最小起订量</label>
+									<input type="text" class="col-md-3" name="moq" id="moq">
+									<label for="" class="col-md-2  col-md-offset-2">最小包装量</label>
+									<input type="text" class="col-md-3" name="mpq" id="mpq">
+							</div>
+							<div class="row mar-top-20px">                	
+									<label for="" class="col-md-2">安全库存</label>
+									<input type="text" class="col-md-3" name="safetyInv" id="safetyInv">
+									<label for="" class="col-md-2  col-md-offset-2">成本中心</label>
+									<select  class="col-md-3 select-cs1 " name="fCostCenterId:number" id="fCostCenterId">
+									</select> 
+							</div>
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">检测周期</label>
+								<input type="text" class="col-md-3" name="checkCycle" id="checkCycle">
+								<label for="" class="col-md-2  col-md-offset-2">检测周期单位</label>
+								<select  class="col-md-3 select-cs1 " name="cycleUnit" id="cycleUnit">
+									<option value="1">月</option>
+									<option value="2">周</option>
+									<option value="3">天</option>
+								</select>
+							</div>
+
+
+
+							<div class="row mar-top-20px">
+								<label for="" class="col-md-2">库存采购单位换算</label>
+								<input type="text" class="col-md-3" name="calc:number" id="calc">
+								<label for="" class="col-md-2  col-md-offset-2">级别</label>
+								<select  class="col-md-3 select-cs1 " name="lvl" id="lvl">
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+								</select>
+							</div>
+
+
+
+
+							<!--<div class="row mar-top-20px">-->
+								<!--<label for="" class="col-md-3">上传附件</label>-->
+								<!--<input type="file" value="" class="col-md-9"  class="inherit " name="idAttachment" id="idAttachment"/>-->
+							<!--</div>-->
+							<div class="row mar-top-20px"> 
+								<label for="" class="col-md-2">备注</label>
+								<textarea class="col-md-10" rows="3" name="remark" id="remark"></textarea>
+							</div>
+							<div class="row mar-top-20px"> 
+								<label for="" class="col-md-2">自动备注</label>
+								<textarea class="col-md-10" rows="3" name="autoRemark" id="autoRemark"></textarea>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="a-upload bg-img dropzone"  id="material-list-uploader"></div>
+						</div>
+					</div>
+				</div>
+                
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">                 		
+                 		<button class="btn btn-primary" id="save" type="submit">保存</button>
+                 		<button class="btn  btn-info" type="button" id="return01">返回</button>
+                 	</div>
+                 </div>
+                 <input type="hidden" id="idMaterial" name="idMaterial:number"/>
+				 <input type="hidden" name="fileId:number" id="fileId"/>
+				 <input type="hidden" name="fileName" id="fileName"/>
+
+				</form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+
+<script type="text/javascript">
+
+	$.fn.dataTable.ext.errMode = 'throw';
+	//@TODO 保存按钮
+	var app= {
+		init: function () {
+			this.bindEvents();
+		},
+		bindEvents: function () {
+			var routeParams = RouterManager.getParams();
+			var action = routeParams.action;
+			var groupId = routeParams.groupId;
+			var materialIndex = routeParams.materialIndex;
+			var jmstoken = store.get('JMS-TOKEN');
+			$('#sMaterialTypeDicId').selectautofill('s/materialTypes', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+			$('#materialCategoryId').selectautofill('s/materialCategories', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+			$('#sUnitDicByUnitPurId').selectautofill('s/units', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+			$('#sUnitDicByUnitInfId').selectautofill('s/units', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+			$('#sStatusDicId').selectautofill('s/getSStatusList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')},data: {'source': 's_material'}});
+			$('#fCostCenterId').selectautofill('s/costCenters', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+			/**
+			 * 上传文件模块
+			 */
+            if(action!=='detail'){
+                //仅对编辑和新建存在动作
+                (function(){
+                    var uploadUrl = 's/uploadMaterialImage';
+                    Dropzone.autoDiscover = false;
+                    Dropzone.options.materialListUploader = {
+                        paramName: "fileName", // The name that will be used to transfer the file
+                        maxFilesize: 10, // MB
+                        dictDefaultMessage:'点击或将文件拖拽至此处上传',
+                        headers: {'JMS-TOKEN':jmstoken},
+                        init: function() {
+                            //发送请求时，挂载数据
+                            var self =this;
+                            this.on("sending", function(file, xhr, formData) {
+                                formData.append("materialId",(materialIndex?materialIndex:0));
+								// formData.append("materialId",idMaterial?idMaterial:0);
+                            });
+                            this.on("addedfile", function(file) {
+                                //限制只能有一张图片
+                                if (self.files[1]!=null){
+                                    this.removeFile(this.files[0]);
+                                };
+								//移除预览
+								$('.preview-node') && $('.preview-node').remove();
+                                file.previewElement.addEventListener("click", function() {
+                                    if(window.confirm('是否重新上传?')){
+                                        self.removeFile(file);
+                                        $('div#material-list-uploader').click();
+                                    }
+                                    else{
+
+                                    }
+                                });
+                            });
+                        },
+                        success:function(file,res){
+                            /*图片上传后端错误处理@TODO hxg*/
+                            var uri = $clientURL+'getFile/'+res['fileName']+'/orgFileName/';
+                            //替换图片
+                            $('div#material-list-uploader').find('[data-dz-thumbnail]').attr('src',uri).css({
+                                width:'inherit',
+                                height:'inherit'
+                            });
+                            $('#fileId').val(res['fileId']);
+                            $('#fileName').val(res['fileName']);
+                            if (file.previewElement) {
+                                return file.previewElement.classList.add("dz-success");
+                            }
+
+                        },
+                        error:function(file){
+                            var  _ref;
+                            if (file.previewElement) {
+                                file.previewElement.classList.add("dz-error");
+                                _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                                _ref[0].innerHTML='上传失败，请重新上传';
+                            }
+                        }
+                    };
+                    new Dropzone("div#material-list-uploader",{
+                        url:$clientURL+uploadUrl
+                    });
+                }());
+            }
+
+			$('#wul1').click(function () {
+				$.get("views/materialList.html", function (data) {
+					RouterManager.setUrl({
+						groupId: 'materialList'
+					});
+					$("#body").html(data);
+				});
+			});
+			$('#importMat').click(function () {
+				$.get("views/mat-import.html", function (data) {
+					RouterManager.setUrl({
+						groupId: 'materialList',
+						viewId:'mat-import'
+					});
+					$("#body").html(data);
+				});
+			});
+			$('#return01').click(function () {
+//				if(groupId == 'materialList'){
+//					var typeId = $('#sMaterialTypeDicId').val();
+//					$.get("views/materialList.html", function (data) {
+//						$("#body").html(data);
+//						RouterManager.setUrl({
+//							groupId:'materialList',
+//							typeId:typeId
+//						});
+//					});
+//				}
+//				else{
+					history.go(-1);
+//				}
+			});
+			/**
+			 * 如果是点击数据进页面，则增加服务器取数据逻辑
+			 */
+//			if (materialIndex != null) {
+			if (materialIndex) {
+				$.materialInfo(materialIndex, jmstoken, function (data) {
+					$('#materialForm').populate(data, true);
+					/**
+					 * 回调填充图片地址数据
+					 */
+					if(data.fileName){
+						var uri = $clientURL+'getImage/'+data['fileName']+'/';
+						$('div#material-list-uploader').append('<div class="preview-node"><img height="120px" width="120px" src="'+uri+'"/></div>');
+						setTimeout(function(){
+							$('.preview-node').click(function(){
+								$('div#material-list-uploader').click();
+							});
+						},0)
+					}
+
+                });
+				if (action == 'detail') {
+					$('input,select,textarea', $('#materialForm')).prop('readonly', true);
+					$('select').prop('disabled', true);
+					$("input:not(:button,:hidden)").prop("readonly", true);
+					$('#save').hide();
+				}
+			}
+			else{
+				$('#modifyTitles').html('<b>新建物料</b>');
+			}
+
+
+			$('#materialForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'pno': {
+						validators: {
+							notEmpty: {
+								message: '物料编码不能为空'
+							},
+//							regexp: {
+//								regexp: /^([a-z_A-Z-.+0-9]+)$/,
+//								message: '只能是字母、数字、下划线、加减号及点。'
+//							},
+							remote: {
+								type: 'GET',
+								url: $clientURL+'s/checkPno',
+								"headers":{'JMS-TOKEN':jmstoken},
+								data:{idMaterial:materialIndex},
+								message: '该物料已经存在',
+								delay: 1000
+							}
+						}
+					},
+					rev: {
+						validators: {
+							regexp: {
+								regexp: /^([a-z_A-Z-.+0-9]+)$/,
+								message: '只能是字母、数字、下划线、加减号及点。'
+							}
+						}
+					},
+					moq: {
+						validators: {
+							notEmpty: {
+								message: '最小起订量不能为空'
+							},
+							regexp: {
+								regexp: /^\d+$/,
+								message: '最小起订量只能是非负整数。'
+							}
+						}
+					},
+					mpq: {
+						validators: {
+							notEmpty: {
+								message: '最小包装量不能为空'
+							},
+							regexp: {
+								regexp: /^\d+$/,
+								message: '最小包装量只能是非负整数。'
+							}
+						}
+					},
+//					weight: {
+//						validators: {
+//							numeric: {
+//								message: '重量请填写数据'
+//							}
+//						}
+//					},
+					safetyInv: {
+						validators: {
+							numeric: {
+								message: '安全库存请填写数据'
+							},
+							regexp: {
+								regexp: /^\d+$/,
+								message: '安全库存只能是非负整数。'
+							}
+						}
+					},
+					cost: {
+						validators: {
+							numeric: {
+								message: '成本请填写数据'
+							},
+							regexp: {
+								regexp: /^([0-9])+(\.[0-9]+)?$/,
+								message: '只能是非负数。'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function (e) {
+				e.preventDefault();
+				var $form = $(e.target),
+						validator = $form.data('bootstrapValidator');
+				var material = JSON.stringify($('#materialForm').serializeJSON());
+
+
+				var typeId = $('#sMaterialTypeDicId').val();
+				debugger;
+				$.saveMaterial(material, jmstoken, function (data) {
+//					debugger;
+					$.get("views/materialList.html", function (data) {
+						$("#body").html(data);
+						RouterManager.setUrl({
+							groupId:'materialList',
+							typeId:typeId
+						});
+					});
+				});
+			});
+
+		}
+	};
+	app.init();
+	
+</script>
+<style>
+input.col-md-10,.row textarea.col-md-10{width:500px;}
+label.col-md-2{width:90px;padding-right:0;}
+input.col-md-3,select.col-md-3{width:150px;}
+</style>

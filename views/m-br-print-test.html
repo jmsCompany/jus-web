@@ -1,0 +1,237 @@
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+
+    function count(o){
+        var t = typeof o;
+        if(t == 'string'){
+            return o.length;
+        }else if(t == 'object'){
+            var n = 0;
+            for(var i in o){
+                n++;
+            }
+            return n;
+        }
+        return false;
+    }
+    var mbrPrint={
+        init:function(){
+            var self = this;
+            var params = this.params = RouterManager.getParams();
+            var year = params['year'];
+            var machine = params['machine'];
+            $('#year').val(year);
+            $('#machine').text(machine);
+            this.bindEnvents();
+        },
+        bindEnvents:function(){
+            var self = this;
+            $('.button').click(function(){
+                // 显示保养单
+            });
+            $('.mbr_tablefoot tr:even').css("color","#0b6bf9");
+            $('.mbr_tablefoot tr:odd').css("color","#f00");
+
+            $('#print01').on("click", function(){
+                $(".mbr_cont").printArea();
+            });
+
+            $('#return01').click(function(){
+               history.go(-1);
+            });
+
+            var routeParams = RouterManager.getParams();
+            var data = {};
+            var year = routeParams.year;
+            var idMachine = routeParams.idMachine;
+            data.year = year;
+            data.idMachine = idMachine;
+            var $obj= $("#mbrTable");
+            $.mbrInfo(data,jmstoken, function (data) {
+                debugger;
+                if(count(data)>0){
+                    var x = new Array();
+                    var y = new Array();
+                    var target = new Array();
+                    _(data).each(function(item,i) {
+                        $obj.find("tr:first").append('<th>wk'+item.x+'</th>');
+                        var objy = (item.y).toFixed(2);
+                        $obj.find("tr:eq(1)").append('<th>'+objy+'</th>');
+                        $obj.find("tr:eq(2)").append('<th>'+item.target+'</th>');
+                        x[i] = item.x;
+                        y[i] = item.y;
+                        target[i] = item.target;
+                    });
+
+                }
+
+debugger;
+                self.columnBasic(x, y ,target );
+            });
+        },
+        columnBasic:function(x,y,target){
+            $('#mbr').highcharts({
+                title: {
+                    text: null
+                },
+                subtitle: {
+                    text: null
+                },
+                credits:{
+                  enabled:false
+                },
+                xAxis: {
+//                    tickInterval: 7 * 24 * 3600 * 1000, // one week
+//                    tickWidth: 0,
+                    categories: x,
+//                    gridLineWidth: 1,
+//                    labels: {
+//                        align: 'left',
+//                        x: 3,
+//                        y: -3
+//                    }
+                },
+                yAxis: [{ // left y axis
+                    title: {
+                        text: null
+                    },
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        y: 16,
+                        format: '{value:.,0f}'
+                    },
+                    showFirstLabel: false
+                }],
+                legend: {
+                    align: 'left',
+                    verticalAlign: 'top',
+                    y: 20,
+                    floating: true,
+                    borderWidth: 0
+                },
+                tooltip: {
+                    shared: true,
+                    crosshairs: true
+                },
+                plotOptions: {
+                    series: {
+                        cursor: 'pointer',
+//                        point: {
+//                            events: {
+//                                click: function (e) {
+//                                    hs.htmlExpand(null, {
+//                                        pageOrigin: {
+//                                            x: e.pageX || e.clientX,
+//                                            y: e.pageY || e.clientY
+//                                        },
+//                                        headingText: this.series.name,
+//                                        maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+//                                        this.y + ' visits',
+//                                        width: 200
+//                                    });
+//                                }
+//                            }
+//                        },
+                        marker: {
+                            lineWidth: 1
+                        }
+                    }
+
+
+//                    column: {
+//                        pointPadding: 0.2,
+//                        borderWidth: 0
+//                    }
+                },
+//                series:series
+                series: [{
+                    name: 'Actual',
+                    lineWidth: 4,
+                    marker: {
+                        radius: 4
+                    },
+                    data:y
+                },
+                    {
+                    name: 'Target%',
+                    data:target
+                }]
+            });
+        }
+    };
+    mbrPrint.init();
+
+
+
+
+</script>
+
+<body>
+	<div class="cont">
+        <button id="print01" class="button-sytle1">打印</button>&nbsp;<button id="return01" class="button-sytle1">返回</button>
+	</div>
+<div class="mbr_cont">
+    <div id="dailyMainTableWrap">
+        <style>
+            @media print {
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                table,
+                td {
+                    border: 1px solid #000;
+                    position: relative;
+                }
+
+                .isplittitle p span.pull-left {
+                    float: left;
+                }
+
+                .isplittitle p span.pull-right {
+                    float: right;
+                }
+            }
+        </style>
+     <table cellpadding="0" cellspacing="0" width="100%">
+     <thead>
+        <tr>
+            <th colspan="2">Sandvik</th>
+            <th colspan="2">Breakdown Rate<br/>设备故障率 (%)</th>
+            <th id="machine"></th>
+        </tr> 
+        <tr>
+           <td>Unit：%</td>
+           <td>Year：<input type="text" id="year"></td>
+           <td>Month：<input type="text"></td>
+           <td>Prepared by：<input type="text"></td>
+           <td>Period：<input type="text"></td>
+        </tr>
+     </thead>
+     </table>
+     <div class="mbr_boxmid" id="mbr">
+
+     </div>
+     <table cellpadding="0" cellspacing="0" width="100%" class="mbr_tablefoot" id="mbrTable">
+         <tbody>
+            <tr>
+                <th>weekly</th>
+                <!--<th>wk1</th><th>wk2</th><th>wk3</th><th>wk4</th><th>wk5</th><th>wk6</th><th>wk7</th><th>wk8</th><th>wk9</th><th>wk10</th><th>wk11</th><th>wk12</th>-->
+                <!--<th>wk13</th><th>wk14</th><th>wk15</th><th>wk16</th><th>wk17</th><th>wk18</th><th>wk19</th><th>wk20</th><th>wk21</th><th>wk22</th><th>wk23</th><th>wk24</th><th>wk25</th><th>wk26</th>-->
+            </tr>
+            <tr>
+                <td><b>Actural</b></td>
+                <!--<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>-->
+            </tr>
+             <tr>
+                <td><b>Target %</b></td>
+                 <!--<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>-->
+            </tr>
+         </tbody>
+     </table>
+        </div>
+</div>
+</body>

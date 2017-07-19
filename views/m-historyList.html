@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+var jmstoken= store.get('JMS-TOKEN');
+
+var mhistory={
+	init:function(){
+		this.bindEvens();
+	},
+	loadTable:function(){
+		var self = this;
+		var data = {};
+		var machineId = $('#machine-select').val();
+		if (machineId) {
+			data.idMachine = machineId;
+		}
+		if (this.table) {
+			this.table.destroy();
+		}
+		this.table =$('#tableHistoryList').DataTable( {
+//      deferRender:  true,
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL + "m/repairHistoryList",
+				"dataType": "json",
+				"headers":{'JMS-TOKEN':jmstoken},
+				"data": data
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-bin>编辑</button><button class=button-edit>详情</button><button class=button-delete>删除</button>'
+			} ],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+			dom: "tip",
+			pageLength:"50"
+		} );
+		$('#tableHistoryList tbody').on( 'click', 'button', function () {
+			var data = self.table.row( $(this).parents('tr') ).data();
+			var historyOptions = {
+				groupId:'m-historyList',
+				historyId:data[8],
+				viewId:'m-history-update',
+			};
+			var clazz =$(this).attr('class');
+			if(clazz=='button-bin'){
+				historyOptions.action = 'edit';
+				$.get("views/m-history-update.html",function(data){
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			}
+			else if(clazz=='button-edit'){
+//				$('#_key19').val(data[8]);
+//				$('#_key31').val(1);
+				historyOptions.action = 'detail';
+				$.get("views/m-history-update.html",function(data){
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			}
+			else{
+				debugger;
+				$.deleteHistory(data[8],jmstoken,function(data){
+					debugger;
+					$.get("views/m-historyList.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			}
+		} );
+	},
+	bindEvens:function(){
+		var self = this;
+		$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+			var routeParams = RouterManager.getParams();
+			var machineId = routeParams.machineId;
+			var _html = '';
+			_(data).each(function (d, i) {
+				_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+				if(machineId == d.id){
+					$('#machine-select').val(parseInt(machineId));
+					$('#machineNo').html(d.name);
+					self.loadTable();
+				}
+			});
+			$('#machine-group').find('.dropdown-menu').append(_html);
+		});
+		$('.machine').on('click',function(e){
+			$('#machineNo').html('设备');
+		});
+		$('#machine-group').on('click', 'li a', function (e) {
+			var $t = $(this);
+			var id = $t.data('id');
+			$('#machine-select').val(parseInt(id));
+			$('#machineNo').html($t.text());
+			self.loadTable();
+			RouterManager.setUrl({
+				groupId:'m-historyList',
+				machineId:id
+			});
+		});
+		var historyOptions = {
+			groupId:'m-historyList'
+		};
+		//点击新建
+		$('#create').click(function(){
+			historyOptions.viewId='m-history-update';
+			$.get("views/m-history-update.html",function(data){
+				RouterManager.setUrl(historyOptions);
+				$("#body").html(data);
+			});
+		});
+	}
+};
+	mhistory.init();
+
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>维修历史</b></span>
+	<!--<span class="h-title" id="create">新建维修历史</span>-->
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="btn-group btn-group-left" id="machine-group">
+			<select name="none" id="machine-select" style="display: none;"></select>
+      		<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">设备</button>
+      		<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+        		<span class="caret"></span>
+        		<span class="sr-only">设备</span>
+      		</button>
+      		<ul class="dropdown-menu"></ul>
+    	</div>
+		<div class="right-list">
+    		<!--搜索框-->
+    		<!--<div class="sousuo">-->
+    			<!--<div class="ss-input">    		-->
+    				<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    			<!--</div>-->
+    			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    		<!--</div>-->
+    		<input type="button" class="button-sytle1" id="create" value="新建">
+    		<!--<button class="btn  btn-info" id="create">新建</button>-->
+    	</div>
+   </div>
+ 	<table id="tableHistoryList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>设备编号</th>
+                <th>设备名称</th> 
+                <th>报修者</th>
+                <th>报修时间</th>
+                <th>故障描述</th>
+                <th>维修人员</th>
+                <th>维修完成时间</th>
+                <th>状态</th>  
+                <th style="min-width:100px;">操作</th>  <!--编辑、详情-->
+            </tr>
+        </thead>
+	</table>
+</div>
+
+
+</body>
+</html>

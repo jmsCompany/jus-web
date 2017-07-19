@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+$(document).ready(function () {
+   $.scrollajax({
+                     url: 'notifations',
+                     div_id:'notifications'
+                     },function(result){
+                          $(result).each(function(i,notification){
+                          var clazz='jmsdivbg0';
+                            if(i%2==0)
+                            clazz='jmsdivbg1';
+			             $('#notifications').append("<div class='"+clazz+"'> 标题： <br/> 事件：" + notification.event +", 创建者： " + notification.username+"<br/> 事件描述："  + notification.details+ "<br/> 事件发生事件："  + notification.creationTime +"</div>");
+                      
+                      });
+
+
+         });
+  });
+</script>
+</head>
+<body>
+<div id="notifications" class="scroll">
+	
+</div>
+<input id="page_notifications" name="start_page" type="hidden" value="0">
+<input id="size_notifications" name="page_size" type="hidden" value="50">
+
+</body>
+</html>

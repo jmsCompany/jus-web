@@ -1,0 +1,486 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="soForm" method="post" action="index.html" class="form-inline">
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title" id="so01">SO</span>
+    				<span class="h-title-selected" id="createSo"><b>Create SO</b></span>
+					<span class="h-title" id="coCompany">Client</span>
+					<span class="h-title" id="createCocompany">Create client</span>
+				</div>
+  
+                <div class="col-xs-12 mar-top-20px">
+                     <div class="btn-group btn-group-left">
+                		<label for="" class="input-w-160">SO No.</label>
+                        <input type="text" class="form-control input-w-3" name="codeSo" id="codeSo"/>
+                	</div>
+                    <label for="" class="col-xs-2 input-w-160" style="line-height:30px;margin-right:-10px">Client</label>
+					<select class="input-w-3 select-cs1 form-control" name="sCompanyCoId:number" id="sCompanyCoId">
+						<option value="">Client</option>
+					</select>
+                </div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="btn-group btn-group-left">
+						<label for="" class="input-w-160">Client Order No.</label>
+						<input type="text" class="form-control input-w-3" name="coOrderNo" id="coOrderNo">
+					</div>
+				</div>
+                <div class="col-xs-12 mar-top-20px" id="order" style="display: none;">
+                		<label for="" class="input-w-160">Creation time</label>
+                		<input type="date" class="form-control input-w-3" name="dateOrder" id="dateOrder" readOnly="true">
+                		<label for="" class="input-w-160">Operator</label>
+                		<input type="text" class="form-control input-w-3" name="userName" id="userName" readOnly="true">
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+					<label for="" class="input-w-160">Freght term</label>
+					<select class="input-w-3 select-cs1 form-control" name="freightTermId:number" id="freightTermId">
+						<option value="">Freght term</option>
+					</select>
+					<label for="" class="input-w-160">Payment term</label>
+					<select  class="input-w-3 select-cs1 form-control" name="paymentTermId:number" id="paymentTermId">
+						<option value="">Payment term</option>
+					</select>
+				</div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">Total amount</label>
+                		<input type="text" class="form-control input-w-3 pay" name="totalAmount:number" id="totalAmount" readonly="true"/>
+                		<label for="" class="input-w-160">Tax rate</label>
+                        <input type="text" class="form-control input-w-3" name="taxRate" id="taxRate"> %
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">Exchange</label>
+                		<input type="text" class="form-control input-w-3" name="exchange" id="exchange"> 
+                		<label for="" class="input-w-160">Status</label>
+					<select  class="input-w-3 select-cs1 form-control" name="sStatusId:number" id="sStatusId">
+                		</select> 
+                </div>
+                <!--<div class="col-xs-12 mar-top-20px">                	-->
+                    <!--<label for="" class="input-w-160">上传附件</label>-->
+                	<!--<input type="file"   value=""  class="inherit " name="idAttachment" id="idAttachment"/> -->
+                <!--</div>-->
+
+					<!--<div class="col-xs-12 mar-top-20px" style="text-align: center;">-->
+						<!--<div class="form-group" id="matlist">-->
+                                <!--<ul class="new-income-list-nav">-->
+									<!--<li style="width:116px;">物料</li>-->
+									<!--<li>单位</li>-->
+									<!--<li>单价</li>-->
+									<!--<li>数量</li>-->
+									<!--<li style="width:90px;">交货日期</li>-->
+									<!--<li>备注</li>-->
+									<!--<li>已发货数量</li>-->
+                                <!--</ul>-->
+							<div class="col-xs-12 mar-top-20px changerep_cont">
+								<table id="" cellpadding="0" cellspacing="0" width="690px">
+									<tr>
+										<th width="200px"> Material</th>
+										<th width="60px"> Unit</th>
+										<th width="70px"> Unit price</th>
+										<th width="90px"> Quantity</th>
+										<th width="90px"> Due date</th>
+										<th width="90px"> Remark</th>
+										<th width="90px" id="action01"> Shipped quantity </th>
+									</tr>
+								</table>
+
+								<div class="form-group" id="matlist">
+									<dl class="matlist" id="item0">
+										<!--<dt>物料</dt>-->
+										<dd>
+											<select class="select-cs1 j" data-id="" style="width:198px;" name="materialId:number" id="materialId"><option value="">Material</option></select>
+											<input type="text" class="a" style="width:56px;" name="unitPur" id="unitPur" placeholder="Unit" readonly="true">
+											<input type="text" class="b pay" style="width:66px;" name="uprice:number" id="uprice" placeholder="Unit price"/>
+											<input type="text" class="c pay" style="width:87px;" name="qtySo:number" id="qtySo" placeholder="Quantity"/>
+											<input type="text" class="e" style="width:86px;" name="deliveryDate" id="deliveryDate" placeholder="Due date">
+											<input type="text" class="f" style="width:86px;" name="remark" id="remark" placeholder="Remark">
+											<input type="text" style="width:86px;" class="k" name="qtyDelivered:number" id="Shipped qty" placeholder="已发货数量" readonly="true">
+										</dd>
+									</dl>
+								</div>
+							</div>
+
+						<!--</div>-->
+					<!--</div>-->
+					<!--<div class="row">-->
+					<div class="col-xs-12 mar-top-20px remark01" style="display: none;">
+						<!--<div class="col-md-10 col-md-offset-1 mar-top-20px remark01" style="display: none;">-->
+							<div class="form-group">
+								<label for="" class="input-w-160">Auto remark</label>
+								<textarea name="autoRemark" id="autoRemark" class="form-control" style="width: 600px;height: 80px;"></textarea>
+							</div>
+						<!--</div>-->
+					</div>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">                 		
+                 		<button class="btn btn-primary" id="save">Save</button>
+                 		<button class="btn  btn-info" type="button" id="return01">Return</button>
+                 	</div>
+                 </div>
+				  <input type="hidden" id="idSo" name="idSo:number"/>
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+
+    
+<script type="text/javascript">
+	var jmstoken= store.get('JMS-TOKEN');
+	function formatRepo (repo) {
+		if (repo.loading) return repo.text;
+
+		var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+		return markup;
+	}
+
+	function formatRepoSelection (repo) {
+		return repo.name || repo.text;
+	}
+	var soOrder={
+		init:function(){
+			var self = this;
+			var params = this.params = RouterManager.getParams();
+			var params=RouterManager.getParams();
+			var action=params['action'];
+			var idSo = params['soId'];
+			if(idSo) {
+				this.loadDetail(idSo, function() {
+					self.dealAction(action);
+				});
+			}else{
+				this.autoFill();
+				$('#action01').hide();
+				$('table','#soForm').attr('width','600px');
+				$('#qtyDelivered').hide();
+			}
+			this.bindEvents();
+			setTimeout(function() {
+				self.form();
+			}, 10);
+		},
+		loadDetail:function(idSo,callback){
+			var self = this;
+			$.soInfo(idSo, jmstoken, function (data) {
+				$('#soForm').populate(data, true);
+				$('#materialId').attr('data-id',data.materialId);
+				self.fillMaterialId($('#materialId'), function() {
+					$('#materialId').val(parseInt($('#materialId').data('id')));
+					self.updateMaterialInfo();
+				});
+				$('#sCompanyCoId').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coCompanyType':2}},function(){
+					$('#sCompanyCoId').val(data.sCompanyCoId);
+				});
+				$('#freightTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'freight'}},function(){
+					$('#freightTermId').val(data.freightTermId);
+				});
+				$('#paymentTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'payment'}},function(){
+					$('#paymentTermId').val(data.paymentTermId);
+				});
+				$('#sStatusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_so'}},function(){
+					$('#sStatusId').val(data.sStatusId);
+				});
+
+				callback && callback();
+			});
+		},
+		dealAction:function(action){
+			$("#order").show();
+			if (action == 'detail') {
+				$('.remark01').show();
+				$('input,select,textarea', $('#soForm')).prop('readonly', true);
+				$("input:not(:button,:hidden)").prop("readonly", true);
+				$('#save').hide();
+				$('#createSo').html('<b>SO detail</b>');
+				$("select").prop("disabled", true);
+			}
+			else {
+				$('#createSo').html('<b>Edit SO</b>');
+			}
+		},
+		autoFill:function(){
+			$('#sCompanyCoId').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coCompanyType':2}});
+			$('#freightTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'freight'}});
+			$('#paymentTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'payment'}});
+			$('#sStatusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_so'}});
+//			$('#materialId').selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+
+			$('#materialId').select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {'JMS-TOKEN': jmstoken},
+					delay: 200,
+					data: function (params) {
+						var paramsObj ={
+							q: params.term,
+							types:[1,2]
+						};
+						var params = $.param(paramsObj,true);
+						return params;
+					},
+					processResults: function (data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function (markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 200,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open',function(evt){
+				$('#select2-js-data-example-ajax-container').html('');
+				$('#js-data-example-ajax').empty();
+			});
+		},
+		fillMaterialId: function($el,callback) {
+			$el.select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {'JMS-TOKEN': jmstoken},
+					delay: 200,
+					data: function (params) {
+						var paramsObj ={
+							q: params.term,
+							types:[1,2]
+						};
+						var params = $.param(paramsObj,true);
+						return params;
+					},
+					processResults: function (data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function (markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 200,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open',function(evt){
+				$('#select2-js-data-example-ajax-container').html('');
+				$('#js-data-example-ajax').empty();
+			});
+			callback && callback();
+		},
+		updateMaterialInfo: function() {
+			var $materialInput = $('#unitPur');
+			var materialId = $('#materialId').val() || $('#materialId').data('id');
+			if(!$('#materialId').val()){
+				$('#materialId').append('<option value="'+materialId+'"></option>');
+				$('#materialId').val(materialId);
+			}
+			$.materialInfo(materialId,jmstoken,function(data){
+				$('.matlist').find('.select2-selection__rendered').text(data.pno + '_' + data.rev + '_' + data.des);
+				if(data.sUnitDicByUnitPur) {
+					$materialInput.val(data.sUnitDicByUnitPur);
+				}
+			});
+		},
+		bindEvents:function(){
+			var self = this;
+			var $cnt = $('.container-fluid');
+			//日期控件
+			$("input[name*='deliveryDate']").datetimepicker({
+				format:"YYYY-MM-DD"
+			});
+			$("input[name*='deliveryDate']").on("dp.change", function (e) {
+				var isEmpty = $(this).val() == '';
+				$('#soForm').bootstrapValidator('enableFieldValidators', 'deliveryDate', !isEmpty)
+			});
+
+			$cnt.on("change",".pay",function(){
+				pay();
+			});
+
+			$cnt.on("change",".j",function () {
+//		var materialInput = $(this).next();
+				var materialInput = $(this).closest('dl').find('.a');
+				var materialId=$(this).val();
+				$.materialInfo(materialId,jmstoken,function(data){
+					materialInput.val(data.sUnitDicByUnitInf);
+				});
+			});
+
+			var historyOptions={
+				groupId:'so'
+			};
+			$('#coCompany').click(function(){
+				$.get("views/cocompany.html",function(data){
+					historyOptions.viewId='cocompany';
+					historyOptions.companyCoTypeId = 2;
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#createCocompany').click(function(){
+				$.get("views/cocompany-create-body.html",function(data){
+					historyOptions.viewId='cocompany-create-body';
+					historyOptions.companyCoTypeId = 2;
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#so01').click(function(){
+				$.get("views/so.html",function(data){
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#return01').click(function(){
+				history.go(-1);
+			});
+		},
+		form:function(){
+			var self = this;
+			$('#soForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'codeSo': {
+						validators: {
+							notEmpty: {
+								message: 'Please fill in the sale No.'
+							}
+						}
+					},
+					'coOrderNo': {
+						validators: {
+							notEmpty: {
+								message: 'Please fill in the client order No.'
+							}
+						}
+					},
+					'sCompanyCoId:number': {
+						validators: {
+							notEmpty: {
+								message: 'Please choose a customer.'
+							}
+						}
+					},
+					'materialId:number': {
+						validators: {
+							notEmpty: {
+								message: 'Material cannot be empty.'
+							}
+						}
+					},
+					'uprice:number': {
+						validators: {
+							notEmpty: {
+								message: 'Unit price cannot be empty.'
+							},
+							digits: {
+								message: 'Format is illegal.'
+							}
+						}
+					},
+				exchange: {
+					validators: {
+						regexp: {
+							regexp: /^\d+$/,
+							message: 'Please fill in the data.'
+						}
+					}
+				},
+				taxRate: {
+					validators: {
+						regexp: {
+							regexp: /^\d+$/,
+							message: 'Please fill in the data.'
+						}
+					}
+				},
+					'qtySo:number': {
+						validators: {
+							notEmpty: {
+								message: 'Qty cannot be empty.'
+							},
+							digits: {
+								message: 'Format is illegal.'
+							}
+						}
+					},
+					'deliveryDate': {
+						validators: {
+							notEmpty: {
+								message: 'Please fill in the due date.'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				var $form     = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var so =JSON.stringify($('#soForm').serializeJSON());
+				$.saveSo(so,jmstoken,function(data){
+					history.go(-1)
+//					$.get("views/so.html",function(data){
+//						$("#body").html(data);
+//					});
+				});
+			});
+		}
+	};
+	soOrder.init();
+
+
+	//计算
+	function pay() {
+		var uprice = $("#uprice");
+		var qtySo = $("#qtySo");
+		var totalAmount = $("#totalAmount");
+		if(uprice.val() == "") {
+//                                      alert("物品单价不能为空!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		if(isNaN(uprice.val()) || uprice.val() < 0) {
+//                                      alert("非法的商品单价!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		if(qtySo.val() == "") {
+//                                      alert("物品数量不能为空!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		if(!checkNum(qtySo.val())) {
+//                                      alert("非法的商品数量!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		var total = parseFloat(uprice.val())*parseInt(qtySo.val());
+		totalAmount.val(total);
+	}
+	function checkNum(num) {
+		var re = /^\d+$/;
+		return re.exec(num) != null;
+
+	}
+
+</script>

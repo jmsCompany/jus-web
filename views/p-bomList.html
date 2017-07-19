@@ -1,0 +1,194 @@
+<script type="text/html" id="pBomList">
+	<div class="body-head-title">
+		<span class="h-title-selected"><b>物料清单列表</b></span>
+		<span class="h-title" id="create">新建物料清单</span>
+        <span class="h-title" id="importMat">物料清单导入</span>
+	</div>
+	<div class="cont">
+		<!--<div class="r-header-body">-->
+			<!--&lt;!&ndash;搜索框&ndash;&gt;-->
+			<!--<div class="sousuo">-->
+				<!--<div class="ss-input">-->
+					<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+				<!--</div>-->
+				<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+			<!--</div>-->
+		<!--</div>-->
+		<table id="tableBom" class="display" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>产品编码</th>
+				<th>版本</th>
+				<th>描述</th>
+				<th>创建时间</th>
+				<th>创建人</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+
+    <!-- 弹窗 start -->
+    <div class="tcbox container-fluid" id="draggable1">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">删除物料清单</span>
+            </div>
+            <input type="button" class="tc_close">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-200">请确认是否删除物料清单！</label>
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="button" id="delete01" class="btn btn-primary ">是</button>
+                    <button id="return01" type="button" class="btn  btn-info">否</button>
+                </div>
+            </div>
+            <input type="hidden" id="idBomLabel" name="idBomLabel:number"/>
+        </div>
+    </div>
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label id="info"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    //弹窗
+    function showObj(objid){
+        $(objid).show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+	var app={
+		init:function(){
+			$('#body').html($('#pBomList').html())
+			this.bindEvents();
+		},
+		bindEvents:function(){
+            var jmstoken= store.get('JMS-TOKEN');
+            var table =$('#tableBom').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "p/getBomList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>编辑</button><button class=button-bin>详情</button><button class=button-delete>删除</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+            table.on( 'xhr', function ( e, settings, json ) {
+                if(json.jmsError) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).show();
+                    $('#info').empty();
+                    $('#info').append('数据加载失败！\n' + json.jmsError);
+//                    alert('数据加载失败！\n' + json.jmsError);
+                }
+            });
+            $('#tableBom').on( 'click', 'button', function () {
+                var rowData = table.row( $(this).parents('tr') ).data();
+                var clazz =$(this).attr('class');
+                if(clazz=='button-edit'){
+                    $.get("views/p-bom-create.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-bomList',
+                            viewId:'p-bom-create',
+                            bomId:rowData[6],
+                            action:'edit'
+                        });
+                        $("#body").html(data);
+                    });
+                }
+                else if(clazz=='button-bin'){
+                    $.get("views/p-bom-create.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-bomList',
+                            viewId:'p-bom-create',
+                            bomId:rowData[6],
+                            action:'detail'
+                        });
+                        $("#body").html(data);
+                    });
+                }
+                else {
+                    $('#draggable1').show();
+                    $('#idBomLabel').val(rowData[6]);
+
+                }
+            } );
+
+            $('.container-fluid').on('click','#delete01',function(){
+                var idBomLabel = $('#idBomLabel').val();
+                $.deleteBom(idBomLabel,jmstoken,function(data){
+                    debugger;
+                    if(data.valid == false){
+                        var top = $('#body').scrollTop();
+                        $('#nullAlert').css({
+                            top: $(window).height() * 0.2 + top
+                        }).show();
+                        $('#info').empty();
+                        $('#info').append('该物料清单已被使用，不能删除');
+                        return;
+                    }
+                    $.get("views/p-bomList.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+            $('#draggable1').on('click','#return01',function(){
+                $('#draggable1').hide();
+            });
+            $('#draggable1').on('click','.tc_close',function(){
+                $('#draggable1').hide();
+            });
+
+            $('#create').click(function(){
+                $.get("views/p-bom-create.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-bomList',
+                        viewId:'p-bom-create'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            $("#importMat").click(function(){
+                $.get("views/bom-import.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-bomList',
+                        viewId:'bom-import'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+		}
+	};
+	app.init();
+
+</script>

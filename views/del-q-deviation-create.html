@@ -1,0 +1,234 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+        <section>
+            <form id="noProcessingForm" method="post" action="index.html" class="form-inline returnPCM_Form">
+
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">批次号</label>
+                        <input type="text" class="form-control input-w-3" name="lotNo" id="lotNo"/>
+                    </div>
+                    <div class="form-group detail">
+                        <label for="" class="input-w-160">零件号</label>
+                        <select class="input-w-3 select-cs1 form-control" name="materialId:number" id="materialId">
+                            <option value="">供应商</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">零件名称</label>
+                        <input type="text" class="form-control input-w-3" name="matDes" id="matDes">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="input-w-160">数量</label>
+                        <input type="text" class="form-control input-w-3" name="qty" id="qty"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">问题描述</label>
+                        <textarea name="des" id="des" class="form-control" style="width: 180px;height: 160px;"></textarea>
+                    </div>
+                    <label for="" class="input-w-160">库位</label>
+                    <div class="form-group">
+                        <div class="">
+                            <label class="input-w-160">来料区域</label>
+                            <input name="stkId" type="checkbox" value="" />
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">原材料仓库</label>
+                            <input name="stkId" type="checkbox" value="" />
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">生产线</label>
+                            <input name="stkId" type="checkbox" value="" />
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">成品仓</label>
+                            <input name="stkId" type="checkbox" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">发布</label>
+                        <input type="text" class="form-control input-w-3" name="release" id="release"/>
+                    </div>
+                    <div class="form-group detail">
+                        <label for="" class="input-w-160">审核</label>
+                        <input type="text" class="form-control input-w-3" name="audit1" id="audit1"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">评审意见</label>
+                        <textarea name="comment" id="comment" class="form-control" style="width: 180px;height: 200px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <label class="input-w-160">挑选<input name="stkId" type="checkbox" value="" /></label>
+                            <input type="text" class="form-control input-w-3" name="qty" id="qty"/>
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">返工<input name="stkId" type="checkbox" value="" /></label>
+                            <input type="text" class="form-control input-w-3" name="qty" id="qty"/>
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">报废<input name="stkId" type="checkbox" value="" /></label>
+                            <input type="text" class="form-control input-w-3" name="qty" id="qty"/>
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">退货<input name="stkId" type="checkbox" value="" /></label>
+                            <input type="text" class="form-control input-w-3" name="qty" id="qty"/>
+                        </div>
+                        <div class="">
+                            <label class="input-w-160">让步接收<input name="stkId" type="checkbox" value="" /></label>
+                            <input type="text" class="form-control input-w-3" name="qty" id="qty"/>
+                        </div>
+                                <span class="action action-txt">
+                                    <a class="button-sytle1 att" href="">员工手册</a>
+                                </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">责任人</label>
+                        <input type="text" class="form-control input-w-3" name="owner" id="owner"/>
+                    </div>
+                    <div class="form-group detail">
+                        <label for="" class="input-w-160">审核</label>
+                        <input type="text" class="form-control input-w-3" name="audit2" id="audit2"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">会签</label>
+                        <input type="text" class="form-control input-w-3" name="countersign" id="countersign">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="input-w-160">批准</label>
+                        <input type="text" class="form-control input-w-3" name="approval1" id="approval1"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">整改措施</label>
+                        <textarea name="improvementAction" id="improvementAction" class="form-control" style="width: 500px;height: 80px;"></textarea>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">是否生成正式抱怨</label>
+                        <input type="radio" name="status:number" id='status27' class="radio-w" value="27" checked/><label for="stateOn">是</label>
+                        <input type="radio" name="status:number" id='status28' class="radio-w" value="28" /><label for="stateOoff">否</label>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">责任人</label>
+                        <input type="text" class="form-control input-w-3" name="response" id="response"/>
+                    </div>
+                    <div class="form-group detail">
+                        <label for="" class="input-w-160">审核</label>
+                        <input type="text" class="form-control input-w-3" name="audit3" id="audit3"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">批准</label>
+                        <input type="text" class="form-control input-w-3" name="approval2" id="approval2">
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="foot-btn-box">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" id="save">保存</button>
+                        <button type="button" class="btn  btn-info" id="return01">返回</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <!-- :form -->
+    </div>
+</div>
+<script type="text/javascript">
+
+    var jmstoken= store.get('JMS-TOKEN');
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var noProcessingCreate = {
+        init:function(){
+            var self = this;
+            this.bindEvents();
+        },
+        autoFill:function(){
+
+        },
+        bindEvents:function(){
+            var self = this;
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+            $('#cancel').click(function(){
+                $.get("views/q-noProcessingList.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+        },
+        form:function(){
+            $('#noProcessingForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'lotNo': {
+                        validators: {
+                            notEmpty: {
+                                message: '批次不能为空'
+                            }
+                        }
+                    },
+                    'location': {
+                        validators: {
+                            notEmpty: {
+                                message: '库位不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var noProcessing =JSON.stringify($('#NoProcessingForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                $.createNoProcessing(noProcessing,jmstoken,function(data){
+                    $.get("views/q-noProcessingList.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        }
+    };
+    noProcessingCreate.init();
+</script>
+    
+
+
+

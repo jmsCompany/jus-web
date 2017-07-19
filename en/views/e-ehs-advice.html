@@ -1,0 +1,120 @@
+	    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+	<div class="col-lg-8 col-lg-offset-2">
+        <form id="ehsForm" method="post" action="index.html" class="form-horizontal">
+        <input type="hidden" id="idEhs" />  <!-- ehs编号-->
+        
+        <div class="col-lg-8 col-lg-offset-2">
+			<div class="form-group">
+            	<label class="col-lg-3 control-label">操作者</label>
+            	<div class="col-lg-5">
+                	<label class="col-lg-3 control-label" name="op" id="op"></label>
+            	</div> 
+        	</div>
+			<div class="form-group">
+            	<label class="col-lg-3 control-label">工种</label>
+            	<div class="col-lg-5">
+               	 	<label class="col-lg-3 control-label" name="workCategory" id="workCategory"></label>
+            	</div> 
+        	</div>
+			<div class="form-group">
+            	<label class="col-lg-3 control-label">日期</label>
+            	<div class="col-lg-5">
+                	<label class="col-lg-3 control-label" name="date" id="date"></label>
+            	</div> 
+        	</div>
+			<div class="form-group">
+            	<label class="col-lg-3 control-label">时间</label>
+            	<div class="col-lg-5">
+                	<label class="col-lg-3 control-label" name="time" id="time"></label>
+            	</div> 
+        	</div>
+        ？？？ tree的格式
+        	<div class="form-group">
+            	<label class="col-lg-3 control-label">危险等级</label>
+            	<div class="col-lg-5">
+            		<input type="radio" value="很高" name="level">
+            		<input type="radio" value="高" name="level">
+            		<input type="radio" value="中等" name="level">
+            		<input type="radio" value="低" name="level">
+            	</div> 
+        	</div>
+        	<div class="form-group">
+            	<label class="col-lg-3 control-label">评论与复查</label>
+            	<div class="col-lg-5">
+            		<textarea name="comments" id="comments" class="autosizejs"></textarea>
+            	</div> 
+        	</div>
+			<div class="form-group">
+            	<label class="col-lg-3 control-label">主管</label>
+            	<div class="col-lg-5">
+                	<input class="col-lg-3 control-label" name="supevisor" id="supevisor"/>
+            	</div> 
+        	</div>
+        	<div class="form-group">
+                <div class="col-lg-9 col-lg-offset-3">
+                    <button type="button" class="btn btn-primary" id="return">返回</button>
+                </div>
+            </div>
+        </div>
+        </form>
+      </section>
+      <!-- :form -->
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    var idEhs = $('#_key20').val();
+	$.ehsInfo({"id":idEhs},token,function(data){
+		$('#op').html(data.op);
+		$('#workCategory').html(data.workCategory);
+		$('#date').html(data.date);
+		$('#time').html(data.time);
+	});
+	  
+	  $('#ehsForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            
+            'supersivor': {
+                validators: {
+                    notEmpty: {
+                        message: '签字不能为空'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var ehs =JSON.stringify($('#ehsForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createEhs(ehs,jmstoken,function(data){
+			      	$.get("views/e-ehs.htmlList",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	  
+	  $('#cancel').click(function(){
+	 	$.get("views/e-ehsList.html",function(data){
+	         $("#body").html(data);
+	    });
+	 });
+});
+</script>

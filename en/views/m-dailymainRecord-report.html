@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).show();	
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+var jmstoken= store.get('JMS-TOKEN');
+var mainDetail = {
+	init:function(){
+		var self = this;
+        var now = new Date();
+        $('#year').val(now.getFullYear());
+		this.bindEvents();
+	},
+	nullAlertShow:function(information){
+		var top = $('#body').scrollTop();
+		$('#nullAlert').css({
+			top: $(window).height() * 0.2 + top
+		}).show();
+		$('#info').empty();
+		$('#info').append(information);
+	},
+	bindEvents:function(){
+		var self = this;
+		//设备下拉框
+		$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+			var _html = '';
+			_(data).each(function (d, i) {
+				_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+			});
+			$('#machine-group').find('.dropdown-menu').append(_html);
+		});
+		$('#machine-group').on('click', 'li a', function (e) {
+			var $t = $(this);
+			var id = $t.data('id');
+			$('#machine-select').val(parseInt(id));
+			$('#machineNo').html($t.text());
+		});
+		$('.machine').on('click',function(e){
+			$('#machineNo').html('Machine');
+		});
+
+
+		//test
+		$('#search').click(function(){
+			var year = $('#year').val();
+			var month = $('#month').val();
+			var idMachine = $('#machine-select').val();
+			if (!year){
+				self.nullAlertShow('Please input year！');
+				return
+			}
+			else if(!month){
+				self.nullAlertShow('Please input month！');
+			}
+			else if($('#machineNo').html() == 'Machine'){
+				self.nullAlertShow('Please choose machine！');
+			}
+			else{
+				var machine = $('#machine-select option:selected').text();
+				$.get("views/m-dailyMain.html",function(data){
+					RouterManager.setUrl({
+						groupId:'m-main',
+						viewId:'m-dailyMain',
+						year:year,
+						month:month,
+						idMachine:idMachine,
+						machine:machine
+					});
+					$("#body").html(data);
+				})
+			}
+		});
+
+
+		$('#mtbf').click(function(){
+			$.get("views/m-mtbf-mttr.html", function (data) {
+				RouterManager.setUrl({
+					groupId:"m-br",
+					viewId:"m-mtbf-mttr"
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#breakdownRate').click(function(){
+			$.get("views/m-br.html", function (data) {
+				RouterManager.setUrl({
+					groupId:"m-br"
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#preMain').click(function(){
+			$.get("views/m-premainRecord-report.html", function (data) {
+				RouterManager.setUrl({
+					groupId:"m-br",
+					viewId:"m-premainRecord-report"
+				});
+				$("#body").html(data);
+			});
+		});
+	}
+};
+	mainDetail.init();
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="breakdownRate">Equipment Failure Rate</span>
+	<span class="h-title" id="mtbf">MTBF&MTTR</span>
+	<span class="h-title-selected"><b>Daily Maintenance Report</b></span>
+	<span class="h-title" id="preMain">Preventive Maintenance Report</span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="btn-group btn-group-left">
+			<div class="btn-group btn-group-left">
+       			<label>Year</label><input type="text" id='year' style="width:150px;">
+       			<!--<script type="text/javascript">-->
+				<!--$(function () {-->
+					<!--$('#date').datetimepicker();-->
+				<!--});-->
+				<!--</script>-->
+			</div>
+			<div class="btn-group btn-group-left">
+				<label>Month</label><input type="text" id='month' style="width:150px;">
+				<!--<script type="text/javascript">-->
+				<!--$(function () {-->
+				<!--$('#date').datetimepicker();-->
+				<!--});-->
+				<!--</script>-->
+			</div>
+			<!--<div class="btn-group btn-group-left" id="dept-group">-->
+				<!--<select name="none" id="dept-select" style="display: none;"></select>-->
+				<!--<button class="btn btn-default" type="button" name="idDept:number" id="idDept">部门</button>-->
+				<!--<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle dept" type="button">-->
+					<!--<span class="caret"></span>-->
+					<!--<span class="sr-only">部门</span>-->
+				<!--</button>-->
+				<!--<ul class="dropdown-menu"></ul>-->
+			<!--</div>-->
+			<div class="btn-group btn-group-left" id="machine-group">
+				<select name="none" id="machine-select" style="display: none;"></select>
+				<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">Machine</button>
+				<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+					<span class="caret"></span>
+					<span class="sr-only">Machine</span>
+				</button>
+				<ul class="dropdown-menu"></ul>
+			</div>
+    	</div>
+		<div class="right-list">
+    		<!--搜索框-->
+    		<!--<div class="sousuo">-->
+    			<!--<div class="ss-input">    		-->
+    				<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    			<!--</div>-->
+    			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    		<!--</div>-->
+
+			<button id="search" class="button-sytle1">Search</button>
+    	</div>
+   </div>
+</div>
+
+<!-- 错误提示弹窗 start -->
+<div class="tcbox container-fluid" id="nullAlert">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label id="info"></label>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

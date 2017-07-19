@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/template" id="oeeItem">
+        <tr id="item<%= item %>">
+            <td><%= data.cppSt %></td>
+            <td><%= data.shiftD %></td>
+            <td><%= data.wo %></td>
+            <td><%= data.routine %></td>
+            <td><%= data.machine %></td>
+            <td><%= data.planTime+'min' %></td>
+            <td><%= data.planStopTime+'min' %></td>
+            <td><%= data.unPlannedStopTime+'min' %></td>
+            <td><%= data.loadingTime+'min' %></td>
+            <td><%= data.actTime+'min' %></td>
+            <td><%= data.actQty %></td>
+            <td><%= data.machineTime+'min' %></td>
+            <td><%= data.planQty %></td>
+            <td><%= data.passedQty %></td>
+            <td><%= data.timeEff %></td>
+            <td><%= data.machineEff %></td>
+            <td><%= data.passedEff %></td>
+            <td><%= data.oee %></td>
+        </tr>
+    </script>
+    <script type="text/javascript">
+        var jmstoken= store.get('JMS-TOKEN');
+        //弹窗
+        function showObj(objid){
+            $(objid).show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.name || repo.text;
+        }
+        function count(o){
+            var t = typeof o;
+            if(t == 'string'){
+                return o.length;
+            }else if(t == 'object'){
+                var n = 0;
+                for(var i in o){
+                    n++;
+                }
+                return n;
+            }
+            return false;
+        }
+//        function toDecimal(x) {
+//            var f = parseFloat(x);
+//            if (isNaN(f)) {
+//                return;
+//            }
+//            f = Math.round(x*1000)/1000;
+//            return f;
+//        }
+        var pOEEReport = {
+            init:function(){
+                var self = this;
+                this.oeeItem = _.template($('#oeeItem').html());
+                var params = this.params = RouterManager.getParams();
+                var action = params['action'];
+                this.bindEvents();
+                this.$oeeList = $('#oeeList');
+                this.autoFill();
+            },
+            nullAlertShow:function(information){
+                var top = $('#body').scrollTop();
+                $('#nullAlert').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                $('#info').empty();
+                $('#info').append(information);
+            },
+            autoFill:function(){
+                var dataPickerOpt = {
+                    format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                }
+                $('#datetimepicker1').datetimepicker(dataPickerOpt);
+                $('#datetimepicker2').datetimepicker(dataPickerOpt);
+            },
+            loadTable: function() {
+                var self = this;
+                var data = {};
+                var fromDate = $('#datetimepicker1').val();
+                var toDate = $('#datetimepicker2').val();
+                var materialId = $('#js-data-example-ajax').val();
+                if ($('#machineNo').html() == 'Device'){
+                    var information = 'Please choose device！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else if(!fromDate){
+                    var information = 'Please choose start time！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else if(!toDate){
+                    var information = 'Please choose finish time！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else{
+                    var machineId = $('#machine-select').val();
+                    data.machineId = machineId;
+                    if(materialId){
+                        data.materialId = materialId;
+                    }
+                    data.fromDate = new Date(fromDate).getTime();
+                    data.toDate = new Date(toDate).getTime();
+                }
+                if (this.table) {
+                    this.table.destroy();
+                }
+                debugger;
+
+                $.oeeInfo(data, jmstoken, function (data) {
+                    debugger;
+                    var cit= $("#oeeList");
+                    if(cit.size()>0) {
+                        cit.find("tr:not(:first)").remove();
+                    }
+
+                    if(count(data)>0){
+                        _(data).each(function(item) {
+                            item.cppSt = $.dateFormat.date(new Date(item.cppSt), 'yyyy-MM-dd HH:mm');
+                            item.planTime = (parseFloat(item.planTime)/(1000*60)).toFixed(0);
+                            item.planStopTime = (parseFloat(item.planStopTime)/(1000*60)).toFixed(0);
+                            item.unPlannedStopTime = (parseFloat(item.unPlannedStopTime)/(1000*60)).toFixed(0);
+                            item.loadingTime = (parseFloat(item.loadingTime)/(1000*60)).toFixed(0);
+                            item.actTime = (parseFloat(item.actTime)/(1000*60)).toFixed(0);
+                            item.machineTime = (parseFloat(item.machineTime)/(1000*60)).toFixed(0);
+
+                            item.timeEff = String(((item.timeEff*100)).toFixed(1))+'%';
+                            item.machineEff = String(((item.machineEff*100)).toFixed(1))+'%';
+                            item.passedEff = String(((item.passedEff*100)).toFixed(1))+'%';
+                            item.oee = String(((item.oee*100)).toFixed(1))+'%';
+
+//                            item.timeEff = String(toDecimal(item.timeEff)*100)+'%';
+//                            debugger;
+//                            item.machineEff = String(toDecimal(item.machineEff)*100)+'%';
+//                            item.passedEff = String(toDecimal(item.passedEff)*100)+'%';
+//                            item.oee = String(toDecimal(item.oee)*100)+'%';
+                            var html = self.createRow(item);
+                            $('#oeeList').append(html);
+                        });
+                    }
+                });
+            },
+            defaultData: { },
+            createRow: function(data) {
+                var self = this;
+                var row = parseInt(self.$oeeList.data('row'));
+                if(!row) {
+                    row = 1;
+                }
+
+                if(!data) {
+                    data = self.defaultData;
+                }
+
+                var param = {
+                    data: data,
+                    item: row,
+                    action: self.params.action
+                }
+
+                var html = self.oeeItem(param);
+                self.$oeeList.data('row', row + 1);
+
+                return html;
+            },
+            bindEvents:function(){
+                var self = this;
+                $('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+                    var _html = '';
+                    _(data).each(function (d, i) {
+                        _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                    });
+                    $('#machine-group').find('.dropdown-menu').append(_html);
+                });
+                $('#machine-group').on('click', 'li a', function (e) {
+                    var $t = $(this);
+                    var id = $t.data('id');
+                    $('#machine-select').val(parseInt(id));
+                    $('#machineNo').html($t.text());
+                });
+                $('.dropdown-toggle').on('click',function(e){
+                    $('#machineNo').html('Device');
+                });
+                $('#js-data-example-ajax').select2({
+                    ajax: {
+                        url: $clientURL + 's/getMaterialListObjs',
+                        dataType: 'json',
+                        headers:{'JMS-TOKEN':jmstoken},
+                        delay: 200,
+                        data: function(params) {
+                            var paramsObj ={
+                                q: params.term,
+                                types:[2]
+                            };
+                            var params = $.param(paramsObj,true);
+                            return params;
+//                            return {
+//                                q: params.term
+//                            }
+                        },
+                        processResults: function(data, params) {
+                            return {
+                                results: data,
+                                pagination: null
+                            }
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) { return markup; },
+                    minimumInputLength: 1,
+                    width: 200,
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
+                }).on('select2:open',function(evt){
+                    $('#select2-js-data-example-ajax-container').html('');
+                    $('#js-data-example-ajax').empty();
+                });
+
+
+                $('#search').on('click',function(){
+                    self.loadTable();
+                });
+
+                $('#pulleyOee').click(function(){
+                    $.get("views/p-OE-pulley.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-OE',
+                            viewId:'p-OE-pulley'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+
+                $('#kpiRoller').click(function(){
+                    $.get("views/p-kpi-roller.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-OE',
+                            viewId:'p-kpi-roller'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                $('#kpiPulley').click(function(){
+                    $.get("views/p-kpi-pulley.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'p-OE',
+                            viewId:'p-kpi-pulley'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+            }
+        };
+        pOEEReport.init();
+    </script>
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title-selected"><b>roller Report</b></span>
+    <span class="h-title" id="pulleyOee">pulley Report</span>
+    <span class="h-title" id="kpiRoller">roller-KPI</span>
+    <span class="h-title" id="kpiPulley">pulley-KPI</span>
+</div>
+<form id="mtfIssueForm" method="post" action="index.html" class="form-inline">
+    <div class="cont">
+        <div class="r-header-body">
+            <div class="btn-group btn-group-left" id="issue">
+                <div class="btn-group btn-group-left">
+                    <label>Date：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+                </div>
+            </div>
+            <div class="btn-group btn-group-left" id="machine-group">
+                <select name="none" id="machine-select" style="display: none;"></select>
+                <button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">Device</button>
+                <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                    <span class="caret"></span>
+                    <span class="sr-only">Device</span>
+                </button>
+                <ul class="dropdown-menu"></ul>
+            </div>
+
+            <div class="btn-group-left">
+                <!--搜索框-->
+                <select class="js-data-example-ajax" id="js-data-example-ajax">
+                    <option value="">Choose Material</option>
+                </select>
+            </div>
+            <div class="right-list">
+                <button id="search" type="button" class="button-sytle1">Search</button>
+            </div>
+        </div>
+        <table id="oeeList" class="display" cellspacing="0" style="width:1416px;">
+            <thead>
+            <tr>
+                <th style="width:120px;">Date</th>
+                <th style="width:30px;">Shift</th>
+                <th style="width:95px;">WO</th>
+                <th style="width:30px;">Routine</th>
+                <th style="width:120px;">Machine</th>
+                <th style="width:65px;">Plan Time</th>
+                <th style="width:92px;">Unplanned Stop Time</th>
+                <th style="width:78px;">Unplanned Stop</th>
+                <th style="width:67px;">Load Time</th>
+                <th style="width:90px;">Actual Work Time</th>
+                <th style="width:90px;">Actual Quantity</th>
+                <th style="width:90px;">Theoretical Work Time</th>
+                <th style="width:78px;">Totla plan Quantity</th>
+                <th style="width:78px;">Good Quantity</th>
+                <th style="width:78px;">Time OEE</th>
+                <th style="width:78px;">Effectivity OEE</th>
+                <th style="width:63px;">Good Rate</th>
+                <th style="width:74px;">OEE</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="clearfix"></div>
+        <div class="foot-btn-box">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" id="save">Save</button>
+                <button type="button" class="btn  btn-info" id="return">Return</button>
+            </div>
+        </div>
+        <input type="hidden" id="typeId" name="typeId:number" value="7" />
+        <input type="hidden" id="savePmr" name="savePmr" value="true" />
+        <input type="hidden" id="fromStkId" name="fromStkId:number"/>
+        <input type="hidden" id="toStkId" name="toStkId:number"/>
+    </div>
+</form>
+<!-- 错误提示弹窗 start -->
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

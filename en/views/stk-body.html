@@ -1,0 +1,133 @@
+<div class="container-fluid">
+	<div class="row">
+		<section>
+            <form id="stkForm" method="post" action="index.html" class="form-inline">
+           		<div class="body-head-title">
+					<span class="h-title-selected"><b>Create/edit stock</b></span>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Stock name</label>
+				    	<input type="text" class="form-control input-w-3"  name="stkName" id="stkName">
+				    </div>
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Address</label>
+				    	<input type="text" class="form-control input-w-3"  name="address" id="address">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+                    <div class="form-group">
+				    	<label for="" class="input-w-160">Stock type</label>
+				    	<select  class="input-w-3 select-cs1 form-control" name="idStkType:number" id="idStkType">
+                		</select>
+                     </div>
+				    <div class="form-group">
+				    	<label for="exampleInputEmail1" class="input-w-160">Status</label>
+				    	<input type="radio" name="status:number" id='status27' class="radio-w" value="27" checked/><label for="stateOn">Valid</label>
+				    	<input type="radio" name="status:number" id='status28' class="radio-w" value="28" /><label for="stateOoff">Invalid</label>
+					</div>
+
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+				    	<label for="" class="input-w-160">Description</label>
+				    	<textarea class="form-control input-w-300" rows="3" name="des" id="des"></textarea>
+				</div>
+				<div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">Save</button>
+                 		<button id="return01" type="button" class="btn  btn-info">Return</button>
+                 	</div>
+                 </div>
+                 <input type="hidden" id="idStk" name="idStk:number"/>
+           </form>         
+        </section>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = RouterManager.getParams();
+	var idStk = params['stkId'];
+	var isEdit = params['action']=='edit';
+	var jmstoken= store.get('JMS-TOKEN');
+	if(idStk!=null){
+	
+		$.stkInfo(idStk,jmstoken,function(data){
+		 	$('#stkForm').populate(data,true);
+			if(data.status==27){
+				$('#status27').attr('checked',true);
+			}
+			else{
+				$('#status28').attr('checked',true);
+			}
+			$('#idStkType').selectautofill('s/getStkTypeList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}}, function() {
+                    $('#idStkType').val(data.idStkType);
+                });
+		});
+	}
+	else{
+    	$('#idStkType').selectautofill('s/getStkTypeList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+	}
+    $('#stkForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'stkName': {
+                validators: {
+                    notEmpty: {
+                        message: 'Stock name cannot be empty.'
+                    },
+					regexp: {
+						regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+						message: 'Only Chinese, letters, Numbers, underscores.'
+					},
+					remote: {
+						type: 'GET',
+						url: $clientURL+'s/checkStkName',
+						"headers":{'JMS-TOKEN':jmstoken},
+						data:{idStk:idStk},
+						message: 'The stock already exists.',
+						delay: 1000
+					}
+                }
+            },
+			'address': {
+				validators: {
+					regexp: {
+						regexp: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+						message: 'Only Chinese, letters, Numbers, underscores.'
+					},
+				}
+			}
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var stk =JSON.stringify($('#stkForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.saveStk(stk,jmstoken,function(data){
+			   // alert('成功保存： ' + JSON.stringify(data));
+				history.go(-1);
+			  	$.get("views/stk.html",function(data){
+	                   $("#body").html(data);
+	            });
+			     
+			});
+    	
+        });
+		$('#return01').click(function(){
+			history.go(-1);
+	 		$.get("views/stk.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+});
+</script>
+
+
+

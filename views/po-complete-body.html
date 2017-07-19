@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title">手动完成</span>
+				</div>
+  
+              
+                 <div class="col-xs-12 mar-top-20px"> 
+                 	<label for="" class="input-w-160">备注</label>
+                 	<textarea class="form-control input-w-300" rows="3" name="remark" id="remark"></textarea>
+                 </div>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">                 		<button class="btn btn-primary">保存</button>
+                 		<button class="btn  btn-info" id="cancel">取消</button>
+                 	</div>
+                 </div>
+                 
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+
+    
+<script type="text/javascript">
+$(document).ready(function() { 
+    var idPo = $('#_key4').val();
+    $('#idPo').html(idPo);
+    
+    $('#pocForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+		}
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var poc =JSON.stringify($('#pocForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createPoc(poc,jmstoken,function(data){
+			   // $form.find('.alert-success').html('成功保存： ' + JSON.stringify(data)).show();
+			      	$.get("views/po.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	 
+	 $('#cancel').click(function(){
+	 	$.get("views/po.html",function(data){
+	         $("#body").html(data);
+	    });
+	 });
+});
+</script>
+
+

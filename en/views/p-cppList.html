@@ -1,0 +1,829 @@
+<script type="text/html" id="pCppListMain">
+	<div class="body-head-title">
+		<span class="h-title-selected"><b>Daily plan</b></span>
+		<!--<span class="h-title" id="spp">总计划</span>-->
+		<span class="h-title" id="cp">Check plan</span>
+		<span class="h-title" id="set">Check set</span>
+		<span class="h-title" id="sp">Stop plan</span>
+		<span class="h-title" id="calendar">Working calendar</span>
+		<span class="h-title" id="overtime">Overtime plan</span>
+		<span class="h-title" id="importCp">Import daily plan</span>
+	</div>
+	<div class="cont">
+			<div class="r-header-body">
+
+				<div class="btn-group btn-group-left" id="machine-group">
+					<select name="none" id="machine-select" style="display: none;"></select>
+					<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">Machine</button>
+					<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+						<span class="caret"></span>
+						<span class="sr-only">Machine</span>
+					</button>
+					<ul class="dropdown-menu"></ul>
+				</div>
+				<div class="right-list">
+					<input type="text" id='q' placeholder="WO No./Pno">
+					<input type="button" id="search" class="button-sytle1" value="Search">
+					<input type="button" class="button-sytle1" id="create" value="Create">
+				</div>
+			</div>
+			<table id="tableCppList" class="display" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<!--<th><input type="button" class="toggle" value=">" ></th>   &lt;!&ndash;多选框&ndash;&gt;-->
+						<th>No.</th>
+						<th>Work order</th>
+						<th>Route</th>
+						<th>Production</th>
+						<!--<th>版本</th>-->
+						<th>Wo quantity</th>
+						<th>Shift</th>
+						<th>Plan start time</th>
+						<th>Plan finish time</th>
+						<th>Actual start time</th>
+						<th>Actual finish time</th>
+						<th>Machine</th>
+						<th>Operator</th>
+						<th>Plan qty</th>
+						<!--<th>检查计划</th>-->
+						<th style="min-width:180px;">Operation</th>  <!--编辑/保存、删除-->
+					</tr>
+				</thead>
+			</table>
+	</div>
+								<!-- 弹窗1 start -->
+	<div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible;">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">Create daliy plan</span>
+			</div>
+			<input type="button" class="tc_close">
+			<form id="cppForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>No.</label>
+						<input type="text" class="form-control"  name="cppCode" id="cppCode" readonly  unselectable="on">
+					</div>
+					<div class="form-group">
+						<label>Work order</label>
+						<select  class="form-control" name="pwoId:number" id="pwoId">
+							<option value="">Work order</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Production</label>
+						<input type="text" class="form-control" name="pno" id="pno" readOnly="true">
+					</div>
+					<div class="form-group">
+						<label>Version</label>
+						<input type="text" class="form-control"  name="rev" id="rev" readOnly="true">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Description</label>
+						<input type="text" class="form-control"  name="des" id="des" readOnly="true">
+					</div>
+					<div class="form-group">
+						<label>Wo quantity<</label>
+						<input type="text" class="form-control"  name="woQty" id="woQty" readOnly="true">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Route</label>
+						<select  class="form-control" name="pRoutineDId:number" id="pRoutineDId">
+							<option value="">Route</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Shift</label>
+						<select  class="form-control" name="pShiftPlanDId" id="pShiftPlanDId">
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Plan start time</label>
+						<input type="text" class="form-control time"  name="planSt" id="planSt">
+					</div>
+					<div class="form-group">
+						<label>Plan finish time</label>
+						<input type="text" class="form-control time"  name="planFt" id="planFt">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px detail01" style="display:none;">
+					<div class="form-group">
+						<label>Actual start time</label>
+						<input type="text" class="form-control"  name="actSt" id="actSt">
+					</div>
+					<div class="form-group">
+						<label>Actual finish time</label>
+						<input type="text" class="form-control"  name="actFt" id="actFt">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Machine</label>
+						<select  class="form-control" name="mMachineId:number" id="mMachineId">
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Operator</label>
+						<select  class="form-control" name="opId" id="opId">
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Plan qty</label>
+						<input type="text" class="form-control"  name="qty" id="qty">
+					<!--</div>-->
+					<!--<div class="form-group">-->
+						<!--<label>是否生成检查计划</label>-->
+						<!--<select  class="form-control" name="status" id="status">-->
+						<!--</select>-->
+					<!--</div>-->
+						</div>
+				</div>
+				<div class="aligncenter">
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary " id="save">Save</button>
+						<button id="return" type="button" class="btn  btn-info">Return</button>
+					</div>
+				</div>
+				<input type="hidden" id="idCpp" name="idCpp:number"/>
+			</form>
+		</div>
+	</div>
+	<!-- 弹窗2 start -->
+	<div class="tcbox container-fluid" id="tcbox-pcpplist01" style="overflow: visible;">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">Check plan</span>
+			</div>
+			<input type="button" class="tc_close">
+			<form id="cppCheckForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>No.</label>
+						<input type="text" class="form-control"  name="code" id="code" readonly  unselectable="on">
+					</div>
+					<div class="form-group">
+						<label>Operator</label>
+						<input type="text" class="form-control"  name="op" id="op" readonly  unselectable="on">
+					</div>
+					<div class="form-group">
+						<label>Plan qty</label>
+						<input type="text" class="form-control"  name="planQty" id="planQty" readonly  unselectable="on">
+					</div>
+				</div>
+				<input type="hidden" class="form-control"  name="toBeQty" id="toBeQty" readonly  unselectable="on">
+				<br>
+				<br>
+				<div class="cont">
+					<!--<form id="woForm" method="post" action="index.html">-->
+						<table  id="checkPlan" class="checkPlan" cellspacing="0" width="100%" style="display:none;">
+							<thead>
+							<tr>
+								<th>Plan check time</th>
+								<th>Plan check qty</th>
+								<th>Should completed qty</th>
+								<th>Check qty</th>
+								<th>Status</th>
+							</tr>
+							</thead>
+						</table>
+					<!--</form>-->
+				</div>
+				<div class="col-xs-12 mar-top-20px changerep_cont">
+					<table id="" cellpadding="0" cellspacing="0" width="576px">
+						<tr>
+							<th width="227px"> Check time</th>
+							<th width="227px"> Check qty</th>
+							<th width="127px"> Operation</th>
+						</tr>
+					</table>
+					<div class="form-group" id="matlist">
+						<input style="width:225px" type="text" class="e" name="checkTime" id="checkTime" placeholder="Check time" readonly  unselectable="on"/>
+						<input style="width:225px" type="text" class="d" name="finQty:number" id="finQty" placeholder="Check qty"/>
+						<button type="submit" class="btn btn-primary " id="save01">Save</button>
+						<button id="return01" type="button" class="btn  btn-info">Return</button>
+					</div>   <!-- +\- over -->
+				</div>
+				<br>
+				<br>
+				<br>
+				<br>
+				<!--<div class="aligncenter">-->
+					<!--<div class="form-group">-->
+					<!--</div>-->
+				<!--</div>-->
+				<input type="hidden" id="pcppId" name="pcppId:number"/>
+			</form>
+		</div>
+	</div>
+
+	<div class="tcbox container-fluid" id="nullAlert">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+			</div>
+			<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label id="info"></label>
+				</div>
+			</div>
+		</div>
+	</div>
+</script><!--
+<script type="text/html" id="cppCheckItem">
+	<dl class="matlist" id="item<%= item %>">
+		<dd class="income-create-list">
+			<input style="width:224px" type="text" class="e" name="smtfItems[item<%= item %>][checkTime]" id="smtfItems.item<%= item %>.checkTime" placeholder="检查时间"  value="<%= data.checkTime %>"/>
+			<input style="width:224px" type="text" class="d" name="smtfItems[item<%= item %>][checkQty]" id="smtfItems.item<%= item %>.checkQty" placeholder="检查数量"  value="<%= data.checkQty %>"/>
+		</dd>
+	</dl>
+</script>-->
+<script type="text/javascript">
+	var jmstoken= store.get('JMS-TOKEN');
+//弹窗
+function showObj(objid){
+	$(objid).draggable().show();
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+var app= {
+	init: function () {
+		var self = this;
+//		this.cppCheckItem = _.template($('#cppCheckItem').html());
+		$('#body').html($('#pCppListMain').html());
+		this.$matList = $('#matlist');
+		this.$checkPlan = $('#checkPlan');
+		this.bindEvents();
+		this.autoFill();
+		this.loadTable();
+		this.form1();
+	},
+	nullAlertShow:function(information){
+		var top = $('#body').scrollTop();
+		$('#nullAlert').css({
+			top: $(window).height() * 0.2 + top
+		}).draggable().show();
+		$('#info').empty();
+		$('#info').append(information);
+	},
+	loadTable: function() {
+		var self = this;
+//		var data = {};
+		var q = $('#q').val();
+		if(this.table) {
+			this.table.destroy();
+		}
+		this.table = $('#tableCppList').DataTable({
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+			"aaSorting": [[0, "asc"],[1, "asc"]],
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL + "p/getCppList",
+				"dataType": "json",
+				headers: {'JMS-TOKEN': jmstoken},
+				"beforeSend": jmsGlobalBlock,
+				"complete": jmsGlobalUnBlock,
+				"error": jmsGlobalUnBlock,
+				data: {q:q},
+			},
+			"columnDefs": [{
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-bin>Edit</button><button class=button-delete>Delete</button> <button class=button-finish>Check plan</button>'
+			}],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+			dom: "tip",
+			pageLength: "50"
+		});
+		$('#tableCppList').on('xhr.dt', function ( e, settings, json, xhr ) {
+			if(json.jmsError) {
+				self.nullAlertShow(json.jmsError);
+//				alert(json.jmsError)
+			}
+		} );
+
+		$('#tableCppList tbody').on('click', 'button', function () {
+			var data = self.table.row($(this).parents('tr')).data();
+			var clazz = $(this).attr('class');
+			if (clazz == 'button-bin') {
+				var top = $('#body').scrollTop();
+				$('#tcbox-pcpplist').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+//				showObj('.tcbox');
+				var cpp = data[13];
+				$('#idCpp').val(cpp);
+				self.loadDetail(cpp);
+				$('.detail01').show();
+			}
+			else if (clazz == 'button-delete') {
+				$.deleteCpp(data[13], jmstoken, function (data) {
+					$.get("views/p-cppList.html", function (data) {
+						$("#body").html(data);
+					});
+				});
+			}
+			else{
+				var top = $('#body').scrollTop();
+				$('#tcbox-pcpplist01').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+//				showObj('.tcbox');
+				var cpp = data[13];
+				$.cppInfo(cpp, jmstoken, function (data) {
+					$('#checkTime').val($.dateFormat.date(new Date(data.actFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+				});
+				$('#pcppId').val(cpp);
+				$('#code').val(data[0]);
+				$('#op').val(data[11]);
+				$('#planQty').val(data[12]);
+				$('#toBeQty').val(data[12]);
+//				$('#checkTime').val(data[9]);
+				self.loadCheckPlan(cpp);
+			}
+		});
+	},
+	autoFill:function(){
+		var dataPickerOpt = {
+//			format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+			format: "YYYY-MM-DDTHH:mm",
+            useCurrent: false,
+            sideBySide: true
+		}
+		$('#planSt').datetimepicker(dataPickerOpt);
+		$('#planFt').datetimepicker(dataPickerOpt);
+		$('#actSt').datetimepicker(dataPickerOpt);
+		$('#actFt').datetimepicker(dataPickerOpt);
+		$('#checkTime').datetimepicker(dataPickerOpt);
+
+		var jmstoken= store.get('JMS-TOKEN');
+		$('#pwoId').selectautofill('p/getWoObjsList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		$('#mMachineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		$('#pShiftPlanDId').selectautofill('p/findWSShiftPlanDObjs',{headers:{'JMS-TOKEN':jmstoken}});
+		$('#opId').selectautofill('group/op/members',{headers:{'JMS-TOKEN':jmstoken}});
+
+		var frameContainer = $('.container-fluid');
+		frameContainer.on("change","#pwoId",function(){
+			$('#pRoutineDId').empty();
+			$('#pRoutineDId').append('<option value="">RoutineD</option>');
+			var idWo = $(this).val();
+			$("#pRoutineDId").selectautofill('p/findRoutineDObjsByWoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'woId':idWo}});
+
+			$.cppWoInfo(idWo,jmstoken,function(data){
+				$('#pno').val(data.pno);
+				$('#rev').val(data.rev);
+				$('#des').val(data.des);
+				$('#woQty').val(data.qty);
+			});
+		});
+
+		$("#planSt").on("dp.change", function (e) {
+			var isEmpty = $(this).val() == '';
+			$('#cppForm').bootstrapValidator('enableFieldValidators', 'planSt', !isEmpty);
+		});
+		$("#planFt").on("dp.change", function (e) {
+			var isEmpty = $(this).val() == '';
+			$('#cppForm').bootstrapValidator('enableFieldValidators', 'planFt', !isEmpty);
+		});
+
+//		$("#actSt").on("dp.change", function (e) {
+//			var isEmpty = $(this).val() == '';
+//			$('#cppForm').bootstrapValidator('enableFieldValidators', 'actSt', !isEmpty);
+//		});
+//		$("#actFt").on("dp.change", function (e) {
+//			var isEmpty = $(this).val() == '';
+//			$('#cppForm').bootstrapValidator('enableFieldValidators', 'actFt', !isEmpty);
+//		});
+		frameContainer.on('focus', 'input, select', function(e) {
+			$('#save').removeAttr('disabled');
+		});
+	},
+	bindEvents: function(){
+		var self = this;
+
+		$("#q").keydown(function() {
+			if (event.keyCode == "13") {//keyCode=13是回车键
+				self.loadTable();
+			}
+		});
+		$('#search').on('click',function(){
+			self.loadTable();
+		});
+
+		//设备下拉框
+		$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+			var _html = '';
+			_(data).each(function (d, i) {
+				_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+			});
+			$('#machine-group').find('.dropdown-menu').append(_html);
+		});
+		$('#machine-group').on('click', 'li a', function (e) {
+			var $t = $(this);
+			var id = $t.data('id');
+			$('#machine-select').val(parseInt(id));
+			$('#machineNo').html($t.text());
+		});
+		$('.machine').on('click',function(e){
+			$('#machineNo').html('Machine');
+		});
+
+//
+//		$('#tableCppList tbody').on('click', 'button', function () {
+//			var data = table.row($(this).parents('tr')).data();
+//			var clazz = $(this).attr('class');
+//			if (clazz == 'button-bin') {
+//				var top = $('#body').scrollTop();
+//				$('.tcbox').css({
+//					top: $(window).height() * 0.2 + top
+//				}).show();
+////				showObj('.tcbox');
+//				var cpp = data[13];
+//				$('#idCpp').val(cpp);
+//				self.loadDetail(cpp);
+//				$('.detail01').show();
+//			}
+//			else {
+//				$.deleteCpp(data[13], jmstoken, function (data) {
+//					$.get("views/p-cppList.html", function (data) {
+//						$("#body").html(data);
+//					});
+//				});
+//			}
+//		});
+		$('#cppForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+//				'cppCode:number': {
+//					validators: {
+//						notEmpty: {
+//							message: '编号不能为空'
+//						},
+//						digits: {
+//							message: '编号请填写数字'
+//						},
+//					}
+//				},
+				'pwoId:number': {
+					validators: {
+						notEmpty: {
+							message: 'WO No. can not be empty.'
+						}
+					}
+				},
+				'pShiftPlanDId': {
+					validators: {
+						notEmpty: {
+							message: 'Shift can not be empty.'
+						}
+					}
+				},
+				'mMachineId:number': {
+					validators: {
+						notEmpty: {
+							message: 'Machine can not be empty.'
+						}
+					}
+				},
+				'planSt': {
+					validators: {
+						notEmpty: {
+							message: 'Plan start time can not be empty.'
+						}
+					}
+				},
+				'planFt': {
+					validators: {
+						notEmpty: {
+							message: 'Plan finish time can not be empty.'
+						}
+					}
+				},
+				'opId': {
+					validators: {
+						notEmpty: {
+							message: 'Operator can not be empty.'
+						}
+					}
+				},
+				'qty': {
+					validators: {
+						notEmpty: {
+							message: 'Plan quantity can not be empty.'
+						},
+//						numeric: {
+//							message: '计划数量请填写数据'
+//						}
+						regexp: {
+							regexp: /^[1-9]\d*$/,
+							message: 'Can be a positive integer.'
+						},
+					}
+				}
+
+			}
+		}).on('success.form.bv', function (e) {
+			e.preventDefault();
+			if(!self.validateTime()) {
+				var information = 'The format of time is wrong！';
+				self.nullAlertShow(information);
+//				alert('输入时间有误');
+				return;
+			}
+			if(!self.validateData()) {
+				var information = 'The format of qty is wrong！';
+				self.nullAlertShow(information);
+//				alert('输入数量有误');
+				return;
+			}
+			var $form = $(e.target),
+			validator = $form.data('bootstrapValidator');
+			var cpp = $('#cppForm').serializeJSON();
+//            cpp.planSt = cpp.planSt.replace('Z', '470+08:00');
+			cpp.planSt = cpp.planSt+':00.000+08:00';
+			cpp.planFt = cpp.planFt+':00.000+08:00';
+			if(cpp.actSt){
+				cpp.actSt = cpp.actSt+':00.000+08:00';
+			}
+
+			if(cpp.actFt){
+				cpp.actFt = cpp.actFt+':00.000+08:00';
+			}
+//            cpp.planFt = cpp.planFt.replace('Z', '470+08:00');
+//			cpp.actSt = cpp.actSt.replace('Z', '470+08:00');
+//			cpp.actFt = cpp.actFt.replace('Z', '470+08:00');
+            cpp = JSON.stringify(cpp);
+			debugger;
+			$.saveCpp(cpp, jmstoken, function (data) {
+				debugger;
+				$.get("views/p-cppList.html", function (data) {
+					$("#body").html(data);
+				});
+			});
+
+		});
+		$('#create').click(function () {
+			var top = $('#body').scrollTop();
+			$('#tcbox-pcpplist').css({
+				top: $(window).height() * 0.2 + top
+			}).draggable().show();
+		});
+		$('#spp').click(function () {
+			$.get("views/p-sppList.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-sppList'
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#cp').click(function () {
+			$.get("views/p-checkPlan.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-checkPlan'
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#set').click(function () {
+			$.get("views/p-checkSet.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-checkSet'
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#sp').click(function () {
+			$.get("views/p-stopPlanList.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-stopPlanList'
+				});
+				$("#body").html(data);
+			});
+		});
+
+
+		$('#calendar').click(function () {
+			$.get("views/p-calendar.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-calendar'
+				});
+				$("#body").html(data);
+			});
+		});
+
+		$('#overtime').click(function () {
+			$.get("views/p-overtime.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-overtime'
+				});
+				$("#body").html(data);
+			});
+		});
+
+		$('#importCp').click(function () {
+			$.get("views/p-import.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-import'
+				});
+				$("#body").html(data);
+			});
+		});
+
+		$('#tcbox-pcpplist,#tcbox-pcpplist01').on("click",".tc_close",function(){
+			$.get("views/p-cppList.html", function (data) {
+				$("#body").html(data);
+			});
+//			$('.tcbox').hide();
+//			$('#cppForm')[0].reset();
+		});
+
+		$('#return, #return01').click(function () {
+//			$.get("views/p-cppList.html", function (data) {
+//				$("#body").html(data);
+//			});
+			$('.tcbox').hide();
+			$('#cppForm')[0].reset();
+		});
+		// 弹窗拖拽
+//		$(function () {
+//			$('#tcbox-pcpplist').draggabilly();
+//		});
+		//展开收缩
+		$(".toggle").click(function () {
+			$("table tr").find('th:eq(4)').toggle();
+			$("table tr").find('th:eq(5)').toggle();
+			$("table tr").find('th:eq(6)').toggle();
+//			$("table tr").find('td:eq(4)').toggle();
+//			$("table tr").find('td:eq(5)').toggle();
+//			$("table tr").find('td:eq(6)').toggle();
+		});
+	},
+	validateTime: function() {
+		var $planSt = $('#planSt');
+		var $planFt = $('#planFt');
+		var flag = true;
+		if($planSt.val() > $planFt.val()) {
+			$planSt.addClass('error');
+			$planFt.addClass('error');
+			flag = false;
+		}
+		return flag;
+	},
+	validateData: function() {
+		var $qty = $('#qty');
+		var flag = true;
+		if($qty.val() <= 0) {
+			$qty.addClass('error');
+			flag = false;
+		}
+		return flag;
+	},
+	loadDetail:function(cpp){
+
+		$.cppInfo(cpp, jmstoken, function (data) {
+			$('#cppForm').populate(data, true);
+//			$('#planSt').val($.dateFormat.date(new Date(data.planSt), 'yyyy-MM-dd'));
+			$('#planSt').val($.dateFormat.date(new Date(data.planSt), 'yyyy-MM-ddTHH:mm'));
+			if(data.actSt){
+				$('#actSt').val($.dateFormat.date(new Date(data.actSt), 'yyyy-MM-ddTHH:mm'));
+				if(data.actFt){
+					$('#actFt').val($.dateFormat.date(new Date(data.actFt), 'yyyy-MM-ddTHH:mm'));
+				}
+				else{
+					$('#actFt').val('');
+				}
+			}else{
+				$('#actSt').val('');
+				$('#actFt').val('');
+			}
+//			$('#planFt').val($.dateFormat.date(new Date(data.planFt), 'yyyy-MM-dd'));
+			$('#planFt').val($.dateFormat.date(new Date(data.planFt), 'yyyy-MM-ddTHH:mm'));
+
+			$("#pRoutineDId").selectautofill('p/findRoutineDObjsByWoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'woId':data.pwoId}},function() {
+				$('#pRoutineDId').val(data.pRoutineDId);
+			});
+			$.cppWoInfo(data.pwoId,jmstoken,function(data){
+				$('#pno').val(data.pno);
+				$('#rev').val(data.rev);
+				$('#des').val(data.des);
+				$('#woQty').val(data.qty);
+			});
+
+		});
+	},
+	loadCheckPlan:function(cpp){
+		var self = this;
+		$.cppCheckInfo(cpp, jmstoken, function (data) {
+			if(data.length>0){
+				$('#checkPlan').show();
+				self.$checkPlan.append('<tbody>');
+				$(data).each(function(i, val){
+					var checkTime = $.dateFormat.date(new Date(val.checkTime), 'yyyy-MM-dd HH:mm:ss');
+					debugger;
+					self.$checkPlan.append('<tr><td><label>'+checkTime+'</label></td><td><label>'+val.planQty+'</label></td><td><label>'+val.toBeQty+'</label></td><td><label>'+val.finQty+'</label></td><td><label>'+val.status+'</label></td>');
+//					self.$checkPlan.append('<tr><td>'+checkTime+'</td><td>'+val.planQty+'</td><td>'+val.toBeQty+'</td><td>'+val.finQty+'</td><td>'+val.status+'</td></tr>');
+				});
+				self.$checkPlan.append('</tbody>');
+			}
+		});
+	},/*
+	createRow: function(data) {
+		var self = this;
+		var row = parseInt(self.$matList.data('row'));
+		if(!row) {
+			row = 1;
+		}
+
+		if(!data) {
+			data = self.defaultData;
+		}
+
+		var param = {
+			data: data,
+			item: row,
+			action: self.params.action
+		}
+
+		var html = self.cppCheckItem(param);
+		self.$matList.data('row', row + 1);
+
+		return html;
+	},*/
+	form1:function(){
+		var self = this;
+		$('#cppCheckForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'checkTime': {
+					validators: {
+						notEmpty: {
+							message: 'Checking time cannot be empty.'
+						}
+					}
+				},
+				'finQty:number': {
+					validators: {
+						notEmpty: {
+							message: 'Checking qty cannot be empty.'
+						}
+					}
+				}
+			}
+		}).on('success.form.bv', function (e) {
+			e.preventDefault();
+			var $form = $(e.target),
+			validator = $form.data('bootstrapValidator');
+//			var cppCheck = JSON.stringify($('#cppCheckForm').serializeJSON());
+
+
+			var cppCheck = $('#cppCheckForm').serializeJSON();
+			cppCheck.checkTime = cppCheck.checkTime.replace('Z', '470+08:00');
+			cppCheck = JSON.stringify(cppCheck);
+			debugger;
+			$.saveCppCheck(cppCheck, jmstoken, function (data) {
+				debugger;
+				$.get("views/p-cppList.html", function (data) {
+					$("#body").html(data);
+				});
+			});
+		});
+	}
+};
+	app.init();
+</script>
+<style>
+	#planSt,#planFt{text-align:left;}
+</style>
+	

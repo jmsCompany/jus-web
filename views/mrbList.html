@@ -1,0 +1,145 @@
+<script type="text/html" id="mrbListMain">
+    <div class="body-head-title">
+        <span class="h-title" id="po01">来料清单</span>
+        <span class="h-title" id="po02">新建来料</span>
+        <span class="h-title" id="po04">检验入库</span>
+        <span class="h-title-selected"><b>采购退货</b></span>
+        <span class="h-title" id="createMrb">新建采购退货</span>
+    </div>
+    <div class="cont">
+        <!--<div class="r-header-body">-->
+            <!--搜索框-->
+            <!--<div class="sousuo">-->
+                <!--<div class="ss-input">-->
+                    <!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+                <!--</div>-->
+                <!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+            <!--</div>-->
+
+            <!--右边
+            <div class="right-list">
+            <a href="#" class="button-sytle1" id="createMrb">新建</a>
+            </div>-->
+        <!--</div> &lt;!&ndash;检索结束&ndash;&gt;-->
+
+        <!--汇总
+        <div class="btn-group btn-group-left">
+            <button class="btn btn-default" type="button">汇总</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">汇总</span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">汇总</a></li>
+                <li><a href="#">明细</a></li>
+            </ul>
+        </div>-->
+        <table id="tableMrb" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>下单员</th>
+                <th>下单日期</th>
+                <th>退货单编号</th>
+                <th>供应商</th>
+                <th>采购订单</th>
+                <th>物料编码</th>
+                <th>版本</th>
+                <th>描述</th>
+                <th>批号</th>
+                <th>退货数量</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</script>
+<script type="text/javascript">
+    var app={
+        init:function() {
+            $('#body').html($('#mrbListMain').html());
+            //绑定事件
+            this.bindEvents();
+        },
+        bindEvents:function(){
+            var jmstoken= store.get('JMS-TOKEN');
+            var historyParams={
+                groupId:'incomeList'
+            };
+            var table =$('#tableMrb').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL+"s/smtfMaterialList",
+                    "dataType": "json",
+                    "headers":{'JMS-TOKEN':jmstoken},
+                    "data": {'typeId':2}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>详情</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+
+                dom: "tip",
+                pageLength:"50"
+            } );
+            $('#tableMrb tbody').on( 'click', 'button', function () {
+                var rowData = table.row( $(this).parents('tr') ).data();
+                var historyOptions={
+                    groupId:'incomeList',
+                    mrbId:rowData[10],
+                    viewId:'mrb-body',
+                    action:'detail'
+                };
+                $.get("views/mrb-body.html",function(data){
+                    RouterManager.setUrl(
+                            historyOptions
+                    );
+                    $("#body").html(data);
+                });
+
+            } );
+            // 新建退货单
+            $('#createMrb').click(function(){
+                $.get("views/mrb-body.html",function(data){
+                    historyParams.viewId='mrb-body';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            // 来料入库
+            $('#po01').click(function(){
+                $.get("views/incomeList.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            //新建入检
+            $("#po02").click(function () {
+                $.get("views/incomeList-create-body.html", function (data) {
+                    historyParams.viewId='incomeList-create-body';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            //新建入库
+            $("#po04").click(function () {
+                $.get("views/incomeList-checked-body.html", function (data) {
+                    historyParams.viewId='incomeList-checked-body';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+        }
+    };
+    app.init();
+</script>
+
+
+

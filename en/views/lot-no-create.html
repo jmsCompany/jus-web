@@ -1,0 +1,184 @@
+<div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                        <form id="lotNoForm" method="post" action="index.html" class="form-horizontal">
+                           
+							<fieldset>
+							<legend>来料收货批号详情</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">采购单号</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="poCode" id="poCode"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">供应商</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="idCocompany" id="idCocompany"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">物料编码</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="pno" id="pno"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">版本</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="rev" id="rev"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">描述</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="des" id="des"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">订购数量</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="qtyPo" id="qtyPo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">已收数量</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="qtyReceived" id="qtyReceived"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">本次数量</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="qty" id="qty"></label>
+                                </div>
+                            </div>
+                            <table id="tableLot" class="display" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>批号</th>
+                                        <th>数量</th>
+                                        <th>箱数</th>
+                                        <th>货架号</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                	<button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+    
+<script type="text/javascript">    
+$(document).ready(function() {
+	var idPoLine = $('#_key8').val();
+	$.poLineInfo({"id":idPoLine},token,function(data){
+		$('#poCode').html(data.poCode);
+		$('#idCocompany').html(data.idCocompany);
+		$('#pno').html(data.pno);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+		$('#qtyPo').html(data.qtyPo);
+		$('#qtyReceived').html(data.qtyReceived);
+	});
+	
+	$('#lotNoForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+           // 'emp_receiving': {
+           //     validators: {
+            //        notEmpty: {
+           //             message: '收货人不能为空'
+           //         }  
+           //     }
+           // },
+           // 'express_company': {
+            //    validators: {
+            //        notEmpty: {
+            //            message: '物流公司不能为空'
+             //       }
+            //    }
+          //  },
+          //  'express_no': {
+           //     validators: {
+           //         notEmpty: {
+           //             message: '运单号不能为空'
+            //        },
+           //         remote: {
+           //             type: 'GET',
+           //              url: $clientURL+'check/express_no',
+            //            name:'IncomingList',
+            //            message: '该运单号已存在',
+           //             delay: 1000
+           //         } 
+            //    }
+            'lotNo': {
+                validators: {
+                    notEmpty: {
+                        message: '批号不能为空'
+                    }
+                }
+            },
+            'qty': {
+                validators: {
+                    notEmpty: {
+                        message: '收货数量不能为空'
+                    }
+                }
+            },
+            'bin': {
+                validators: {
+                    notEmpty: {
+                        message: '货架号不能为空'
+                    }
+                }
+            },
+            'qtyBox': {
+                validators: {
+                    notEmpty: {
+                        message: '箱数不能为空'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var income =JSON.stringify($('#incomeForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createIncome(income,jmstoken,function(data){
+			      	$.get("views/IncomeList-create-body.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	
+	$('cancel').click(function(){
+	 		$.get("views/incomeList-create-body.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    

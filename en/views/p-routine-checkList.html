@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>检查列表</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>检查列表</b></span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+<div class="btn-group btn-group-left">
+       <label>产品：</label>
+       <input name="material" readonly="readonly" id="material" type="text"/>
+</div>
+	<div class="btn-group btn-group-left">
+		<label>工序：</label>
+		<input name="routeNo" readonly="readonly" id="routeNo" type="text"/>
+	</div>
+<div class="right-list">
+       <button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">新建</button>
+</div>
+
+</div> <!--检索结束-->
+    <!--<form id="binForm" method="post" action="index.html" class="form-horizontal">-->
+        
+        <table id="checkList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>检查项目</th>
+				<th>检验方法</th>
+				<th>规格</th>
+                <th>检具</th>
+				<th>检验频次</th>
+				<th>检验人员</th>  <!--作业员/检验员-->
+                <th>操作</th>
+            </tr>
+        </thead>
+        </table>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="button" class="btn btn-info" id="return02">返回</button>
+                 	</div>
+                 </div>
+    <!--</form>-->
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">新建或编辑检查项目</span>
+		</div>
+      <input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+     <form id="checkItemForm" method="post" action="index.html" class="form-inline">
+				<!--<div class="col-xs-12 mar-top-20px">  -->
+					<!--<div class="form-group">-->
+				    	<!--<label for="" class="input-w-160">项目类型</label>-->
+				    	<!--<input type="text" class="form-control input-w-3"  name="bin" id="bin">-->
+				    <!--</div>-->
+				<!--</div>-->
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">检查项目</label>
+						<input type="text" class="form-control input-w-3"  name="item" id="item">
+					</div>
+				</div>
+		 		<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label for="" class="input-w-160">检验方法</label>
+				 		<input type="text" class="form-control input-w-3"  name="testMethod" id="testMethod">
+			 			</div>
+		 		</div>
+		 		<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label for="" class="input-w-160">规格</label>
+				 		<input type="text" class="form-control input-w-3"  name="specification" id="specification">
+			 		</div>
+		 		</div>
+		 		<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label for="" class="input-w-160">检具</label>
+						<select  class="input-w-3 select-cs1 form-control" name="materialId:number" id="materialId">
+						</select>
+			 		</div>
+		 		</div>
+		 		<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label for="" class="input-w-160">检验频次</label>
+				 		<input type="text" class="form-control input-w-3"  name="frequency:number" id="frequency">
+			 		</div>
+		 		</div>
+		 		<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label for="" class="input-w-160">检验人员</label>
+				 		<select  class="input-w-3 select-cs1 form-control" name="qTesterId:number" id="qTesterId">
+				 		</select>
+			 		</div>
+		 		</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return1" type="button" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idCheckList" name="idCheckList:number"/>
+       			 <input type="hidden" id="pRoutineDId" name="pRoutineDId:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+<script type="text/javascript">
+
+//弹窗
+function showObj(objid){
+	$(objid).draggable().show();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+var jmstoken= store.get('JMS-TOKEN');
+	var params = RouterManager.getParams();
+	var mat = params['material'];
+	$('#material').val(mat);
+	var routeD = params['routineDId'];
+	$('#pRoutineDId').val(routeD);
+	var routeNo = params['routeNo'];
+	$('#routeNo').val(routeNo);
+
+	$('#qTesterId').selectautofill('q/getTestersObjsList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+	$("#materialId").selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+
+   var table= $('#checkList').DataTable( {
+        "processing": true,
+		"serverSide": true,
+	   "stateSave": true,
+	   "stateDuration": -1,
+        "ajax": {
+			"type": 'POST',
+            "url": $clientURL+"q/getCheckList",
+            "dataType": "json",
+             data: {"routineDId":routeD},
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+        dom: "tip",
+		pageLength:"50"
+    } );
+  
+	$('#checkList tbody').on( 'click', 'button', function () {
+     	var data = table.row( $(this).parents('tr') ).data();
+     	var clazz=$(this).attr('class');
+        if(clazz=='button-edit'){
+			var top = $('#body').scrollTop();
+			$('.tcbox').css({
+				top: $(window).height() * 0.2 + top
+			}).draggable().show();
+//			showObj('.tcbox');
+			$.checkInfo(data[6],jmstoken,function(data){
+		 		$('#checkItemForm').populate(data,true);
+			});
+     	}
+        else{
+        	$.deleteCheck(data[6],jmstoken,function(data){
+     		  	$.get("views/p-routine-checkList.html",function(data){
+	                $("#body").html(data);
+	            });
+     		});
+        }
+    } );
+	 	$('#checkItemForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+			'item': {
+				validators: {
+					notEmpty: {
+						message: '检查项目不能为空'
+					}
+				}
+			},
+			'frequency:number': {
+				validators: {
+					digits: {
+						message: '检查项目不能为空'
+					}
+				}
+			},
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+			var jmstoken= store.get('JMS-TOKEN');
+       		var checkItem =JSON.stringify($('#checkItemForm').serializeJSON());
+		 	$.saveCheckList(checkItem,jmstoken,function(data){
+			      	$.get("views/p-routine-checkList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+
+        });
+		$('#return1').click(function(){
+	 		$.get("views/p-routine-checkList.html",function(data){
+	         	$("#body").html(data);
+			});
+		});
+		
+	 	$('#return02').click(function(){
+			history.go(-1);
+	 	});
+// 弹窗拖拽
+//$(function () {
+//	$('#draggable1').draggabilly();
+//});
+</script>
+
+</body>
+</html>
+

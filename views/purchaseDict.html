@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+	</style>
+	<script type="text/javascript">
+		function showObj(objid) {
+			$(objid).show();
+
+		}
+		function hideObj(objid) {
+			$(objid).hide();
+		}
+
+		//	function startrequest()
+		//	{
+		//		$("#date").text((new date()).tostring());
+		//	}
+		$(document).ready(function() {
+			var jmstoken = store.get('JMS-TOKEN');
+			var table = null
+			function loadTable (){
+				table = $('#buyDict').DataTable({
+
+					"retrieve": true,
+					"processing": true,
+					"serverSide": true,
+					"stateSave": true,
+					"stateDuration": -1,
+					//scrollY:"350px",
+					//scrollCollapse: true,
+					"ajax": {
+						"type": 'POST',
+						"url": $clientURL + "s/mrp/buyMethodsTable",
+						"dataType": "json",
+						headers: {
+							'JMS-TOKEN': jmstoken
+						}
+					},
+					"columnDefs": [
+					],
+					"language": {
+						"url": "js/datatable/chinese.json"
+					},
+
+					dom: "tip",
+					pageLength: "50"
+
+				});
+			}
+			loadTable()
+			//	setinterval("startrequest()",3000);
+			$("#return,.tc_close").on('click', function() {
+				$('.tcbox').hide();
+			});
+			$('#create').click(function() {
+				$('.tcbox').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+			});
+			$('#poForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'vl': {
+						validators: {
+							notEmpty: {
+								message: '值不能为空'
+							},
+						}
+					},
+					'unit': {
+						validators: {
+							notEmpty: {
+								message: '单位不能为空'
+							},
+						}
+					},
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				if ($("#unit").val()=='无'&&+$("#vl").val()!=0) {
+					return alert("单位是无的时候，值必须为0！")
+				}
+				var $form     = $(e.target),
+						validator = $form.data('bootstrapValidator');
+				var form =JSON.stringify($('#poForm').serializeJSON());
+				var jmstoken= store.get('JMS-TOKEN');
+				$.saveBuyMethod(form,jmstoken,function(data){
+					$('#save').attr('disabled',false)
+					if(data.valid) {
+						table.destroy();
+						loadTable();
+						$('.tcbox').hide();
+						$('#poForm')[0].reset();
+					}else {
+						alert('新建失败！')
+					}
+				});
+			})
+			// $("#save").on('click', function() {
+			//
+			// })
+			// $.fn.dataTable.ext.errMode = 'throw';
+
+			var historyOptions = {
+				groupId: 'mrp'
+			};
+
+			$('#noMatReport').click(function() {
+				historyOptions.viewId = 'noMatReport';
+				$.get("views/noMatReport.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#sourcingPrice').click(function() {
+				historyOptions.viewId = 'mrp';
+				$.get("views/mrp.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#tempSourcing').click(function() {
+				historyOptions.viewId = 'tempSourcing';
+				$.get("views/tempSourcing.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#purchaseDict').click(function() {
+				historyOptions.viewId = 'purchaseDict';
+				$.get("views/purchaseDict.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+		});
+	</script>
+
+</head>
+
+<body>
+	<div class="body-head-title">
+		<span class="h-title" id="sourcingPrice"><b>采购价格</b></span>
+		<span class="h-title-selected" id="purchaseDict">采购字典</span>
+		<span class="h-title" id="noMatReport">缺料报告</span>
+		<span class="h-title" id="tempSourcing">临时采购单</span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+			<!-- <button id="detail" class="button-sytle1">明细</button> -->
+			<div class="right-list">
+				<!--<select class="js-data-example-ajax" id="js-data-example-ajax">-->
+				<!--<option value="">选择物料</option>-->
+				<!--</select>-->
+				<!-- <input type="text" id='q' placeholder="物料编码/物料描述/版本"> -->
+				<button id="create" class="button-sytle1">新建</button>
+			</div>
+		</div>
+		<!--检索结束-->
+	</div>
+	<table id="buyDict" class="display" cellspacing="0" cellpadding="0" width="100%">
+		<thead>
+			<tr>
+				<th>值</th>
+				<th>单位</th>
+				<th>描述</th>
+				<th>备注</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+	<div class="tcbox container-fluid mat-box" id="draggable1">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">新建采购字典</span>
+			</div>
+			<input type="button" class="tc_close">
+			<form id="poForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">值</label>
+						<input type="number" class="form-control input-w-3" name="vl" placeholder="值" id="vl" />
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">单位</label>
+						<select class="form-control input-w-3" name="unit" id="unit">
+							<option value="无">无</option>
+							<option value="天">天</option>
+							<option value="周">周</option>
+							<option value="月">月</option>
+							<option value="季">季</option>
+							<option value="年">年</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">描述</label>
+						<input type="text" class="form-control input-w-3" name="descr" placeholder="描述" id="sUnitDicByUnitPur" />
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label style="text-align:center;width:80px;">备注</label>
+						<input type="text" class="form-control input-w-3" name="remark" placeholder="备注" id="sUnitDicByUnitPur" />
+					</div>
+				</div>
+				<div class="aligncenter">
+					<div class="form-group">
+						<button type="submit" id="save" class="btn btn-primary ">保存</button>
+						<button id="return" type="reset" class="btn  btn-info">返回</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

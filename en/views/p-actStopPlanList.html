@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+var jmstoken= store.get('JMS-TOKEN');
+function showObj(objid){
+	$(objid).show();
+}
+function hideObj(objid){
+	$(objid).hide();
+}
+var actStopPlanList = {
+	init:function(){
+//		this.loadTable();
+		this.bindEvents();
+		this.form();
+		this.autoFill();
+	},
+	autoFill:function(){
+		var dataPickerOpt = {
+			format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+			useCurrent: false,
+			sideBySide: true
+		}
+		$('#actSt').datetimepicker(dataPickerOpt);
+		$('#actFt').datetimepicker(dataPickerOpt);
+		$('#planSt').datetimepicker(dataPickerOpt);
+		$('#planFt').datetimepicker(dataPickerOpt);
+
+	},
+	loadTable:function(){
+		var self = this;
+		var data = {};
+		if ($('#handle-bar').html() == 'All'){
+			data.idStatus = null;
+		}
+		else{
+			var idStatus = $('#status-select').val();
+			data.idStatus = idStatus;
+		}
+		if(this.table) {
+			this.table.destroy();
+		}
+		this.table = $('#tableStopPlanList').DataTable( {
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL + "p/findPStopsPlanReportList",
+				"dataType": "json",
+				headers: {'JMS-TOKEN':jmstoken},
+				data:data
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-edit>Edit</button>'
+			} ],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+			dom: "tip",
+			pageLength:"50"
+		} );
+		$('#tableStopPlanList tbody').on( 'click', 'button', function () {
+			var rowData = self.table.row( $(this).parents('tr') ).data();
+			var clazz =$(this).attr('class');
+			var top = $('#body').scrollTop();
+			$('#actStop').css({
+				top: $(window).height() * 0.2 + top
+			}).show();
+			self.loadDetail(rowData[7]);
+		} );
+	},
+	loadDetail:function(idActStop){
+		$.actStopInfo(idActStop,jmstoken,function(data){
+			$('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_stops_plan'}},function(){
+				$('#statusId').val(data.statusId);
+			});
+			$('#actStopPlanForm').populate(data,true);
+			$('#machineId').html('<option value="' + data.machineId + '">' + data.machineCode + '</option>');
+			$('#pSubCodeId').html('<option value="' + data.pSubCodeId + '">' + data.pSubCode + '</option>');
+			$('#planSt').val($.dateFormat.date(new Date(data.planSt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+			$('#planFt').val($.dateFormat.date(new Date(data.planFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+			if(data.actSt){
+				$('#actSt').val($.dateFormat.date(new Date(data.actSt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+				if(data.actFt){
+					$('#actFt').val($.dateFormat.date(new Date(data.actFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+				}
+				else{
+					$('#actFt').val('');
+				}
+			}else{
+				$('#actSt').val('');
+				$('#actFt').val('');
+			}
+		});
+	},
+	bindEvents:function(){
+
+		var self = this;
+
+		$('#status-select').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN': jmstoken},data:{'source':'p_stops_plan'}}, function(data) {
+			var _html = '';
+			_(data).each(function(d, i) {
+				_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+				if(d.name == 'Open'){
+					$('#status-select').val(parseInt(d.id));
+					$('#handle-bar').html(d.name);
+					self.loadTable();
+				}
+			});
+			$('#status-group').find('.dropdown-menu').append(_html);
+			$('#status-group').find('.dropdown-menu').append('<li><a >All</a></li>');
+		});
+
+//		$('.dropdown-toggle').on('click',function(e){
+//			$('#handle-bar').html('状态');
+//		});
+		$('#status-group').on('click', 'li a', function(e) {
+			var $t = $(this);
+			var id = $t.data('id');
+			$('#status-select').val(parseInt(id));
+			$('#handle-bar').html($t.text());
+			self.loadTable();
+		});
+
+		var historyOptions = {
+			groupId:'p-actStopPlanList'
+		};
+
+		$('#us').click(function(){
+			$.get("views/p-unplannedStop.html",function(data){
+				historyOptions.viewId='p-unplannedStop';
+				RouterManager.setUrl(historyOptions);
+				$("#body").html(data);
+			});
+		});
+//    	$('#sr').click(function(){
+//	 		$.get("views/p-stop-reason.html",function(data){
+//	             $("#body").html(data);
+//	     	});
+//	 	});
+		$('#cs').click(function(){
+			$.get("views/p-actSetup.html",function(data){
+				historyOptions.viewId='p-actSetup';
+				RouterManager.setUrl(historyOptions);
+				$("#body").html(data);
+			});
+		});
+
+		$('#return1').click(function(){
+			$.get("views/p-actStopPlanList.html",function(data){
+				$("#body").html(data);
+			});
+		});
+	},
+	form:function(){
+		$('#actStopPlanForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+//				'actSt': {
+//					validators: {
+//						notEmpty: {
+//							message: 'Actual start time cannot be empty.'
+//						}
+//					}
+//				},
+//				'actFt': {
+//					validators: {
+//						notEmpty: {
+//							message: 'Actual finish time cannot be empty'
+//						}
+//					}
+//				}
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			var $form  = $(e.target),
+			validator = $form.data('bootstrapValidator');
+//			var actStopPlan =JSON.stringify($('#actStopPlanForm').serializeJSON());
+
+
+			var actStopPlan = $('#actStopPlanForm').serializeJSON();
+			actStopPlan.planSt = actStopPlan.planSt.replace('Z', '470+08:00');
+			actStopPlan.planFt = actStopPlan.planFt.replace('Z', '470+08:00');
+			actStopPlan.actSt = actStopPlan.actSt.replace('Z', '470+08:00');
+			actStopPlan.actFt = actStopPlan.actFt.replace('Z', '470+08:00');
+			actStopPlan = JSON.stringify(actStopPlan);
+			debugger;
+			$.saveStopPlan(actStopPlan,jmstoken,function(data){
+				debugger;
+				$('#save').removeAttr('disabled');
+				$.get("views/p-actStopPlanList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+
+		});
+	}
+};
+actStopPlanList.init();
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>Actual Stop</b></span>
+	<span class="h-title" id="us">Unplanned Stop</span>
+	<!--<span class="h-title" id="sr">停机编码</span>-->
+	<span class="h-title" id="cs">Actual Setup</span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+	<div class="btn-group btn-group-left" id="status-group">
+		<select name="none" id="status-select" style="display: none;"></select>
+		<button class="btn btn-default" type="button" style="" id="handle-bar">Status</button>
+		<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+			<span class="caret"></span>
+			<span class="sr-only">Status</span>
+		</button>
+		<ul class="dropdown-menu"></ul>
+	</div>
+</div>
+
+<table id="tableStopPlanList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+				<th>Machine</th>
+                <th>Reason</th>
+                <th>Plan start time</th>
+                <th>Plan finish time</th>
+                <th>Actual start time</th>
+                <th>Actual finish time</th>
+				<th>Status</th>
+				<th>Operation</th>
+            </tr>
+        </thead>
+</table>
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="actStop" style="overflow: visible;">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">Actual Stop</span>
+		</div>
+      <input type="button" class="tc_close" onClick="javascript:hideObj('#actStop');">
+     <form id="actStopPlanForm" method="post" action="index.html" class="form-inline">
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Machine</label>
+				 <!--<input type="text" class="form-control input-w-3"  name="machine" id="machine" readOnly="true">-->
+				 <select class="form-control" style="width:180px;" name="machineId:number" id="machineId">
+				 </select>
+			 </div>
+		 </div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Main Reason</label>
+				    	<!--<input type="text" class="form-control input-w-3"  name="Code" id="Code" readOnly="true">-->
+						<select class="form-control" style="width:180px;" name="pSubCodeId:number" id="pSubCodeId">
+						</select>
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+				    <div class="form-group">
+				    	<label for="" class="input-w-160">Plan start time</label>
+				    	<input type="text" class="form-control input-w-3"  name="planSt" id="planSt" readOnly="true" readonly="true">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Plan finish time</label>
+				    	<input type="text" class="form-control input-w-3"  name="planFt" id="planFt" readOnly="true" readonly="true">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Actual start time</label>
+				    	<input type="text" class="form-control input-w-3"  name="actSt" id="actSt">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Actual finish time</label>
+				    	<input type="text" class="form-control input-w-3"  name="actFt" id="actFt">
+				    </div>
+				</div>
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Status</label>
+				 <!--<input type="text" class="form-control input-w-3"  name="Code" id="Code" readOnly="true">-->
+				 <select class="form-control" style="width:180px;" name="statusId:number" id="statusId">
+				 </select>
+			 </div>
+		 </div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary " id="save">Save</button>
+                 		<button id="return1" type="button" class="btn  btn-info">Return</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idStopsPlan" name="idStopsPlan:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>

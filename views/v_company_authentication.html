@@ -1,0 +1,19 @@
+﻿
+<script type="text/javascript">
+
+ console.log(store.get('JMS-TOKEN'));
+
+ $.ajax({
+                    'url':          '/jms-integration-1.0/company/view',
+                     'type':        'GET',
+                    'dataType':    'json',
+                    'contentType': 'application/json; charset=UTF-8',
+                    'headers':      {'JMS-TOKEN':store.get('JMS-TOKEN')},
+                    'success': function(data, textStatus){
+                                      
+                                       console.log(JSON.stringify(data));
+
+                       }
+               });
+
+</script>

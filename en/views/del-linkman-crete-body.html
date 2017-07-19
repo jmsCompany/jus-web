@@ -1,0 +1,232 @@
+<div class="container-fluid">
+	<div class="row">
+		<section>
+			<div class="body-head-title">				
+                        <span class="h-title"><b>新建、编辑联系人</b></span>
+			</div>
+			<form id="editlinkmanForm" method="post" action="index.html" class="form-inline">
+			<div class="form-box">
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputName" class="input-w-160">姓名</label>
+					    <input type="text" class="form-control input-w-300"  placeholder="" name="exampleInputName" id="exampleInputName">
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputSex" class="input-w-160">性别</label>
+				    	<input type="radio" name="iCheck" id="Man" class="radio-w" value="" checked/><label for="">男</label>
+				    	<input type="radio" name="iCheck" id="Woman" class="radio-w" value="" /><label for="">女</label>
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputWork" class="input-w-160">职务</label>
+					    <input type="text" class="form-control input-w-300" placeholder="" name="exampleInputWork" id="exampleInputWork">
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputTel" class="input-w-160" name="exampleInputTel" id="exampleInputTel">电话</label>
+					    <input type="Tel" class="form-control input-w-300" placeholder="" name="exampleInputTel" id="exampleInputTel">
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputEmail1" class="input-w-160">邮箱</label>
+	                    <input type="email" class="form-control input-w-3" id="exampleInputEmail1" placeholder="">
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputQq" class="input-w-160">qq</label>
+					    <input type="text" class="form-control input-w-3" id="exampleInputQq" placeholder="">
+					</div>
+                </div>
+                <div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputWexin" class="input-w-160">微信</label>
+					    <input type="text" class="form-control input-w-3" id="exampleInputWexin" placeholder="">
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputWang" class="input-w-160">旺旺</label>
+					    <input type="text" class="form-control input-w-300" id="exampleInputWang" placeholder="">
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputState" class="input-w-160">状态</label>
+					    <select name="exampleInputState" class="form-control  select-cs1 input-w-300" id="exampleInputState">
+					    	<option value="">请选择</option>
+					    </select>
+					</div>
+				</div>
+
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputRemarks" class="input-w-160">备注</label>
+					    <textarea class="form-control input-w-300" rows="3" id="exampleInputRemarks"></textarea>
+					</div>
+				</div>
+				<div class="col-xs-10 mar-top-20px">
+					<div class="form-group">
+					    <label for="exampleInputAutoremarks" class="input-w-160">自动备注</label>
+					    <textarea class="form-control input-w-300" rows="3" id="exampleInputAutoremarks"></textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button type="reset" class="btn  btn-info">取消</button>
+                 	</div>
+                 </div>
+                 </form>
+		</section>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+//  $('#companyType\\.idDic').selectautofill('dic/companyType');
+//  $('#level\\.idDic').selectautofill('dic/level');
+//  $('#term1\\.idDic').selectautofill('dic/term1');
+//  $('#term2\\.idDic').selectautofill('dic/term2');
+//  $('#country\\.idDic').selectautofill('dic/country');
+//  $('#status\.idDic').selectautofill('dic/status');
+//	
+    $('#editlinkmanForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'exampleInputName': {
+                validators: {
+                    notEmpty: {
+                        message: '姓名不能为空'
+                    },
+                    remote: {
+                        type: 'GET',
+                         url: $clientURL+'check/co_code',
+                        name:'cocompany',
+                        message: '该姓名已存在',
+                        delay: 1000
+                    }   
+                }
+            },
+            'exampleInputWork': {
+                validators: {
+                    notEmpty: {
+                        message: '职务不能为空'
+                    }
+                }
+            },
+            'name': {
+                validators: {
+                    notEmpty: {
+                        message: '公司名称不能为空'
+                    }
+                }
+            },
+            'exampleInputTel': {
+                validators: {
+                    //notEmpty: {},
+                    digits: {},
+                    phone: {
+						//message: '电话号码不合法'
+                        country: 'CN'
+                    }
+                }
+            },
+            'companyFax': {
+                validators: {
+                    //notEmpty: {},
+                    digits: {},
+                    phone: {
+						//message: '电话号码不合法'
+                        country: 'CN'
+                    }
+                }
+            },
+            'addressAct': {
+                validators: {
+                    notEmpty: {
+                        message: '实际地址不能为空'
+                    }
+                }
+            },
+            'addressReg': {
+                validators: {
+                    notEmpty: {
+                        message: '注册地址不能为空'
+                    }
+                }
+            },
+            'aritificialPerson': {
+                validators: {
+                    notEmpty: {
+                        message: '法人代表不能为空'
+                    }
+                }
+            },
+            'url': {
+                validators: {
+                    uri: {
+                        allowLocal: true,
+                        message: '请输入有效网址'
+                    }
+                }
+            },
+            'taxNo': {
+                validators: {
+                    notEmpty: {
+                        message: '公司税号不能为空'
+                    }
+                }
+            },
+            'bank': {
+                validators: {
+                    notEmpty: {
+                        message: '开户银行不能为空'
+                    }
+                }
+            },
+            'bankAccNo': {
+                validators: {
+                    notEmpty: {
+                        message: '银行帐号不能为空'
+                    }
+                }
+            },
+            'auditBy': {
+                validators: {
+                    notEmpty: {
+                        message: '检核人不能为空'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var cocompany =JSON.stringify($('#cocompanyForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createCocompany(cocompany,jmstoken,function(data){
+			   // $form.find('.alert-success').html('成功保存： ' + JSON.stringify(data)).show();
+			      	$.get("views/cocompany.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+		
+
+
+});
+</script>

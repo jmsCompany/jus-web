@@ -1,0 +1,80 @@
+<script type="text/template" id="poMain">
+    <div class="body-head-title">
+        <span class="h-title-selected" id="pprice"><b>采购价格</b></span>
+        <!-- <span class="h-title" id="purchaseDict">采购字典</span> -->
+        <span class="h-title" id="noMatReport">缺料报告</span>
+        <span class="h-title" id="tempSourcing">临时采购单</span>
+    </div>
+    <div class="cont">
+        <div class="a-upload bg-img dropzone" id="drawId">导入采购价格</div>
+        <div id="result"></div>
+    </div>
+</script>
+<script type="text/template" id="dropzone-template-container">
+    <div class="dz-preview dz-file-preview">
+        <div class="dz-details">
+            <div class="dz-filename"><span data-dz-name></span><span data-dz-remove title="删除">✘</span><span data-dz-size></span></div>
+        </div>
+        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+        <div class="dz-success-mark"><span>✔</span></div>
+        <div class="dz-error-mark"><span>✘</span></div>
+        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    </div>
+</script>
+<script type="text/javascript">
+    //初始化页面
+        var dropzoneTmpl = $('#dropzone-template-container').html();
+        $('#body').html($('#poMain').html());
+        var jmstoken= store.get('JMS-TOKEN');
+
+        var app={
+            init:function(){
+                this.bindEvents();
+            },
+            bindEvents:function(){
+                var self = this;
+
+                $('#noMatReport').click(function() {
+                   // historyOptions.viewId = 'noMatReport';
+                    $.get("views/noMatReport.html", function(data) {
+                      //  RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#tempSourcing').click(function() {
+                   // historyOptions.viewId = 'tempSourcing';
+                    $.get("views/tempSourcing.html", function(data) {
+                        //RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+
+                // 返回
+                $('#pprice').click(function(){
+                    $.get("views/mrp.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+
+                $('.dropzone').dropzone({
+                    previewTemplate: dropzoneTmpl,
+                    url: $clientURL+ 's/uploadComPriceFile',
+                    headers: {'JMS-TOKEN':jmstoken},
+                    maxFiles: 1,
+                    maxFilesize: 10,
+					acceptedFiles:'.csv',
+                    dictDefaultMessage:"",
+                    init:function(){
+                        var that = this;
+                        this.on('success',function(file,res){
+                            if(!res.valid) {
+                                $('#result').html(res.msg);
+                            }
+                        });
+                    }
+                });
+
+            }
+        };
+        app.init();
+</script>

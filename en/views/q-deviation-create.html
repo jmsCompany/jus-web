@@ -1,0 +1,463 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+  <!--<head>-->
+    <!--<meta charset="utf-8">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--&lt;!&ndash;-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <!--<meta name="format-detection" content="telephone=no">-->
+    <!--&ndash;&gt;-->
+    <!--<title>表格页面</title>-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap-customize.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/style.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/pages.css">-->
+    <!--<script type="text/javascript" src="js/quality/js/html5.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/jquery.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/bootstrap.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/respond.src.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/base.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/main.js"></script>-->
+    <!--&lt;!&ndash;plugin&ndash;&gt;-->
+  <!--</head>-->
+  <body>
+    <!-------------------------------------- 头部开始 -------------------------------------->
+    <header>
+      <div class="container1">
+        
+      </div>
+    </header>
+    <!-------------------------------------- 头部结束 -------------------------------------->
+    <!-------------------------------------- 内容开始 -------------------------------------->
+    <main>
+      <form id="deviationForm"  method="post" action="index.html">
+      <div class="container1">
+        <div class="ui-table1 no-border style1">
+          <table>
+            <tr>
+              <td colspan="10" align="right"><p><span class="name">FM-08-41. Rev 01</span></p></td>
+            </tr>
+            <tr>
+              <td colspan="2" valign="top">
+                <!--<img class="logo" src="img/logo2.png" alt="">-->
+              </td>
+              <td colspan="6">
+                <div class="title1">
+                  Permission for Deviation/Concession <br>让步接收申请
+                </div>
+              </td>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td colspan="10" align="center">
+                <b class="fz14">Deviation/ Concession Index: </b>
+                <span class="wh30"></span>
+
+                <input id="deviationNo" name="deviationNo" class="no-show-border" style="border-bottom: 2px solid #808080; width: 250px; line-height: 20px; height: 20px; display: inline-block;">
+                <!--<p contenteditable style="border-bottom: 2px solid #808080; width: 250px; line-height: 20px; height: 20px; display: inline-block;"></p>-->
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="ht10"></div>
+        <div class="ui-table1 style2">
+          <table>
+            <tr>
+              <td colspan="2" align="center"><p><span class="tname">Product/Process No. <br>产品/过程名称</span></p></td>
+              <td colspan="3">
+                <input id="material" name="material" class="no-show-border" readonly>
+                <input type="hidden" id="idMaterial" name="idMaterial" class="no-show-border" >
+
+                <!--<select id="idMaterial" name="idMaterial:number" style="width:120px;">-->
+                  <!--<option>产品</option>-->
+                <!--</select><br><br>-->
+                <select id="idRoutineD" name="idRoutineD:number" style="width:120px;">
+                  <option>工序</option>
+                </select>
+                <!--<textarea class="contenteditable" placeholder="Fill in Drawing No."></textarea>-->
+              </td>
+              <td colspan="2" align="center"><p><span class="tname">Raised function<br>提出部门:</span></p></td>
+              <td colspan="3">
+                <!--<textarea class="contenteditable" placeholder="Fill in issue department"></textarea>-->
+
+                <select id="idDept" name="idDept:number" style="width:120px;">
+                  <option>部门</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="2" align="center"><p><span class="tname">Supplier/Customer name:<br>供应商/客户名称</span></p></td>
+              <td colspan="3" rowspan="2">
+                <!--<textarea class="contenteditable" placeholder="Fill the supplier/customer name"></textarea>-->
+
+                <select id="idCompanyCo" name="idCompanyCo:number" style="width:120px;">
+                  <option>合作公司</option>
+                </select>
+              </td>
+              <td colspan="2" align="center"><p><span class="tname">发起人<br>Issuer</span></p></td>
+              <td colspan="3">
+
+                <select id="issuer" name="issuer:number" style="width:120px;">
+                  <option>发起人</option>
+                </select>
+                <!--<input id="issuer" name="issuer" class="no-show-border">-->
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center"><p><span class="tname">日期<br>Date</span></p></td>
+              <td colspan="3">
+                <input id="date1" name="date1" class="no-show-border">
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2"><p><span class="tname">Scope/ Period of Validity<br> or max quantity allowed<br>偏离申请范围/有效期或<br>数量</span></p></td>
+              <td colspan="8">
+                <textarea class="contenteditable" id="scopePeriodMaxqty" name="scopePeriodMaxqty"  style="width:650px;height:80px;"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p><span class="tname">Reason for <br>deviatio/Concession偏离<br>申请的原因</span></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+              </td>
+              <td colspan="8">
+                <textarea class="contenteditable" id="reason" name="reason" style="width:650px;height:220px;"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" rowspan="5" valign="top">
+                <p><span class="tname">Review and approval会<br>签及批准</span></p>
+              </td>
+              <td colspan="2" align="center">
+                <p><span class="tname">Function <br>职能部门</span></p>
+              </td>
+              <td colspan="4" align="center">
+                <p><span class="tname">Review comments(Ac/ Re) <br>评审备注(接受/拒绝)</span></p>
+              </td>
+              <td colspan="2" align="center">
+                <p><span class="tname">Sign off <br>签字</span></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">
+                <p><span class="tname">M.F.G <br>Engineering</span></p>
+              </td>
+              <td colspan="4" align="center">
+
+                <input id="mfgRemark" name="mfgRemark" class="no-show-border">
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+              <td colspan="2" align="center">
+
+                <!--<input id="mfgSign" name="mfgSign" class="no-show-border">-->
+                <select id="mfgSign" name="mfgSign:number" style="width:120px;">
+                  <!--<option>发起人</option>-->
+                </select>
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">
+                <p><span class="tname">Application <br>Engineering</span></p>
+              </td>
+              <td colspan="4" align="center">
+                <input id="aeRemark" name="aeRemark" class="no-show-border">
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+              <td colspan="2" align="center">
+                <!--<input id="aeSign" name="aeSign" class="no-show-border">-->
+                <select id="aeSign" name="aeSign:number" style="width:120px;">
+                  <!--<option>发起人</option>-->
+                </select>
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">
+                <p><span class="tname">Quality <br>Engineering</span></p>
+              </td>
+              <td colspan="4" align="center">
+
+                <input id="qeRemark" name="qeRemark" class="no-show-border">
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+              <td colspan="2" align="center">
+
+                <!--<input id="qeSign" name="qeSign" class="no-show-border">-->
+                <select id="qeSign" name="qeSign:number" style="width:120px;">
+                  <!--<option>发起人</option>-->
+                </select>
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">
+                <p><span class="tname">Other <br> Fuction</span></p>
+              </td>
+              <td colspan="4" align="center">
+
+                <input id="otherFuction" name="otherFuction" class="no-show-border">
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+              <td colspan="2" align="center">
+                <!--<input id="ofSign" name="ofSign" class="no-show-border">-->
+                <select id="ofSign" name="ofSign:number" style="width:120px;">
+                  <!--<option>发起人</option>-->
+                </select>
+                <!--<textarea class="contenteditable" placeholder=""></textarea>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="10">
+                <p style="color: #0000ff; font-size: 14px;">
+                  <span style="text-decoration: underline;">Remarks:</span><br>
+                  The Deviation approval is only valid for the above named period/amount!<br>
+                  This document has to be attached to every container!<br>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="foot-btn-box">
+        <div class="form-group">
+          <button class="btn btn-primary" id="save01">保存</button>
+          <button class="btn  btn-info" type="button" id="return01">返回</button>
+        </div>
+      </div>
+        <input id="idDeviation" name="idDeviation" type="hidden">
+        <input id="idNoProcess" name="idNoProcess" type="hidden">
+      </form>
+    </main>
+    <!-------------------------------------- 内容结束 -------------------------------------->
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+    <footer>
+      <div class="container1">
+        
+      </div>
+    </footer>
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+  </body>
+<!--</html>-->
+<style>
+
+  .no-show-border{
+    border-left:0px;border-top:0px;border-right:0px;border-bottom:1px;width:120px;
+  }
+</style>
+
+<script type="text/javascript">
+  var jmstoken= store.get('JMS-TOKEN');
+  function formatRepo (repo) {
+    if (repo.loading) return repo.text;
+
+    var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+    return markup;
+  }
+
+  function formatRepoSelection (repo) {
+    return repo.name || repo.text;
+  }
+  var deviationCreate={
+    init:function(){
+      var self = this;
+      var params = this.params = RouterManager.getParams();
+      var action = params['action'];
+      var idNoProcess = params['idNoProcess'];
+      var idDeviation = params['idDeviation'];
+      var materialId = params['materialId'];
+      var material = params['material'];
+
+      if(idDeviation){
+        this.loadDetail(idDeviation,action);
+      }
+      else{
+        this.autoFill(materialId);
+      }
+      $('#material').val(material);
+      $('#idNoProcess').val(idNoProcess);
+      $('#idMaterial').val(materialId);
+      this.bindEvents();
+      this.form();
+    },
+    loadDetail:function(idDeviation,action,callback){
+      var self = this;
+      $.deviationInfo(idDeviation,jmstoken,function(data){
+        debugger;
+        $('#deviationForm').populate(data,true);
+
+        $('#idCompanyCo').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+          $('#idCompanyCo').val(data.idCompanyCo)
+        });
+        $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{materialId:data.idMaterial}},function(){
+          $('#idRoutineD').val(data.idRoutineD);
+        });
+
+        var $issuer = $('#issuer');
+        self.fillUser($issuer,function(){
+          $issuer.append('<option value="'+data.issuer+'"></option>');
+          $issuer.val(data.issuerName);
+        });
+        $('#select2-issuer-container').text(data.issuerName);
+
+        var $mfgSign = $('#mfgSign');
+        self.fillUser($mfgSign,function(){
+          $mfgSign.append('<option value="'+data.mfgSign+'"></option>');
+          $mfgSign.val(data.mfgSignName);
+        });
+        $('#select2-mfgSign-container').text(data.mfgSignName);
+
+        var $aeSign = $('#aeSign');
+        self.fillUser($aeSign,function(){
+          $aeSign.append('<option value="'+data.aeSign+'"></option>');
+          $aeSign.val(data.aeSignName);
+        });
+        $('#select2-aeSign-container').text(data.aeSignName);
+
+        var $qeSign = $('#qeSign');
+        self.fillUser($qeSign,function(){
+          $qeSign.append('<option value="'+data.qeSign+'"></option>');
+          $qeSign.val(data.qeSignName);
+        });
+        $('#select2-qeSign-container').text(data.qeSignName);
+
+        var $ofSign = $('#ofSign');
+        self.fillUser($ofSign,function(){
+          $ofSign.append('<option value="'+data.ofSign+'"></option>');
+          $ofSign.val(data.ofSignName);
+        });
+        $('#select2-ofSign-container').text(data.ofSignName);
+
+        self.dealAction(action);
+        callback;
+      });
+    },
+    dealAction:function(action){
+//      $('.remark01').show();
+      if(action == 'detail'){
+        $('input,select,textarea', $('#deviationForm')).prop('readonly', true);
+        $("input:not(:button,:hidden)").prop("disabled", 'disabled');
+        $('select', $('#deviationForm')).prop("disabled", 'disabled');
+        $('.clearfix').remove();
+        $('.foot-btn-box').remove();
+      }
+    },
+    autoFill:function(materialId){
+      var self = this;
+      $('#idCompanyCo').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+      $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{materialId:materialId}});
+//      self.fillMaterialId();
+      self.fillUser($('#issuer'));
+      self.fillUser($('#audit02'));
+      self.fillUser($('#mfgSign'));
+      self.fillUser($('#aeSign'));
+      self.fillUser($('#qeSign'));
+      self.fillUser($('#ofSign'));
+      var dataPickerOpt = {
+        format: "YYYY-MM-DD"
+      };
+      $('#date1').datetimepicker(dataPickerOpt);
+    },
+    fillUser: function($user,callback) {
+      $user.select2({
+        ajax: {
+          url: $clientURL + 'u/getUsersByQ',
+          dataType: 'json',
+          headers: {'JMS-TOKEN': jmstoken},
+          delay: 200,
+          data: function (params) {
+            return {
+              q: params.term
+            }
+          },
+          processResults: function (data, params) {
+            return {
+              results: data,
+              pagination: null
+            }
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        },
+        minimumInputLength: 1,
+        width: 120,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      }).on('select2:open',function(evt){
+        $('#select2-js-data-example-ajax-container').html('');
+        $('#js-data-example-ajax').empty();
+      });
+      callback && callback();
+    },
+    bindEvents:function(){
+      var self = this;
+      var $frame = $('#deviationForm');
+//      $frame.on('change','#idMaterial',function(){
+//        $('#idRoutineD').empty();
+//        $('#idRoutineD').append('<option value="">工序</option>');
+//        var idMaterial = $('#idMaterial').val();
+//        $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{materialId:idMaterial}});
+//      });
+      $frame.on('click','#return01',function(){
+//        $.get("views/q-deviationList.html",function(data){
+//          RouterManager.setUrl({
+//            groupId :'q-noProcessingSheetList',
+//            viewId:'q-deviationList'
+//          });
+//          $("#body").html(data);
+//        });
+        history.go(-1);
+      });
+    },
+    form:function(){
+      $('#deviationForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+          'idMaterial:number': {
+            validators: {
+              notEmpty: {
+                message: '物料编码不能为空'
+              }
+            }
+          }
+        }
+      }).on('success.form.bv', function (e) {
+        e.preventDefault();
+        var $form = $(e.target),
+        validator = $form.data('bootstrapValidator');
+        var deviation = JSON.stringify($('#deviationForm').serializeJSON());
+        debugger;
+        $.saveDeviation(deviation, jmstoken, function (data) {
+          debugger;
+          history.go(-1);
+//          $.get("views/q-deviationList.html", function (data) {
+//            $("#body").html(data);
+//            RouterManager.setUrl({
+//              groupId:'q-deviationList'
+//            });
+//          });
+        });
+      });
+    }
+  };
+  deviationCreate.init();
+
+</script>

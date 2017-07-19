@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+        var jmstoken= store.get('JMS-TOKEN');
+        var employee={
+            init:function(){
+                var self = this;
+                var params = RouterManager.getParams();
+                var userId = params['userId'];
+                $('#idUser').val(userId);
+                $('#name').val(params['name']);
+                $('#username').val(params['username']);
+                this.$userRole = $('#userRoleList');
+                this.bindEvents();
+                this.loadTable();
+            },
+            loadTable:function(callback){
+                var self = this;
+                $.userRoleInfo(jmstoken,function(data){
+                    debugger;
+                    self.$userRole.append('<tbody>');
+                    $(data).each(function(i, val){
+                        self.$userRole.append('<tr><td><input type="checkbox" name="wsRoleList" id="'+val.idRole+'" value='+val.idRole+'></td><td><label>'+val.role+'</label></td>');
+                    });
+                    self.$userRole.append('</tbody>');
+                    self.loadDetail();
+                });
+            },
+            loadDetail:function(){
+                var userId = $('#idUser').val();
+                $.userInfo(userId,jmstoken,function(data){
+//                    debugger;
+                    $(data.roleList).each(function(i, val){
+                        var idRole = val.idRole;
+                        $('#'+idRole).attr('checked',true);
+                    });
+                });
+            },
+            bindEvents:function(){
+                $('#return1').click(function(){
+                    $.get("views/sys-employee.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+                $('#save').click(function(){
+//                var roleName = new Array();
+//                var roleD = new Object();
+//                var j = 0;
+//                $("input[name='wsRoleList']").each(function(i, o){
+//                    if(o.checked) {
+//                        roleD.idRole = o.value;
+//                        roleName[0] = "idRole";
+////                        wsRoleList[j] ='{"idRole":'+ o.value;+'}';
+//                        debugger;
+//                        j++;
+//                    }
+//                });
+//                debugger;
+//                var wsRoleList = JSON.stringify(roleD, roleName);
+                    var wsRoleList = '';
+                    var j = 0;
+                    $("input[name='wsRoleList']").each(function(i, o){
+                        if(o.checked) {
+                            if(wsRoleList.length!=0){
+                                wsRoleList = wsRoleList+',';
+                            }
+                            wsRoleList = wsRoleList+'{"idRole":'+o.value+'}';
+                            j++;
+                        }
+                    });
+//                var contact = new Object();
+//                contact.idUser = $('#idUser').val();
+//                contact.roleList = String(wsRoleList);
+//                var wsUser = new Array();
+//                wsUser[0] = "idUser";
+//                wsUser[1] = "roleList";
+                      var wsUserRoles = '{"idUser":'+$('#idUser').val()+',"roleList":['+wsRoleList+']}';
+//                    var wsUserRoles ={"idUser":10,"roleList":[{"idRole":21},{"idRole":22}]};
+//
+//                var contact = new Object();
+                var contact = $.parseJSON(wsUserRoles);
+                var roleUser =JSON.stringify(contact);
+//                var wsUserRoles = JSON.stringify(contact, wsUser);
+                    //取到对象数组后，我们来循环检测它是不是被选中
+//                for(var i=0; i<obj.length; i++){
+//                    if(obj[i].checked){
+//                        wsRoleList+=obj[i].value+',';//如果选中，将value添加到变量s中
+//                    }
+//                }
+                    //那么现在来检测s的值就知道选中的复选框的值了
+//                alert(s==''?'你还没有选择任何内容！':s);
+                    $.addRole(roleUser,jmstoken,function(data){
+                        $.get("views/sys-employee.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                });
+            }
+        };
+        employee.init();
+    </script>
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="position">分配角色</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group btn-group-left">
+            <label>姓名：</label>
+            <input name="name" readonly id="name" type="text"/>
+        </div>
+        <div class="btn-group btn-group-left">
+            <label>用户名：</label>
+            <input name="username" readonly id="username" type="text"/>
+        </div>
+    </div>
+    <table id="userRoleList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th></th>   <!--多选框-->
+            <th>角色</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="aligncenter">
+        <div class="form-group">
+            <button id="save" type="submit" class="btn btn-primary ">保存</button>
+            <button id="return1" type="reset" class="btn  btn-info">返回</button>
+        </div>
+    </div>
+    <input type="hidden" id="idUser" name="idUser:number"/>
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+

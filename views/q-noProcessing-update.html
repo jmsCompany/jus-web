@@ -1,0 +1,212 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="noProcessingForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idNoProcessing" />
+							<fieldset>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">批次号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="lotNo" id="lotNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="pno" id="pno"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件名称</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="matDes" id="matDes"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">数量</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="qty" id="qty"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">库位</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="location" id="location"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">问题描述</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="des" id="des"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">发布</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="release" id="release"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">审核</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="audit1" id="audit1"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">评审意见</label>
+                                <div class="col-lg-5">
+                                	<textarea name="comment" id="comment" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <form action="" method="get"> 
+                                <label class="col-lg-3 control-label">处理方式</label>
+                                <label><input name="disposal" type="checkbox" value="" />挑选</label> 
+                                <!--选择挑选跳出：可接收数量输入-->
+                                <label><input name="disposal" type="checkbox" value="" />返工</label>
+                                <!--选择返工跳出：返工数量输入-->
+                                <label><input name="disposal" type="checkbox" value="" />报废</label> 
+                                <!--选择报废跳出：报废数量输入-->
+                                <label><input name="disposal" type="checkbox" value="" />退货</label>
+                                <!--选择退货跳出：挑选/返工工时-->
+                                <label><input name="disposal" type="checkbox" value="" />让步接收</label> 
+                                <!--选择让步接收跳出：让步接收数量和偏差申请单号输入-->
+                            </form> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">责任人</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="owner" id="owner"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">审核</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="audit2" id="audit2"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">会签</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="countersign" id="countersign"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">批准</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="approval1" id="approval1"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">整改措施</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="improvementAction" id="improvementAction"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">是否生成正式抱怨</label>
+                                <div class="col-lg-5">
+                                <label><input name="concernOrNot" type="radio" value="" />是 </label> 
+                                <label><input name="concernOrNot" type="radio" value="" />否 </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">抱怨号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="concernNo" id="concernNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">责任人</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="response" id="response"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">审核</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="audit3" id="audit3"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">批准</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="approval2" id="approval2"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$('#location\\.idDic').selectautofill('dic/location');
+    
+    var idNoProcessing = $('#_key26').val();
+	$.noProcessingInfo({"id":idNoProcessing},token,function(data){
+		$('#noProcessingForm').populate(data,true);
+	});
+    
+    $('#noProcessingForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'lotNo': {
+                validators: {
+                    notEmpty: {
+                        message: '批次不能为空'
+                    }
+                }
+            },
+            'location': {
+                validators: {
+                    notEmpty: {
+                        message: '库位不能为空'
+                    } 
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var noProcessing =JSON.stringify($('#NoProcessingForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createNoProcessing(noProcessing,jmstoken,function(data){
+			      	$.get("views/q-noProcessingList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+ 	   
+ 	   $('#cancel').click(function(){
+	 		$.get("views/q-noProcessingList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    
+
+
+

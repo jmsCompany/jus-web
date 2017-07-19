@@ -1,0 +1,59 @@
+<form id="cppForm" method="post" action="index.html" class="form-horizontal">
+	<table id="tableCppList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>工单号</th>
+                <th>工艺</th>
+                <th>产品</th> 
+                <th>版本</th>
+                <th>数量</th>
+                <th>班次</th>
+                <th>计划开始时间</th>
+                <th>计划结束时间</th>
+                <th>计划数量</th>
+                <th>计划检查时间</th> 
+            </tr>
+        </thead>
+	</table>
+	<div class="form-group">
+    	<div class="col-lg-9 col-lg-offset-3">
+        	<button type="submit" class="btn btn-primary" id="return">取消</button>
+    	</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+var jmstoken= store.get('JMS-TOKEN');
+$(document).ready(function() {
+    $('#tableSppList').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://192.168.30.107:9999/jms/s/materialList",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        //dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+    
+    
+		
+		$('return').click(function(){
+	 		$.get("views/p-sppList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+	
+
+} );
+</script>

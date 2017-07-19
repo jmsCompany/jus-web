@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#table-materialList').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+
+} );
+</script>
+
+</head>
+<body>
+ 
+ <table id="table-materialList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>物料编码</th>
+                <th>物料名称</th>
+                <th>版本</th>
+                <th>大类</th>
+                <th>小类</th>
+                <th>仓库</th>
+                <th>状态</th>
+                <th>操作</th>
+        </thead>
+ 
+</table>
+</body>
+</html>

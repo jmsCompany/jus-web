@@ -1,0 +1,213 @@
+<script type="text/template" id="linkmanCreateBody">
+    <div class="container-fluid">
+        <div class="row">
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title"><b>新建或编辑联系人</b></span>
+                </div>
+                <form id="editlinkmanForm" method="post" action="index.html" class="form-inline">
+                    <div class="form-box">
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputName" class="input-w-160">姓名</label>
+                                <input type="text" class="form-control input-w-300"  placeholder="" name="name" id="name">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputSex" class="input-w-160">性别</label>
+                                <input type="radio" name="genderId:number" class="radio-w" value="1" checked/><label for="">男</label>
+                                <input type="radio" name="genderId:number" class="radio-w" value="2" /><label for="">女</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputWork" class="input-w-160">职务</label>
+                                <input type="text" class="form-control input-w-300" placeholder="" name="position" id="position">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputTel" class="input-w-160" name="exampleInputTel" id="exampleInputTel">电话</label>
+                                <input type="Tel" class="form-control input-w-300" placeholder="" name="phoneNo" id="phoneNo">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">邮箱</label>
+                                <input type="text" class="form-control input-w-3" id="email" name="email" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputQq" class="input-w-160">qq</label>
+                                <input type="text" class="form-control input-w-3" id="qq" name="qq" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputWexin" class="input-w-160">微信</label>
+                                <input type="text" class="form-control input-w-3" id="weChat" name="weChat" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputWang" class="input-w-160">旺旺</label>
+                                <input type="text" class="form-control input-w-300" id="wangwang" name="wangwang" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputState" class="input-w-160">状态</label>
+                                <input type="radio" name="statusId:number" class="radio-w" value="27" checked/><label for="stateOn">有效</label>
+                                <input type="radio" name="statusId:number" class="radio-w" value="28" /><label for="stateOoff">无效</label>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputRemarks" class="input-w-160">备注</label>
+                                <textarea class="form-control input-w-300" rows="3" id="remark" name="remark"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputAutoremarks" class="input-w-160">自动备注</label>
+                                <textarea class="form-control input-w-300" rows="3" id="autoRemark" name="autoRemark"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button id="save" type="submit" class="btn btn-primary ">保存</button>
+
+
+                            <button id="return01" type="button" class="btn  btn-info">返回</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idLinkman" name="idLinkman:number"/>
+                    <input type="hidden" id="coCompanyId" name="coCompanyId:number"/>
+                </form>
+                <!--<input type="button" id="return" value="返回" class="button-bin"/>-->
+            </section>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var app={
+        init:function(){
+            $('#body').html($('#linkmanCreateBody').html());
+            var self=this;
+            setTimeout(self.bindEvents,0);
+        },
+        bindEvents:function(){
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+            //处理页面操作
+            var params = RouterManager.getParams();
+            var idLinkman = params.linkmanId ;
+            $('#idLinkman').val(idLinkman);
+            var coCompanyId = params.coCompanyId;
+            $('#coCompanyId').val(coCompanyId);
+            var jmstoken= store.get('JMS-TOKEN');
+            if(idLinkman!=null){
+                $.linkmanInfo(idLinkman	,jmstoken,function(data){
+                    $('#editlinkmanForm').populate(data,true);
+                });
+                if(params.action=='detail'){
+                    $('input,select,textarea',$('#editlinkmanForm')).prop('readonly',true);
+                    $("input:not(:button,:hidden)").prop("readonly", true);
+                    $(".radio-w").prop("disabled", true);
+                    $('#save').hide();
+                    $('.h-title').html('<b>联系人详情</b>');
+                }
+            }
+
+            $('#editlinkmanForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: '姓名不能为空'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+                                message: '只能是汉字、字母。'
+                            }
+                        }
+                    },
+                    'position': {
+                        validators: {
+                            regexp: {
+                                regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+                                message: '只能是汉字、字母、数字、下划线。'
+                            },
+                        }
+                    },
+                    'phoneNo': {
+                        validators: {
+                            phone: {
+                                message: '电话号码不合法',
+                                country: 'CN'
+                            }
+                        }
+                    },
+                    'email': {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不合法。'
+                            }
+                        }
+                    },
+                    'qq': {
+                        validators: {
+                            digits: {
+                                message: 'qq不合法'
+                            },
+                        }
+                    },
+                    'weChat': {
+                        validators: {
+                            regexp: {
+                                regexp: /^([a-z_A-Z-.+0-9]+)$/,
+                                message: '请输入正确的微信'
+                            }
+                        }
+                    },
+                    'wangwang': {
+                        validators: {
+                            regexp: {
+                                regexp: /^([a-z_A-Z-.+0-9]+)$/,
+                                message: '请输入正确的旺旺'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var linkman =JSON.stringify($('#editlinkmanForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                $.saveLinkman(linkman,jmstoken,function(data){
+//                    $.get("views/linkman-body.html",function(data){
+//                        $("#body").html(data);
+//                    });
+                    history.go(-1);
+                });
+
+            });
+        }
+    };
+    app.init();
+</script>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+    //弹窗
+    function showObj(objid){
+        $(objid).show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    var jmstoken= store.get('JMS-TOKEN');
+    $.fn.dataTable.ext.errMode = 'throw';
+    var role={
+        init:function(){
+            this.$rolePermission = $('#rolePermission');
+            this.bindEvents();
+//            this.form();
+            this.loadTable();
+            this.autoFill();
+        },
+        autoFill:function(){
+            $('#pSubCodeId').selectautofill('p/getPStopsCodeObjsList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+        },
+        bindEvents:function(){
+            $('#draggable1').on('click','.tc_close',function(){
+                $('.tcbox').hide();
+                $('#roleForm')[0].reset();
+            });
+            $('#return').click(function(){
+                $.get("views/sys-role.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+
+            var historyParams={
+                groupId:'system'
+            };
+            $('#dep').click(function(){
+                $.get("views/sys-dept.html",function(data){
+                    historyParams.viewId = 'sys-dept';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#emp').click(function(){
+                $.get("views/sys-employee.html",function(data){
+                    historyParams.viewId = 'sys-employee';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#position').click(function(){
+                $.get("views/sys-position.html",function(data){
+                    historyParams.viewId = 'sys-position';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#notification').click(function(){
+                $.get("views/sys-notification.html",function(data){
+                    historyParams.viewId = 'sys-notification';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#costCenter').click(function(){
+                $.get("views/sys-cost-center.html",function(data){
+                    historyParams.viewId = 'sys-cost-center';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+        },
+        loadTable:function(){
+            var table=$('#roleList').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL+"u/roles/list",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+
+            $('#roleList tbody').on( 'click', 'button', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                var clazz=$(this).attr('class');
+                if(clazz=='button-edit'){
+                    var top = $('#body').scrollTop();
+                    $('#draggable1').css({
+                        top: $(window).height() * 0.2 + top
+                    }).show();
+                    var idStopDes = data[2];
+                    $.stopDesInfo(idStopDes,jmstoken,function(data){
+                        $('#stopDesForm').populate(data,true);
+                    });
+                }
+                else{
+                    $.deleteBin(data[2],jmstoken,function(data){
+                        if(data.valid == false){
+                            var top = $('#body').scrollTop();
+                            $('#draggable2').css({
+                                top: $(window).height() * 0.2 + top
+                            }).show();
+//					showObj('#draggable2');
+                        }
+                        else{
+                            $.get("views/sys-stopDes.html",function(data){
+                                $("#body").html(data);
+                            });
+                        }
+                    });
+                }
+            } );
+        },
+        form:function(){
+            var self = this;
+            $('#stopDesForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'role': {
+                        validators: {
+                            notEmpty: {
+                                message: '角色名称不能为空'
+                            }
+                        }
+                    },
+                    'description': {
+                        validators: {
+                            notEmpty: {
+                                message: '描述不能为空'
+                            }
+                        }
+                    },
+//                    'level:number': {
+//                        validators: {
+//                            digits: {
+//                                message: '级别请填写数字'
+//                            }
+//                        }
+//                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var role =JSON.stringify($('#stopDesForm').serializeJSON());
+                $.saveStopDes(role,jmstoken,function(data){
+                    $.get("views/sys-stopDes.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        }
+    };
+    role.init();
+
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="position">职位</span>
+    <span class="h-title" id="dep">部门</span>
+    <span class="h-title" id="emp">员工</span>
+    <span class="h-title" id="role01">角色</span>
+    <span class="h-title" id="notification">消息中心</span>
+    <span class="h-title" id="costCenter">成本中心</span>
+    <span class="h-title"><b>停机描述</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">新建</button>
+
+        </div> <!--检索结束-->
+    </div>
+    <table id="roleList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>类型</th>
+            <th>描述</th>
+            <!--<th>级别</th>-->
+            <!--<th>状态</th>-->
+            <th>操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">停机原因</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="stopDesForm" method="post" action="index.html" class="form-horizontal">
+            <div class="form-group">
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">类型</label>
+                <div class="col-lg-5">
+                    <!--<input type="text" class="form-control" name="role" id="role"/>-->
+
+                    <select  class="input-w-3 select-cs1 form-control" name="pSubCodeId:number" id="pSubCodeId">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">描述</label>
+                <div class="col-lg-5">
+                    <input type="text" class="form-control" name="description" id="description" style="width:180px;"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-9 col-lg-offset-3">
+                    <button type="submit" class="btn btn-primary ">保存</button>
+                    <button id="return" type="button" class="btn  btn-info">返回</button>
+                </div>
+                <input type="hidden" class="form-control" name="idStopDes:number" id="idStopDes"/>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 弹窗 over -->
+</body>
+</html>
+

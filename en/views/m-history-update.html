@@ -1,0 +1,601 @@
+<script type="text/html" id="mHistoryCreate">
+<div class="container-fluid">
+    <div class="row">
+    <section>
+			<div class="body-head-title">			
+                 <span class="h-title"><b>Edit repair history</b></span>
+			</div>
+     <form id="historyForm" method="get" action="index.html"  class="form-inline">
+           <div class="form-box">  
+           <div class="clearfix"></div>
+				<div class="title-box">
+					<span>Basic Information</span>
+				</div>
+							<div class="col-xs-12 mar-top-20px">
+                                 <div class="form-group">
+                                     <label for="" class="input-w-160">Machine</label>
+                                     <select class="input-w-3 select-cs1 form-control" name="machineId:number" id="machineId">
+                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="input-w-160">Submitter</label>
+                                    <select class="input-w-3 select-cs1 form-control" name="opId:number" id="opId">
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xs-12 mar-top-20px">
+                                <div class="form-group" style="position:relative;">
+                                    <label for="" class="input-w-160">Submit Time</label>
+                                    <input type='text' class="form-control" name="repairTime" id="repairTime"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="input-w-160">Confirmor</label>
+                                    <select class="input-w-3 select-cs1 form-control" name="confirmorId:number" id="confirmorId">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 mar-top-20px">
+                                <div class="form-group">
+                                    <label class="input-w-160">Fault Description</label>
+                                    <textarea class="form-control input-w-300" name="issueDes" id="issueDes"></textarea>
+                                </div> 
+                            </div> 
+                            
+                            <div class="col-xs-12 mar-top-20px changerep_cont sparePartHistory">
+                                <div class="title-box">
+                                    <span>Repair or change parts</span>
+                                </div>
+                                <!--<table id="" cellpadding="0" cellspacing="0" style="width: 513px;padding-left: 100px;">-->
+                                <table id="" cellpadding="0" cellspacing="0" width="513px" style="padding-left:100px;">
+                                    <tr>
+                                        <th width="201px"> Parts Name</th>
+                                        <!--<th width="151px"> 型号规格</th>-->
+                                        <th width="200px"> Quantity</th>
+                                        <th width="112px" id="operation01"> Operation</th>
+                                    </tr>
+                                </table>
+                                <div class="form-group" id="matlist">
+                                </div>   <!-- +\- over -->
+                            </div>
+                            
+                            <div class="col-xs-12 mar-top-20px">
+                                <div class="form-group">
+                                    <label class="input-w-160">Fault Solution Description</label>
+                                    <textarea  class="form-control input-w-300" name="solution" id="solution"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 mar-top-20px">
+                                <div class="form-group">
+                                    <label class="input-w-160">Cause Analysis of Failure and Prevention of Recurrence</label>
+                                    <textarea  class="form-control input-w-300" name="suggestion" id="suggestion"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 mar-top-20px">
+                                <!--<div class="form-group datetime">-->
+                                    <!--<label>开始响应时间</label>-->
+                                    <!--<div class='input-group date' id='datetimepicker1'>-->
+										<!--<input type='text' class="form-control t" name="responseTime" id="responseTime"  />-->
+										<!--<span class="input-group-addon">-->
+											<!--<span class="glyphicon glyphicon-calendar"></span>-->
+										<!--</span>-->
+									<!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="form-group datetime">-->
+                                    <!--<label>开始维修时间</label>-->
+                                      <!--<div class='input-group date' id='datetimepicker2'>-->
+                                            <!--<input type='text' class="form-control t" name="repairingTime" id="repairingTime"  />-->
+                                            <!--<span class="input-group-addon">-->
+                                                <!--<span class="glyphicon glyphicon-calendar"></span>-->
+                                            <!--</span>-->
+                                        <!--</div>-->
+                                <!--</div>-->
+                                <div class="form-group" style="position:relative;">
+                                    <label class="input-w-160">Start response time</label>
+                                    <input type="text" class="form-control" name="responseTime" id="responseTime"/>
+                                </div>
+                                <div class="form-group" style="position:relative;">
+                                    <label class="input-w-160">Repair Finish Time</label>
+                                    <input type="text" class="form-control" name="repairingTime" id="repairingTime"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 mar-top-20px">
+                                <div class="form-group" style="position:relative;">
+                                    <label class="input-w-160">Repair confirm time</label>
+                                    <input type="text" class="form-control" name="recoverTime" id="recoverTime"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="input-w-160">Solver</label>
+                                    <select class="input-w-3 select-cs1 form-control" name="maintainerId:number" id="maintainerId">
+                                    </select>
+                                    <!--<input type="text" class="form-control" name="maintainerId:number" id="maintainerId"/>-->
+                                </div>
+                            </div>
+                           <div class="col-xs-12 mar-top-20px">
+                               <div class="form-group">
+                                   <label class="input-w-160">Confirmor</label>
+                                   <select class="input-w-3 select-cs1 form-control" name="repairId:number" id="repairId">
+                                   </select>
+                                   <!--<input type="text" class="form-control" name="repairId:number" id="repairId"/>-->
+                               </div>
+                               <div class="form-group">
+                                   <label class="input-w-160">Status</label>
+                                   <select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+                                   </select>
+                                   <!--<input type="text" class="form-control" name="statusId:number" id="statusId"/>-->
+                               </div>
+                           </div>
+
+
+                </div> 
+                 <div class="clearfix"></div>           
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                          <button type="submit" class="btn btn-primary" id="save01">Save</button>
+                          <button type="button" class="btn btn-primary" id="return01">REturn</button>
+                    </div>
+                 </div>
+                 <input type="hidden" class="form-control" name="idRepairHistory:number" id="idRepairHistory"/>
+               </form>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+<script type="text/html" id="historyPartItems">
+    <dl class="matlist" id="item<%= item %>">
+        <!--<dt>&nbsp;</dt>-->
+        <dd class="historyUpdate">
+            <select data-id="<%= data.materialId %>" class="select-cs1 a" name="historyPartItems[item<%= item %>][materialId]:number" id="historyPartItems.item<%= item %>.materialId"><option value="" >Please choose material</option></select>
+            <!--<input type="text" class="c" style="width:26.4%;" name="spareItems[item<%= item %>][des]" id="spareItems.item<%= item %>.des" value="<%= data.des %>"/>-->
+            <input type="text" class="b" style="width:198px;" name="historyPartItems[item<%= item %>][qty]:number" id="historyPartItems.item<%= item %>.qty" value="<%= data.qty %>"/>
+            <a class="button-sytle1 spare-add">+</a>
+            <a class="button-sytle1 spare-delete">-</a>
+        </dd>
+    </dl>
+</script>
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    //弹窗
+    function showObj(objid){
+        $(objid).show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+
+    function count(o){
+        var t = typeof o;
+        if(t == 'string'){
+            return o.length;
+        }else if(t == 'object'){
+            var n = 0;
+            for(var i in o){
+                n++;
+            }
+            return n;
+        }
+        return false;
+    }
+
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var mhistoryUpdate={
+        init:function(){
+            var self = this;
+            this.historyPartItems = _.template($('#historyPartItems').html());
+            $('#body').html($('#mHistoryCreate').html());
+            var params = this.params = RouterManager.getParams();
+            var historyId = params.historyId;
+            var action = params['action'];
+            this.$matList = $('#matlist');
+            if(historyId) {
+                self.loadDetail(historyId, function () {
+                    self.dealAction(action);
+                });
+            }
+            else{
+                self.$matList.append(self.createRow());
+                self.autoFill();
+            }
+
+            this.bindEvents();
+            this.time();
+            this.form();
+        },
+        autoFill:function(){
+            var self = this;
+            var $mat = $('#matlist');
+            self.fillMaterialId($mat);
+            var $opId = $('#opId');
+            self.fillUserId($opId);
+            var $confirmorId = $('#confirmorId');
+            self.fillUserId($confirmorId);
+            var $maintainerId = $('#maintainerId');
+            self.fillUserId($maintainerId);
+            var $repairId = $('#repairId');
+            self.fillUserId($repairId);
+            $('#machineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':jmstoken}});
+            $('#statusId').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_repair_history'}});
+//            $('#opId').selectautofill('group/op/members',{headers:{'JMS-TOKEN':jmstoken}});
+        },
+        time:function(){
+            var dataPickerOpt = {
+                format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+            }
+            $('#repairTime').datetimepicker(dataPickerOpt);
+            $('#responseTime').datetimepicker(dataPickerOpt);
+            $('#repairingTime').datetimepicker(dataPickerOpt);
+            $('#recoverTime').datetimepicker(dataPickerOpt);
+        },
+        fillMaterialId: function($el, callback) {
+            if(!$el) {
+                $el = $('.a');
+            } else {
+                $el = $el.find('.a');
+            }
+            $el.select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[5]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            callback && callback();
+        },
+        fillUserId: function($el, callback) {
+            $el.select2({
+                ajax: {
+                    url: $clientURL + 'u/getUsersByQ',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            callback && callback();
+        },
+        loadDetail: function(historyId, callback) {
+            var self = this;
+            debugger;
+            $.historyInfo(historyId,jmstoken,function(data){
+                debugger;
+                $('#historyForm').populate(data,true);
+                if(count(data.historyPartItems)>0){
+                    _(data.historyPartItems).each(function(item) {
+                        debugger;
+                        var html = self.createRow(item);
+                        $('#matlist').append(html);
+                        var $el = $('#matlist').children().eq(-1);
+                        self.fillMaterialId($el,function(){
+                            var $materialId = $el.find('.a');
+                            var materialId = $materialId.data('id');
+                            $materialId.append('<option value="'+materialId+'">'+item.material+'</option>');
+                            $materialId.val(materialId);
+                            $materialId.closest('dl').find('.select2-selection__rendered').text(item.material);
+                        });
+                    });
+                }
+                else{
+                    self.$matList.append(self.createRow());
+                    self.fillMaterialId();
+                }
+
+                $('#machineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':jmstoken}},function(){
+                    $('#machineId').val(data.machineId);
+                });
+
+                $('#statusId').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_repair_history'}},function(){
+                    $('#statusId').val(data.statusId);
+                });
+
+//                self.fillMaterialId(null, function() {
+//                    debugger;
+//                    self.$matList.find('.historyUpdate').each(function(i, ml) {
+//                        debugger;
+//                        $(ml).find('.a').val(parseInt($(ml).find('.a').data('id')));
+//                    });
+//                });
+
+                var confirmorId = data.confirmorId;
+                var $confirmorId = $('#confirmorId');
+                self.fillUserId($confirmorId,function(){
+                    if(confirmorId){
+                        $confirmorId.append('<option value="'+confirmorId+'">'+data.confirmor+'</option>');
+                        $confirmorId.val(confirmorId);
+                        $('#select2-confirmorId-container').text(data.confirmor);
+                    }
+                });
+
+                var opId = data.opId;
+                var $opId = $('#opId');
+                self.fillUserId($opId,function(){
+                    if(opId) {
+                        $opId.append('<option value="' + opId + '">' + data.op + '</option>');
+                        $opId.val(opId);
+                        $('#select2-opId-container').text(data.op);
+                    }
+                });
+
+                var maintainerId = data.maintainerId;
+                var $maintainerId = $('#maintainerId');
+                self.fillUserId($maintainerId,function(){
+                    if(maintainerId) {
+                        $maintainerId.append('<option value="' + maintainerId + '">' + data.maintainer + '</option>');
+                        $maintainerId.val(maintainerId);
+                        $('#select2-maintainerId-container').text(data.maintainer);
+                    }
+                });
+
+                var repairId = data.repairId;
+                var $repairId = $('#repairId');
+                self.fillUserId($repairId,function(){
+                    if(repairId) {
+                        $repairId.append('<option value="' + repairId + '">' + data.repair + '</option>');
+                        $repairId.val(repairId);
+                        $('#select2-repairId-container').text(data.repair);
+                    }
+                });
+
+                $('#repairTime').val($.dateFormat.date(new Date(data.repairTime), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                if(data.responseTime){
+                    $('#responseTime').val($.dateFormat.date(new Date(data.responseTime), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                if(data.repairingTime){
+                    $('#repairingTime').val($.dateFormat.date(new Date(data.repairingTime), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                if(data.recoverTime) {
+                    $('#recoverTime').val($.dateFormat.date(new Date(data.recoverTime), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                callback && callback();
+            });
+        },
+        dealAction:function(action){
+            if (action == 'detail') {
+                $('#operation01').hide();
+                $('table','#historyForm').attr('width','401px');
+                $('input,select,textarea', $('#historyForm')).prop('readonly', true);
+                $("input:not(:button,:hidden)").prop("disabled", 'disabled');
+                $('select', $('#historyForm')).prop("disabled", 'disabled');
+                $('#save01').hide();
+                $('.button-sytle1').remove();
+            }
+        },
+        defaultData: { },
+        createRow: function(data) {
+            var self = this;
+            var row = parseInt(self.$matList.data('row'));
+            if(!row) {
+                row = 1;
+            }
+
+            if(!data) {
+                data = self.defaultData;
+            }
+
+            var param = {
+                data: data,
+                item: row,
+                action: self.params.action
+            }
+
+            var html = self.historyPartItems(param);
+            self.$matList.data('row', row + 1);
+
+            return html;
+        },
+        addRow: function(e) {
+            e.stopPropagation();
+
+            var $t = $(e.target);
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+            this.fillMaterialId($t.closest('dl').next());
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
+        bindEvents:function(){
+            var self = this;
+            var frameContainer= $('.container-fluid');
+            //增加行
+            frameContainer.on('click','.spare-add',self.addRow.bind(self));
+            //删除行
+            frameContainer.on('click','.spare-delete', self.delRow.bind(self));
+
+            var historyParams={
+                groupId:'m-historyList'
+            };
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+        },
+        form:function(){
+            var self = this;
+            $('#historyForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'machineId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Machine cannot be empty'
+                            }
+                        }
+                    },
+                    'opId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Submitter cannot be empty'
+                            }
+                        }
+                    },
+                    '报修时间': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Solver cannot be empty'
+                            }
+                        }
+                    },
+                    'maintainerId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Solver cannot be empty'
+                            }
+                        }
+                    },
+                    'repairId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Confirmor cannot be empty'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                if(!self.validateMatlist()) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).show();
+                    $('#info').empty();
+                    $('#info').append('Authentication does not pass');
+//                    alert('验证不通过');
+                    return;
+                }
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var history = $('#historyForm').serializeJSON();
+                debugger;
+                history.repairTime = history.repairTime.replace('Z', '470+08:00');
+                history.responseTime = history.responseTime.replace('Z', '470+08:00');
+                history.repairingTime = history.repairingTime.replace('Z', '470+08:00');
+                history.recoverTime = history.recoverTime.replace('Z', '470+08:00');
+                history = JSON.stringify(history);
+                var machineId = $('#machineId').val();
+                $.saveHistory(history,jmstoken,function(data){
+                    $.get("views/m-historyList.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'m-historyList',
+                            machineId:machineId
+                        });
+                        $("#body").html(data);
+                    });
+                });
+            });
+        },
+        validateMatlist: function() {
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            var flag = true;
+
+            $items.each(function(i) {
+                var $t = $(this);
+                if(!parseInt($t.find('.b').val())&&$t.find('.b').val()) {
+                    $t.find('.b').addClass('error');
+                    flag = false;
+                }
+
+                if(!$t.find('.a').val()&&$t.find('.b').val()) {
+                    $t.find('.a').addClass('error');
+                    flag = false;
+                }
+                if($t.find('.a').val()&&!$t.find('.b').val()) {
+                    $t.find('.a').addClass('error');
+                    flag = false;
+                }
+            });
+
+
+            return flag;
+        }
+    };
+    mhistoryUpdate.init();
+
+</script>
+
+
+
+

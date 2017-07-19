@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>成本中心</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="position">职位</span>
+	<span class="h-title" id="dep">部门</span>
+	<span class="h-title" id="emp">员工</span>
+	<span class="h-title" id="role">角色</span>
+	<span class="h-title" id="notification">消息中心</span>
+	<span class="h-title"><b>成本中心</b></span>
+	<span class="h-title" id="stopDes">停机描述</span>
+	<span class="h-title" id="doSet">收、出货设置</span>
+	<span class="h-title" id="code">自动编码设置</span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+	<div class="right-list">
+       <button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">新建</button>
+	</div>
+
+</div>
+
+    <table id="coList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>成本中心编码</th>
+                <th>描述</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">新建或编辑成本中心</span>
+		</div>
+      	<input type="button" class="tc_close">
+     	<form id="coForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+				    	<label for="" class="input-w-160">成本中心编码</label>
+						<!--<input type="text" class="form-control input-w-3"  name="costCenterNo" id="costCenterNo" onfocus= "focus_last(this)">-->
+						<input type="text" class="form-control input-w-3"  name="costCenterNo" id="costCenterNo">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+				    	<label for="" class="input-w-160">描述</label>
+						<!--<textarea class="form-control" rows="3" name="des" id="des"  onfocus= "focus_last(this)"></textarea>-->
+						<textarea class="form-control" rows="3" name="des" id="des"></textarea>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="reset" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idCostCenter" name="idCostCenter:number"/>
+           </form>
+   </div>
+</div>
+
+<!-- 弹窗 over -->
+<script type="text/javascript">
+
+//弹窗
+function showObj(objid){
+	$(objid).show();
+
+}
+function hideObj(objid){
+	$(objid).hide();
+}
+$(document).ready(function() {
+
+	var jmstoken= store.get('JMS-TOKEN');
+   	var table= $('#coList').DataTable( {
+        "processing": true,
+		"serverSide": true,
+        "ajax": {
+			"type": 'POST',
+            "url": $clientURL+"s/costCenterList",
+            "dataType": "json",
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+        dom: "tip",
+		pageLength:"50"
+    } );
+
+	$('#coList tbody').on( 'click', 'button', function () {
+     	var data = table.row( $(this).parents('tr') ).data();
+     	var clazz=$(this).attr('class');
+        if(clazz=='button-edit'){
+        	showObj('.tcbox');
+			$.costCenterInfo(data[2],jmstoken,function(data){
+		 		$('#coForm').populate(data,true);
+			});
+     	}
+        else{
+        	$.deleteCostCenter(data[2],jmstoken,function(data){
+     		  	$.get("views/sys-cost-center.html",function(data){
+	                $("#body").html(data);
+	            });
+     		});
+        }
+    } );
+
+	 $('#coForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'costCenterNo': {
+                validators: {
+                    notEmpty: {
+                        message: '成本中心编码不能为空'
+                    },
+					digits:{
+						message: '必须是数字'
+					}
+                }
+            }
+
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var co =JSON.stringify($('#coForm').serializeJSON());
+		 	$.saveCostCenter(co,jmstoken,function(data){
+			      	$.get("views/sys-cost-center.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+
+        });
+		$('#return').click(function(){
+	 		$.get("views/sys-cost-center.html",function(data){
+	         	$("#body").html(data);
+			});
+		});
+
+	$('#draggable1').on('click','.tc_close',function(){
+		$('.tcbox').hide();
+		$('#coForm')[0].reset();
+	});
+	var historyParams={
+		groupId:'system'
+	}
+	$('#position').click(function(){
+		$.get("views/sys-position.html",function(data){
+			historyParams.viewId = 'sys-position';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#emp').click(function(){
+		$.get("views/sys-employee.html",function(data){
+			historyParams.viewId = 'sys-employee';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#role').click(function(){
+		$.get("views/sys-role.html",function(data){
+			historyParams.viewId = 'sys-role';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#notification').click(function(){
+		$.get("views/sys-notification.html",function(data){
+			historyParams.viewId = 'sys-notification';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#dep').click(function(){
+		$.get("views/sys-dept.html",function(data){
+			historyParams.viewId = 'sys-dept';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#stopDes').click(function(){
+		$.get("views/sys-stopDes.html",function(data){
+			historyParams.viewId = 'sys-stopDes';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#doSet').click(function(){
+		$.get("views/sys-doSet.html",function(data){
+			historyParams.viewId = 'sys-doSet';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#code').click(function(){
+		$.get("views/sys-code.html",function(data){
+			historyParams.viewId = 'sys-code';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	// 弹窗拖拽
+//	$(function () {
+//		$('#draggable1').draggabilly();
+//	});
+});
+//function focus_last(obj){
+//
+//	var text = obj.createTextRange();
+//
+//	text.collapse(false);text.select();
+//
+//}
+</script>
+</body>
+
+
+
+</html>

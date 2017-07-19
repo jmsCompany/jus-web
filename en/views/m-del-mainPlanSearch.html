@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+var jmstoken= store.get('JMS-TOKEN');
+$(document).ready(function() {
+    
+		$('.button').click(function(){
+	 		// 显示保养单
+	 	});
+	
+
+} );
+</script>
+
+</head>
+<body>
+<div class="col-lg-9 col-lg-offset-3">
+	<label class="col-lg-3 control-label">设备</label>
+ 	<div class="col-lg-5">
+   		<select class="form-control" name="machine[idDic]:number" id="machine.idDic">
+   		</select>
+  	</div>
+	<label class="col-lg-3 control-label">保养类型</label>
+ 	<div class="col-lg-5">
+   		<select class="form-control" name="mainType[idDic]:number" id="mainType.idDic">
+   		</select>
+  	</div>
+  	<label class="col-lg-3 control-label">保养年份</label>
+ 	<div class="col-lg-5">
+   		<select class="form-control" name="mainYear[idDic]:number" id="mainYear.idDic">
+   		</select>
+  	</div>
+  	<label class="col-lg-3 control-label">保养月份</label>
+ 	<div class="col-lg-5">
+   		<select class="form-control" name="mmainMonth[idDic]:number" id="mainMonth.idDic">
+   		</select>
+  	</div>
+  	<label class="col-lg-3 control-label">保养周期</label>
+ 	<div class="col-lg-5">
+   		<select class="form-control" name="mainCycle[idDic]:number" id="mainCycle.idDic">
+   		</select>
+  	</div>
+ 	<div class="col-lg-5">
+   		<button type="button" class="btn btn-primary">查询</button>
+  	</div>
+</div>
+
+</body>
+</html>

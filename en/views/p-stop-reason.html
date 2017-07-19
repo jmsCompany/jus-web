@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+function showObj(objid){
+	$(objid).show();	
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+$(document).ready(function() {
+	var jmstoken= store.get('JMS-TOKEN');
+    var table=$('#tableStopReason').DataTable( {
+
+        "processing": true,
+		"serverSide": true,
+        "ajax": {
+            "url": $clientURL + "p/findPStopsCodeList",
+            "dataType": "json",
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      	dom: "tip",
+		pageLength:"50"
+    } );
+    
+    $('#tableStopReason tbody').on( 'click', 'button', function () {
+     	var data = table.row( $(this).parents('tr') ).data();
+     	var clazz=$(this).attr('class');
+        if(clazz=='button-edit'){
+        	showObj('.tcbox');
+			$.stopsCodeInfo(data[2],jmstoken,function(data){
+		 		$('#stopReasonForm').populate(data,true);
+			});
+     	}
+        else{
+        	$.deleteStopsCode(data[2],jmstoken,function(data){
+     		  	$.get("views/p-stop-reason.html",function(data){
+	                $("#body").html(data);
+	            });
+     		});
+        }
+    } );
+    
+    $('#stopReasonForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'code': {
+                validators: {
+                    notEmpty: {
+                        message: '编号不能为空'
+                    }   
+                }
+            },
+            'des': {
+                validators: {
+                    notEmpty: {
+                        message: '描述不能为空'
+                    }   
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var stopsCode =JSON.stringify($('#stopReasonForm').serializeJSON());
+		 	$.saveStopsCode(stopsCode,jmstoken,function(data){
+			      	$.get("views/p-stop-reason.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+
+        });
+    	
+    	$('#us').click(function(){
+	 		$.get("views/p-unplannedStop.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	$('#as').click(function(){
+	 		$.get("views/p-actStopPlanList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	$('#cs').click(function(){
+	 		$.get("views/p-create-stop.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+	
+		
+    	$('#return').click(function(){
+	 		$.get("views/p-stop-reason.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+});
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="as">实际停机</span>
+	<span class="h-title" id="us">非计划停机</span>
+	<span class="h-title"><b>停机编码</b></span>
+	<span class="h-title" id="cs">新建停机</span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="right-list">
+			<button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">新建</button>
+		</div>
+	</div>
+ <table id="tableStopReason" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>描述</th>
+				<th>操作</th>
+            </tr>
+        </thead>
+</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">新建或编辑停工编码</span>
+		</div>
+      <input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+     <form id="stopReasonForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">编号</label>
+				    	<input type="text" class="form-control input-w-3"  name="code" id="code">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">描述</label>
+				    	<textarea class="form-control input-w-300" rows="3" name="des" id="des"></textarea>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="reset" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idStopsCode" name="idStopsCode:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>

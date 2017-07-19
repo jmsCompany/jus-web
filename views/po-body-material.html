@@ -1,0 +1,59 @@
+ 
+ <div class="body-head-title">
+	<span class="h-title"><b>物料信息查询</b></span>
+</div>
+ <div class="cont">
+<div class="r-header-body">
+    <div class="sousuo">
+    	<div class="ss-input">    		
+    	<input type="text" name="" id="codeCo.id" value="" class="border-none" placeholder="输入要查询的内容"/>
+    	</div>
+    	<a href=""><span class="icon-ss-bg"></span>搜索</a>
+    </div>
+</div> <!--检索结束-->
+ <table id="tableMat" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>物料编码</th>
+                <th>物料描述</th>
+                <th>版本</th>
+                <th>库存单位</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+</div>    
+<script type="text/javascript">
+	
+ $(document).ready(function() {
+    $('?').click(function(){
+			$('#_key3').val('?');
+			// 跳转到上一界面
+	 		//$.get("views/po-order.html",function(data){
+	          //   $("#body").html(data);
+	     	//});
+	});
+	
+	$('#tableMat').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://192.168.30.107:9999/jms/s/materialList",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        //dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+});   	
+
+</script>    
+

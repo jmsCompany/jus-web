@@ -1,0 +1,147 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="mrbForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idMrb" />  <!-- 采购订单退货单信息编号-->
+							<fieldset>
+							<legend>编辑采购退货单</legend>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">供应商</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="codeCo:number" id="codeCo.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">采购订单</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="poNo:number" id="poNo.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">批号</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="lotNo:number" id="lotNo.id">
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group"> 
+                            	<div class="col-lg-9 col-lg-offset-3">
+                                	<button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                            	</div>
+                       		</div>
+<br> 
+<br> 
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        	<th>行号</th>
+                                            <th>物料名称</th>
+                                            <th>版本</th>
+                                            <th>描述</th>
+                                            <th>单位</th>
+                                            <th>采购数量</th>
+                                            <th>交货日期</th>
+                                            <th>收货日期</th>
+                                            <th>备注</th>
+                                            <th>已退货数量</th>
+                                            <th>退货数量</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+
+<br>
+                       
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+	$('#codeCo\\.idDic').selectautofill('dic/codeCo');
+	$('#codePo\\.idDic').selectautofill('dic/codePo');
+	$('#lotNo\\.idDic').selectautofill('dic/lotNo');
+		
+	var idMrb = $('#_key14').val();
+	$.mrbInfo({"id":idMrb},token,function(data){
+		$('#mrbForm').populate(data,true);
+	});
+		
+	    $('#table1').DataTable( {
+       		deferRender:  true,
+        	"processing": true,
+        	"serverSide": true,
+        	scrollY:"350px",
+        	scrollCollapse: true,
+        	"ajax": {
+            	"url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            	"dataType": "json"
+            	
+        	},
+       		"language": {
+                "url": "js/datatable/chinese.json"
+            },
+      		dom: "rtiS",
+        	scroller: {
+           		loadingIndicator: true
+        	}
+    	} );
+    	
+
+    	$('#mrbForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'qtyRejecting': {
+                	validators: {
+                    	notEmpty: {
+                        	message: '退货数量不能为空'
+                    	}
+                	}	
+            	}
+			}
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var mrb =JSON.stringify($('#mrbForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createMrb(mrb,jmstoken,function(data){
+			      	$.get("views/po.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	   
+	   $('cancel').click(function(){
+	   	//返回上一页面？
+	 		//$.get("views/po.html",function(data){
+	          //   $("#body").html(data);
+	     	//});
+	 	});
+    	
+	});
+	</script>

@@ -1,0 +1,69 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="defaultForm" method="post" action="index.html" class="form-horizontal">
+                    		<input type="hidden" id="idSO" />  <!-- 销售订单编号-->
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                    <textarea name="remark" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+    
+<script type="text/javascript">
+$(document).ready(function() { 
+    var idSo = $('#_key10').val();
+    $('#idSo').html(idSo);
+    
+    $('#socForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+		}
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var soc =JSON.stringify($('#socForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createSoc(soc,jmstoken,function(data){
+			   // $form.find('.alert-success').html('成功保存： ' + JSON.stringify(data)).show();
+			      	$.get("views/so.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	 
+	 $('#cancel').click(function(){
+	 	$.get("views/so.html",function(data){
+	         $("#body").html(data);
+	    });
+	 });
+});
+</script>
+
+
+

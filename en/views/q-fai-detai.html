@@ -1,0 +1,175 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="faiForm" method="post" action="index.html" class="form-horizontal">
+                        
+							<fieldset>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">工单号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="woNo" id="woNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件名称</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="matDes" id="matDes"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">图纸号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="drawNo" id="drawNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">项目名称</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="projectName" id="projectName"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">工序</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="routeDes" id="routeDes"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">设备</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="machineName" id="machineName"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">生产批次</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="lotNo" id="lotNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>检查项目</th>
+                                            <th>检验方法</th>
+                                            <th>规格</th>
+                                            <th>作业员/检验员</th>
+                                            <th>作业员/检验结果</th>
+                                            <th>判定</th>
+                                            <th>检验员/检验结果</th>
+                                            <th>判定</th>
+                                            <th>+</th>
+                                            <th>-</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">作业员</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="op" id="op"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="opDate" id="opDate"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">班长</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="shiftLeader" id="shiftLeader"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="slDate" id="slDate"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">检验员</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="inspector" id="inspector"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="inspectorDate" id="inspectorDate"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="button" class="btn btn-primary" id="return">返回</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    
+    var idFai = $('#_key22').val();
+	$.faiInfo({"id":idFai},token,function(data){
+		$('#woNo').html(data.woNo);
+		$('#matDes').html(data.matDes);
+		$('#drawNo').html(data.drawNo);
+		$('#projectName').html(data.projectName);
+		$('#routeDes').html(data.routeDes);
+		$('#machineName').html(data.machineName);
+		$('#lotNo').html(data.lotNo);
+		$('#op').html(data.op);
+		$('#opDate').html(data.opDate);
+		$('#shiftLeader').html(data.shiftLeader);
+		$('#slDate').html(data.slDate);
+		$('#inspector').html(data.inspector);
+		$('#inspectorDate').html(data.inspectorDate);
+	});
+    
+    $('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+    
+ 	   
+ 	   $('#return').click(function(){
+	 		$.get("views/q-faiList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    
+
+
+

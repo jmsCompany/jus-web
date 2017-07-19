@@ -1,0 +1,87 @@
+<script type="text/html" id="qFailList">
+    <div class="body-head-title">
+        <span class="h-title"><b>首件检查</b></span>
+    </div>
+    <div class="cont">
+        <div class="r-header-body">
+            <div class="right-list">
+                <input type="button" class="button-sytle1" id="create" value="新建">
+            </div>
+        </div>
+        <table id="table1" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>图纸号</th>
+                <th>零件名称</th>
+                <th>工单号</th>
+                <th>项目名称</th>
+                <th>工序</th>
+                <th>设备</th>
+                <th>生产批次</th>
+                <th>操作</th><!--编辑、详情-->
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="aligncenter">
+        <div class="form-group">
+            <button id="return" type="reset" class="btn  btn-info" style="visibility: hidden">返回</button>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var app={
+        init:function(){
+            $('#body').html($('#qFailList').html());
+            this.bindEvents();
+        },
+        bindEvents:function(){
+            $('#table1').DataTable( {
+                deferRender:  true,
+                "processing": true,
+                "serverSide": true,
+                scrollY:"350px",
+                scrollCollapse: true,
+                "ajax": {
+                    "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+                    "dataType": "json"
+                },
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+
+                dom: "rtiS",
+                scroller: {
+                    loadingIndicator: true
+                }
+            } );
+            //	点击新建
+            $('#create').click(function(){
+                $.get("views/q-fai-create.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'q-failList',
+                        viewId:'q-fai-create'
+                    })
+                    $("#body").html(data);
+                });
+            });
+            //	点击编辑
+            $('？').click(function(){
+                $('#_key22').val('?');
+                $.get("views/q-fai-update.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+            //	点击详情
+            $('？').click(function(){
+                $('#_key22').val('?');
+                $.get("views/q-fai-detail.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+        }
+    }
+    app.init();
+
+</script>

@@ -1,0 +1,710 @@
+<script type="text/html" id="pBomCreate">
+<div class="container-fluid">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title" id="list">BOM List</span>
+                    <span class="h-title-selected" id="createBom"><b>Create BOM</b></span>
+                </div>
+
+            	<form id="bomForm" method="post" action="index.html" class="form-inline">
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label class="input-w-160">Material/NO.</label>
+                                <select class="input-w-3 select-cs1 form-control" data-id="" name="materialId:number" id="materialId">
+                                    <option value="">Material/NO.</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group" id="status1">
+                                <label class="input-w-160">Status</label>
+                                <select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="order">
+                        <div class="col-md-5 col-md-offset-1 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">Creation Date</label>
+                                <input type="text" class="form-control input-w-3" name="creationTime" id="creationTime" readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="col-md-5 mar-top-20px">
+                            <div class="form-group">
+                                <label for="" class="input-w-160">Creator</label>
+                                <input type="text" class="form-control input-w-3" name="creator" id="creator" readonly="true"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<div class="col-xs-12 mar-top-20px">-->
+                        <!--<div class="form-group" id="matlist">-->
+                            <!--<ul class="new-income-list-nav">-->
+                                <!--<li style="width:96px">物料</li>-->
+                                <!--<li>单位</li>-->
+                                <!--<li>重量</li>-->
+                                <!--<li>成本</li>-->
+                                <!--<li style="width:82px">工作中心</li>-->
+                                <!--<li>级别</li>-->
+                                <!--<li>排序</li>-->
+                                <!--<li>单位用料</li>-->
+                                <!--<li>损耗</li>-->
+                                <!--<li>操作</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                    <!--</div> &lt;!&ndash; +\- over &ndash;&gt;-->
+                    <div class="col-xs-12 mar-top-20px changerep_cont">
+                        <table id="" cellpadding="0" cellspacing="0" width="919px">
+                            <tr>
+                                <th width="198px"> Material</th>
+                                <th width="56px"> Unit</th>
+                                <th width="61px"> Weight</th>
+                                <th width="61px"> Cost</th>
+                                <th width="87px"> Routine</th>
+                                <th width="105px"> Work Center</th>
+                                <th width="56px"> Level</th>
+                                <th width="56px"> Queue</th>
+                                <th width="71px"> QPU</th>
+                                <th width="71px"> Attrition</th>
+                                <th width="97px" id="operation"> Operation</th>
+                            </tr>
+                        </table>
+
+                        <div class="form-group" id="matlist">
+                        </div>   <!-- +\- over -->
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="save">Save</button>
+                            <button class="btn  btn-info" type="button" id="return01">Return</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idBomLabel" name="idBomLabel"/>
+                    <input type="hidden" id="edit" value="true"/>
+
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+<!-- 编辑物料清单子弹窗 start -->
+<div class="tcbox container-fluid" id="editBomD" style="overflow: visible;">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">Edit BOM items</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="bomDForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label class="input-w-160">Material</label>
+                    <select  class="form-control" style="width:182px;" name="idMaterial:number" id="idMaterial">
+                    </select>
+                </div>
+            </div>
+            <!--<input type="hidden" class="form-control" id="idMaterial">-->
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label class="input-w-160">Routine</label>
+                    <select  class="form-control" style="width:182px;" name="idRoutineD:number" id="idRoutineD">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label class="input-w-160">QPU</label>
+                    <input type="text" class="form-control"  name="qpu" id="qpu">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label class="input-w-160">Attrition</label>
+                    <input type="text" class="form-control"  name="wastage" id="wastage">
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary " id="save01">Save</button>
+                    <button id="return02" type="button" class="btn  btn-info">Return</button>
+                </div>
+            </div>
+            <input type="hidden" id="idBom" name="idBom:number" />
+        </form>
+    </div>
+</div>
+<!-- 提示信息弹窗 start -->
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+<script type="text/html" id="bomItem">
+    <dl class="matlist" id="item<%= item %>">
+        <dd class="income-create-list">
+            <select data-id="<%= data.materialId %>" class="select-cs1 a" style="width:196px" name="bomItems[item<%= item %>][materialId]:number" id="bomItems.item<%= item %>.materialId"><option value="" >Please choose material</option></select>
+            <input type="text" class="b" style="width:52px" name="bomItems[item<%= item %>][sUnitDicByUnitInf]" id="bomItems.item<%= item %>.sUnitDicByUnitInf" placeholder="Unit" value="<%= data.sUnitDicByUnitInf %>" readOnly="true"/>
+            <input type="text" class="c" style="width:57px" name="bomItems[item<%= item %>][weight]" id="bomItems.item<%= item %>.weight" placeholder="Weight" value="<%= data.weight %>" readOnly="true"/>
+            <input type="text" class="d" style="width:57px" name="bomItems[item<%= item %>][cost]" id="bomItems.item<%= item %>.cost" placeholder="Cost" value="<%= data.cost %>" readOnly="true"/>
+            <select data-id="<%= data.idRoutineD %>" class="select-cs1 j" style="width:80px" name="bomItems[item<%= item %>][idRoutineD]:number" id="bomItems.item<%= item %>.idRoutineD"><option value="" >Routine</option></select>
+            <select data-id="<%= data.workCenterId %>" class="select-cs1 e" style="width:101px" name="bomItems[item<%= item %>][workCenterId]:number" id="bomItems.item<%= item %>.workCenterId"><option value="">Work Center</option></select>
+            <input type="text" class="f" style="width:52px" name="bomItems[item<%= item %>][lvl]:number" id="bomItems.item<%= item %>.lvl" value="<%= data.lvl %>" placeholder="Level"/>
+            <input type="text" class="g" style="width:52px" name="bomItems[item<%= item %>][orderBy]:number" id="bomItems.item<%= item %>.orderBy" value="<%= data.orderBy %>" placeholder="Queue"/>
+            <input type="text" class="h" style="width:67px" name="bomItems[item<%= item %>][qpu]:number" id="bomItems.item<%= item %>.qpu" value="<%= data.qpu %>" placeholder="QPU"/>
+            <input type="text" class="i" style="width:67px" name="bomItems[item<%= item %>][wastage]:number" id="bomItems.item<%= item %>.wastage" value="<%= data.wastage %>" placeholder="Attrition"/>
+            <% if(action == 'detail') { %>
+            <% } else { %>
+            <span class="action">
+                <a class="button-sytle1 new-income-add">+</a><a class="button-sytle1 new-income-delete">-</a>
+            </span>
+            <% } %>
+            <input type="hidden" class="idBom" name="bomItems[item<%= item %>][idBom]:number" id="bomItems.item<%= item %>.idBom" value="<%= data.idBom %>"/>
+        </dd>
+    </dl>
+</script>
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    //弹窗
+    function showObj(objid){
+        $(objid).show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var bom={
+    //仅仅是为了模块化而已
+        init:function(){
+            var self = this;
+            this.bomItem = _.template($('#bomItem').html());
+
+            $('#body').html($('#pBomCreate').html());
+
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var bomId = params['bomId'];
+
+            this.$matList = $('#matlist');
+
+            if(bomId) {
+                this.loadDetail(bomId,action);
+            } else {
+                $("#status1").hide();
+                $("#order").hide();
+                this.$matList.append(this.createRow());
+                this.dealAutoFill();
+            }
+
+            //绑定事件
+            this.bindEvents();
+            this.form();
+            this.form1();
+        },
+        loadDetail: function(bomId,action, callback) {
+            var self = this;
+            $.bomInfo(bomId,jmstoken,function(data){
+                $('#bomForm').populate(data,true);
+                $('#edit').val(data.edit);
+//                $('#materialId').selectautofill('s/materials',{headers:{'JMS-TOKEN':jmstoken}}, function() {
+//                    $('#materialId').val(data.materialId);
+//                });
+//                $('#materialId').attr('data-id',data.materialId);
+                var materialId = data.materialId;
+                self.fillMaterialId2(function(){
+//                    var materialId = parseInt($('#materialId').data('id'));
+                    $('#materialId').append('<option value="'+materialId+'"></option>');
+                    $('#materialId').val(materialId);
+                });
+                $('#select2-materialId-container').text(data.pno + '_' + data.rev + '_' + data.material);
+                $('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_bom_label'}}, function() {
+                    $('#statusId').val(data.statusId);
+                });
+                var bomItems = '';
+                _(data.bomItems).each(function(item) {
+                    bomItems += self.createRow(item);
+                });
+                self.$matList.append(bomItems);
+
+                $('#creationTime').val($.dateFormat.date(new Date(data.creationTime), 'yyyy-MM-dd'));
+
+                self.fillMaterialId(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.a').val(parseInt($(ml).find('.a').data('id')));
+                        self.loadMaterial($(ml).closest('dl'));
+                    });
+                });
+
+                self.fillWorkCenterId(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.e').val(parseInt($(ml).find('.e').data('id')));
+                    });
+                });
+                self.fillRoutineDId(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.j').val(parseInt($(ml).find('.j').data('id')));
+                    });
+                });
+                self.dealAction(action,data.edit);
+
+                callback && callback();
+            });
+        },
+        fillMaterialId: function($el, callback) {
+            if(!$el) {
+                $el = $('.a');
+            } else {
+                $el = $el.find('.a');
+            }
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            $el.select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[1,3]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+//                        return {
+//                            q: params.term,
+//                            types: [1, 3]
+//                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            callback && callback();
+        },
+        fillMaterialId2: function(callback) {
+            $('#materialId').select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[2]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+//                        return {
+//                            q: params.term,
+//                            types: [2, 3]
+//                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            callback && callback();
+        },
+        fillRoutineDId: function($el, callback) {
+            var materialId = $('#materialId').val();
+            if (!materialId) {
+                return;
+            }
+            if(!$el) {
+                $el = $('.j');
+            } else {
+                $el = $el.find('.j');
+            }
+            $el.empty();
+            $el.append('<option value="">Routine</option>');
+            $el.selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':materialId}}, callback);
+        },
+        fillWorkCenterId: function($el, callback) {
+            if(!$el) {
+                $el = $('.e');
+            } else {
+                $el = $el.find('.e');
+            }
+            $el.selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+        },
+        loadMaterial: function($dl) {
+            var $unitInput =  $dl.find('.b');
+            var $weightInput =  $dl.find('.c');
+            var $costInput =  $dl.find('.d');
+            var materialId = $dl.find('.a').val()|| $dl.find('.a').data('id');
+            if(!$dl.find('.a').val()){
+                $dl.find('.a').append('<option value="'+materialId+'"></option>');
+                $dl.find('.a').val(materialId);
+            }
+            if(!materialId) {
+                return;
+            }
+            else{
+                $.materialInfo(materialId,jmstoken,function(data){
+                    $dl.find('.select2-selection__rendered').text(data.pno + '_' + data.rev + '_' + data.des);
+                    $unitInput.val(data.sUnitDicByUnitInf);
+                    $weightInput.val(data.weight);
+                    $costInput.val(data.cost);
+                });
+            }
+        },
+        dealAction: function(action,edit) {
+            // 如果是详情页面的话
+            if(action == 'detail') {
+                $('input,textarea',$('#bomForm')).prop('readonly',true);
+                $("select").prop("disabled", true);
+                $('.new-income-add').remove();
+                $('.new-income-delete').remove();
+                $('#save').remove();
+                $('#createBom').html('<b>BOM Detail</b>');
+                $('#operation').hide();
+                $('table','#bomForm').attr('width','');
+                $('.action a').remove();
+                $('.action').append('<a class="button-sytle1 editBom" href="">Edit</a>');
+            } else if(action == 'edit') {
+                $('#createBom').html('<b>Edit BOM</b>');
+                if(edit == false){
+                    $('.action a').remove();
+                    $('.action').attr("class",'action action-txt');
+                    $('.action').append('<a class="button-sytle1 editBom" href="">Edit</a>');
+                    $('#operation').attr('width','60px');
+                    $('table','#bomForm').attr('width','');
+                    $("input:not(:button,:hidden)",$('#bomForm')).prop("disabled", true);
+                    $("select:not(#statusId)",$('#bomForm')).prop("disabled", true);
+                }
+            }
+        },
+        defaultData: { },
+        createRow: function(data) {
+            var self = this;
+            var row = parseInt(self.$matList.data('row'));
+            if(!row) {
+                row = 1;
+            }
+
+            if(!data) {
+                data = self.defaultData;
+            }
+            var param = {
+                data: data,
+                item: row,
+                action: self.params.action
+            }
+
+            var html = self.bomItem(param);
+            self.$matList.data('row', row + 1);
+
+            return html;
+        },
+        addRow: function(e) {
+            e.stopPropagation();
+
+            var $t = $(e.target);
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+
+            this.fillMaterialId($t.closest('dl').next());
+            this.fillWorkCenterId($t.closest('dl').next());
+            this.fillRoutineDId($t.closest('dl').next());
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
+        /**
+         * 绑定事件逻辑
+         */
+        bindEvents:function(){
+            var self = this;
+            var frameContainer= $('.container-fluid');
+            //增加行
+            frameContainer.on('click','.new-income-add',self.addRow.bind(self));
+            //删除行
+            frameContainer.on('click','.new-income-delete', self.delRow.bind(self));
+            frameContainer.on('focus', 'input, select, textarea', function(e) {
+                $(this).removeClass('error');
+                $('#save').removeAttr('disabled');
+            });
+            //改变物料
+            frameContainer.on("change",".a",function(){
+                var $dl = $(this).closest('dl');
+                self.loadMaterial($dl);
+            });
+            //改变成品
+            frameContainer.on("change","#materialId",function(){
+                var $list = $('#matlist');
+                var $items = $list.find('.matlist');
+                $items.each(function(i) {
+                    var $dl = $(this);
+                    self.fillRoutineDId($dl);
+                });
+            });
+
+
+            frameContainer.on("click",".editBom",function(e){
+                e.preventDefault();
+                var top = $('#body').scrollTop();
+                $('#editBomD').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                var idBom = $(this).closest('dl').find('.idBom').val();
+                $('#idBom').val(idBom);
+                $.bomDInfo(idBom,jmstoken,function(data){
+                    $('#bomDForm').populate(data,true);
+                    $('#idMaterial').html('<option value="' + data.materialId + '">' + data.pno +'_'+ data.rev +'_'+ data.material + '</option>');
+                    var produtionId = $('#materialId').val();
+                    $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':produtionId}}, function(){
+                        $('#idRoutineD').val(data.idRoutineD);
+                    });
+                });
+            });
+
+            $('#editBomD').on("click",".tc_close,#return02",function(){
+                $.get("views/p-bom-create.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+
+            var historyParams={
+                groupId:'p-bomList'
+            };
+            $("#list").click(function(){
+                $.get("views/p-bomList.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+        },
+        dealAutoFill:function() {
+            var self = this;
+//            $('#materialId').selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            self.fillMaterialId2();
+            $('#statusId').selectautofill('p/getPStatusList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')},data: {'source': 'p_bom_label'}});
+//            $('.a').selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            $('.e').selectautofill('p/getWorkCenterList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            self.fillMaterialId();
+        },
+        form1:function(){
+            var self = this;
+            $('#bomDForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'qpu': {
+                        validators: {
+                            notEmpty: {
+                                message: 'QPU cannot be empty.'
+                            },
+                            regexp: {
+                                regexp: /^[1-9]\d*$/,
+                                message: 'Can only be a positive integer.'
+                            }
+                        }
+                    },
+                    'wastage': {
+                        validators: {
+                            regexp: {
+                                regexp: /^\d+$/,
+                                message: 'Can only be a natural number.'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var bomD =JSON.stringify($('#bomDForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                debugger;
+                $.saveBomD(bomD,jmstoken,function(data){
+                    debugger;
+                    $.get("views/p-bom-create.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        },
+        form:function(){
+            var self = this;
+            $('#bomForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'materialId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Material/NO. cannot be empty.'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                if(!self.validateMatlist()) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).show();
+                    $('#info').empty();
+                    $('#info').append('Authentication does not pass');
+//                    alert('验证不通过');
+                    return;
+                }
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var bom =JSON.stringify($('#bomForm').serializeJSON());
+                var edit = $('#edit').val();
+                if(edit == "true"){
+                    debugger;
+                    $.saveBom(bom,jmstoken,function(data){
+                        if(data.saved == false){
+                            var top = $('#body').scrollTop();
+                            $('#nullAlert').css({
+                                top: $(window).height() * 0.2 + top
+                            }).show();
+                            $('#info').empty();
+                            $('#info').append('This BOM has been existed.');
+                            return;
+                        }
+                        debugger;
+                        history.go(-1);
+                        $.get("views/p-bomList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+                else{
+                    debugger;
+                    $.updateBom(bom,jmstoken,function(data){
+                        history.go(-1);
+                        $.get("views/p-bomList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            });
+        },
+        validateMatlist: function() {
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            var flag = true;
+            var reg =/^\d+$/;
+            var reg1 =/^([0-9])+(\.[0-9]+)?$/;
+
+            if(!$items.length) {
+                flag = false;
+            }
+
+            $items.each(function(i) {
+                var $t = $(this);
+
+                if(!$t.find('.a').val()) {
+                    $t.find('.a').addClass('error');
+                    flag = false;
+                }
+//                if(!$t.find('.j').val()) {
+//                    $t.find('.j').addClass('error');
+//                    flag = false;
+//                }
+
+                var qpu = $t.find('.h').val();
+                if(!qpu||reg.test(qpu)==false) {
+                    $t.find('.h').addClass('error');
+                    flag = false;
+                }
+
+                var lvl = $t.find('.f').val();
+                if(!lvl||reg.test(lvl)==false) {
+                    $t.find('.f').addClass('error');
+                    flag = false;
+                }
+
+                var orderBy = $t.find('.g').val();
+                if(!orderBy||reg.test(orderBy)==false) {
+                    $t.find('.g').addClass('error').val('');
+                    flag = false;
+                }
+
+                var wastage = $t.find('.i').val();
+                if(!wastage||reg1.test(wastage)==false) {
+                    $t.find('.i').addClass('error').val('');
+                    flag = false;
+                }
+            });
+
+            return flag;
+        }
+
+    };
+    bom.init();
+</script>

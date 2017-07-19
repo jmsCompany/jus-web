@@ -1,0 +1,141 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="bomForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           
+							<fieldset>
+							<legend>新建物料清单</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">产品编码</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="pno" id="pno"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">版本</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="rev" id="rev"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">描述</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="des" id="des"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">工作中心</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="workCenter" id="workCenter"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">状态</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="status" id="status"/>
+                                </div>
+                            </div>
+                            
+<br> 
+<br> 
+							<div class="form-group"> 
+                            	<div class="col-lg-9 col-lg-offset-3">
+                                	<button type="submit" class="btn btn-primary">添加</button>
+                            	</div>
+                       		</div>
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        	<th>行号</th>
+                                            <th>物料编号</th>
+                                            <th>版本</th>
+                                            <th>描述</th>
+                                            <th>重量</th>
+                                            <th>单位</th>
+                                            <th>工作中心</th>
+                                            <th>单位用料</th>
+                                            <th>排序</th>
+                                            <th>操作</th>         <!--删除、编辑-->                                    
+                                            <th>
+                                                <button type="button" class="btn btn-primary" id="add">添加</button>	
+                                            </th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+<br>
+                            <div class="form-group"> 
+                            	<div class="col-lg-9 col-lg-offset-3">
+                                	<button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                            	</div>
+                       		</div>
+                       
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		//在产品编码、物料编码处按回车跳转到po-body-material.html 未实现
+		
+	var idMat = $('#_key3').val();
+	$.materialInfo({"id":idMat},token,function(data){
+		$('#pno').html(data.pno);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+	});
+			
+    
+    	$('#bomForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'pno': {
+                    	notEmpty: {
+                        	message: '产品编号不能为空'
+                    	}
+                	}
+            	}
+			}
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var bom =JSON.stringify($('#bomForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createBom(bom,jmstoken,function(data){
+			      	$.get("views/p-bomList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	   
+	   $('cancel').click(function(){
+	 		$.get("views/p-bomList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	
+    	
+	});
+	</script>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>产线</title>
+<script type="text/javascript">
+
+function showObj(objid){
+	$(objid).draggable().show();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+$(document).ready(function() {
+    console.log('test');
+	var jmstoken= store.get('JMS-TOKEN');
+
+	$('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_line'}});
+
+	var table =$('#tableWorkcenter').DataTable({
+        "processing": true,
+		"serverSide": true,
+        "stateSave": true,
+        "stateDuration": -1,
+        "ajax": {
+            "type": 'POST',
+            "url": $clientURL + "p/plineList",
+            "dataType": "json",
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      	dom: "tip",
+		pageLength:"50"
+    } );
+
+    $('#tableWorkcenter tbody').on( 'click', 'button', function () {
+		var data = table.row( $(this).parents('tr') ).data();
+		var clazz =$(this).attr('class');
+		if(clazz=='button-edit'){
+            var top = $('#body').scrollTop();
+            $('.tcbox').css({
+                top: $(window).height() * 0.2 + top
+            }).draggable().show();
+//			showObj('.tcbox');
+			$.lineInfo(data[2],jmstoken,function(data){
+				$('#lineForm').populate(data,true);
+			});
+		}
+		else {
+			$.deleteLine(data[2],jmstoken,function(data){
+				$.get("views/p-line.html",function(data){
+					$("#body").html(data);
+				});
+			});
+		}
+    } );
+    
+    $('#lineForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'pline': {
+                validators: {
+                    notEmpty: {
+                        message: '产线名称不能为空'
+                    },
+                    regexp: {
+                        regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+                        message: '只能是中文，字母、数字及下划线。'
+                    }
+                }
+            }
+
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var line =JSON.stringify($('#lineForm').serializeJSON());
+		 	$.saveLine(line,jmstoken,function(data){
+                $.get("views/p-line.html",function(data){
+                    $("#body").html(data);
+                });
+			});
+
+    });
+    var historyOptions={
+        groupId:'p-workcenter'
+    };
+   //产线
+    $('#workcenter').click(function(){
+        $.get("views/p-workcenter.html",function(data){
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+    //车间
+    $('#p-wip').click(function(){
+        historyOptions.viewId='p-wip';
+        $.get("views/p-wip.html",function(data){
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+    //设备组
+    $('#mGroup').click(function(){
+        historyOptions.viewId='p-machine-group';
+        $.get("views/p-machine-group.html",function(data){
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+
+    $('#draggable1').on("click","#return",function() {
+        $.get("views/p-line.html",function(data){
+            $("#body").html(data);
+        });
+    });
+//    $(function () {
+//        $('#draggable1').draggabilly();
+//    });
+} );
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="workcenter">工作中心</span>
+    <span class="h-title-selected"><b>产线</b></span>
+    <span class="h-title" id="p-wip">车间</span>
+    <span class="h-title" id="mGroup">设备组</span>
+</div>
+<div class="cont"> 
+<div class="r-header-body">
+<div class="right-list">
+       <button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">新建</button>
+</div>
+</div>
+ <table id="tableWorkcenter" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>产线名</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">新建或编辑产线</span>
+		</div>
+      <input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+     <form id="lineForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">产线名</label>
+				    	<input type="text" class="form-control input-w-3"  name="pline" id="pline">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+				    <div class="form-group">
+				    	<label for="" class="input-w-160">状态</label>
+						<select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+						</select>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="button" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idPline" name="idPline:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+

@@ -1,0 +1,120 @@
+<script type="text/template" id="linkBodyMain">
+    <div class="body-head-title">
+        <span class="h-title-selected"><b>公司联系人</b></span>
+    </div>
+    <div class="cont">
+        <div class="r-header-body">
+            <div class="btn-group btn-group-left">
+                <label>公司：</label>
+                <input name="shortName" id="shortName" type="text"/>
+            </div>
+            <div class="right-list">
+                <button id="create" class="button-sytle1">新建</button>
+            </div>
+
+        </div> <!--检索结束-->
+        <!--<form id="binForm" method="post" action="index.html" class="form-horizontal">-->
+        <table id="Linkman" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>职务</th>
+                <th>电话</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="col-lg-9 col-lg-offset-3">
+            <button type="button" class="btn btn-primary" id="return01">返回</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var app={
+        init:function(){
+            $('#body').html($('#linkBodyMain').html());
+            this.bindEvents();
+        },
+        bindEvents:function(){
+            var params = RouterManager.getParams();
+            var jmstoken= store.get('JMS-TOKEN');
+            var companyCoId =params.coCompanyId;
+            var shortName = params.shortName;
+            $('#shortName').val(shortName);
+            $("#shortName").prop("readonly", true);
+            var table =$('#Linkman').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "s/LinkmanList",
+                    "dataType": "json",
+                    data: {"companyCoId":companyCoId},
+                    headers: {'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class="button-bin">编辑</button><button class="button-edit">详情</button><button class="button-delete">删除</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            });
+            $('#Linkman').on( 'click', 'button', function () {
+                var rowData = table.row( $(this).parents('tr') ).data();
+//                var historyOptions=Object.assign(params,{
+//                    linkmanId:rowData[4]
+//                });
+                var historyOptions = params;
+                historyOptions.linkmanId = rowData[4];
+                var clazz =$(this).attr('class');
+                if(clazz=='button-bin'){
+                    $.get("views/linkman-create-body.html",function(data){
+                        $("#body").html(data);
+                        historyOptions.action='edit';
+                        historyOptions.viewId='linkman-create-body';
+                        RouterManager.setUrl(historyOptions)
+                    });
+
+                }
+                else if(clazz=='button-edit'){
+                    $.get("views/linkman-create-body.html",function(data){
+                        $("#body").html(data);
+                        historyOptions.action='detail';
+                        historyOptions.viewId='linkman-create-body';
+                        RouterManager.setUrl(historyOptions)
+                    });
+                }
+                else {
+                    $.deleteLinkman(rowData[4],jmstoken,function(data){
+                        $.get("views/linkman-body.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            } );
+            $('#create').click(function(){
+                $.get("views/linkman-create-body.html",function(data){
+                    $("#body").html(data);
+                    var historyOptions=Object.assign(params,{
+                        action:'create',
+                        viewId:'linkman-create-body'
+                    });
+                    RouterManager.setUrl(historyOptions)
+                });
+            });
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+        }
+    };
+    app.init();
+
+</script>

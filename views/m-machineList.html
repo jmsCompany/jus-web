@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).draggable().show();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+$(document).ready(function() {
+
+	var jmstoken= store.get('JMS-TOKEN');
+	var machineList={
+		init:function(){
+			var self = this;
+			this.bindEvents();
+			this.loadTable();
+			this.form();
+			this.autoFill();
+		},
+		loadLocation:function(callback){
+			var idStk = $('#idStk').val();
+			$('#idLocation').empty();
+			$('#idLocation').append('<option>所在位置</option>');
+			if(!isNaN(idStk)){
+				$('#idLocation').selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, callback);
+			}
+		},
+		bindEvents:function(){
+			var self = this;
+			$('#tcbox-pcpplist').on('click','#tcclose, #return',function(){
+				$('#tcbox-pcpplist').hide();
+				$('#machineForm')[0].reset();
+				$('#statusId').empty();
+			});
+			$('#create').on('click',function(){
+				var top = $('#body').scrollTop();
+				$('#tcbox-pcpplist').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+			});
+			$('#idStk').on('change',function(){
+				self.loadLocation();
+			});
+//			$('#return').click(function(){
+//				$.get("views/m-machineList.html",function(data){
+//					$("#body").html(data);
+//				});
+//			});
+		},
+		loadTable:function(){
+			var self = this;
+			this.table =$('#tableMachineList').DataTable( {
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "m/getMachineList",
+					"dataType": "json",
+					headers: {'JMS-TOKEN':jmstoken}
+				},
+				"columnDefs": [ {
+					"targets": -1,
+					"data": null,
+					"defaultContent": '<button class=button-bin>维修历史</button><button class=button-edit>备件</button><button class=button-sytle1>保养计划</button><button class=button-print>编辑</button><button class=button-delete>删除</button>'
+				} ],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+				dom: "tip",
+				pageLength:"50"
+			} );
+			$('#tableMachineList tbody').on( 'click', 'button', function () {
+				var data = self.table.row( $(this).parents('tr') ).data();
+				var historyOptions={
+					groupId:'m-machineList',
+					machineId:data[8]
+				};
+				var clazz =$(this).attr('class');
+				if(clazz=='button-bin'){
+//					$('#_key18').val(data[8]);
+					historyOptions.viewId='m-history';
+					$.get("views/m-historyList.html",function(data){
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+
+				}
+				else if(clazz=='button-edit'){
+//					$('#_key18').val(data[8]);
+					historyOptions.viewId='m-sparePartList';
+					$.get("views/m-sparePartList.html",function(data){
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+				}
+				else if(clazz=='button-sytle1'){
+//					$('#_key18').val(data[8]);
+					historyOptions.viewId='m-machine-mainPlan';
+					$.get("views/m-machine-mainPlan.html",function(data){
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+				}
+				else if(clazz=='button-print'){
+					var top = $('#body').scrollTop();
+					$('#tcbox-pcpplist').css({
+						top: $(window).height() * 0.2 + top
+					}).draggable().show();
+					self.loadDetail(data[8]);
+				}
+				else {
+					$.deleteMachine(data[8],jmstoken,function(data){
+						if(data.valid == false){
+							var top = $('#body').scrollTop();
+							$('#draggable2').css({
+								top: $(window).height() * 0.2 + top
+							}).draggable().show();
+						}
+						else{
+							$.get("views/m-machineList.html",function(data){
+								$("#body").html(data);
+							});
+						}
+					});
+				}
+			} );
+		},
+		autoFill:function(){
+			var self = this;
+			$('#idStatus').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_machine'}});
+			$('#idGroup').selectautofill('m/getMachineGroupsObjs',{headers:{'JMS-TOKEN':jmstoken}});
+			$("#idLine").selectautofill('p/m/findWSPLines', {headers: {'JMS-TOKEN':jmstoken}});
+			$('#idWc').selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':jmstoken}});
+			$('#idWip').selectautofill('m/findWipObjs',{headers:{'JMS-TOKEN':jmstoken}});
+			$('#idStk').selectautofill('s/getStksByTypes?statusId=27&types=2',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		},
+		loadDetail:function(idMachine){
+			var self = this;
+			$.machineInfo(idMachine,jmstoken,function(data){
+				debugger;
+				$('#machineForm').populate(data,true);
+				$('#idStk').val(data.idStk);
+				self.loadLocation(function(){
+					$('#idLocation').val(data.idLocation);
+				});
+//				$('#idMstatus').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_machine'}},function(){
+//					$('#idMstatus').val(data.idMstatus);
+//				});
+//				$('#idGroup').selectautofill('m/getMachineGroupsObjs',{headers:{'JMS-TOKEN':jmstoken}},function(){
+//					$('#idGroup').val(data.idGroup);
+//				});
+//				$("#idLine").selectautofill('p/m/findWSPLines', {headers: {'JMS-TOKEN':jmstoken}},function(){
+//					$('#idLine').val(data.idLine);
+//				});
+//				$('#idWc').selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':jmstoken}},function(){
+//					$('#idWc').val(data.idWc);
+//				});
+//				$('#idWip').selectautofill('m/findWipObjs',{headers:{'JMS-TOKEN':jmstoken}},function(){
+//					$('#idWip').val(data.idWip);
+//				});
+//				$('#idStk').selectautofill('s/getStksByTypes?statusId=27&types=2',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+//					$('#idStk').val(data.idStk);
+//				});
+//				if(data.idStk){
+//					$('#idLocation').selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':data.idStk}},function(){
+//						$('#idLocation').val(data.idLocation);
+//					});
+//				}
+			});
+		},
+		form:function(){
+			var self = this;
+			$('#machineForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'code': {
+						validators: {
+							notEmpty: {
+								message: '设备编号不能为空'
+							}
+						}
+					},
+					'totalKwa': {
+						validators: {
+							digits: {
+								message: '请输入数字'
+							}
+						}
+					},
+					'idLocation:number': {
+						validators: {
+							notEmpty: {
+								message: '所在位置不能为空'
+							}
+						}
+					}
+//					'name': {
+//						validators: {
+//							notEmpty: {
+//								message: '设备名称不能为空'
+//							}
+//						}
+//					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				var $form     = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var machine =JSON.stringify($('#machineForm').serializeJSON());
+				debugger;
+				$.saveMachine(machine,jmstoken,function(data){
+					debugger;
+					$.get("views/m-machineList.html",function(data){
+						$("#body").html(data);
+					});
+					$('#machineForm')[0].reset();
+				});
+			});
+		}
+	};
+	machineList.init();
+	/*
+
+	 */
+
+} );
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>设备列表</b></span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+    	<div class="right-list">
+			<!--<div class="sousuo">-->
+    			<!--<div class="ss-input">    		-->
+    				<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    			<!--</div>-->
+    			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    		<!--</div>-->
+     		<input type="button" class="button-sytle1" id="create" value="新建">
+    	</div>
+	</div>
+ 	<table id="tableMachineList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>设备编号</th>
+                <th>设备名称</th> 
+                <th>组别</th>
+                <th>功率</th>
+                <th>型号</th> 
+                <th>安装日期</th>
+				<th>所在位置</th>
+				<th>状态</th>
+                <th style="min-width:300px;">操作</th>  <!--维修历史、备件、保养计划、编辑、删除-->
+            </tr>
+        </thead>
+	</table>
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist"  style="overflow: visible;">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+			<span class="h-title">新建设备</span>
+		</div>
+      <input type="button" class="tc_close" id="tcclose">
+     <form id="machineForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>设备编号</label>
+				    	<input type="text" class="form-control"  name="code" id="code">
+				    </div>
+					<div class="form-group">
+				    	<label>设备名称</label>
+						<input type="text" class="form-control"  name="name" id="name">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>用于</label>
+				    	<select  class="form-control" name="idGroup:number" id="idGroup">
+							<option>用于</option>
+                        </select>
+				    </div>
+					<div class="form-group">
+				    	<label>功率</label>
+				    	<input type="text" class="form-control" name="totalKwa" id="totalKwa">
+					</div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>安装日期</label>
+						<input type="text" name='satCompletedDate' id='satCompletedDate'>
+						<script type="text/javascript">
+							$(function () {
+								$('#satCompletedDate').datetimepicker({format:"YYYY-MM-DD"});
+							});
+						</script>
+					</div>
+					<div class="form-group">
+				    	<label>型号</label>
+				    	<input type="text" class="form-control"  name="spec" id="spec">
+					</div>
+				</div>
+		 		<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label>所在车间</label>
+				 		<select  class="form-control" name="idStk:number" id="idStk">
+							<option>所在车间</option>
+				 		</select>
+			 		</div>
+			 		<div class="form-group">
+				 		<label>所在位置</label>
+						<select  class="form-control" name="idLocation:number" id="idLocation">
+							<option value="">所在位置</option>
+						</select>
+			 		</div>
+		 		</div>
+				 <div class="col-xs-12 mar-top-20px">
+					 <div class="form-group">
+						 <label>产线</label>
+						 <select  class="form-control" name="idLine:number" id="idLine">
+							 <option>产线</option>
+						 </select>
+					 </div>
+					 <div class="form-group">
+						 <label>工作中心</label>
+						 <select  class="form-control" name="idWc:number" id="idWc">
+							 <option>工作中心</option>
+						 </select>
+					 </div>
+					 <!--<div class="form-group">-->
+						 <!--<label>车间</label>-->
+						 <!--<select  class="form-control" name="idWip:number" id="idWip">-->
+							 <!--<option>车间</option>-->
+						 <!--</select>-->
+					 <!--</div>-->
+				 </div>
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label>mtbf</label>
+				 <input type="text" class="form-control"  name="mtbf" id="mtbf">
+			 </div>
+			 <div class="form-group">
+				 <label>mttr</label>
+				 <input type="text" class="form-control"  name="mttr" id="mttr">
+			 </div>
+		 </div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>downtime</label>
+						<input type="text" class="form-control"  name="downtime" id="downtime">
+					</div>
+					<div class="form-group">
+						<label>状态</label>
+						<select  class="form-control" name="idStatus:number" id="idStatus">
+						</select>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="button" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idMachine" name="idMachine:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+
+<!-- 错误提示弹窗 start -->
+<div class="tcbox container-fluid" id="draggable2">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#draggable2');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label>此设备不能删除！</label>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

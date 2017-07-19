@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Equipment Failure Rate</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>Equipment Failure Rate</b></span>
+    <span class="h-title" id="mtbf">MTBF&MTTR</span>
+	<span class="h-title" id="dailyMain">Daily Maintenance Report</span>
+	<span class="h-title" id="preMain">Preventive Maintenance Report</span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+         <!--<div class="btn-group btn-group-left">-->
+      		<!--<button class="btn btn-default" type="button" name="idDept:number" id="idDept">年份</button>-->
+      		<!--<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">-->
+        		<!--<span class="caret"></span>-->
+        		<!--<span class="sr-only">请选择</span>-->
+      		<!--</button>-->
+      		<!--<ul class="dropdown-menu">-->
+      		<!--</ul>-->
+    	<!--</div>-->
+	<!-- 年份 -->
+
+	<div class="btn-group btn-group-left">
+		<div class="btn-group btn-group-left">
+			<label>Year：</label><input type="text" id='year'>
+			<!--<script type="text/javascript">-->
+				<!--$(function () {-->
+					<!--$('#date').datetimepicker({format:"YYYY"});-->
+				<!--});-->
+			<!--</script>-->
+		</div>
+		<div class="btn-group btn-group-left" id="machine-group">
+			<select name="none" id="machine-select" style="display: none;"></select>
+			<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">Machine</button>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+				<span class="caret"></span>
+				<span class="sr-only">Machine</span>
+			</button>
+			<ul class="dropdown-menu"></ul>
+		</div>
+	</div>
+    <!--<div class="btn-group btn-group-left">-->
+       <!--<label>from WW：</label><input type="text" id="">-->
+   <!--</div>-->
+    <!--<div class="btn-group btn-group-left">-->
+       <!--<label>to WW：</label><input type="text" id="">-->
+     <!--</div>-->
+
+	<div class="right-list">
+       <button id="view" class="button-sytle1">Search</button>
+	</div>
+
+</div> 
+        
+</div>
+
+<div class="tcbox container-fluid" id="nullAlert">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label id="info"></label>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+　function openwin(data)
+　　{ window.open ("views/m-br-print.html"+"?year="+data, "newwindow", "height=auto, width=auto, top=0,left=0,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
+}
+ //弹窗
+ function showObj(objid){
+	 $(objid).show();
+
+ }
+ function hideObj(objid){
+	 $(objid).hide();
+ }
+ var jmstoken= store.get('JMS-TOKEN');
+	var mbrSearch ={
+		init:function(){
+			var self = this;
+			var now = new Date();
+			$('#year').val(now.getFullYear());
+			this.bindEvents();
+		},
+		nullAlertShow:function(information){
+			var top = $('#body').scrollTop();
+			$('#nullAlert').css({
+				top: $(window).height() * 0.2 + top
+			}).show();
+			$('#info').empty();
+			$('#info').append(information);
+		},
+		bindEvents:function(){
+			var self = this;
+
+			//设备下拉框
+			$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+				var _html = '';
+				_(data).each(function (d, i) {
+					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+				});
+				$('#machine-group').find('.dropdown-menu').append(_html);
+			});
+			$('#machine-group').on('click', 'li a', function (e) {
+				var $t = $(this);
+				var id = $t.data('id');
+				$('#machine-select').val(parseInt(id));
+				$('#machineNo').html($t.text());
+			});
+			$('.machine').on('click',function(e){
+				$('#machineNo').html('Machine');
+			});
+//			var dataPickerOpt = {
+//				format: "YYYY-MM-DD"
+//			}
+//			$('#date').datetimepicker(dataPickerOpt);
+			$('#view').on('click',function(){
+				var year = $('#year').val();
+				var idMachine = $('#machine-select').val();
+				if (!year){
+					self.nullAlertShow('Please input year！');
+					return
+				}
+				else if($('#machineNo').html() == 'Machine'){
+					self.nullAlertShow('Pleas choose machine！');
+				}
+				else{
+					var machine = $("#machine-select  option:selected").text();
+					$.get("views/m-br-print-test.html", function (data) {
+						RouterManager.setUrl({
+							groupId:"m-br",
+							viewId:"m-br-print-test",
+							year:year,
+							idMachine:idMachine,
+							machine:machine
+						});
+						$("#body").html(data);
+					});
+				}
+			});
+
+			$('#mtbf').click(function(){
+				$.get("views/m-mtbf-mttr.html", function (data) {
+					RouterManager.setUrl({
+						groupId:"m-br",
+						viewId:"m-mtbf-mttr"
+					});
+					$("#body").html(data);
+				});
+			});
+			$('#dailyMain').click(function(){
+				$.get("views/m-dailymainRecord-report.html", function (data) {
+					RouterManager.setUrl({
+						groupId:"m-br",
+						viewId:"m-dailymainRecord-report"
+					});
+					$("#body").html(data);
+				});
+			});
+			$('#preMain').click(function(){
+				$.get("views/m-premainRecord-report.html", function (data) {
+					RouterManager.setUrl({
+						groupId:"m-br",
+						viewId:"m-premainRecord-report"
+					});
+					$("#body").html(data);
+				});
+			});
+		}
+	};
+ mbrSearch.init();
+
+</script>
+
+</body>
+</html>
+

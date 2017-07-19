@@ -1,0 +1,405 @@
+﻿
+
+
+
+
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="employeeForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           
+							<fieldset>
+							<legend>基本信息</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">姓名</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="name" id="name"/>
+                                </div>
+                                <button id="passwordChange" type='button' class="button-sytle1">修改密码</button>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">性别</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="gender[idDic]:number" id="gender.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">用户名</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="username" id="username"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">手机号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="mobile" id="mobile"/>
+                                </div>
+                            </div>			
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">邮箱</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="email" id="email"/>
+                                </div>
+                            </div>
+                            <input type="hidden" class="form-control" name="password" id="password" value=""/>
+							
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">部门</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="companyType[idDic]:number" id="companyType.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-lg-3 control-label">职位</label>-->
+                                <!--<div class="col-lg-5">-->
+                                    <!--<select class="form-control" name="companyType[idDic]:number" id="companyType.idDic">-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            <!--</div>-->
+							
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">分机</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="ext" id="ext"/>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-lg-3 control-label">简历文件</label>-->
+                                <!--<div class="col-lg-5">-->
+                                    <!--<input type="text" class="form-control" name="companyName" id="companyName"/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">状态</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="enabled:number" id="enabled">
+                                        <option value="0">未激活</option>
+                                        <option value="1">激活</option>
+                                    </select>
+                                </div>
+                            </div>
+							<legend>其它信息</legend>
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-lg-3 control-label">工号</label>-->
+                                <!--<div class="col-lg-5">-->
+                                    <!--<input type="text" class="form-control" name="login" id="login"/>-->
+                                <!--</div>-->
+                            <!--</div>-->
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">生日</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker2'>
+                                        <input type='text' class="form-control t" name="birthday" id="birthday"  />
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $('#datetimepicker2').datetimepicker({format: "YYYY-MM-DD"});
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">身份证</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="idcard" id="idcard"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">住址</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="address" id="address"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">紧急联系人电话</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="emergencyHp" id="emergencyHp"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">毕业学校</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="school" id="school"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">毕业时间</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="gradTime" id="gradTime"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">专业</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="major" id="major"/>
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-lg-3 control-label">学历</label>-->
+                                <!--<div class="col-lg-5">-->
+                                    <!--<select class="form-control" name="degree" id="degree">-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-lg-3 control-label">使用语言</label>-->
+                                <!--<div class="col-lg-5">-->
+                                    <!--<select class="form-control" name="locale" id="locale">-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group" id="detail01">
+                                <label class="col-lg-3 control-label">创建时间</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="creationTime" id="creationTime"/>
+                                </div>
+                            </div>
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                                <button type="button" id="return02" class="btn btn-primary">返回</button>
+                            </div>
+                        </div>
+                        <input type="hidden" id="idUser" name="idUser:number"/>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+<!-- 弹窗1 start -->
+    <div class="tcbox container-fluid" id="tcbox-password1">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">修改密码</span>
+            </div>
+            <input type="button" class="tc_close" id="close01">
+            <form id="passswordForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">新密码</label>
+                        <input type="password" class="form-control input-w-3"  name="newPassword" id="newPassword"/>
+                    </div>
+                </div>
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <button id="return1" type="button" class="btn  btn-info">返回</button>
+                    </div>
+                </div>
+                <input type="hidden" id="idUser1" name="idUser:number"/>
+            </form>
+        </div>
+    </div>
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    var idCompany = store.get('userProfile').idCompany;
+    var createEmployee={
+        init:function(){
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var userId = params['userId'];
+            if(userId){
+                this.loadDetail(userId);
+//                $('#detail02').hide();
+                this.form2();
+            }
+            else{
+                debugger;
+                $('#detail01').hide();
+                $('#passwordChange').hide();
+                this.form1();
+            }
+            this.bindEvents(userId);
+//            this.form();
+            this.form();
+        },
+        bindEvents:function(userId){
+            var self = this;
+            var frameContainer = $('#employeeForm');
+            $('#gender\\.idDic').selectautofill('dic/gender');
+            $('#return02').click(function(){
+               history.go(-1);
+            });
+            $('#return1, .tc_close').click(function(){
+                $.get("views/v_company_employee.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+            frameContainer.on('click','#passwordChange',function(e){
+                var top = $('#body').scrollTop();
+                $('#tcbox-password1').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+//                var userId = $('#idUser').val();
+                debugger;
+                $('#idUser1').val(userId);
+            });
+        },
+        loadDetail:function(userId, callback){
+            $.userInfo(userId,jmstoken,function(data){
+                var username = data.username;
+                arr = username.split('@@');
+                data.username = arr[0];
+                $('#employeeForm').populate(data,true);
+            });
+        },
+        form1:function(){
+            $('#employeeForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'username': {
+                        validators: {
+                            notEmpty: {
+                                message: '用户名不能为空'
+                            }
+                        }
+                    },
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: '姓名不能为空'
+                            }
+                        }
+                    },
+//                    'mobile': {
+//                        validators: {
+//                            notEmpty: {
+//                                message: '手机号不能为空'
+//                            },
+//                            phone: {
+//                                message: '电话号码不合法',
+//                                country: 'CN'
+//                            }
+//                        }
+//                    },
+                    'email': {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不合法。'
+                            }
+                        }
+                    },
+//                    'password': {
+//                        validators: {
+//                            notEmpty: {
+//                                message: '密码不能为空'
+//                            },
+//                        }
+//                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $('#username').val($('#username').val()+'@@'+idCompany);
+                debugger;
+                var user =JSON.stringify($('#employeeForm').serializeJSON());
+                $.saveUser1(user,jmstoken,function(data){
+                    $.get("views/sys-employee.html",function(data){
+                        $("#body").html(data);
+                        history.go(-1);
+                    });
+                });
+            });
+        },
+        form2:function(){
+            $('#employeeForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'username': {
+                        validators: {
+                            notEmpty: {
+                                message: '用户名不能为空'
+                            }
+                        }
+                    },
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: '姓名不能为空'
+                            }
+                        }
+                    },
+                    'email': {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不合法。'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                $('#username').val($('#username').val()+'@@'+idCompany);
+                debugger;
+                var user =JSON.stringify($('#employeeForm').serializeJSON());
+                $.saveUser2(user,jmstoken,function(data){
+                    $.get("views/sys-employee.html",function(data){
+                        $("#body").html(data);
+                        history.go(-1);
+                    });
+                });
+            });
+        },
+        form:function(){
+            $('#passswordForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'nemPassword': {
+                        validators: {
+                            notEmpty: {
+                                message: '密码不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var userPassword =JSON.stringify($('#passswordForm').serializeJSON());
+                debugger;
+                $.saveUserPassword(userPassword,jmstoken,function(data){
+                    debugger;
+                    $.get("views/v_company_employee.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        }
+    };
+    createEmployee.init();
+</script>

@@ -1,0 +1,243 @@
+<script type="text/html" id="qTemplate">
+    <div class="container-fluid" id="container-routine">
+        <div id="dropzone-template-container" style="display: none;">
+            <div class="dz-preview dz-file-preview">
+                <div class="dz-details">
+                    <div class="dz-filename"><span data-dz-name></span><span data-dz-remove title="删除">✘</span><span data-dz-size></span></div>
+                </div>
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                <div class="dz-success-mark"><span>✔</span></div>
+                <div class="dz-error-mark"><span>✘</span></div>
+                <div class="dz-error-message"><span data-dz-errormessage></span></div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title" id="list01">文件列表</span>
+                    <span class="h-title" id="qm01">新建文件</span>
+                    <span class="h-title-selected"><b>文件类型</b></span>
+                </div>
+
+                <button id="add" style="padding:5px 10px;margin:5px 10px" data-action="new">新建</button>
+                <div class="cont">
+            
+                <table id="tableFileType" class="tabletxt" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>文件类型</th>
+                            <th>描述</th>
+                            <th style="min-width:200px;">操作</th>
+                        </tr>
+                    </thead>
+                </table>
+
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+<!-- 弹窗 start -->
+    <div class="tcbox container-fluid" id="draggable1">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">新建/编辑</span>
+            </div>
+            <input type="button" class="tc_close">
+            <form id="poForm" class="form-inline">
+                <input type="hidden" name="idFileType" value="0"/>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label style="text-align:center;width:80px;">文件类型</label>
+                        <input type="text" class="form-control input-w-3" name="type"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label style="text-align:center;width:80px;">描述</label>
+                        <input type="text" class="form-control input-w-3" name="des"/>
+                    </div>
+                </div>
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button type="button" class="submit btn btn-primary ">保存</button>
+                        <!--<button id="return" type="reset" class="btn  btn-info">返回</button>-->
+                    </div>
+                </div>
+                <input type="hidden" id="idPo" name="idPo:number" />
+            </form>
+        </div>
+    </div>
+</script>
+
+
+<script>
+var jmstoken= store.get('JMS-TOKEN');
+
+var app={
+    init:function(){
+        var self = this;
+
+        $('#body').html($('#qTemplate').html());
+
+        var params = this.params = RouterManager.getParams();
+        var action = params['action'];
+        var qmId = params['qmId'];
+
+        this.bindEvents();
+    },
+    bindEvents:function(){
+        var historyParams={
+                groupId:'q-inProcessingList'
+            };
+
+        //出货管理
+        $("#list01").click(function(){
+            $.get("views/q-inProcessingList.html",function(data){
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+
+        $("#return01").click(function(){
+            history.go(-1);
+        });
+        
+        $("#qm01").click(function(){
+        $.get("views/q-qm-body.html",function(data){
+            RouterManager.setUrl({
+                groupId:'q-inProcessingList',
+                viewId:'q-qm-body'
+            });
+            $("#body").html(data);
+        });
+});
+    }
+};
+app.init();
+
+function init(){
+    $('#tableFileType').DataTable( {
+            "ordering": false,
+            "bDestroy": true,
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "stateDuration": -1,
+            "ajax": {
+           "type": 'POST',
+                    "url": $clientURL+"q/getQFileTypeList",
+                    "dataType": "json",
+           "headers":{'JMS-TOKEN':jmstoken},
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class="button-edit" data-action="edit">编辑</button><button class="button-bin" data-action="del">删除</button>'
+                } ],
+           "language": {
+                            "url": "js/datatable/chinese.json"
+                       },
+          
+            dom: "tip",
+        pageLength:"50",
+        initComplete: function(){
+            $('#tableFileType tr[role=row] td:nth-child(5)').each(function(i,k){
+                if($(k).text() == '是') $(k).next().html('-');
+            });
+
+            //弹出框-编辑
+            $('.button-edit').on('click', function () {
+                if(!flag){
+                    flag=1;
+                    var action =$(this).data('action');
+                    var actions={
+                        'edit':function(){
+                        var top = $('#body').scrollTop();
+                        var left = $('#body').scrollLeft();
+
+                        $('[name=idFileType]').val($(this).parents('td').siblings().eq(0).text());
+                        $('[name=type]').val($(this).parents('td').siblings().eq(1).text());
+                        $('[name=des]').val($(this).parents('td').siblings().eq(2).text());
+
+                            $('.tcbox').css({
+                                top: $(window).height() * 0.2 + top,
+                                left:$(window).height() * 0.5 + left
+                            }).draggable().show();
+                        }
+                    };
+                    actions[action].call(this);
+                }
+                else{
+                    return false;
+                }
+            });
+
+            //弹出框-编辑
+            $('.button-bin').on('click', function () {
+                if(confirm('确认删除？')){
+                    delFileType($(this).parents('td').siblings().eq(0).text(), init);
+                }
+            });
+}
+});
+}
+
+init();
+
+//弹出框
+var flag=0;
+
+//新建
+$('button#add').on( 'click', function () {
+    if(!flag){
+        flag=1;
+        var action =$(this).data('action');
+        var actions={
+            'new':function(){
+            var top = $('#body').scrollTop();
+                var left = $('#body').scrollLeft();
+                $('.tcbox').css({
+                    top: $(window).height() * 0.2 + top,
+                    left:$(window).height() * 0.5 + left
+                }).draggable().show();
+            }
+        };
+        actions[action]();
+    }
+    else{
+        return false;
+    }
+});
+
+//关闭
+$('.tcbox').on('click','.tc_close',function(){
+    $('.tcbox').hide();
+    $('#poForm')[0].reset();
+    $('[name=idFileType]').val(0);
+    flag=0;
+});
+
+//保存
+$('.tcbox').on('click','.submit',function(){
+    saveFileType(JSON.stringify({
+        idFileType : $('[name=idFileType]').val()
+    ,   type : $('[name=type]').val()
+    ,   des : $('[name=des]').val()
+    }), init);
+    $('.tcbox .tc_close').trigger('click');
+});
+
+ //保存字典
+function saveFileType(data,callback){
+      $.JMSClient('q/saveQFileType',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
+ };
+
+//删除字典
+function delFileType(id,callback){
+      $.JMSClient('q/deleteQFileType',{'type':'GET',headers:{'JMS-TOKEN':jmstoken},data:{fileTypeId:id}},callback);
+  };
+</script>

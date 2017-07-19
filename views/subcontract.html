@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--<style>-->
+        <!--.form-group {-->
+            <!--display: block;-->
+            <!--width: 600px;-->
+            <!--margin-top: 20px;-->
+        <!--}-->
+
+        <!--.form-group.small {-->
+            <!--width: 400px;-->
+        <!--}-->
+
+        <!--.form-group label {-->
+            <!--width: 150px;-->
+        <!--}-->
+
+        <!--.form-group label,-->
+        <!--.form-group input {-->
+            <!--float: left;-->
+            <!--display: block;-->
+        <!--}-->
+
+        <!--.form-group input {-->
+            <!--width: calc(100% - 150px);-->
+        <!--}-->
+    <!--</style>-->
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title-selected" data-view-id="subcontract">公司流转</span>
+    <span class="h-title" data-view-id="s-company-report">公司往来报告</span>
+    <span class="h-title" data-view-id="s-company-setting">公司往来设置</span>
+    <span class="h-title" data-view-id="s-company-list">往来物料清单</span>
+    <span class="h-title" data-view-id="s-po-list">往来采购订单</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="filter pull-left">
+            <div class="btn-group" role="group" aria-label="...">
+                <a class="btn btn-default" data-page="table" data-action="4">待接收</a>
+                <a class="btn btn-default" data-page="table" data-action="5">已接收</a>
+                <a class="btn btn-default" data-page="table" data-action="6">已拒绝</a>
+            </div>
+        </div>
+        <div class="right-list">
+            <button class="button-sytle1" data-page="applyPo">新建采购单</button>
+            <button class="button-sytle1" data-page="applyDo">新建发货</button>
+            <button class="button-sytle1" data-page="applySo">新建销售单</button>
+        </div>
+    </div>
+    <div id="page"></div>
+</div>
+
+<script id="table-tpl" type="text/html">
+    <table id="table" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>提交时间</th>
+            <th>从公司</th>
+            <th>到公司</th>
+            <th>批号</th>
+            <th>从仓位/货架</th>
+            <th>到仓位/货架</th>
+            <th>物料</th>
+            <th>数量</th>
+            <th>订单号</th>
+            <th>备注</th>
+            <th>接收时间</th>
+            <th>流转单号</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+    </table>
+</script>
+
+<script>
+    $(function () {
+        var jmstoken = store.get('JMS-TOKEN');
+        var historyOptions={
+            groupId:'subcontract'
+        };
+
+        $(".body-head-title span").on('click',function(){
+            var viewId = $(this).data('view-id');
+            historyOptions.viewId = viewId;
+            $.get("views/" + viewId + ".html",function(data){
+                RouterManager.setUrl(historyOptions);
+                $("#body").html(data);
+            });
+        });
+        loadTable('4');
+
+        $('.r-header-body').on('click', '[data-page]', function (e) {
+            var _params = $(this).data();
+            if (_params.page == 'table') {
+                $(this).addClass('active').siblings('.active').removeClass('active');
+                loadTable(_params.action);
+            } else {
+//                $('.filter a.active').removeClass('active');
+
+                $(this).addClass('active').siblings('.active').removeClass('active');
+
+                if (_params.page == 'applyPo') {
+                    loadApplyPo();
+                }
+                else if (_params.page == 'applyDo'){
+                    loadApplyDo();
+                }
+                else{
+                    loadApplySo();
+                }
+            }
+        });
+
+        function loadApplyPo() {
+            $.get("views/subcontract-applyPo.html", function (data) {
+                RouterManager.setUrl({
+                    groupId:'subcontract',
+//                    viewId:'s-company-setting',
+                    action:'applyPo'
+                });
+                $("#page").html(data);
+
+            });
+        }
+
+        function loadApplyDo() {
+            $.get("views/subcontract-applyDo.html", function (data) {
+//            $.get("views/subcontract-receiveDo.html", function (data) {
+                RouterManager.setUrl({
+                    groupId:'subcontract',
+//                   viewId:'s-company-setting',
+                    action:'applyDo'
+                });
+                $("#page").html(data);
+
+            });
+        }
+
+        function loadApplySo() {
+            $.get("views/subcontract-applySo.html", function (data) {
+                RouterManager.setUrl({
+                    groupId:'subcontract',
+//                    viewId:'s-company-setting',
+                    action:'applySo'
+                });
+                $("#page").html(data);
+
+            });
+        }
+
+        var currAction = '';
+        function loadTable(type) {
+            currAction = type;
+            var _columnDefs = {
+                '4': [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class="button-bin" data-status="5">接收</button>' +
+                    '<button class="button-delete" data-status="5">拒绝</button>'
+                }],
+                '5': [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent":  ''
+                }],
+                '6': [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": ''
+                }]
+            };
+
+            $('#page').html($('#table-tpl').html());
+            this.table = $('#table').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "s/getSmtfMaterialListFromCom",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN': jmstoken},
+                    "data": {statusId:type},
+                    "beforeSend": jmsGlobalBlock,
+                    "complete": jmsGlobalUnBlock,
+                    "error": jmsGlobalUnBlock
+                },
+                "columnDefs": _columnDefs[type],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength: "50"
+            });
+
+            // 表格操作按钮
+            $('#table tbody').on( 'click', 'button', function () {
+                var rowData = self.table.row( $(this).parents('tr') ).data();
+                var historyOptions = {
+                    groupId:'subcontract',
+                    orderId:rowData[12]
+                };
+                var clazz =$(this).attr('class');
+                //手动完成
+                var actions={
+                    'button-bin':function(){
+                        historyOptions.viewId='subcontract-receiveDo';
+                        historyOptions.action='edit';
+                        $.get("views/subcontract-receiveDo.html",function(data){
+                            RouterManager.setUrl(historyOptions);
+                            $("#body").html(data);
+                        });
+                    },
+                    'button-delete':function(){
+                    	if(confirm("确定拒收吗？")){
+	                    	$.refuseSmtf(historyOptions.orderId,jmstoken,function(data){
+	                    		loadTable('4');
+	                    	});
+                    	}
+                    	else{
+                    		return false;
+                    	}
+                    }
+                };
+                actions[clazz]();
+            });
+        }
+    });
+</script>
+</body>
+</html>

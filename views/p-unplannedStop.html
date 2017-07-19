@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    function showObj(objid){
+        $(objid).draggable().show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    var unplannedStop = {
+        init:function(){
+            this.loadTable();
+            this.bindEvents();
+            this.form();
+//            this.autoFill();
+        },
+        autoFill:function(){
+            var self = this;
+            $('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_unplanned_stops'}});
+            $('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('#pSubCodeId').selectautofill('p/getPStopsCodeObjsList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+                self.eventIdfill($('#pSubCodeId').val());
+            });
+        },
+        eventIdfill:function(pSubCodeId){
+//            var pSubCodeId = $('#pSubCodeId').val();
+            if(pSubCodeId == "1"){
+                $('#eventId').val(12);
+            }
+            else if(pSubCodeId == "2"){
+                $('#eventId').val(10);
+            }
+            else if(pSubCodeId == "3"){
+                $('#eventId').val(9);
+            }
+            else if(pSubCodeId == "4"){
+                $('#eventId').val(13);
+            }
+            else if(pSubCodeId == "5"){
+                $('#eventId').val(14);
+            }
+            else{
+                $('#eventId').val(15);
+            }
+        },
+        loadTable:function(){
+            var self = this;
+            this.table=$('#tableUnplanned').DataTable( {
+            "processing": true,
+            "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+            "ajax": {
+                "type": 'POST',
+                "url": $clientURL + "p/etUnplannedStopsList",
+                "dataType": "json",
+                headers: {'JMS-TOKEN':jmstoken}
+            },
+            "columnDefs": [ {
+                "targets": -1,
+                "data": null,
+                "defaultContent": '<button class=button-edit>编辑</button>'
+            } ],
+            "language": {
+                "url": "js/datatable/chinese.json"
+            },
+            dom: "tip",
+            pageLength:"50"
+        } );
+
+            $('#tableUnplanned tbody').on( 'click', 'button', function () {
+                var data = self.table.row( $(this).parents('tr') ).data();
+                var clazz =$(this).attr('class');
+                var top = $('#body').scrollTop();
+                $('#unplannedStop').css({
+                    top: $(window).height() * 0.2 + top
+                }).draggable().show();
+                debugger;
+                self.loadDetail(data[6]);
+            } );
+        },
+        loadDetail:function(idUnplannedStop){
+            $.unplannedStopInfo(idUnplannedStop,jmstoken,function(data){
+                $('#unplannedStopForm').populate(data,true);
+                if(data.opSt){
+                    $('#opSt').val($.dateFormat.date(new Date(data.opSt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                    $("#idCpp").selectautofill('p/getCppListByMachineIdAndDate',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'machineId':data.idMachine,'reportTime':data.opSt}},function(){
+                        $("#idCpp").val(data.idCpp);
+                    });
+                }
+                else{
+                    $('#opSt').val('');
+                }
+
+                if(data.eqSt){
+                    $('#eqSt').val($.dateFormat.date(new Date(data.eqSt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                else{
+                    $('#eqSt').val('');
+                }
+
+                if(data.eqFt){
+                    $('#eqFt').val($.dateFormat.date(new Date(data.eqFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                else{
+                    $('#eqFt').val('');
+                }
+
+                if(data.opFt){
+                    $('#opFt').val($.dateFormat.date(new Date(data.opFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                else{
+                    $('#opFt').val('');
+                }
+
+
+                $('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_unplanned_stops'}},function(){
+                    $('#statusId').val(data.statusId);
+                });
+                $('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+                    $('#idMachine').val(data.idMachine);
+                });
+                $('#pSubCodeId').selectautofill('p/getPStopsCodeObjsList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+                    $('#pSubCodeId').val(data.pSubCodeId);
+                });
+
+            });
+        },
+        loadCpp:function(){
+            var idMachine = $('#idMachine').val();
+            var reportTime = $('#opSt').val();
+            if(!idMachine||!reportTime){
+                return;
+            }
+            reportTime = new Date(reportTime).getTime();
+            $("#idCpp").selectautofill('p/getCppListByMachineIdAndDate',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'machineId':idMachine,'reportTime':reportTime}});
+        },
+        bindEvents:function(){
+            var dataPickerOpt = {
+                format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+                useCurrent: false,
+                sideBySide: true
+            }
+            $('#opSt').datetimepicker(dataPickerOpt);
+            $('#eqSt').datetimepicker(dataPickerOpt);
+            $('#eqFt').datetimepicker(dataPickerOpt);
+            $('#opFt').datetimepicker(dataPickerOpt);
+
+            var self = this;
+            $('#create').on('click',function(){
+                showObj('#unplannedStop');
+                self.autoFill();
+            });
+            $('#idMachine').on('change',function(){
+                self.loadCpp();
+            });
+            $('#unplannedStop').on('click','#return, .tc_close',function(){
+                $('#unplannedStop').hide();
+                $('#unplannedStopForm')[0].reset();
+                $("#idCpp").empty();
+            });
+            $("#opSt").on("dp.change", function (e) {
+                self.loadCpp();
+            });
+            $('#pSubCodeId').on('change',function(){
+                var pSubCodeId = $('#pSubCodeId').val();
+                self.eventIdfill(pSubCodeId);
+            });
+            var historyOptions = {
+                groupId:'p-actStopPlanList'
+            };
+            $('#as').click(function(){
+                $.get("views/p-actStopPlanList.html",function(data){
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+//    	$('#sr').click(function(){
+//	 		$.get("views/p-stop-reason.html",function(data){
+//	             $("#body").html(data);
+//	     	});
+//	 	});
+            $('#cs').click(function(){
+                $.get("views/p-actSetup.html",function(data){
+                    historyOptions.viewId='p-actSetup';
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+        },
+        form:function(){
+            $('#unplannedStopForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'actSt': {
+                        validators: {
+                            notEmpty: {
+                                message: '实际开始时间不能为空'
+                            }
+                        }
+                    },
+                    'actFt': {
+                        validators: {
+                            notEmpty: {
+                                message: '实际开始时间不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var unplannedStop = $('#unplannedStopForm').serializeJSON();
+                unplannedStop.opSt = unplannedStop.opSt.replace('Z', '470+08:00');
+                unplannedStop.eqSt = unplannedStop.eqSt.replace('Z', '470+08:00');
+                unplannedStop.eqFt = unplannedStop.eqFt.replace('Z', '470+08:00');
+                unplannedStop.opFt = unplannedStop.opFt.replace('Z', '470+08:00');
+                unplannedStop = JSON.stringify(unplannedStop);
+                debugger;
+                $.saveUnplannedStop(unplannedStop,jmstoken,function(data){
+                    debugger;
+                    $.get("views/p-unplannedStop.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        }
+    };
+    unplannedStop.init();
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="as">实际停机</span>
+	<span class="h-title-selected"><b>非计划停机</b></span>
+	<!--<span class="h-title" id="sr">停机编码</span>-->
+	<span class="h-title" id="cs">实际装载</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <input type="button" class="button-sytle1" id="create" value="新建"/>
+        </div>
+    </div>
+    <table id="tableUnplanned" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>机器</th>
+                <th>原因</th>
+                <th>操作者发起时间</th>
+                <th>响应时间</th>
+                <th>完成时间</th>
+                <th>操作者确认时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="unplannedStop" style="overflow: visible;">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">非计划停机</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="unplannedStopForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">机器</label>
+                    <!--<input type="text" class="form-control input-w-3"  name="machine" id="machine" readOnly="true">-->
+                    <select class="form-control" style="width:180px;" name="idMachine:number" id="idMachine">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">原因</label>
+                    <!--<input type="text" class="form-control input-w-3"  name="Code" id="Code" readOnly="true">-->
+                    <select class="form-control" style="width:180px;" name="pSubCodeId:number" id="pSubCodeId">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label class="input-w-160">描述</label>
+                    <textarea class="form-control" rows="3" name="opDes" id="opDes" style="width:180px"></textarea>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">操作者发起时间</label>
+                    <input type="text" class="form-control input-w-3"  name="opSt" id="opSt">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">响应时间</label>
+                    <input type="text" class="form-control input-w-3"  name="eqSt" id="eqSt">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">完成时间</label>
+                    <input type="text" class="form-control input-w-3"  name="eqFt" id="eqFt">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">操作者确认时间</label>
+                    <input type="text" class="form-control input-w-3"  name="opFt" id="opFt">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">日计划</label>
+                    <!--<input type="text" class="form-control input-w-3"  name="machine" id="machine" readOnly="true">-->
+                    <select class="form-control" style="width:180px;" name="idCpp:number" id="idCpp">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">状态</label>
+                    <!--<input type="text" class="form-control input-w-3"  name="Code" id="Code" readOnly="true">-->
+                    <select class="form-control" style="width:180px;" name="statusId:number" id="statusId">
+                    </select>
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary ">保存</button>
+                    <button id="return" type="button" class="btn  btn-info">返回</button>
+                </div>
+            </div>
+            <input type="hidden" id="idUnplannedStops" name="idUnplannedStops:number"/>
+            <input type="hidden" id="eventId" name="eventId:number"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

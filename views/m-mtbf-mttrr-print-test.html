@@ -1,0 +1,230 @@
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+
+    function count(o){
+        var t = typeof o;
+        if(t == 'string'){
+            return o.length;
+        }else if(t == 'object'){
+            var n = 0;
+            for(var i in o){
+                n++;
+            }
+            return n;
+        }
+        return false;
+    }
+    var mtbfMttr={
+        init:function(){
+            var self = this;
+            this.bindEnvents();
+        },
+        bindEnvents:function(){
+            var self = this;
+            $('.button').click(function(){
+                // 显示保养单
+            });
+            $('.mbr_tablefoot tr:even').css("color","#0b6bf9");
+            $('.mbr_tablefoot tr:odd').css("color","#f00");
+
+            $('#print01').on("click", function(){
+                $(".mbr_cont").printArea();
+            });
+
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+
+            var routeParams = RouterManager.getParams();
+            var data={};
+            var year = routeParams.year;
+            var machine = routeParams.machine;
+            data.year = year;
+            $('#year').val(year);
+            $('#machine').text(machine);
+            var idMachine = routeParams.idMachine;
+            data.idMachine = idMachine;
+            var $obj= $("#mttrMtbfTable");
+            $.mtbfMttrInfo(data,jmstoken, function (data) {
+                debugger;
+                if(count(data)>0){
+                    var x = new Array();
+                    var mtbfActual = new Array();
+                    var mtbfTarget = new Array();
+                    var mttrActual = new Array();
+                    var mttrTarget = new Array();
+                    _(data).each(function(item,i) {
+//                        $obj.find("tr:first").append('<th>'+item.x+'</th>');
+                        var objmtbfActual = (item.mtbfActual).toFixed(2);
+//                        $obj.find("tr:eq(1)").append('<td>'+objmtbfActual+'</td>');
+                        $obj.find("tr:eq(1) td:eq("+ i+1+ ")").html(objmtbfActual);
+
+//                        $obj.find("tr:eq(2)").append('<td>'+item.mtbfTarget+'</td>');
+
+                        $obj.find("tr:eq(2) td:eq("+ i+1+ ")").html(item.mtbfTarget);
+                        var objmttrActual = (item.mttrActual).toFixed(2);
+//                        $obj.find("tr:eq(3)").append('<td>'+objmttrActual+'</td>');
+
+                        $obj.find("tr:eq(3) td:eq("+ i+1+ ")").html(objmttrActual);
+//                        $obj.find("tr:eq(4)").append('<td>'+item.mttrTarget+'</td>');
+                        $obj.find("tr:eq(4) td:eq("+ i+1+ ")").html(item.mttrTarget);
+                        x[i] = item.x;
+                        mtbfActual[i] = item.mtbfActual;
+                        mtbfTarget[i] = item.mtbfTarget;
+                        mttrActual[i] = item.mttrActual;
+                        mttrTarget[i] = item.mttrTarget;
+                    });
+
+                }
+
+                self.columnBasic(x,mtbfActual, mtbfTarget ,mttrActual,mttrTarget );
+            });
+        },
+        columnBasic:function(x,mtbfActual, mtbfTarget ,mttrActual,mttrTarget){
+            $('#mtbfMttr').highcharts({
+                title: {
+                    text: null
+                },
+                subtitle: {
+                    text: null
+                },
+                credits:{
+                    enabled:false
+                },
+                xAxis: {
+//                    tickInterval: 7 * 24 * 3600 * 1000, // one week
+//                    tickWidth: 0,
+                    categories: x,
+//                    gridLineWidth: 1,
+//                    labels: {
+//                        align: 'left',
+//                        x: 3,
+//                        y: -3
+//                    }
+                },
+                yAxis: [{ // left y axis
+                    title: {
+                        text: null
+                    },
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        y: 16,
+                        format: '{value:.,0f}'
+                    },
+                    showFirstLabel: false
+                }],
+                legend: {
+                    align: 'left',
+                    verticalAlign: 'top',
+                    y: 20,
+                    floating: true,
+                    borderWidth: 0
+                },
+                tooltip: {
+                    shared: true,
+                    crosshairs: true
+                },
+                plotOptions: {
+                    series: {
+                        cursor: 'pointer',
+//                        point: {
+//                            events: {
+//                                click: function (e) {
+//                                    hs.htmlExpand(null, {
+//                                        pageOrigin: {
+//                                            x: e.pageX || e.clientX,
+//                                            y: e.pageY || e.clientY
+//                                        },
+//                                        headingText: this.series.name,
+//                                        maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+//                                        this.y + ' visits',
+//                                        width: 200
+//                                    });
+//                                }
+//                            }
+//                        },
+                        marker: {
+                            lineWidth: 1
+                        }
+                    }
+                },
+                series: [{
+                    name: 'MTBF Actual(H)',
+                    lineWidth: 4,
+                    marker: {
+                        radius: 4
+                    },
+                    data:mtbfActual
+                },
+                    {
+                        name: 'MTBF Target(H)',
+                        data:mtbfTarget
+                    },
+                    {
+                        name: 'MTTR Actual(M)',
+                        data:mttrActual
+                    },
+                    {
+                        name: 'MTTR Target(M)',
+                        data:mttrTarget
+                    }]
+            });
+        }
+    };
+    mtbfMttr.init();
+
+</script>
+
+</head>
+<body>
+	<div class="cont">
+        <button id="print01" class="button-sytle1">打印</button>&nbsp;<button id="return01" class="button-sytle1">返回</button>
+	</div>
+<div class="mbr_cont">
+     <table cellpadding="0" cellspacing="0" width="100%">
+     <thead>
+        <tr>
+            <th colspan="2">Sandvik</th>
+            <th colspan="2">MTBF&MTTR <br/> 平均故障间隔时间和平均故障修复时间 </th>
+            <th id="machine"></th>
+        </tr> 
+        <tr>
+           <td>Unit：%</td>
+           <td>Year：<input type="text" id="year"></td>
+           <td>Month：<input type="text"></td>
+           <td>Prepared by：<input type="text"></td>
+           <td>Period：monthly</td>
+        </tr>
+     </thead>
+     </table>
+     <div class="mbr_boxmid" id="mtbfMttr">
+
+     </div>
+     <table cellpadding="0" cellspacing="0" width="100%" class="mbr_tablefoot" id="mttrMtbfTable">
+         <tbody>
+            <tr>
+                <th>Month</th>
+                <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+            </tr>
+            <tr>
+                <td><b>MTBF<br/>Actual (H)</b></td>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+             <tr>
+                <td><b>MTBF<br/>Target (H)</b></td>
+                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td><b>MTTR<br/>Actual (M)</b></td>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+             <tr>
+                <td><b>MTTR<br/>Target (M)</b></td>
+                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+         </tbody>
+     </table>
+</div>
+</body>

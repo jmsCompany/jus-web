@@ -1,0 +1,243 @@
+<script type="text/template" id="incomeListBody">
+	<div class="body-head-title">
+		<span class="h-title-selected"><b>来料清单</b></span>
+		<span class="h-title" id="po01">新建来料</span>
+        <span class="h-title" id="po04">检验入库</span>
+		<span class="h-title" id="po02">采购退货</span>
+		<span class="h-title" id="po03">新建采购退货</span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+            <div class="btn-group btn-group-left" id="issue">
+                <div class="btn-group btn-group-left">
+                    <label>日期：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+                </div>
+            </div>
+
+
+            <div class="right-list">
+                <input type="text" id='q' placeholder="采购单/供应商/物料">
+                <button id="search" class="button-sytle1">查询</button>
+            </div>
+		</div> <!--检索结束-->
+
+
+		<table id="income" class="display" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>收货单号</th>
+				<th>采购单号</th>
+				<th>供应商</th>
+				<th>应交日期</th>
+				<th>收货日期</th>
+				<th>物料编码</th>
+				<th>版本</th>
+				<th>描述</th>
+				<th>收货数量</th>
+				<th>检验状态</th>
+				<th style="min-width:105px;">操作</th>
+			</tr>
+			</thead>
+		</table>
+		<!-- 弹窗 start -->
+		<div class="tcbox container-fluid"  id="draggable1">
+			<div class="tcbox_cont row">
+				<div class="body-head-title">
+					<span class="h-title">是否结束</span>
+				</div>
+				<input type="button" class="tc_close">
+				<form id="finishIncomeForm" method="post" action="index.html" class="form-inline">
+					<div class="col-xs-12 mar-top-20px">
+						<div class="form-group">
+							<label for="" class="input-w-160">检验状态</label>
+							<input type="radio" name="status:number" class="radio-w" value="27" checked/><label for="stateOn">是</label>
+							<input type="radio" name="status:number" class="radio-w" value="28" /><label for="stateOoff">否</label>
+						</div>
+					</div>
+					<div class="aligncenter">
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary ">保存</button>
+							<!--<button id="return1" type="reset" class="btn  btn-info">返回</button>-->
+						</div>
+					</div>
+					<input type="hidden" id="idMt" name="idMt:number"/>
+				</form>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).show();
+}
+function hideObj(objid){
+	$(objid).hide();
+}
+var jmstoken = store.get('JMS-TOKEN');
+var app={
+    init:function(){
+        $('#body').html($('#incomeListBody').html());
+        this.bindEvents();
+        this.autoFill();
+    },
+    autoFill:function(){
+        $('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
+        $('#datetimepicker2').datetimepicker({format:"YYYY-MM-DD"});
+    },
+    bindEvents:function() {
+        var self = this;
+        $('#search').on('click',function(){
+            self.loadTable();
+        });
+        $("#q").keydown(function() {
+            if (event.keyCode == "13") {//keyCode=13是回车键
+                self.loadTable();
+            }
+        });
+        var historyParams = {
+            groupId: 'incomeList'
+        };
+        //新建入检
+        $("#po01").click(function () {
+            $.get("views/incomeList-create-body.html", function (data) {
+                historyParams.viewId = 'incomeList-create-body';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        })
+        //新建入库
+        $("#po04").click(function () {
+            $.get("views/incomeList-checked-body.html", function (data) {
+                historyParams.viewId = 'incomeList-checked-body';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        // 采购退货
+        $("#po02").click(function () {
+            $.get("views/mrbList.html", function (data) {
+                historyParams.viewId = 'mrbList';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        // 新建采购退货
+        $("#po03").click(function () {
+            $.get("views/mrb-body.html", function (data) {
+                historyParams.viewId = 'mrb-body';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+
+        $('.tcbox').on('click','.tc_close',function(){
+            flag=0;
+            $('.tcbox').hide();
+            $('#finishIncomeForm')[0].reset();
+//                    $('#statusId').empty();
+        });
+    },
+    loadTable:function(){
+        var self = this;
+        var data = {};
+        data.typeId = 1;
+        var fromDay = $('#datetimepicker1').val();
+        if (fromDay) {
+            data.from= fromDay;
+        }
+        var toDay = $('#datetimepicker2').val();
+        if (toDay) {
+            data.to = toDay;
+        }
+        var q = $('#q').val();
+        if (q) {
+            data.q = q;
+        }
+        if (this.table) {
+            this.table.destroy();
+        }
+        this.table=$('#income').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+            "ajax": {
+                "type": 'POST',
+                "url": $clientURL+"s/smtfMaterialList",
+                "dataType": "json",
+                "headers":{'JMS-TOKEN':jmstoken},
+                "data": data,
+                "beforeSend": jmsGlobalBlock,
+                "complete": jmsGlobalUnBlock,
+                "error": jmsGlobalUnBlock
+            },
+            "columnDefs": [ {
+                "targets": -1,
+                "data": null,
+                "defaultContent": '<button class=button-bin>检验</button>' +
+                '<button class=button-edit>详情</button>' +
+                '<button class=button-finish>状态</button>'
+            } ],
+            "language": {
+                "url": "js/datatable/chinese.json"
+            },
+
+            dom: "tip",
+            pageLength:"50"
+        } );
+        $('#income tbody').on( 'click', 'button', function () {
+            var rowData = self.table.row( $(this).parents('tr') ).data();
+            var clazz =$(this).attr('class');
+            var historyOptions={
+                groupId:'incomeList',
+                incomeId:rowData[10],
+                viewId:'incomeList-create-body'
+            };
+            var actions={
+                'button-bin':function(){
+                    historyOptions.action='edit';
+                    $.get("views/incomeList-create-body.html",function(data){
+                        RouterManager.setUrl(
+                            historyOptions
+                        );
+                        $("#body").html(data);
+                    });
+                },
+                'button-edit':function(){
+                    historyOptions.action='detail';
+                    $.get("views/incomeList-create-body.html",function(data){
+                        RouterManager.setUrl(
+                                historyOptions
+                        );
+                        $("#body").html(data);
+                    });
+                },
+                'button-finish':function(){
+                    var top = $('#body').scrollTop();
+                    var left = $('#body').scrollLeft();
+                    $('.tcbox').css({
+                        top: $(window).height() * 0.2 + top,
+                        left:$(window).height() * 0.5 + left
+                    }).draggable().show();
+                    //                        }).show();
+                    //                            $('#statusId').empty();
+                    $.poInfo(rowData[11], jmstoken, function (data) {
+                        $('#statusId').val(data.sStatusId);
+                        //                                });
+                    });
+                }
+            };
+            actions[clazz]();
+        } );
+    }
+};
+app.init();
+</script>
+
+
+
+

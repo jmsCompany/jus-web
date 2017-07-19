@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            var jmstoken= store.get('JMS-TOKEN');
+            $.fn.dataTable.ext.errMode = 'throw';
+            /*
+            var table=$('#stkList').DataTable( {
+
+                //  deferRender:  true,
+                "processing": true,
+                "serverSide": true,
+                //scrollY:"350px",
+                //scrollCollapse: true,
+                "ajax": {
+                    "url": $clientURL+"s/stkList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-bin>货架</button><button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+
+                dom: "tip",
+                pageLength:"50"
+
+            } );
+
+            $('#stkList tbody').on( 'click', 'button', function () {
+                var rowData = table.row( $(this).parents('tr') ).data();
+                var historyOptions={
+                    groupId:'stk',
+                    stkId:rowData[5]
+                };
+                var clazz =$(this).attr('class');
+                if(clazz=='button-bin'){
+                    historyOptions.viewId='bin';
+                    historyOptions.stkName=rowData[0];
+                    $.get("views/bin.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+
+                }
+                else if(clazz=='button-edit'){
+                    historyOptions.action='edit';
+                    historyOptions.viewId='bin';
+                    $.get("views/stk-body.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                }
+                else {
+                    $.deleteStk(data[5],jmstoken,function(data){
+                        $.get("views/stk.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+                //
+                // alert( data[0] +"的id: "+ data[ 5 ] );
+            } );
+*/
+            var historyParams={
+                groupId:'system'
+            };
+            $('#create').click(function(){
+                $.get("views/v_company_dept.html",function(data){
+                    historyParams.viewId = 'sys-position';
+                    historyParams.action = 'create';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#position').click(function(){
+                $.get("views/sys-position.html",function(data){
+                    historyParams.viewId = 'sys-position';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#emp').click(function(){
+                $.get("views/sys-employee.html",function(data){
+                    historyParams.viewId = 'sys-employee';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#role').click(function(){
+                $.get("views/sys-role.html",function(data){
+                    historyParams.viewId = 'sys-role';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#notification').click(function(){
+                $.get("views/sys-notification.html",function(data){
+                    historyParams.viewId = 'sys-notification';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#costCenter').click(function(){
+                $.get("views/sys-cost-center.html",function(data){
+                    historyParams.viewId = 'sys-cost-center';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#stopDes').click(function(){
+                $.get("views/sys-stopDes.html",function(data){
+                    historyParams.viewId = 'sys-stopDes';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+        } );
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="position">职位</span>
+    <span class="h-title"><b>部门</b></span>
+    <span class="h-title" id="emp">员工</span>
+    <span class="h-title" id="role">角色</span>
+    <span class="h-title" id="notification">消息中心</span>
+    <span class="h-title" id="costCenter">成本中心</span>
+    <span class="h-title" id="stopDes">停机描述</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <button id="create" class="button-sytle1">新建</button>
+
+        </div> <!--检索结束-->
+    </div>
+    <table id="stkList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>部门名称</th>
+            <th>描述</th>
+            <th>排序</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+</body>
+</html>
+

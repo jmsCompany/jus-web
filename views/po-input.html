@@ -1,0 +1,35 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+        <section>
+            <form id="materialForm" method="post" action="index.html" class="form-inline">
+                <div class="alert alert-success" style="display: none;"></div>
+                <div class="body-head-title">
+                    <span class="h-title">导入</span>
+                </div>
+
+                <div class="cont">
+                    <div class="btn-group btn-group-left">
+                        <button id="input" class="button-sytle1">导入</button>
+                    </div>
+                    <div class="btn-group btn-group-left">
+                        <button type="button" class="btn btn-info" id="cancel">返回</button>
+                    </div>
+                </div>
+                <div class="print_box">
+                </div>
+
+            </form>
+        </section>
+        <!-- :form -->
+    </div>
+</div>
+<script type="text/javascript">
+    $('return').click(function(){
+        $.get("views/po.html",function(data){
+            $("#body").html(data);
+        });
+    });
+</script>
+
+

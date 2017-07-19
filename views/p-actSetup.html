@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>实际装载</title>
+	</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="as">实际停机</span>
+	<span class="h-title" id="us">非计划停机</span>
+	<!--<span class="h-title" id="sr">停机编码</span>-->
+	<span class="h-title-selected"><b>实际装载</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <input type="button" class="button-sytle1" id="create" value="新建">
+        </div>
+    </div>
+<table id="actSetupList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>工单号</th>
+                <th>产品</th>
+                <th>班次</th>
+                <th>机器</th>
+                <th>实际开始装载</th>
+                <th>实际结束装载</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+
+
+</div>
+
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="actSetup" style="overflow: visible;">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">实际装载</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="actSetupForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px hide01">
+                <div class="form-group">
+                    <label for="" class="input-w-160">机器</label>
+                    <select class="form-control" style="width:180px;" name="idMachine:number" id="idMachine">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px hide01">
+                <div class="form-group">
+                    <label for="" class="input-w-160">计划开始时间</label>
+                    <input type="text" class="form-control input-w-3"  name="planSt" id="planSt">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">日计划</label>
+                    <select class="form-control" style="width:180px;" name="cppId:number" id="cppId">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">实际开始装载</label>
+                    <input type="text" class="form-control input-w-3"  name="actSt" id="actSt">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">实际结束装载</label>
+                    <input type="text" class="form-control input-w-3"  name="actFt" id="actFt">
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary ">保存</button>
+                    <button id="return" type="button" class="btn  btn-info">返回</button>
+                </div>
+            </div>
+            <input type="hidden" id="idActualSetup" name="idActualSetup:number"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+
+    var jmstoken= store.get('JMS-TOKEN');
+    //弹窗
+    function showObj(objid){
+        $(objid).draggable().show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    var app= {
+        init: function () {
+            this.bindEvents();
+            this.loadTable();
+            this.form();
+        },
+        loadTable: function () {
+            var self = this;
+            this.table = $('#actSetupList').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "p/getActSetupList",
+                    "dataType": "json",
+                    "headers": {'JMS-TOKEN': jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>编辑</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+
+                dom: "tip",
+                pageLength: "50"
+            });
+            $('#actSetupList').on('xhr.dt', function (e, settings, json, xhr) {
+                if (json.jmsError) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+                    $('#info').empty();
+                    $('#info').append(json.jmsError);
+//                    alert(json.jmsError)
+                }
+            });
+            $('#actSetupList tbody').on( 'click', 'button', function () {
+                var data = self.table.row( $(this).parents('tr') ).data();
+                var clazz =$(this).attr('class');
+                var top = $('#body').scrollTop();
+                $('#actSetup').css({
+                    top: $(window).height() * 0.2 + top
+                }).draggable().show();
+                $('.hide01').hide();
+                debugger;
+                self.loadDetail(data[6]);
+            } );
+        },
+        loadDetail:function(idActSetup){
+            $.actSetupInfo(idActSetup,jmstoken,function(data){
+                debugger;
+                $('#cppId').html('<option value="' + data.cppId + '">' + data.cpp + '</option>');
+                $('#actSetupForm').populate(data,true);
+                if(data.actSt){
+                    $('#actSt').val($.dateFormat.date(new Date(data.actSt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                else{
+                    $('#actSt').val('');
+                }
+
+                if(data.actFt){
+                    $('#actFt').val($.dateFormat.date(new Date(data.actFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+                }
+                else{
+                    $('#actFt').val('');
+                }
+            });
+        },
+        loadCpp:function(){
+            var idMachine = $('#idMachine').val();
+            var reportTime = $('#planSt').val();
+            if(!idMachine||!reportTime){
+                return;
+            }
+            reportTime = new Date(reportTime).getTime();
+            $("#cppId").selectautofill('p/getCppListByMachineIdAndDate',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'machineId':idMachine,'reportTime':reportTime}});
+        },
+        bindEvents: function () {
+            var dataPickerOpt = {
+                format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+                useCurrent: false,
+                sideBySide: true
+            }
+            $('#planSt').datetimepicker(dataPickerOpt);
+            $('#actSt').datetimepicker(dataPickerOpt);
+            $('#actFt').datetimepicker(dataPickerOpt);
+
+            $('#create').on('click',function(){
+                showObj('#actSetup');
+                $('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            });
+            var self = this;
+            $('#actSetup').on('click','#return,.tc_close',function(){
+                $('.hide01').show();
+                $('#actSetup').hide();
+                $('#actSetupForm')[0].reset();
+                $("#cppId").empty();
+                $("#idMachine").empty();
+                $("#idActualSetup").val('');
+            });
+
+            $('#idMachine').on('change',function(){
+                self.loadCpp();
+            });
+            $("#planSt").on("dp.change", function (e) {
+                self.loadCpp();
+            });
+            var historyOptions = {
+                groupId:'p-actStopPlanList'
+            };
+            $('#as').click(function () {
+                $.get("views/p-actStopPlanList.html", function (data) {
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            $('#sr').click(function () {
+                $.get("views/p-stop-reason.html", function (data) {
+                    $("#body").html(data);
+                });
+            });
+            $('#us').click(function () {
+                $.get("views/p-unplannedStop.html", function (data) {
+                    historyOptions.viewId='p-unplannedStop';
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+        },
+        form:function(){
+            $('#actSetupForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+//				'actSt': {
+//					validators: {
+//						notEmpty: {
+//							message: '实际开始时间不能为空'
+//						}
+//					}
+//				},
+//				'actFt': {
+//					validators: {
+//						notEmpty: {
+//							message: '实际结束时间不能为空'
+//						}
+//					}
+//				}
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form  = $(e.target),
+                validator = $form.data('bootstrapValidator');
+//			var actStopPlan =JSON.stringify($('#actSetupForm').serializeJSON());
+
+
+                var actStopPlan = $('#actSetupForm').serializeJSON();
+                actStopPlan.planSt = actStopPlan.planSt.replace('Z', '470+08:00');
+                actStopPlan.actSt = actStopPlan.actSt.replace('Z', '470+08:00');
+                actStopPlan.actFt = actStopPlan.actFt.replace('Z', '470+08:00');
+                actStopPlan = JSON.stringify(actStopPlan);
+                debugger;
+                $.saveActSetup(actStopPlan,jmstoken,function(data){
+                    debugger;
+                    $('#save').removeAttr('disabled');
+                    $.get("views/p-actSetup.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+
+            });
+        }
+    };
+    app.init();
+
+</script>

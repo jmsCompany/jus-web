@@ -1,0 +1,156 @@
+ <div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title">编辑采购订单</span>
+				</div>
+  
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">订单编码</label>
+                        <input type="text" class="form-control input-w-3" name="" id="" readOnly="true"> 
+                		<label for="" class="input-w-160">供应商</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="materialCategory[idDic]:number" id="materialCategory.idDic">
+                			<option value="">供应商</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">下单日期</label>
+                		<input type="date" class="form-control input-w-3" name="" id=""> 
+                		<label for="" class="input-w-160">下单员</label>
+                		<input type="text" class="form-control input-w-3" name="weight" id="" readOnly="true">
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">货运条款</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="" id="">
+                			<option value="">货运条款</option>
+                		</select> 
+                		<label for="" class="input-w-160">付款条件</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="" id="">
+                			<option value="">付款条件</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">总价</label>
+                		<input type="text" class="form-control input-w-3" name="" id="">
+                		<label for="" class="input-w-160">税率</label>
+                        <input type="text" class="form-control input-w-3" name="" id=""> %
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">汇率</label>
+                		<input type="text" class="form-control input-w-3" name="" id=""> 
+                		<label for="" class="input-w-160">状态</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="" id="">
+                			<option value="">状态</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">币别</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="" id="">
+                			<option value="">币别</option>
+                		</select>
+                    <label for="" class="input-w-160">上传附件</label>
+                	<input type="file" name="" id="" value=""  class="inherit " name="idAttachment" id="idAttachment"/> 
+                </div>
+
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">                 		<button class="btn btn-primary">保存</button>
+                 		<button class="btn  btn-info" id="cancel">取消</button>
+                 	</div>
+                 </div>
+                 
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+		
+		$('#codeCo\\.idDic').selectautofill('dic/codeCo');
+		$('#stk\\.idDic').selectautofill('dic/stk');
+		$('#status\\.idDic').selectautofill('dic/status');
+		$('#term1\\.idDic').selectautofill('dic/term1');
+		$('#term2\\.idDic').selectautofill('dic/term2');
+		
+	var idPo = $('#_key4').val();
+	$.poInfo({"id":idPo},token,function(data){
+		$('#poForm').populate(data,true);
+	});
+		
+	var idMat = $('#_key3').val();
+	$.materialInfo({"id":idMat},token,function(data){
+		$('#pno').html(data.pno);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+		$('#unitPur').html(data.unitPur);
+	});
+	
+	
+		
+	    $('#table1').DataTable( {
+       		deferRender:  true,
+        	"processing": true,
+        	"serverSide": true,
+        	scrollY:"350px",
+        	scrollCollapse: true,
+        	"ajax": {
+            	"url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            	"dataType": "json"
+        	},
+       		"language": {
+                "url": "js/datatable/chinese.json"
+            },
+      		dom: "rtiS",
+        	scroller: {
+           		loadingIndicator: true
+        	}
+    	} );
+    	
+    	$("#aa").click(function () {
+        	location.href = "";
+    	});
+
+    
+    	$('#poForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'taxRate': {
+                	validators: {
+                    	notEmpty: {
+                        	message: '税率不能为空'
+                    	}
+                	}	
+            	}
+			}
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var po =JSON.stringify($('#poForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createPo(po,jmstoken,function(data){
+			      	$.get("views/po.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	   
+	   $('cancel').click(function(){
+	 		$.get("views/po.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	
+	});
+	</script>

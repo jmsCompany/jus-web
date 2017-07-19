@@ -1,0 +1,311 @@
+/*----------pages.css----------*/
+.ui-digi{
+  width: 23rem;
+  margin: 0 auto;
+  padding-top: 5.5rem;
+}
+.ui-digi .head{
+  height: 11.5rem;
+  background-color: #182fcb;
+  border-radius: .4rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, .8) inset;
+  padding: .8rem 1.6rem;
+  position: relative;
+}
+.ui-digi .head >i.wifi{
+  display: inline-block;
+  width: 1.9rem;
+  height: 1.5rem;
+  background: url(../img/wifi.png);
+  background-size: 100% 100%;
+  position: absolute;
+  left: 8.5rem;
+  bottom: .8rem;
+}
+.ui-digi .head >.l{
+  float: left;
+}
+.ui-digi .head >.r{
+  position: absolute;
+  top: .8rem;
+  right: 1.6rem;
+}
+.ui-digi .head .d{
+  text-align: center;
+  letter-spacing: -.1rem;
+}
+.ui-digi .head .d.d1{
+  margin-top: .5rem;
+}
+.ui-digi .head .d.d2{
+  margin-top: .5rem;
+  margin-right: -.5rem;
+}
+.ui-digi .head .d p{
+  color: #c6c4c5;
+  font-size: 1.2rem;
+  font-family: Candara;
+  line-height: 1em;
+}
+.ui-digi .head .d.d2 p{
+
+}
+.ui-digi .head .d h3{
+  color: #fff;
+  font-size: 3.5rem;
+  font-family: DS-DIGI;
+  line-height: .8em;
+}
+.ui-digi .head .d.d2 h3{
+  font-size: 7.2rem;
+}
+.ui-digi .head .d p .div{
+  display: inline-block;
+  width: 2rem;
+}
+.ui-digi .dial{
+  margin: 0 -1rem;
+  margin-top: 2rem;
+}
+.ui-digi .dial table{
+  width: 100%;
+}
+.ui-digi .dial table tr{
+
+}
+.ui-digi .dial table tr td{
+  width: 33.33%;
+  padding-bottom: .8rem;
+  vertical-align: top;
+}
+.ui-digi .dial .i{
+  display: block;
+}
+.ui-digi .dial .i:active{
+  opacity: .8;
+}
+.ui-digi .dial .i h3{
+  text-align: center;
+}
+.ui-digi .dial .i h3 img{
+  width: 5.25rem;
+  height: 5.25rem;
+  border-radius: 50%;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, .5);
+}
+.ui-digi .dial .i p{
+  text-align: center;
+  color: #999999;
+  font-size: 1.2rem;
+  line-height: 1em;
+  margin-top: .5rem;
+}
+.ui-digi .dial .i p img{
+  height: 1rem;
+}
+.ui-prodlist{
+
+}
+.ui-prodlist ul{
+
+}
+.ui-prodlist ul li{
+  margin-bottom: .1rem;
+}
+.ui-prodlist .i{
+  display: block;
+  padding: 1.5rem;
+  background-color: #eaeaea;
+}
+.ui-prodlist .i >img{
+  width: 5.3rem;
+  height: 5.3rem;
+  border-radius: .3rem;
+  float: left;
+}
+.ui-prodlist .i >.ct{
+  margin-left: 6.8rem;
+  margin-top: -.5rem;
+}
+.ui-prodlist .i >.ct p{
+  color: #615e5e;
+  line-height: 2.4rem;
+}
+.ui-userhead{
+  height: 10.5rem;
+  background: url(../img/user-bg.jpg);
+  background-size: cover;
+}
+.ui-userhead p{
+  padding-top: 1.6rem;
+  text-align: center;
+}
+.ui-userhead p img{
+  width: 7.3rem;
+  height: 7.3rem;
+  border: .3rem solid #7c8b9d;
+  border-radius: 50%;
+}
+.ui-form{
+  margin: 0 2rem;
+}
+.ui-form table{
+  width: 100%;
+}
+.ui-form table tr{
+  border-bottom: .1rem solid #545454;
+}
+.ui-form table tr td{
+
+}
+.ui-form label{
+  color: #999999;
+  font-size: 1.4rem;
+  line-height: 4.5rem;
+  white-space: nowrap;
+}
+.ui-form label i{
+  display: inline-block;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: none no-repeat center;
+  background-size: auto 1.6rem;
+  vertical-align: middle;
+  margin-right: .5rem;
+}
+.ui-form label i.ico1{
+  background-image: url(../img/form-ico1.png);
+}
+.ui-form label i.ico2{
+  background-image: url(../img/form-ico2.png);
+  background-size: 1.6rem auto;
+}
+.ui-form label i.ico3{
+  background-image: url(../img/form-ico3.png);
+}
+.ui-form label i.ico4{
+  background-image: url(../img/form-ico4.png);
+}
+.ui-form label i.ico5{
+  background-image: url(../img/form-ico5.png);
+}
+.ui-form label i.ico6{
+  background-image: url(../img/form-ico6.png);
+}
+.ui-form label small{
+  font-size: 1.2rem;
+}
+.ui-form .ct{
+  color: #999999;
+  font-size: 1.4rem;
+  position: relative;
+}
+.ui-form .ct.ar{
+  text-align: right;
+}
+.ui-form .ct select,
+.ui-form .ct input[type="password"],
+.ui-form .ct input[type="text"]{
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 4.5rem;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  -webkit-appearance: none;
+}
+.ui-form .ct.ar select,
+.ui-form .ct.ar input[type="password"],
+.ui-form .ct.ar input[type="text"]{
+  text-align: right;
+}
+.ui-form.gray .ct.ar select,
+.ui-form.gray .ct.ar input[type="password"],
+.ui-form.gray .ct.ar input[type="text"]{
+  color: #aaaaaa;
+}
+.ui-form .ct select{
+  background: url(../img/form-aw.png) no-repeat 100% 50%;
+  background-size: .8rem auto;
+  padding-right: 1.8rem;
+  width: auto;
+}
+.ui-form .ct a.pswdview{
+  display: inline-block;
+  width: 1.6rem;
+  height: 1rem;
+  background: url(../img/form-eye.png);
+  background-size: 100% 100%;
+  position: absolute;
+  top: 50%;
+  margin-top: -.5rem;
+  right: 0;
+}
+.ui-form .ct a.pswdview:active{
+  opacity: .8;
+}
+.bt-submit{
+  display: inline-block;
+  width: 22rem;
+  height: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  color: #ececee !important;
+  border-radius: .2rem;
+  font-size: 1.5rem;
+}
+.bt-submit:active{
+  opacity: .8;
+}
+.bt-submit.bg-1{
+  background-color: #0064c8;
+}
+.bt-submit.bg-2{
+  background-color: #f26c4f;
+}
+.ui-link{
+
+}
+.ui-link p{
+  line-height: 4.5rem;
+  padding-left: 10rem;
+}
+.ui-link p a{
+  color: #bebdbd;
+  font-size: 1.5rem;
+}
+.ui-link p a:active{
+  opacity: .8;
+}
+.ui-link p a img{
+  height: 1.5rem;
+  vertical-align: middle;
+  margin-right: 1rem;
+}
+.ui-srch{
+  padding: 4rem;
+  background-color: #eaeaea;
+}
+.ui-srch .p{
+  margin-bottom: 2.5rem;
+}
+.ui-srch .p >label{
+  line-height: 2.4rem;
+  color: #000000;
+  font-size: 1.8rem;
+}
+.ui-srch .p input{
+  border: none;
+  height: 2.4rem;
+  background-color: #fff;
+  border-radius: .2rem;
+  text-indent: .7rem;
+  color: #333333;
+  font-size: 1.5rem;
+  width: 17rem;
+  float: right;
+}
+
+/*----------customize----------*/

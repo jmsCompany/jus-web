@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+	<div class="body-head-title">
+		<span class="h-title" id="sourcingPrice"><b>采购价格</b></span>
+		<!-- <span class="h-title" id="purchaseDict">采购字典</span> -->
+		<span class="h-title" id="noMatReport">缺料报告</span>
+		<span class="h-title-selected">临时采购单</span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+			<div class="right-list">
+				<!--<select class="js-data-example-ajax" id="js-data-example-ajax">-->
+				<!--<option value="">选择物料</option>-->
+				<!--</select>-->
+				<input type="text" id='q' placeholder="物料编码/物料描述/版本">
+				<button id="search" class="button-sytle1">查询</button>
+				<button id="refresh" class="button-sytle1">刷新</button>
+				<button id="gen" class="button-sytle1">生成采购订单</button>
+			</div>
+		</div>
+		<!--检索结束-->
+	</div>
+	<table id="material" class="display" cellspacing="0" cellpadding="0" width="100%">
+		<thead>
+			<tr>
+				<th>选择</th>
+				<th>物料编码</th>
+				<th>版本</th>
+				<th>描述</th>
+				<th>需料日期</th>
+				<th>缺料数量</th>
+				<th>库存单位</th>
+				<th>应采购数量</th>
+				<th>实际采购数量</th>
+				<th>单价</th>
+				<th>本次单价</th>
+				<th>总价</th>
+				<th>应实数量差</th>
+				<th>差额</th>
+				<th>货运期（天）</th>
+				<th>最晚下单日期</th>
+				<th>最早到货日期</th>
+				<th>运费单价</th>
+				<th>运费总价</th>
+				<th>采购单位</th>
+				<th>最小包装量</th>
+				<th>最小起订量</th>
+				<th>供应商（编码/名称）</th>
+				<th>百分比</th>
+				<th>是否主供应商</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+	<script type="text/javascript">
+		function showObj(objid) {
+			$(objid).show();
+
+		}
+
+		function hideObj(objid) {
+			$(objid).hide();
+		}
+
+		//	function startrequest()
+		//	{
+		//		$("#date").text((new date()).tostring());
+		//	}
+		$(document).ready(function() {
+			var jmstoken = store.get('JMS-TOKEN');
+
+			//	setinterval("startrequest()",3000);
+			var table = $('#material').DataTable({
+
+				//  deferRender:  true,
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				//scrollY:"350px",
+				//scrollCollapse: true,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "s/mrp/tempSourcingList",
+					"dataType": "json",
+					headers: {
+						'JMS-TOKEN': jmstoken
+					},
+					"data": {
+						q:$("#supplier").val()
+					},
+				},
+				"columnDefs": [
+				],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+
+				dom: "tip",
+				pageLength: "50"
+
+			});
+			$("#search").on("click",function(){
+				table.destroy()
+				table = $('#material').DataTable({
+
+					//  deferRender:  true,
+					"processing": true,
+					"serverSide": true,
+					"stateSave": true,
+					"stateDuration": -1,
+					//scrollY:"350px",
+					//scrollCollapse: true,
+					"ajax": {
+						"type": 'POST',
+						"url": $clientURL + "s/mrp/tempSourcingList",
+						"dataType": "json",
+						headers: {
+							'JMS-TOKEN': jmstoken
+						},
+						"data": {
+							q:$("#supplier").val()
+						},
+					},
+					"columnDefs": [
+					],
+					"language": {
+						"url": "js/datatable/chinese.json"
+					},
+
+					dom: "tip",
+					pageLength: "50"
+
+				});
+			})
+			var historyOptions = {
+				groupId: 'mrp'
+			};
+			$('#stkList tbody').on('click', 'button', function() {
+				var rowData = table.row($(this).parents('tr')).data();
+				historyOptions.stkId = rowData[5];
+				var clazz = $(this).attr('class');
+				if (clazz == 'button-bin') {
+					historyOptions.viewId = 'bin';
+					historyOptions.stkName = rowData[0];
+					$.get("views/bin.html", function(data) {
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+
+				} else if (clazz == 'button-edit') {
+					historyOptions.action = 'edit';
+					historyOptions.viewId = 'stk-body';
+					$.get("views/stk-body.html", function(data) {
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+				} else {
+					$.deleteStk(rowData[5], jmstoken, function(data) {
+						if (data.valid == false) {
+							//					  showObj('.tcbox');
+							var top = $('#body').scrollTop();
+							$('.tcbox').css({
+								top: $(window).height() * 0.2 + top
+							}).show();
+						} else {
+							$.get("views/stk.html", function(data) {
+								$("#body").html(data);
+							});
+						}
+					});
+				}
+				//
+				// alert( data[0] +"的id: "+ data[ 5 ] );
+			});
+
+			$('#gen').click(function() {
+				historyOptions.viewId = 'mrp-create-tempsrc-body';
+				$.get("views/mrp-create-tempsrc-body.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#refresh').click(function() {
+				location.reload();
+			});
+
+			$('#sourcingPrice').click(function() {
+				historyOptions.viewId = 'mrp';
+				$.get("views/mrp.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#noMatReport').click(function() {
+				historyOptions.viewId = 'noMatReport';
+				$.get("views/noMatReport.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#purchaseDict').click(function() {
+				historyOptions.viewId = 'purchaseDict';
+				$.get("views/purchaseDict.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>

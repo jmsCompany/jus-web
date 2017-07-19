@@ -1,0 +1,169 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="personnelForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           	<input type="hidden" id="idPersonnel" />  <!-- 人事计划编号-->
+							<fieldset>
+							<legend>编辑人事计划</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">人事计划编号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="perNo" id="perNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">名称</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="name" id="name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">有效期</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="validityTerm" id="validityTerm"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">开始时间</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker1'>
+										<input type='text' class="form-control" name="startTime" id="startTime"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+							        <script type="text/javascript">
+										$(function () {
+											$('#datetimepicker1').datetimepicker();
+										});
+									</script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">结束时间</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker1'>
+										<input type='text' class="form-control" name="finTime" id="finTime"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+							        <script type="text/javascript">
+										$(function () {
+											$('#datetimepicker1').datetimepicker();
+										});
+									</script>
+                                </div>
+                            </div>
+<br> 
+<br> 
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        	<th>序号</th>
+                                            <th>班次</th>
+                                            <th>描述</th>
+                                            <th>开始时间</th>
+                                            <th>结束时间</th>
+                                            <th>操作</th> <!--新增、编辑、删除-->
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            <div class="form-group"> 
+                            	<div class="col-lg-9 col-lg-offset-3">
+                                	<button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                            	</div>
+                       		</div>
+<br>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+		
+	var idPersonnel = $('#_key17').val();
+	$.personnelInfo({"id":idPersonnel},token,function(data){
+		$('#personnelForm').populate(data,true);
+	});
+		
+	  $('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+        },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );  
+    
+    	$('#personnelForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'name': {
+                    	notEmpty: {
+                        	message: '人事计划名称不能为空'
+                    	}
+                	}
+            	},
+            	'shift': {
+                	validators: {
+                    	notEmpty: {
+                        	message: '班次不能为空'
+                    	}
+                	}	
+            	}
+			}
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var personnel =JSON.stringify($('#personnelForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createPersonnel(personnel,jmstoken,function(data){
+			      	$.get("views/p-personnelPlanList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	   
+	   $('cancel').click(function(){
+	 		$.get("views/p-personnelPlanList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	
+    	
+	});
+	</script>

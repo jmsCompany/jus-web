@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>设备组</title>
+    <script type="text/javascript">
+
+        function showObj(objid){
+            $(objid).draggable().show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+
+        $(document).ready(function() {
+            var jmstoken= store.get('JMS-TOKEN');
+            var table=$('#tableMgroup').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "m/MachineGroup",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+            $('#tableMgroup tbody').on( 'click', 'button', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                var clazz=$(this).attr('class');
+                if(clazz=='button-edit'){
+                    var top = $('#body').scrollTop();
+                    $('.tcbox').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+                    $.machineGroupInfo(data[1],jmstoken,function(data){
+                        $('#machineGroupForm').populate(data,true);
+                    });
+                }
+                else{
+                    $.deleteMachineGroup(data[1],jmstoken,function(data){
+                        $.get("views/p-machine-group.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            } );
+            $('#machineGroupForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'groupName': {
+                        validators: {
+                            notEmpty: {
+                                message: '设备组不能为空'
+                            }
+                        }
+                    }
+
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var machineGroup =JSON.stringify($('#machineGroupForm').serializeJSON());
+                $.saveMachineGroup(machineGroup,jmstoken,function(data){
+                    $.get("views/p-machine-group.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+
+            });
+            var historyOptions={
+                groupId:'p-workcenter'
+            };
+            //产线
+            $('#workcenter').click(function(){
+                $.get("views/p-workcenter.html",function(data){
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            //产线
+            $('#p-line').click(function(){
+                historyOptions.viewId='p-line';
+                $.get("views/p-line.html",function(data){
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            //车间
+            $('#p-wip').click(function(){
+                historyOptions.viewId='p-wip';
+                $.get("views/p-wip.html",function(data){
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            $('#draggable1').on("click",".tc_close",function() {
+                $.get("views/p-machine-group.html", function (data) {
+                    $("#body").html(data);
+                });
+            });
+
+            $('#draggable1').on("click","#return",function() {
+                $.get("views/p-machine-group.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+            // 弹窗拖拽
+//    $(function () {
+//        $('#draggable1').draggabilly();
+//    });
+        } );
+    </script>
+    <style>
+        #workCenter{text-align:left;}
+    </style>
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="workcenter">工作中心</span>
+    <span class="h-title" id="p-line">产线</span>
+    <span class="h-title" id="p-wip">车间</span>
+    <span class="h-title-selected"><b>设备组</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">新建</button>
+        </div>
+    </div>
+    <table id="tableMgroup" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>设备组名称</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">新建或编辑工作中心</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="machineGroupForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">设备组名称</label>
+                    <input type="text" class="form-control input-w-3"  name="groupName" id="groupName">
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary ">保存</button>
+                    <button id="return" type="button" class="btn  btn-info">返回</button>
+                </div>
+            </div>
+            <input type="hidden" id="idGroup" name="idGroup:number"/>
+        </form>
+    </div>
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+

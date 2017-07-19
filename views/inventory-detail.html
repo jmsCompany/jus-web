@@ -1,0 +1,270 @@
+<script type="text/template" id="InventoryListDetail">
+    <div class="body-head-title">
+        <span class="h-title" id="summary">概览</span>
+        <span class="h-title-selected"><b>详情</b></span>
+        <span class="h-title" id="invImport">导入</span>
+    </div>
+    <div class="cont">
+        <div class="r-header-body">
+            <!--仓库-->
+            <div class="btn-group btn-group-left" id="stk-group">
+                <select name="none" id="stk-select" style="display: none;"></select>
+                <button class="btn btn-default" type="button" style="" id="handle-bar">仓库</button>
+                <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                    <span class="caret"></span>
+                    <span class="sr-only">仓库</span>
+                </button>
+                <ul class="dropdown-menu"></ul>
+            </div>
+            <!--右边-->
+            <div class="right-list">
+                <!--搜索框-->
+                <select class="js-data-example-ajax" id="js-data-example-ajax">
+                    <option value="">选择物料</option>
+                </select>
+                <button class="btn btn-default" type="button" style="" id="detail-export">导出</button>
+            </div>
+        </div> <!--检索结束-->
+        <table id="tableInv" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>仓库名称</th>
+                <th>物料编码</th>
+                <th>版本</th>
+                <th>描述</th>
+                <th>货架号</th>
+                <th>批号</th>
+                <!--<th>箱数</th>-->
+                <!--<th>每箱数量</th>-->
+                <th>总数</th>
+                <!--<th>累计</th>-->
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label id="info"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+var jmstoken = store.get('JMS-TOKEN');
+$('#body').html($('#InventoryListDetail').html());
+
+$.fn.dataTable.ext.errMode = 'throw';
+function formatRepo (repo) {
+    if (repo.loading) return repo.text;
+
+    var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+    return markup;
+}
+
+function formatRepoSelection (repo) {
+    return repo.name || repo.text;
+}
+//弹窗
+function showObj(objid){
+    $(objid).show();
+
+}
+function hideObj(objid){
+    $(objid).hide();
+}
+var app ={
+    init:function(){
+        var jmstoken= store.get('JMS-TOKEN');
+        
+        this.bindEvens();
+    },
+    loadTable: function() {
+        var data = {};
+        if ($('#handle-bar').html() == '仓库'){
+            data.stkId = null;
+        }
+        else{
+            var stkId = $('#stk-select').val();
+            data.stkId = stkId;
+        }
+        var materialId = $('#js-data-example-ajax').val();
+        if(materialId) {
+            data.materialId = materialId;
+        }
+        
+        if(this.table) {
+            this.table.destroy();
+        }
+        
+        this.table=$('#tableInv').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "stateDuration": -1,
+            "ajax": {
+                "type": 'POST',
+                "url": $clientURL + "s/inventoryDetail",
+                "dataType": "json",
+                "headers":{'JMS-TOKEN':jmstoken},
+                "data": data
+            },
+            "language": {
+            "url": "js/datatable/chinese.json"
+            },
+
+            dom: "tip",
+            pageLength:"50"
+        } );
+        $('#tableInv').on('xhr.dt', function ( e, settings, json, xhr ) {
+            if(json.jmsError) {
+                var top = $('#body').scrollTop();
+                $('#nullAlert').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                $('#info').empty();
+                $('#info').append(json.jmsError);
+//                alert(json.jmsError)
+            }
+        } )
+    },
+    bindEvens:function(){
+        var self = this;
+        $('#stk-select').selectautofill('s/getStksByTypes?statusId=27&types=4&types=1&types=2&types=3&types=5&types=6&types=7&types=9',{headers:{'JMS-TOKEN': jmstoken}}, function(data) {
+            var _html = '';
+            _(data).each(function(d, i) {
+                _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+            });
+            $('#stk-group').find('.dropdown-menu').append(_html);
+        });
+        
+        $('#js-data-example-ajax').select2({
+            ajax: {
+                url: $clientURL + 's/getMaterialListObjs',
+                dataType: 'json',
+                headers:{'JMS-TOKEN':jmstoken},
+                delay: 200,
+                data: function(params) {
+                    return {
+                        q: params.term
+                    }
+                },
+                processResults: function(data, params) {
+                    return {
+                        results: data,
+                        pagination: null
+                    }
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 1,
+            width: 200,
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
+        }).on('select2:open',function(evt){
+            $('#select2-js-data-example-ajax-container').html('');
+            $('#js-data-example-ajax').empty();
+        });
+        
+        $('.js-data-example-ajax').on('change', self.loadTable.bind(self));
+        $('.dropdown-toggle').on('click',function(e){
+            $('#handle-bar').html('仓库');
+        });
+        $('#stk-group').on('click', 'li a', function(e) {
+            var $t = $(this);
+            var id = $t.data('id');
+            $('#stk-select').val(parseInt(id));
+            $('#handle-bar').html($t.text());
+            self.loadTable();
+        });
+
+
+        $('#detail-export').click(function(){
+
+            var url = $clientURL + 's/inventoryDetail/export'
+            var stkId =null;
+          //  var materialId =null;
+            if ($('#handle-bar').html() == '仓库'){
+               // data.stkId = null;
+            }
+            else{
+                 stkId = $('#stk-select').val();
+              //  data.stkId = stkId;
+            }
+            var  materialId = $('#js-data-example-ajax').val();
+            if(materialId) {
+
+                if(stkId)
+                {
+                    url = url+ '?materialId=' +materialId +'&stkId='+stkId;
+                }
+                else{
+                    url = url+ '?materialId=' +materialId;
+                }
+
+            }
+            else{
+
+                if(stkId)
+                {
+                    url = url+ '?stkId='+stkId;
+                }
+
+
+            }
+
+
+
+
+
+
+
+            var req = new XMLHttpRequest();
+
+            req.open('GET', url, false);
+            req.setRequestHeader('JMS-TOKEN', jmstoken);
+
+            req.onload = function (oEvent) {
+                var blob = new Blob([req.response], {type: "application/octet-stream"});
+                //window.URL.createObjectURL(blob);
+                var csvUrl = URL.createObjectURL(blob);
+                window.open(csvUrl);
+            };
+
+            req.send();
+
+        });
+
+
+
+        $('#summary').click(function(){
+            $.get("views/InventoryList.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'InventoryList'
+                });
+                $("#body").html(data);
+            });
+        });
+
+        $('#invImport').click(function(){
+            $.get("views/inv-import.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'InventoryList',
+                    viewId:'inv-import'
+                });
+                $("#body").html(data);
+            });
+        });
+    }
+};
+app.init();
+
+</script>
+

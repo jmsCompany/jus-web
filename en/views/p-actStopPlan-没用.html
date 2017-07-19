@@ -1,0 +1,109 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                        
+                           
+							<fieldset>
+							<legend>实际停工</legend>
+                            <div class="alert alert-success" style="display: none;"></div>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">编号</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="pno" id="pno"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            	<label class="col-lg-3 control-label">主原因</label>
+                                <img src="" width="105" height="30" name="idPic" id="idPic"/></img>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">主原因描述</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="rev" id="rev"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">次级原因</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="des" id="des"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">次原因描述</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="unitInf" id="unitInf"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">开始时间</label>
+                                <div class="col-lg-5">
+									<label class="col-lg-3 control-label" name="weight" id="weight"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">结束时间</label>
+                                <div class="col-lg-5">
+									<label class="col-lg-3 control-label" name="cost" id="cost"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">实际开始时间</label>
+                                <div class="col-lg-5">
+									<label class="col-lg-3 control-label" name="cost" id="cost"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">实际结束时间</label>
+                                <div class="col-lg-5">
+									<label class="col-lg-3 control-label" name="cost" id="cost"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">操作</label>
+                                <div class="col-lg-5">
+									<label class="col-lg-3 control-label" name="cost" id="cost"/></label>
+                                </div>
+                            </div>
+                            
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary" id="return">返回</button>
+                            </div>
+                        </div>   
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() { 
+    var idMat = $('#_key13').val();
+	$.materialInfo({"id":idMat},token,function(data){
+		$('#pno').html(data.pno);
+		$('#idPic').html(data.idPic);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+		$('#unitInf').html(data.unitInf);
+		$('#weight').html(data.weight);
+		$('#cost').html(data.cost);
+		$('#idAttachment').html(data.idAttachment);
+	});
+	
+	$('return').click(function(){
+	 		$.get("views/p-bomList.html",function(data){
+	             $("#body").html();
+	     	});
+	 	});
+});
+</script>
+
+

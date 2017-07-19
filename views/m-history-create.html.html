@@ -1,0 +1,128 @@
+    <div class="container">
+
+        <div class="row">
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                        <form id="historyForm" method="get" action="index.html" class="form-horizontal">
+                           
+							<fieldset>
+							<legend>新建维修历史</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">设备编号</label>
+                                <div class="col-lg-5">
+                                	<select class="form-control" name="machineNo:number" id="machineNo">
+   							    	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">设备名称</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="machineName" id="machineName"/></label>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">报修者</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="repair" id="repair"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">报修时间</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker1'>
+										<input type='text' class="form-control" name="repairTime" id="repairTime"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+							        <script type="text/javascript">
+										$(function () {
+											$('#datetimepicker1').datetimepicker();
+										});
+									</script>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">确认者</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="confirmor" id="confirmor"/>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">故障描述</label>
+                                <div class="col-lg-5">
+                                	<textarea name="des" id="des" class="autosizejs" name="issueDes" id="issueDes"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    
+	$('#historyForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	'machineNo': {
+                validators: {
+                    notEmpty: {
+                        message: '设备编号不能为空'
+                    }
+                }
+			},          
+            'repair': {
+                validators: {
+                    notEmpty: {
+                        message: '报修者不能为空'
+                    }
+                }
+            },
+            '报修时间': {
+                validators: {
+                    notEmpty: {
+                        message: '报修时间不能为空'
+                    }
+                }
+            }
+		}
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var history =JSON.stringify($('#historyForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createHistory(history,jmstoken,function(data){
+			      	$.get("views/m-historyList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+    
+	$('#cancel').click(function(){
+		$.get("views/m-historyList.html",function(data){
+	        $("#body").html(data);
+	 	});
+    });
+    
+    
+
+});
+</script>
+    
+
+
+

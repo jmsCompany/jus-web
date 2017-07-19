@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="materialForm" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title">打印</span>
+				</div>
+  
+<div class="cont">              
+<!--<div class="btn-group btn-group-left">
+      <button class="btn btn-default" type="button">切换</button>
+      <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+        <span class="caret"></span>
+        <span class="sr-only" name="choice:number">切换</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>      
+      </ul>
+    </div>-->
+ </div>   
+    <div class="print_box">
+    </div>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">打印</button>
+                 		<button type="reset" class="btn btn-info" id="cancel">返回</button>
+                 	</div>
+                 </div>
+                 
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+ <script type="text/javascript">   
+   	 $('return').click(function(){
+	 		$.get("views/po.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+</script>
+
+

@@ -1,0 +1,173 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="finalAuditForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idFinalAudit" />
+							<fieldset>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">工单号</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="woNo" id="woNo">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件名称</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="matDes" id="matDes"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">图纸号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="drawNo" id="drawNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">项目名称</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="projectName" id="projectName"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">工序</label>
+                                <div class="col-lg-5">
+                                	<select class="form-control" name="routeDes" id="routeDes">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">生产批次</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="lotNo" id="lotNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>检查项目</th>
+                                            <th>检验方法</th>
+                                            <th>规格</th>
+                                            <th>检验频次</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>3</th>
+                                            <th>4</th>
+                                            <th>5</th>
+                                            <th>6</th>
+                                            <th>+</th>
+                                            <th>-</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">检验结果</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="result" id="result">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">检验员</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="inspector" id="inspector"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker1'>
+										<input type='text' class="form-control" name="Date" id="Date"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+							        <script type="text/javascript">
+										$(function () {
+											$('#datetimepicker1').datetimepicker();
+										});
+									</script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$('#woNo\\.idDic').selectautofill('dic/woNo');
+	$('#routeDes\\.idDic').selectautofill('dic/routeDes');
+    
+    var idFinalAudit = $('#_key25').val();
+	$.finalAuditInfo({"id":idFinalAudit},token,function(data){
+		$('#finalAuditForm').populate(data,true);
+	});
+    
+    $('#finalAuditForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'woNo': {
+                validators: {
+                    notEmpty: {
+                        message: '工单号不能为空'
+                    }
+                }
+            },
+            'routeDes': {
+                validators: {
+                    notEmpty: {
+                        message: '工序不能为空'
+                    } 
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var finalAudit =JSON.stringify($('#finalAuditForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createFinalAudit(finalAudit,jmstoken,function(data){
+			      	$.get("views/q-finalAuditList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+ 	   
+ 	   $('#cancel').click(function(){
+	 		$.get("views/q-finalAuditList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    
+
+
+

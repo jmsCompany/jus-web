@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+        var jmstoken= store.get('JMS-TOKEN');
+        //弹窗
+        function showObj(objid){
+            $(objid).show();
+            $(objid).draggable();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+
+        var ehsItemList = {
+            init:function(){
+                var self = this;
+                this.bindEvents();
+                this.loadTable();
+                this.form();
+            },
+            loadTable: function() {
+                var self = this;
+//                var q = $('#q').val();
+                if(this.table) {
+                    this.table.destroy();
+                }
+                this.table = $('#ehsItemList').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "e/getWSEHSItemList",
+                        "dataType": "json",
+                        headers: {'JMS-TOKEN': jmstoken},
+                        "beforeSend": jmsGlobalBlock,
+                        "complete": jmsGlobalUnBlock,
+                        "error": jmsGlobalUnBlock,
+//                        data: {q:q},
+                    },
+                    "columnDefs": [{
+                        "targets": -1,
+                        "data": null,
+                        "defaultContent": '<button class=button-bin>Edit</button><button class=button-delete>Delete</button>'
+                    }],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength: "50"
+                });
+                $('#ehsItemList').on('xhr.dt', function ( e, settings, json, xhr ) {
+                    if(json.jmsError) {
+                        self.nullAlertShow(json.jmsError);
+//				alert(json.jmsError)
+                    }
+                } );
+
+                $('#ehsItemList tbody').on('click', 'button', function () {
+                    var data = self.table.row($(this).parents('tr')).data();
+                    var clazz = $(this).attr('class');
+
+                    if (clazz == 'button-bin') {
+                        var top = $('#body').scrollTop();
+                        $('#ehsItem').css({
+                            top: $(window).height() * 0.2 + top
+                        }).draggable().show();
+                        var idEhsItem = data[2];
+                        $.ehsItemInfo(idEhsItem, jmstoken, function (data) {
+                            $('#ehsForm').populate(data, true);
+                        });
+                    }
+                    else{
+                        $.deleteEhsItem(data[2], jmstoken, function (data) {
+                            $.get("views/e-ehs-item.html", function (data) {
+                                $("#body").html(data);
+                            });
+                        });
+                    }
+
+
+                });
+            },
+            bindEvents:function(){
+                var self = this;
+                $('#ehsList').click(function(){
+                    $.get("views/e-ehsList.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'e-ehsList'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                $('#create').click(function(){
+                    var top = $('#body').scrollTop();
+                    $('#ehsItem').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+                });
+                $('#ehsItem').on('click','.tc_close,#return',function(){
+                    $.get("views/e-ehs-item.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            },
+            form:function(){
+                $('#ehsForm').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'woNo': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'WO/NO. cannot be empty.'
+                                },
+                                regexp: {
+                                    regexp: /^([a-z_A-Z-.+0-9]+)$/,
+                                    message: 'Only English letters, Numbers, add and subtract Numbers, horizontal lines and points.'
+                                },
+                            }
+                        },
+                        'idSo': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'SO/NO. cannot be empty.'
+                                }
+                            }
+                        },
+                        'qty:number': {
+                            validators: {
+                                notEmpty: {
+                                    message: 'Quantity cannot be empty.'
+                                },
+                                regexp: {
+                                    regexp: /^[1-9]\d*$/,
+                                    message: 'Can only be a positive integer。'
+                                },
+                            }
+                        }
+                    }
+                }).on('success.form.bv', function(e) {
+                    e.preventDefault();
+                    var $form     = $(e.target),
+                            validator = $form.data('bootstrapValidator');
+                    var ehsRecord =JSON.stringify($('#ehsForm').serializeJSON());
+                    debugger;
+                    $.saveEhsItem(ehsRecord,jmstoken,function(data){
+                        debugger;
+                        $.get("views/e-ehs-item.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                });
+            }
+        };
+        ehsItemList.init();
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="ehsList">EHS Solution</span>
+    <span class="h-title-selected"><b>EHS Project</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <button id="create" class="button-sytle1">Create</button>
+        </div>
+    </div>
+    <!--检索结束-->
+
+    <table id="ehsItemList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>Project</th>
+            <th>Type</th>
+            <th>Operation</th><!--详情、处理-->
+        </tr>
+        </thead>
+    </table>
+</div>
+<!-- 弹窗1 start -->
+<div class="tcbox container-fluid" id="ehsItem" style="overflow: visible;">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">Create or edit EHS</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="ehsForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">Project</label>
+                    <input type="text" class="form-control input-w-3"  name="des" id="des">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-160">Type</label>
+                    <select  class="input-w-3 select-cs1 form-control" name="type" id="type">
+                        <option value=0>Important</option>
+                        <option value=1>Not Important</option>
+                    </select>
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary " id="save">Save</button>
+                    <button id="return" type="button" class="btn  btn-info">Return</button>
+                </div>
+            </div>
+            <input type="hidden" id="idEhs" name="idEhs:number"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

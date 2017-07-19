@@ -1,0 +1,143 @@
+<script type="text/template" id="poMain">
+    <div class="body-head-title">
+        <span class="h-title" id="po01">采购订单</span>
+        <span class="h-title" id="createPo">新建采购订单</span>
+        <span class="h-title" id="cocoMpany">供应商</span>
+        <span class="h-title" id="createCocompany">新建供应商</span>
+        <span class="h-title-selected" id="importPo">采购订单导入</span>
+        <span class="h-title" id="imporCo">供应商导入</span>
+    </div>
+    <div class="cont">
+        <div class="a-upload bg-img dropzone" id="drawId">导入采购订单</div>
+        <div id="result"></div>
+    </div>
+</script>
+<script type="text/template" id="dropzone-template-container">
+    <div class="dz-preview dz-file-preview">
+        <div class="dz-details">
+            <div class="dz-filename"><span data-dz-name></span><span data-dz-remove title="删除">✘</span><span data-dz-size></span></div>
+        </div>
+        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+        <div class="dz-success-mark"><span>✔</span></div>
+        <div class="dz-error-mark"><span>✘</span></div>
+        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    </div>
+</script>
+<script type="text/javascript">
+    //初始化页面
+        var dropzoneTmpl = $('#dropzone-template-container').html();
+        $('#body').html($('#poMain').html());
+        var jmstoken= store.get('JMS-TOKEN');
+
+        var app={
+            init:function(){
+                this.bindEvents();
+            },
+            bindEvents:function(){
+                var self = this;
+
+                // 采购订单
+                $('#po01').click(function(){
+                    $.get("views/po.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                //	创建采购订单
+                $('#createPo').click(function(){
+                    $.get("views/po-order.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'po-order'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+
+                $('#input').click(function(){
+                    $.get("views/po-input.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'po-input'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 供应商
+                $('#cocoMpany').click(function(){
+                    $.get("views/cocompany.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'cocompany'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 新建供应商
+                $('#createCocompany').click(function(){
+                    $.get("views/cocompany-create-body.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'cocompany-create-body',
+                            companyCoTypeId:'1'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 采购订单导入
+                $('#importPo').click(function(){
+                    $.get("views/po-import.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'cocompany'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                $('#imporCo').click(function(){
+                    $.get("views/co-import.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'co-import'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 返回
+                $('#return').click(function(){
+                    $.get("views/po.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+
+                $('.dropzone').dropzone({
+                    previewTemplate: dropzoneTmpl,
+                    url: $clientURL+ 's/uploadSpoFile',
+                    headers: {'JMS-TOKEN':jmstoken},
+                    maxFiles: 1,
+                    maxFilesize: 10,
+                    dictDefaultMessage:"",
+                    init:function(){
+                        var that = this;
+                        this.on('success',function(file,res){
+                            if(!res.valid) {
+                                $('#result').html(res.msg);
+                            }
+                        });
+                    }
+                });
+
+            }
+        };
+        app.init();
+</script>

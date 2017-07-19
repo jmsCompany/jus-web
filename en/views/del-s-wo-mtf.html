@@ -1,0 +1,400 @@
+<script type="text/html" id="justTest">
+    <a href="#">justTest, sWoMft</a>
+</script>
+
+<script type="text/html" id="sWoMft">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <form id="mtfForm" method="post" action="index.html" class="form-inline">
+                    <div class="alert alert-success" style="display: none;"></div>
+                    <div class="body-head-title">
+                        <span class="h-title" id="mtf01">物流查询</span>
+                        <!--<span class="h-title" id="kanban">看板信息</span>-->
+                        <span class="h-title"><b>工单流转</b></span>
+                        <span class="h-title" id="create">手动创建</span>
+                    </div>
+
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">流转单号</label>
+                            <input type="text" class="form-control input-w-3" name="mtNo" id="mtNo" />
+                        </div>
+                        <div class="form-group order" style="display: none;">
+                            <label for="" class="input-w-160">流转人</label>
+                            <input type="text" class="form-control input-w-3" name="empMtUser" id="empMtUser" readOnly="true" />
+                        </div>
+                        <div class="form-group order" style="display: none;">
+                            <label for="" class="input-w-160">流转日期</label>
+                            <input type="date" class="form-control input-w-3" name="creationTime" id="creationTime" readOnly="true" />
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">从仓库</label>
+                            <select class="input-w-3 select-cs1 form-control" name="fromStkId:number" id="fromStkId">
+                                <option value="-1">从仓库</option>
+                		    </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="input-w-160">到仓库</label>
+                            <select class="input-w-3 select-cs1 form-control" name="toStkId:number" id="toStkId">
+                                <option value="-1">到仓库</option>
+                		    </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">工单</label>
+                            <select class="input-w-3 select-cs1 form-control" name="idWo:number" id="idWo">
+                                <option>工单</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="checkOrNot">
+                            <label for="" class="input-w-160">&nbsp;</label>
+                            <label for="whether" class="input-w-160" style="text-align: left;">
+                            <input type="checkbox" id="whether" checked> 是否成品</label>
+                        </div>
+                    </div>
+                    <!-- +\- start -->
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group" id="matlist">
+                            <ul class="new-income-list-nav" style="width: 600px">
+                                <li style="width:180px;">物料</li>
+                                <li>数量</li>
+                                <li style="width:88px;">从货架</li>
+                                <li style="width:90px;">到货架</li>
+                                <li>备注</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- +\- over -->
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="save-btn">保存</button>
+                            <button type="reset" class="btn  btn-info" id="return">返回</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idMt" name="idMt:number" />
+                    <input type="hidden" id="typeId" name="typeId:number" value="4" />
+                </form>
+
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+</script>
+<script id="materialItem" type="text/html">
+
+    <dl class="matlist" id="item<%= item %>">
+        <dt>物料</dt>
+        <dd>
+            <select class="input-w-3 select-cs1 material-item-select material" name="smtfItems[item<%= item %>][material]" id="smtfItems.item<%= item %>.material">
+            <% if (action == 'detail') { %>
+            <option value=""><%= data.materialPno %>-<%= data.materialRev %>-<%= data.materialDes %></option>
+            <% } else { %>
+            <option value="">请选择</option>
+            <% } %>
+            </select>
+            <input type="text" class="" value="<%= data.qty %>" name="smtfItems[item<%= item %>][qty]:number" id="smtfItems.item<%= item %>.qty" placeholder="数量">
+            <select class="select-cs1 fromBinId" name="smtfItems[item<%= item %>][fromBinId]:number" id="smtfItems.item<%= item %>.fromBinId">
+            <% if (action == 'detail') { %>
+            <option value="<%= data.fromBinId %>"><%= data.fromBin %></option>
+            <% } else { %>
+            <option value="">从货架</option>
+            <% } %>
+            </select>
+            <select class="select-cs1 toBinId" name="smtfItems[item<%= item %>][toBinId]:number" id="smtfItems.item<%= item %>.toBinId">
+            <% if (action == 'detail') { %>
+            <option value="<%= data.toBinId %>"><%= data.toBin %></option>
+            <% } else { %>
+            <option value="">到货架</option>
+            <% } %>
+            </select>
+            <input type="text" class="" value="<%= data.remark %>" name="smtfItems[item<%= item %>][remark]" id="smtfItems.item<%= item %>.remark" placeholder="备注">
+            <span class="row-action-wrapper hidden">
+                <a class="button-sytle1" data-action="addRow">+</a>
+                <a class="button-sytle1" data-action="delRow">-</a>
+            </span>
+            <input type="hidden" class="pwoBomId" value="<%= data.qty %>" name="smtfItems[item<%= item %>][pwoBomId]:number" id="smtfItems.item<%= item %>.pwoBomId"/>
+            <input type="hidden" class="materialId" value="<%= data.qty %>" name="smtfItems[item<%= item %>][materialId]:number" id="smtfItems.item<%= item %>.materialId"/>
+        </dd>
+    </dl>
+</script>
+<script>
+    var jmstoken= store.get('JMS-TOKEN');
+    var app = {
+        historyOptions: {
+            groupId:'mtfList'
+        },
+        init: function() {
+            var self = this;
+            this.materialItem = $('#materialItem').html();
+            $('#body').html($('#sWoMft').html());
+            this.params = RouterManager.getParams();
+            var mtfId = this.params['mtfId'];
+            this.$matList = $('#matlist');
+            if(mtfId) {
+                $('#save-btn').hide();
+                $('#idWo').selectautofill('p/getWoObjsList',{headers:{'JMS-TOKEN':jmstoken}}, function() {
+                    self.loadDetail(mtfId, function() {
+                    });
+                });
+            } else {
+                $('#fromStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':jmstoken},data:{'statusId':27}}, function() {
+                    $('#toStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':jmstoken},data:{'statusId':27}}, function() {
+                        $('#idWo').selectautofill('p/getWoObjsList',{headers:{'JMS-TOKEN':jmstoken}}, function() {
+                            self.whether();
+                        });
+                    });
+                });
+                $('#matlist').append(self.createRow());
+            }
+            this.bindEvents();
+        },
+        loadDetail: function(mtfId, callback) {
+            var self = this;
+            
+            $.mtfInfo(mtfId, jmstoken, function(data) {
+                var smtfItems = '';
+                _(data.smtfItems).each(function(item) {
+                    smtfItems += self.createRow(item);
+                });
+                self.$matList.append(smtfItems);
+
+                $('#mtfForm').populate(data, true);
+                $('#creationTime').val($.dateFormat.date(new Date(data.creationTime), 'yyyy-MM-dd'));
+                $('#fromStkId').html('<option value="' + data.fromStkId + '">' + data.fromStk + '</option>');
+                $('#toStkId').html('<option value="' + data.toStkId + '">' + data.toStk + '</option>');
+
+                self.dealAction();
+            });
+        },
+        bindEvents: function() {
+            var self = this;
+            // 看板信息
+            $('#kanban').click(function () {
+                $.get("views/p-kanban.html", function (data) {
+                    self.historyOptions.viewId='p-kanban';
+                    RouterManager.setUrl(self.historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            //物流查询
+            $('#mtf01').click(function () {
+                RouterManager.setUrl(self.historyOptions);
+                $.get("views/mtfList.html", function (data) {
+                    $("#body").html(data);
+                });
+            });
+            // 手动创建
+            $('#create').click(function(){
+                $.get("views/mtfList-body.html",function(data){
+                    self.historyOptions.viewId='mtfList-body';
+                    RouterManager.setUrl(self.historyOptions);
+                    $("#body").html(data);
+                });
+            });
+
+            $('#mtfForm').on("change","#idWo",function(){
+                self.whether();
+            });
+
+            $("#fromStkId").on("change", function(){
+                self.loadFromBin();
+            });
+
+            $("#toStkId").on("change", function(){
+                self.loadToBin();
+            });
+
+            $('#return').click(function(){
+               history.go(-1);
+            });
+
+            $('#mtfForm').on("change",".material",function(){
+                var Material = $(this).val();
+                arr=Material.split('_');
+                if(arr.length>1){
+                    $(this).closest('dl').find('.pwoBomId').val(arr[0]);
+                    $(this).closest('dl').find('.materialId').val(arr[1]);
+                }
+                else{
+                    $(this).closest('dl').find('.materialId').val(Material);
+                }
+            });
+
+            $('#mtfForm').on('click', '.row-action-wrapper a', function(e) {
+                var $t = $(this);
+                var action = $t.data('action');
+                self[action] && self[action](e);
+            });
+
+            $("#whether").on("change",function(){
+                var $t = $("#whether");
+                if($t.prop("checked")) {
+                    $h = $('.new-income-list-nav');
+                    $('#matlist').empty();
+                    $('#matlist').append($h);
+                    $('#matlist').append(self.createRow());
+                }
+                self.whether();
+            });
+
+            $('#mtfForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'fromStkId': {
+                        validators: {
+                            notEmpty: {
+                                message: '从仓库不能为空'
+                            }
+                        }
+                        // 流转单子项至少有一条记录
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                    e.preventDefault();
+                    
+                    var $form = $(e.target);
+                    var validator = $form.data('bootstrapValidator');
+                    var mtf = JSON.stringify($('#mtfForm').serializeJSON());
+                    $.saveMtf(mtf, jmstoken, function(data) {
+                        if(data.valid) {
+                            $.get("views/s-wo-mtf.html",function(data) {
+                                $("#body").html(data);
+                            });
+                        } else {
+                            alert(data.msg);
+                        }
+                    });
+            });
+        },
+        whether: function() {
+            var self = this;
+//            if(self.params.action != 'detail') {
+//                $('#matlist').append(self.createRow());
+//            }
+            
+            self.loadMaterial();
+            self.loadFromBin();
+            self.loadToBin();
+            $('.pwoBomId').val('');
+            $('.materialId').val('');
+        },
+        loadFromBin: function($select) {
+            var idStk = $('#fromStkId').val();
+            if(!$select || !$select.length) {
+                $select = $('.fromBinId')
+            }
+            $select.empty();
+            $select.append('<option>从货架</option>');
+            $select.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}});
+        },
+        loadToBin: function($select) {
+            var idStk = $('#toStkId').val();
+            if(!$select || !$select.length) {
+                $select = $('.toBinId')
+            }
+            $select.empty();
+            $select.append('<option>到货架</option>');
+            $select.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}});
+        },
+        loadMaterial: function($select) {
+            var $t = $("#whether");
+            var woId = $('#idWo').val();
+            woId = parseInt($.trim(woId));
+
+            if(!$select || !$select.length) {
+                $select = $(".material-item-select");
+            }
+
+            $select.empty();
+            $select.append('<option>请选择</option>');
+            if(!woId) {
+                if($t.prop("checked")){
+                    $('.row-action-wrapper').addClass('hidden');
+                }
+                else{
+                    $('.row-action-wrapper').removeClass('hidden');
+                }
+                return;
+            }
+            else{
+                if($t.prop("checked")) {
+                    $('.row-action-wrapper').addClass('hidden');
+                    // 根据工单获得单条记录
+                    $select.selectautofill('p/getMaterialByWoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'woId':woId}});
+                } else {
+                    $('.row-action-wrapper').removeClass('hidden');
+                    // 根据工单获得多条记录
+                    $select.selectautofill('p/getMaterialByWoBom',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'woId':woId}});
+                }
+            }
+        },
+        dealAction: function() {
+            $('.order').show();
+            $("input:not(:button, :hidden)").prop("disabled", true);
+                $("select").prop("disabled", true);
+                $('#save').hide();
+                $('#checkOrNot').hide();
+        },
+        addRow: function(e) {
+            var $t = $(e.target);
+            
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+            
+            var $cnt = $t.closest('dl').next();
+            this.loadMaterial($cnt.find('.material-item-select'));
+            this.loadFromBin($cnt.find('.fromBinId'));
+            this.loadToBin($cnt.find('.toBinId'));
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if($('#matlist').find('dl').length == 1) {
+                return;
+            }
+
+            $t.closest('dl').remove();
+        },
+        createRow: function(data) {
+            var self = this;
+            var $list = $('#matlist');
+            var row = parseInt($list.data('row'));
+            
+            if(!row) {
+                row = 1;
+            }
+            
+            if(!data) {
+                data = {}
+            }
+
+            var compiled = _.template(self.materialItem);
+            var html = compiled({
+                item: row,
+                data: data,
+                action: self.params.action
+            });
+            $list.data('row', row + 1);
+
+            return html;
+        }
+    }
+    app.init();
+
+</script>
+</body>
+
+</html>

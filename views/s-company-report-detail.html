@@ -1,0 +1,53 @@
+<div class="table-wrap">
+    <table class="display"  id="detail" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>从公司</th>
+            <th>到公司</th>
+            <th>日期</th>
+            <th>物料</th>
+            <th>数量</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script>
+
+    $(function () {
+        var jmstoken = store.get('JMS-TOKEN');
+        var app = {
+            init: function () {
+//                $('#body').html($('#comComApplyForm').html());
+                var self = this;
+                setTimeout(self.bindEvents, 0);
+            },
+            bindEvents: function () {
+                //处理页面操作
+                var params = RouterManager.getParams();
+
+
+                $('#detail').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "s/getSmtfCList",
+                        "dataType": "json",
+                        headers: {'JMS-TOKEN': jmstoken},
+                        "beforeSend": jmsGlobalBlock,
+                        "complete": jmsGlobalUnBlock,
+                        "error": jmsGlobalUnBlock
+                    },
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength: "50"
+                });
+            }
+        };
+        app.init();
+    })
+</script>

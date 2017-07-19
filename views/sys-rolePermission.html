@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+
+            <script type="text/javascript">
+                //弹窗
+                function showObj(objid){
+                    $(objid).show();
+                }
+                function hideObj(objid){
+                    $(objid).hide();
+                }
+                var jmstoken= store.get('JMS-TOKEN');
+                $.fn.dataTable.ext.errMode = 'throw';
+                var role={
+                    init:function(){
+                        var params = RouterManager.getParams();
+                        var roleId = params['roleId'];
+                        $('#idRole').val(roleId);
+                        $('#role').val(params['role']);
+                        $('#description').val(params['description']);
+                        this.$rolePermission = $('#rolePermission');
+                        this.bindEvents();
+                        this.loadTable();
+                    },
+                    loadTable:function(callback){
+                        var self = this;
+                        $.rolePermissionInfo(jmstoken,function(data){
+                            self.$rolePermission.append('<tbody>');
+                            $(data).each(function(i, val){
+                                self.$rolePermission.append('<tr><td><input type="checkbox" name="WSMenuList" id="'+val.id+'" value='+val.id+'></td><td><label>'+val.name+'</label></td><td><label>'+val.group+'</label></td>');
+                            });
+                            self.$rolePermission.append('</tbody>');
+                            self.loadDetail();
+                        });
+                    },
+                    loadDetail:function(){
+                        var roleId = $('#idRole').val();
+                        $.roleInfo(roleId,jmstoken,function(data){
+                            $(data).each(function(i, val){
+                                var idPermission = val.id;
+                                $('#'+idPermission).attr('checked',true);
+                            });
+                        });
+                    },
+                    bindEvents:function(){
+
+                        $('#return1').click(function(){
+                            history.go(-1);
+                        });
+
+                        $('#save').click(function(){
+                            var WSMenuList = '';
+                            var j = 0;
+                            $("input[name='WSMenuList']").each(function(i, o){
+                                if(o.checked) {
+                                    if(WSMenuList.length!=0){
+                                        WSMenuList = WSMenuList+',';
+                                    }
+                                    WSMenuList = WSMenuList+'{"id":'+o.value+'}';
+                                    j++;
+                                }
+                            });
+//                            var wsRolePermission = '{"idRole":'+$('#idRole').val()+',"role":"'+$('#role').val()+'","WSMenuList":['+WSMenuList+']}';
+                            var wsRolePermission = '{"idRole":'+$('#idRole').val()+',"role":"'+$('#role').val()+'","menuList":['+WSMenuList+']}';
+                            var contact = $.parseJSON(wsRolePermission);
+                            var permissionRole =JSON.stringify(contact);
+                            $.addPermission(permissionRole,jmstoken,function(data){
+                                $.get("views/sys-role.html",function(data){
+                                    $("#body").html(data);
+                                });
+                            });
+                        });
+                    }
+                };
+                role.init();
+
+            </script>
+
+        </head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="role01"><b>角色权限</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group btn-group-left">
+            <label>角色名称：</label>
+            <input name="role" readonly id="role" type="text"/>
+        </div>
+        <div class="btn-group btn-group-left">
+            <label>描述：</label>
+            <input name="description" readonly id="description" type="text"/>
+        </div>
+    </div>
+    <table id="rolePermission" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th></th>   <!--多选框-->
+            <th>权限</th>
+            <th>组别</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="aligncenter">
+        <div class="form-group">
+            <button id="save" type="submit" class="btn btn-primary ">保存</button>
+            <button id="return1" type="reset" class="btn  btn-info">返回</button>
+        </div>
+    </div>
+    <input type="hidden" class="form-control" name="idRole:number" id="idRole"/>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+function showObj(objid){
+	$(objid).draggable().show();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+$(function () {
+	$('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
+	$('#datetimepicker2').datetimepicker({format:"YYYY-MM-DD"});
+});
+var jmstoken= store.get('JMS-TOKEN');
+var soList = {
+	init:function(){
+		this.loadTable();
+		this.bindEvents();
+		this.form();
+	},
+	loadTable:function(){
+		var self = this;
+		var data = {};
+		var fromDay = $('#datetimepicker1').val();
+		if (fromDay) {
+			data.fromDay = fromDay;
+		}
+		var toDay = $('#datetimepicker2').val();
+		if (toDay) {
+			data.toDay = toDay;
+		}
+		var q = $('#q').val();
+		if (q) {
+			data.q = q;
+		}
+		if (this.table) {
+			this.table.destroy();
+		}
+		this.table = $('#tableSo').DataTable( {
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL+"s/getSoList",
+				"dataType": "json",
+				"headers":{'JMS-TOKEN':jmstoken},
+				"beforeSend": jmsGlobalBlock,
+				"complete": jmsGlobalUnBlock,
+				"error": jmsGlobalUnBlock,
+				"data": data
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-finish>Status</button><button class=button-print>Print</button><button class=button-bin>Edit</button><button class=button-edit>Detail</button>'
+			} ],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+
+			dom: "tip",
+			pageLength:"50"
+		} );
+		$('#tableSo').on( 'draw.dt', function (e, setting) {
+			$.each(setting.aoData, function(i, v) {
+				if(v._aData[4] !== 'Edit') {
+					$(v.anCells[11]).find('.button-bin').remove();
+				}
+			});
+		} );
+		$('#tableSo tbody').on( 'click', 'button', function () {
+			var rowData = self.table.row( $(this).parents('tr') ).data();
+			var clickOption={
+				groupId:'so',
+				soId:rowData[11]
+			};
+			var clazz =$(this).attr('class');
+			if(clazz=='button-finish'){
+				var top = $('#body').scrollTop();
+				$('.tcbox').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+				$.soInfo(rowData[11], jmstoken, function (data) {
+					$('#soForm').populate(data,true);
+					$('#statusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_so','removeEdit':true}},function(){
+						$('#statusId').val(data.sStatusId);
+					});
+				});
+			}
+			else if(clazz=='button-print'){
+				$("#_key10").val(rowData[11]);
+				clickOption.viewId='print-so';
+				$.get("views/print-so.html",function(data){
+					$("#body").html(data);
+				});
+			}
+			else if(clazz=='button-bin'){
+				clickOption.action='edit';
+				clickOption.viewId='so-order';
+				$.get("views/so-order.html",function(data){
+					RouterManager.setUrl(clickOption);
+					$("#body").html(data);
+				});
+			}
+			else {
+				clickOption.action='detail';
+				clickOption.viewId='so-order';
+				$.get("views/so-order.html",function(data){
+					RouterManager.setUrl(clickOption);
+					$("#body").html(data);
+				});
+			}
+		} );
+	},
+	bindEvents:function(){
+		var self = this;
+		$("#q").keydown(function() {
+			if (event.keyCode == "13") {//keyCode=13是回车键
+				self.loadTable();
+			}
+		});
+		$('#search').on('click',function(){
+			self.loadTable();
+		});
+		var historyOptions={
+			groupId:'so'
+		};
+		//	新建销售订单
+		$('#soOrder').click(function(){
+			$.get("views/so-order.html",function(data){
+				historyOptions.viewId='so-order';
+				RouterManager.setUrl(historyOptions);
+				$("#body").html(data);
+			});
+		});
+		$('#coCompany').click(function(){
+			$.get("views/cocompany.html",function(data){
+				historyOptions.viewId='cocompany';
+				historyOptions.companyCoTypeId = 2;
+				RouterManager.setUrl(historyOptions);
+				$("#body").html(data);
+			});
+		});
+		$('#createCocompany').click(function(){
+			$.get("views/cocompany-create-body.html",function(data){
+				historyOptions.viewId='cocompany-create-body';
+				historyOptions.companyCoTypeId = 2;
+				RouterManager.setUrl(historyOptions);
+				$("#body").html(data);
+			});
+		});
+		$('#return').click(function(){
+			$.get("views/so.html",function(data){
+				$("#body").html(data);
+			});
+		});
+
+		$('.tcbox').on('click','.tc_close',function(){
+			$('.tcbox').hide();
+			$('#soForm')[0].reset();
+			$('#statusId').empty();
+		});
+	},
+	form:function(){
+		$('.button-finish').ready(function() {
+			$('#soForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+//				'remark': {
+//					validators: {
+//						notEmpty: {
+//							message: '备注不能为空'
+//						}
+//					}
+//				}
+				}
+			}).on('success.form.bv', function (e) {
+				e.preventDefault();
+				var $form = $(e.target),
+						validator = $form.data('bootstrapValidator');
+				var remark = JSON.stringify($('#soForm').serializeJSON());
+				$.saveSsoRemark(remark, jmstoken, function (data) {
+					$.get("views/so.html", function (data) {
+						$("#body").html(data);
+					});
+				});
+			});
+		});
+	}
+};
+soList.init();
+
+	// 弹窗拖拽
+//	$(function () {
+//		$('#draggable1').draggabilly();
+//	});
+
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>SO</b></span>
+    <span class="h-title" id="soOrder">Create SO</span>
+	<span class="h-title" id="coCompany">Client</span>
+	<span class="h-title" id="createCocompany">Create client</span>
+</div>
+<div class="cont">
+
+<div class="r-header-body">
+	<div class="btn-group btn-group-left" id="issue">
+		<div class="btn-group btn-group-left">
+			<label>Date：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+		</div>
+	</div>
+	<div class="right-list">
+		<input type="text" id='q' placeholder="SO/Client/Material">
+		<button id="search" class="button-sytle1">Search</button>
+	</div>
+<!--<div class="btn-group-left link-title">-->
+     <!--<span id="all"><a href="#">所有订单</a></span>-->
+	 <!--<span id="edit"><a href="#">编辑</a></span>-->
+	 <!--<span id="write"><a href="#">签字</a></span>-->
+	 <!--<span id="processing"><a href="#">激活</a></span>-->
+	 <!--<span id="finished"><a href="#">结束</a></span>-->
+	 <!--<span id="canceled"><a href="#">作废</a></span>-->
+<!--</div>-->
+<!--<div class="right-list">-->
+    <!--&lt;!&ndash;搜索框&ndash;&gt;-->
+    <!--<div class="sousuo">-->
+    	<!--<div class="ss-input">    		-->
+    	<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    	<!--</div>-->
+    	<!--<a href="#"><span class="icon-ss-bg"></span>搜索</a>-->
+    <!--</div>-->
+    <!--&lt;!&ndash;<a href="#" class="button-sytle1" id="createMrb">新建退货单</a>&ndash;&gt;-->
+<!--</div> &lt;!&ndash;检索结束&ndash;&gt;-->
+</div>
+ <table id="tableSo" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>SO No.</th>
+                <th>Creation time</th>
+                <th>Operator</th>
+                <th>Client</th>
+                <th>Status</th>
+                <th>Material</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+                <th>Total amount</th>
+                <th>Due date</th>
+                <th>Shipped quantity</th>
+                <th style="min-width:200px;">Operation</th>
+        </thead>
+</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+	<div class="tcbox_cont row">
+        <div class="body-head-title">
+			<span class="h-title">Manual completion</span>
+		</div>
+      <input type="button" class="tc_close">
+     <form id="soForm" method="post" action="index.html" class="form-inline">
+
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label style="text-align:center;width:80px;">SO No.</label>
+				 <input type="text" class="form-control input-w-3" name="codeSo" id="codeSo" readonly  unselectable="on"/>
+			 </div>
+		 </div>
+		    <div class="col-xs-12 mar-top-20px">
+			 	<div class="form-group">
+				 	<label style="text-align:center;width:80px;">Status</label>
+				 	<select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+					 </select>
+					</div>
+		    </div>
+			 <div class="col-xs-12 mar-top-20px">
+				 <div class="form-group">
+					 <label style="text-align:center;width:80px;">Remark</label>
+					 <textarea class="form-control" rows="3" name="autoRemark" id="autoRemark" style="width:180px"></textarea>
+				 </div>
+			 </div>
+            <div class="aligncenter">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary ">Save</button>
+					<button id="return" type="reset" class="btn  btn-info">Return</button>
+				</div>
+           </div>
+                 <input type="hidden" id="idSo" name="idSo:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+

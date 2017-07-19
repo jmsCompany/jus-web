@@ -1,0 +1,45 @@
+ <table id="tableMat" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>物料编号</th>
+                <th>版本</th>
+                <th>描述</th>
+                <th>单位</th>  <!--库存单位-->
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+    
+<script type="text/javascript">
+	
+ $(document).ready(function() {
+    $('?').click(function(){
+			$('#_key3').val('?');
+	 		$.get("views/so-order.html",function(data){
+	             $("#body").html(data);
+	     	});
+	});
+	
+	$('#tableMat').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://192.168.30.107:9999/jms/s/materialList",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        //dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+});   	
+
+</script>    
+

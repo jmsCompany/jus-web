@@ -1,0 +1,325 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="cocompanyForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           	<input type="hidden" id="idCompany" />  <!-- 物料编号-->
+							<fieldset>
+							<legend>基本信息</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">公司编码</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="coCode" id="coCode"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司简称</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="shortName" id="shortName"/>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司名称</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="name" id="name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司类别</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="companyType[idDic]:number" id="companyType.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">重要等级</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="level[idDic]:number" id="level.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司电话</label>
+                                <div class="col-lg-5">
+                                        <input type="text" class="form-control" name="companyTel" id="companyTel"/>
+                                </div>
+                            </div>			
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司传真</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="companyFax" id="companyFax"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">实际地址</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="addressAct" id="addressAct"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">注册地址</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="addressReg" id="addressReg"/>
+                                </div>
+                            </div>	
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">国别地区</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="country[idDic]:number" id="country.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">法人代表</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="aritificialPerson" id="aritificialPerson"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司网址</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="url" id="url"/>
+                                </div>
+                            </div>
+							
+                           
+							<legend>交易信息</legend>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司税号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="taxNo" id="taxNo"/>
+                                </div>
+                            </div>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">开户银行</label>
+                                <div class="col-lg-5">
+									<input type="text" class="form-control" name="bank" id="bank"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">银行帐号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="bankAccNo" id="bankAccNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">货运条款</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term1.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">付款条件</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term2.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">检核人</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="auditBy" id="auditBy"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">状态</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="status[idDic]:number" id="status.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                    <textarea name="remark" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            
+                            <legend>合作公司认证</legend>
+                            <div class="form-group">建议上传营业执照、税务等级书、一般纳税人认定书
+                            </div>
+                            <div class="form-group">
+                            	<div class="col-lg-5">
+                                	<input name="idAttachment" id="idAttachment" type="file" value="添加附件"> 
+                                </div>
+                            </div>
+<br>    
+<br> 
+<br> 
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">保存</button>
+                                <button type="submit" class="btn btn-primary" id="cancel">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#companyType\\.idDic').selectautofill('dic/companyType');
+    $('#level\\.idDic').selectautofill('dic/level');
+    $('#term1\\.idDic').selectautofill('dic/term1');
+    $('#term2\\.idDic').selectautofill('dic/term2');
+    $('#country\\.idDic').selectautofill('dic/country');
+    $('#status\.idDic').selectautofill('dic/status');
+	
+	var idCocompany = $('#_key2').val();
+    $.cocompanyInfo({"id":idCocompany},token,function(data){
+		$('#cocompanyForm').populate(data,true);
+	});
+	
+    $('#cocompanyForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'coCode': {
+                validators: {
+                    notEmpty: {
+                        message: '公司编码不能为空'
+                    },
+                    remote: {
+                        type: 'GET',
+                         url: $clientURL+'check/co_code',
+                        name:'cocompany',
+                        message: '该公司编码已存在',
+                        delay: 1000
+                    }   
+                }
+            },
+            'shortName': {
+                validators: {
+                    notEmpty: {
+                        message: '公司简称不能为空'
+                    },
+                    remote: {
+                        type: 'GET',
+                         url: $clientURL+'check/short_name',
+                        name:'cocompany',
+                        message: '该公司简称已存在',
+                        delay: 1000
+                    }   
+                }
+            },
+            'name': {
+                validators: {
+                    notEmpty: {
+                        message: '公司名称不能为空'
+                    }
+                }
+            },
+            'companyTel': {
+                validators: {
+                    //notEmpty: {},
+                    digits: {},
+                    phone: {
+						//message: '电话号码不合法'
+                        country: 'CN'
+                    }
+                }
+            },
+            'companyFax': {
+                validators: {
+                    //notEmpty: {},
+                    digits: {},
+                    phone: {
+						//message: '电话号码不合法'
+                        country: 'CN'
+                    }
+                }
+            },
+            'addressAct': {
+                validators: {
+                    notEmpty: {
+                        message: '实际地址不能为空'
+                    }
+                }
+            },
+            'addressReg': {
+                validators: {
+                    notEmpty: {
+                        message: '注册地址不能为空'
+                    }
+                }
+            },
+            'aritificialPerson': {
+                validators: {
+                    notEmpty: {
+                        message: '法人代表不能为空'
+                    }
+                }
+            },
+            'url': {
+                validators: {
+                    uri: {
+                        allowLocal: true,
+                        message: '请输入有效网址'
+                    }
+                }
+            },
+            'taxNo': {
+                validators: {
+                    notEmpty: {
+                        message: '公司税号不能为空'
+                    }
+                }
+            },
+            'bank': {
+                validators: {
+                    notEmpty: {
+                        message: '开户银行不能为空'
+                    }
+                }
+            },
+            'bankAccNo': {
+                validators: {
+                    notEmpty: {
+                        message: '银行帐号不能为空'
+                    }
+                }
+            },
+            'auditBy': {
+                validators: {
+                    notEmpty: {
+                        message: '检核人不能为空'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var cocompany =JSON.stringify($('#cocompanyForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createCocompany(cocompany,jmstoken,function(data){
+			   // $form.find('.alert-success').html('成功保存： ' + JSON.stringify(data)).show();
+			      	$.get("views/cocompany.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	    $('cancel').click(function(){
+	 		$.get("views/cocompany.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+});
+</script>

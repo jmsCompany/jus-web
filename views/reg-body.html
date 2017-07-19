@@ -1,0 +1,145 @@
+
+		<div class="mainer" >
+			
+                          
+					 <form id="regForm"  class="form-horizontal">
+					  <div class="alert alert-success" style="display: none;"></div>
+                    <div class=" alert-error error-box" style="display: none;"></div>
+					<div class="ht25"></div>
+					<div class="hd"><p>注册账号</p></div>
+					<div class="ht15"></div>
+					<div class="ct row">
+						<div class="pt_frma font-12px ">
+							<div class="p">
+								<div class="input  form-group  ">
+									<input type="text" value="" placeholder="公司名" name="companyName" class="input-css" >
+								</div>
+								
+							</div>
+							<div class="p">
+								<div class="input  form-group">
+									<input type="text" value="" placeholder="用户名" name="wsUsers[username]" class="input-css">
+								</div>
+								
+							</div>
+							<div class="p">
+								<div class="input  form-group">
+									<input type="text" value="" placeholder="手机号" name="wsUsers[mobile]" class="input-css">
+								</div>
+								
+							</div>
+							<div class="p">
+								<div class="input  form-group">
+									<input type="text" value="" placeholder="邮箱" name="wsUsers[email]" class="input-css">
+								</div>
+								
+							</div>
+							<div class="p">
+								
+								<div class="form-group input  input ">
+								    
+								    <input type="password" placeholder="密码" name="wsUsers[password]" class="input-css">
+								    
+								  </div>
+								  <div class="form-group input ">
+								    
+								    <input type="password" placeholder="确认密码" name="confirmPassword:skip" class="input-css">
+								   
+								  </div>
+							</div>
+							<div class="ht15" style="border-bottom: 1px solid #dfdfdf;"></div>
+							<div class="ht15"></div>
+							<div class="p">
+								<div class="form-group  select-div">
+									<select class="" name="companyType[idDic]:number" id="CompanyType">
+										<!--<option value="">公司规模</option>-->
+									</select>
+								</div>
+								<div class="form-group select-div " id="companySizeDiv" >
+									<select class="" style="padding: 0px;" name="companySize[idDic]:number" id="companySize">
+										<!--<option value="">所属行业</option>-->
+									</select>
+								</div>
+								
+							</div>
+							<div class="ht15"></div>
+							
+							
+							
+							
+							
+							<div class="p">
+								<button type="submit" class="btn-reg">注册</button>
+							</div>
+							<div class="ht15"></div>
+							<div class="form-group">
+                                <div class="col-lg-5 col-lg-offset-3">
+                                    <div class="checkbox2">
+                                    	
+                                        <input type="checkbox" name="acceptTerms:skip" id="checkbox2"/> 
+                                        <label for="checkbox2">我接受使用协议</label>
+                                    </div>
+                                </div>
+                            </div>
+							<div class="ht15"></div>
+						</div>
+						</form>
+					</div>
+		
+
+<script type="text/javascript">
+$(document).ready(function() {
+		
+
+      $('#companySize').selectautofill('dic/companySize');
+      $('#CompanyType').selectautofill('dic/companyType');
+   //   $('#companySizeDiv').block({ 
+    //            message: 'Processing', 
+     //           css: { border: '3px solid #a00' },
+     //           timeout:2000 
+      //      });
+		
+		 $('#regForm').bootstrapValidator({
+		 		 
+		 		 
+	
+		 		 
+		 		  		 
+		 		 
+    }).on('success.form.bv', function(e) {
+            // Prevent submit form
+            e.preventDefault();
+            var $form     = $(e.target);
+            var validator = $form.data('bootstrapValidator');
+           
+           alert('submit');
+          var username = $.trim(validator.getFieldElements('wsUsers[username]').val());
+           var email = $.trim(validator.getFieldElements('wsUsers[email]').val());
+            var mobile = $.trim(validator.getFieldElements('wsUsers[mobile]').val());
+            
+            alert('username: ' +username );
+//           alert(username);
+           if(username===''&&email===''&&mobile==='')
+           {
+                  $form.find('.alert-error').html('用户名/手机/邮箱至少输入一个').show();
+  
+             }
+            else
+            {
+            	
+                 var wsCompany =JSON.stringify($('#regForm').serializeJSON());
+                 $.registCompany(wsCompany,function(data){
+                       $form.find('.alert-success').html('成功注册公司，公司注册信息为： ' + data).show();
+                      //location.href="index.html";
+                 });
+            	
+             }
+
+ 
+        });
+		
+
+    
+
+});
+</script>

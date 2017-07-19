@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<style>
+		select.form-inline {
+			height: 26px;
+			vertical-align: middle;
+			background: #fff;
+		}
+	</style>
+	<script type="text/javascript">
+		function showObj(objid) {
+			$(objid).show();
+
+		}
+
+		function hideObj(objid) {
+			$(objid).hide();
+		}
+		function formatRepo(repo) {
+			if (repo.loading) return repo.text;
+
+			var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+			return markup;
+		}
+
+		function formatRepoSelection(repo) {
+			return repo.name || repo.text;
+		}
+		//	function startrequest()
+		//	{
+		//		$("#date").text((new date()).tostring());
+		//	}
+		$(document).ready(function() {
+			var jmstoken = store.get('JMS-TOKEN');
+
+			//	setinterval("startrequest()",3000);
+
+			$('#mat-ajax').select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {
+						'JMS-TOKEN': jmstoken
+					},
+					delay: 200,
+					data: function(params) {
+						var paramsObj = {
+							q: params.term,
+							types: [2]
+						};
+						var params = $.param(paramsObj, true);
+						return params;
+					},
+					processResults: function(data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function(markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 182,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open', function(evt) {
+				$('#mat-ajax').empty();
+			});
+			$.fn.dataTable.ext.errMode = 'throw';
+			var table = $('#materialListDetail').DataTable({
+
+				//  deferRender:  true,
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				//scrollY:"350px",
+				//scrollCollapse: true,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "s/mrp/noMatDetailReportList",
+					"dataType": "json",
+					headers: {
+						'JMS-TOKEN': jmstoken
+					},
+				},
+				"columnDefs": [],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+
+				dom: "tip",
+				pageLength: "50"
+
+			});
+
+			var historyOptions = {
+				groupId: 'stk'
+			};
+			$('#stkList tbody').on('click', 'button', function() {
+				var rowData = table.row($(this).parents('tr')).data();
+				historyOptions.stkId = rowData[5];
+				var clazz = $(this).attr('class');
+				if (clazz == 'button-bin') {
+					historyOptions.viewId = 'bin';
+					historyOptions.stkName = rowData[0];
+					$.get("views/bin.html", function(data) {
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+
+				} else if (clazz == 'button-edit') {
+					historyOptions.action = 'edit';
+					historyOptions.viewId = 'stk-body';
+					$.get("views/stk-body.html", function(data) {
+						RouterManager.setUrl(historyOptions);
+						$("#body").html(data);
+					});
+				} else {
+					$.deleteStk(rowData[5], jmstoken, function(data) {
+						if (data.valid == false) {
+							//					  showObj('.tcbox');
+							var top = $('#body').scrollTop();
+							$('.tcbox').css({
+								top: $(window).height() * 0.2 + top
+							}).show();
+						} else {
+							$.get("views/stk.html", function(data) {
+								$("#body").html(data);
+							});
+						}
+					});
+				}
+				//
+				// alert( data[0] +"的id: "+ data[ 5 ] );
+			});
+
+			$('#summary').click(function() {
+				historyOptions.viewId = 'noMatReport';
+				$.get("views/noMatReport.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+
+			$('#sourcingPrice').click(function() {
+				historyOptions.viewId = 'mrp';
+				$.get("views/mrp.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#tempSourcing').click(function() {
+				historyOptions.viewId = 'tempSourcing';
+				$.get("views/tempSourcing.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+			$('#purchaseDict').click(function() {
+				historyOptions.viewId = 'purchaseDict';
+				$.get("views/purchaseDict.html", function(data) {
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+			});
+		});
+	</script>
+
+</head>
+
+<body>
+	<div class="body-head-title">
+		<span class="h-title" id="sourcingPrice"><b>采购价格</b></span>
+		<span class="h-title" id="purchaseDict">采购字典</span>
+		<span class="h-title-selected">缺料报告</span>
+		<span class="h-title" id="tempsrc">临时采购单</span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+			<button id="summary" class="btn btn-default">汇总</button>
+			<button id="detail" class="btn btn-primary">明细</button>
+			<div class="right-list">
+				<select id="mat-ajax">
+					<option value="">选择原料/成品</option>
+				</select>
+				<input type="text" name="" placeholder="工单/计划单" value="">
+				<select class="form-inline" name="type">
+					<option value="">选择类别</option>
+					<option value="1">生产原料数</option>
+					<option value="2">库存</option>
+					<option value="3">OPEN PO</option>
+					<option value="4">安全库存</option>
+					<option value="5">确认缺料</option>
+					<option value="6">临时PO</option>
+					<option value="7">采购申请</option>
+				</select>
+				<button id="search" class="button-sytle1">查询</button>
+				<button id="refresh" class="button-sytle1">刷新</button>
+				<button id="export" class="button-sytle1">导出</button>
+			</div>
+		</div>
+		<!--检索结束-->
+	</div>
+	<table id="materialListDetail" class="display" cellspacing="0" cellpadding="0" width="100%">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>原料</th>
+				<th>库存单位</th>
+				<th>类别</th>
+				<th>数量</th>
+				<th>生产/到货日期</th>
+				<th>工单完成日期</th>
+				<th>缺料数量</th>
+				<th>状态</th>
+				<th>采购单号</th>
+				<th>工单号码</th>
+				<th>工单数</th>
+				<th>OPEN WO</th>
+				<th>成品/半成品</th>
+				<th>计划单号</th>
+				<th>计划数量</th>
+				<th>OPEN PP</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+
+</body>
+
+</html>

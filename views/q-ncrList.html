@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+        var jmstoken = store.get('JMS-TOKEN');
+        function showObj(objid){
+            $(objid).show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.name || repo.text;
+        }
+        var noProcessing  = {
+            init:function(){
+                this.bindEvents();
+                this.autoFill();
+            },
+            autoFill:function(){
+                var dataPickerOpt = {
+                    format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                };
+                $('#datetimepicker1').datetimepicker(dataPickerOpt);
+                $('#datetimepicker2').datetimepicker(dataPickerOpt);
+            },
+            nullAlertShow:function(information){
+                var top = $('#body').scrollTop();
+                $('#nullAlert').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                $('#info').empty();
+                $('#info').append(information);
+            },
+            loadTable:function(){
+                var self = this;
+                var data = {};
+
+                var materialId = $('#js-data-example-ajax').val();
+                var fromDay = $('#datetimepicker1').val();
+                var toDay = $('#datetimepicker2').val();
+                if (!fromDay){
+                    self.nullAlertShow('请输入开始日期！');
+                    return
+                }
+                else if(!toDay) {
+                    self.nullAlertShow('请输入截止日期！');
+                    return
+                }
+                else if(!materialId){
+                    self.nullAlertShow('请选择物料！');
+                    return
+                }
+                else{
+                    data.materialId = materialId;
+                    data.from = new Date(fromDay).getTime();
+                    data.to = new Date(toDay).getTime();
+                }
+                debugger;
+                if (this.table) {
+                    this.table.destroy();
+                }
+                this.table = $('#ncrList').DataTable( {
+//      deferRender:  true,
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "q/getQNcr2List",
+                        "dataType": "json",
+                        "data":data,
+                        "headers":{'JMS-TOKEN':jmstoken}
+                    },
+                    "columnDefs": [ {
+                        "targets": -1,
+                        "data": null,
+                        "defaultContent": '<button class=button-edit>编辑</button><button class=button-bin>详情</button><button class=button-delete>删除</button>'
+                    } ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength:"50"
+                } );
+                $('#ncrList tbody').on( 'click', 'button', function () {
+                    var data = self.table.row( $(this).parents('tr') ).data();
+                    var clazz =$(this).attr('class');
+                    var ncrId = data[5];
+                    if(clazz=='button-edit'){
+                        $.get("views/q-ncr-create.html",function(data){
+                            RouterManager.setUrl({
+                                groupId :'q-noProcessingSheetList',
+                                viewId:'q-ncr-create',
+                                action:'edit',
+                                idNcr:ncrId
+                            });
+                            $("#body").html(data);
+                        });
+                    }
+                    else if(clazz=='button-bin'){
+                        $.get("views/q-ncr-create.html",function(data){
+                            RouterManager.setUrl({
+                                groupId :'q-noProcessingSheetList',
+                                viewId:'q-ncr-create',
+                                action:'detail',
+                                idNcr:ncrId
+                            });
+                            $("#body").html(data);
+                        });
+                    }
+                    else{
+                        $.deleteNcr(ncrId,jmstoken,function(data){
+                            $.get("views/q-ncrList.html",function(data){
+                                $("#body").html(data);
+                            });
+                        });
+                    }
+                });
+            },
+            bindEvents:function(){
+                var self = this;
+                //选择物料
+                $('#js-data-example-ajax').select2({
+                    ajax: {
+                        url: $clientURL + 's/getMaterialListObjs',
+                        dataType: 'json',
+                        headers:{'JMS-TOKEN':jmstoken},
+                        delay: 200,
+                        data: function(params) {
+                            return {
+                                q: params.term
+                            }
+                        },
+                        processResults: function(data, params) {
+                            return {
+                                results: data,
+                                pagination: null
+                            }
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) { return markup; },
+                    minimumInputLength: 1,
+                    width: 200,
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
+                }).on('select2:open',function(evt){
+                    $('#select2-js-data-example-ajax-container').html('');
+                    $('#js-data-example-ajax').empty();
+                });
+                //	点击查询？？
+                $('#create').click(function(){
+                    self.loadTable();
+                });
+                var historyOptions={
+                    groupId :'q-noProcessingSheetList'
+                };
+                $('#finalAudit').click(function(){
+                    $.get("views/q-noProcessingSheetList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#deviation01').click(function(){
+                    historyOptions.viewId='q-deviationList';
+                    $.get("views/q-deviationList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#car').click(function(){
+                    historyOptions.viewId='q-carList';
+                    $.get("views/q-carList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#8D').click(function(){
+                    historyOptions.viewId='q-eightDList';
+                    $.get("views/q-eightDList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+            }
+        };
+        noProcessing.init();
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="finalAudit">不合格处理单</span>
+    <span class="h-title" id="deviation01">偏差申请单</span>
+    <span class="h-title-selected"><b>抱怨单</b></span>
+    <span class="h-title" id="8D">8D</span>
+    <span class="h-title" id="car">CAR</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group btn-group-left" id="status-group">
+            <select class="js-data-example-ajax" id="js-data-example-ajax">
+                <option value="">选择物料</option>
+            </select>
+        </div>
+        <div class="btn-group btn-group-left" id="issue">
+            <div class="btn-group btn-group-left">
+                <label>日期：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+            </div>
+        </div>
+        <div class="right-list">
+            <!--<div class="sousuo">-->
+            <!--<div class="ss-input">-->
+            <!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+            <!--</div>-->
+            <!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+            <!--</div>-->
+            <!--<input type="text" id='des' style="width:150px">-->
+            <input type="button" class="button-sytle1" id="create" value="查询">
+        </div>
+    </div>
+    <table id="ncrList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>零件</th>
+            <th>ncrNo</th>
+            <th>回复方式</th>
+            <th>作成人</th>
+            <th>日期</th>
+            <th>操作</th><!--编辑、详情-->
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

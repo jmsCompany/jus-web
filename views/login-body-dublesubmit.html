@@ -1,0 +1,409 @@
+﻿
+		<div class="mainer" >
+			<form id="loginForm" method="post" action="index.html" class="form-horizontal">
+			<div class="pt_lbox" id="login">
+				<p><img src="images/login/logo-in.png" alt=""></p>
+				<div class="ht55"></div>
+				<div class="lbox br5">
+					<div class="ht25"></div>
+					<div class="hd"><p>账号登录</p></div>
+					<div class="ht15"></div>
+					<div class="ct">
+						<div class="pt_frma">
+							<div class="p">
+								<div  class="error-banner br3 font-12px none" ><p>登录名或密码错误</p></div>
+							</div>
+							<div class="ht15"></div>
+							<div class="p">
+								<div class="input br3 bd label paddiing-bottom " >
+                                    <label for="" class="title ico ico1">登录名</label><i class=""></i>
+									<input type="text" name="login" >
+								</div>
+								<p class="error"></p>
+							</div>
+							<div class="ht20"></div>
+							<div class="p">
+								<div class="input br3 bd label paddiing-bottom ">
+                                    <label for="" class="title ico ico2">密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+									<i class=" "><!--class添加noti显示感叹号图标！--></i>
+									<input type="password" name="password" >
+								</div>
+								<p class="error"></p>
+							</div>
+
+                            <div class="ht20"></div>
+                            <div class="p">
+                                    <!--<select class="form-control" name="lang" >-->
+                                        <!--<option value="cn">中文</option>-->
+                                        <!--<option value="en">English</option>-->
+                                    <!--</select>-->
+
+
+                                <p class="font-12px"><span class="r"><!--<a href="" class="cl-a">忘记密码</a>--></span>
+                                    <input type="radio" name="lang" value="cn" checked/>&nbsp;&nbsp;&nbsp;&nbsp;<label>中文</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="lang" value="en" />&nbsp;&nbsp;&nbsp;&nbsp;<label>English</label>
+                                </p>
+                                <p class="error"></p>
+                            </div>
+
+							<div class="ht20"></div>
+							<div class="p">
+								 <button id="login_btn" type="submit" class="btn-login">登录</button>
+							</div>
+            </form>
+							<div class="ht20"></div>
+							<div class="p">
+								<p class="font-12px"><span class="r"><!--<a href="" class="cl-a">忘记密码</a>--></span>
+									<a href="" class="checkbox on"></a>
+									在电脑上保存登录 
+								</p>
+							</div>
+							<div class="ht20"></div>
+						</div>
+					</div>
+					<div class="ft br5 bt">
+						<div class="ht20"></div>
+						<p>还没有账号吗？
+                            <a href="javascript:;" onclick="changeBox('login', 'register')">
+                                请您注册
+                            </a>
+                        </p>
+						<div class="ht20"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="pt_lbox gt backend none" id="register">
+				<!--<p><img src="../images/login/logo-in.png" alt=""></p>-->
+				<div class="ht55"></div>
+				<div class="lbox br5 ">
+					
+                          
+					 <form id="regForm" method="post" action="index.html" class="form-horizontal">
+					  <div class="alert alert-success" style="display: none;"></div>
+                    <div class=" alert-error error-box" style="display: none;"></div>
+					<div class="ht25"></div>
+					<div class="hd"><p>注册账号</p></div>
+					<div class="ht15"></div>
+					<div class="ct row">
+						<div class="pt_frma font-12px ">
+							<div class="p">
+								<div class="input  form-group  ">
+									<input type="text" value="" placeholder="公司名" name="companyName" class="input-css" >
+								</div>
+								
+							</div>
+							<div class="p">
+								<div class="input  form-group">
+									<input type="text" value="" placeholder="用户名" name="wsUsers[username]" class="input-css">
+								</div>
+								
+							</div>
+							<div class="p">
+								<div class="input  form-group">
+									<input type="text" value="" placeholder="手机号" name="wsUsers[mobile]" class="input-css">
+								</div>
+								
+							</div>
+							<div class="p">
+								<div class="input  form-group">
+									<input type="text" value="" placeholder="邮箱" name="wsUsers[email]" class="input-css">
+								</div>
+								
+							</div>
+							<div class="p">
+								
+								<div class="form-group input  input ">
+								    
+								    <input type="password" placeholder="密码" name="wsUsers[password]" class="input-css">
+								    
+								  </div>
+								  <div class="form-group input ">
+								    
+								    <input type="password" placeholder="确认密码" name="confirmPassword:skip" class="input-css">
+								   
+								  </div>
+							</div>
+							<div class="ht15" style="border-bottom: 1px solid #dfdfdf;"></div>
+							<div class="ht15"></div>
+							<div class="p">
+								<div class="form-group  select-div">
+									<select class="" name="companyType[idDic]:number" id="CompanyType">
+										<!--<option value="">公司规模</option>-->
+									</select>
+								</div>
+								<div class="form-group select-div " id="companySizeDiv" >
+									<select class="" style="padding: 0px;" name="companySize[idDic]:number" id="companySize">
+										<!--<option value="">所属行业</option>-->
+									</select>
+								</div>
+								
+							</div>
+							<div class="ht15"></div>
+							
+							
+							
+							
+							
+							<div class="p">
+								<button type="submit" class="btn-reg">注册</button>
+							</div>
+							<div class="ht15"></div>
+							<div class="form-group">
+                                <div class="col-lg-5 col-lg-offset-3">
+                                    <div class="checkbox2">
+                                    	
+                                        <input type="checkbox" name="acceptTerms:skip" id="checkbox2"/> 
+                                        <label for="checkbox2">我接受使用协议</label>
+                                    </div>
+                                </div>
+                            </div>
+							<div class="ht15"></div>
+						</div>
+						</form>
+					</div>
+				</div>
+				<div class="ht35"></div>
+				<p>已经拥有一个账号？ <a href="javascript:void(0);" onclick="changeBox('register', 'login')">立即登陆</a></p>
+				<div class="height50"></div>
+			</div>
+		</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+		
+	$('#regForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'wsUsers[username]': {
+                message: '用户名不合法。',
+                validators: {
+                    /*notEmpty: {
+                        message: 'The username is required and can\'t be empty'
+                    },*/
+                    stringLength: {
+                        min: 2,
+                        max: 15,
+                        message: '长度必须大于2小于15个字符'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: '只能是字符、数字、点、下划线。'
+                    },
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/username',
+                        name:'login',
+                        message: '该用户名已经被注册',
+                        delay: 1000
+                    } 
+                }
+            },
+            'companyName': {
+                message: '公司名不合法。',
+                validators: {
+                    notEmpty: {
+                        message: '公司名不为空'
+                    },
+                    stringLength: {
+                        min: 2,
+                        max: 64,
+                        message: '长度必须大于2小于64个字符'
+                    },
+
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/companyname',
+                        name:'companyname',
+                        message: '该公司已经被注册',
+                        delay: 1000
+                    }
+                }
+            },
+            'acceptTerms:skip': {
+                validators: {
+                    notEmpty: {
+                        message: '请点击接受使用协议。'
+                    }
+                }
+            },
+            'wsUsers[email]': {
+                validators: {
+                    /*notEmpty: {
+                     message: 'The email address is required and can\'t be empty'
+                     },*/
+                    emailAddress: {
+                        message: '邮箱格式不合法。'
+                    },
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/username',
+                        name:'login',
+                        message: '该邮箱已经被注册',
+                        delay: 1000
+                    }
+                }
+            },
+            'website': {
+                validators: {
+                    uri: {
+                        allowLocal: true,
+                        message: 'The input is not a valid URL'
+                    }
+                }
+            },
+            'wsUsers[mobile]': {
+                validators: {
+                    //notEmpty: {},
+                    digits: {},
+                    phone: {
+                        //message: '电话号码不合法'
+                        country: 'CN'
+                    },
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/username',
+                        name:'login',
+                        message: '该手机号码已经被注册',
+                        delay: 1000
+                    }
+                }
+            },
+            'color': {
+                validators: {
+                    hexColor: {
+                        message: 'The input is not a valid hex color'
+                    }
+                }
+            },
+            'zipCode': {
+                validators: {
+                    zipCode: {
+                        country: 'US',
+                        message: 'The input is not a valid US zip code'
+                    }
+                }
+            },
+            'wsUsers[password]': {
+                validators: {
+                    notEmpty: {
+                        message: '密码不能为空'
+                    },
+                    identical: {
+                        field: 'confirmPassword:skip',
+                        message: '密码与确认密码不同！'
+                    }
+                }
+            },
+            'confirmPassword:skip': {
+                validators: {
+                    notEmpty: {
+                        message: '确认密码不能为空'
+                    },
+                    identical: {
+                        field: 'wsUsers[password]',
+                        message: '密码与确认密码不同！'
+                    }
+                }
+            },
+            'ages': {
+                validators: {
+                    lessThan: {
+                        value: 100,
+                        inclusive: true,
+                        message: 'The ages has to be less than 100'
+                    },
+                    greaterThan: {
+                        value: 10,
+                        inclusive: false,
+                        message: 'The ages has to be greater than or equals to 10'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            // Prevent submit form
+         e.preventDefault();
+         var $form     = $(e.target);
+         var validator = $form.data('bootstrapValidator');
+           
+          // alert('submit');
+         var username = $.trim(validator.getFieldElements('wsUsers[username]').val());
+         var email = $.trim(validator.getFieldElements('wsUsers[email]').val());
+         var mobile = $.trim(validator.getFieldElements('wsUsers[mobile]').val());
+            
+        //    alert('username: ' +username );
+//           alert(username);
+         if(username===''&&email===''&&mobile===''){
+             $form.find('.alert-error').html('用户名/手机/邮箱至少输入一个').show();
+         }
+         else{
+             var wsCompany =JSON.stringify($('#regForm').serializeJSON());
+             debugger;
+             $.registCompany(wsCompany,function(data){
+                 debugger;
+                 $form.find('.alert-success').html('成功注册公司，公司注册信息为： ' + data).show();
+                 //location.href="index.html";
+             });
+         }
+    });
+		
+
+		
+    $('#loginForm').bootstrapValidator({}).on('success.form.bv', function(e) {
+        // Prevent submit form
+        e.preventDefault();
+        var $form     = $(e.target);
+        var validator = $form.data('bootstrapValidator');
+        var wsUser =$('#loginForm').serializeJSON();
+        alert('login');
+        $.login(JSON.stringify(wsUser),function(data){
+            if(data.token==null)
+            {$form.find('.error-banner').show();
+                setTimeout(function(){
+                    $('#login_btn').removeAttr('disabled')
+                },0)}
+            else
+            {
+                //  $form.find('.alert').html('登陆成功，返回userprofile，其中JMS-TOKEN为: ' + data.token +', id: ' + data.login).show();
+                store.set('JMS-TOKEN',data.token);
+                store.set('ID_USER',data.login);
+                store.set('userProfile',data);
+                location.href="index.html";
+
+            }
+        });
+  
+    });
+});
+</script>
+<script type="text/javascript">
+//	用户注册输入错误提示；
+	
+	$(".checkbox, .radio").click(function(event) {
+		$(this).toggleClass('on');
+	});
+</script>	
+<script type="text/javascript">
+// 注册页面
+$(document).ready(function() {
+
+    $('#companySize').selectautofill('dic/companySize');
+    $('#CompanyType').selectautofill('dic/companyType');
+    $('#companySizeDiv').block({
+        message: 'Processing',
+        css: { border: '3px solid #a00' },
+        timeout:2000
+    });
+    $("input:radio[name='lang']").change(function(){
+        location.href="en/login.html";
+    });
+ 
+
+});
+</script>

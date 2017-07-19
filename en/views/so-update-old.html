@@ -1,0 +1,219 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="soForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           <input type="hidden" id="idSO" />  <!-- 销售订单编号-->
+							<fieldset>
+							<legend>销售订单创建</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">订单编码</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="soNo" id="soNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">客户</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="codeCo:number" id="codeCo.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">客户订单号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="coOrderNo" id="coOrderNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">货运条款</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term1.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">付款条件</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term2.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">发货仓库</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="stk:number" id="stk.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">税率</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="taxRate" id="taxRate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">汇率</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="exchange" id="exchange"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">物料编号</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="pno:number" id="pno.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">数量</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="qtySo" id="qtySo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">单价</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="uPrice" id="uPrice"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">总价</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="totalAmount" id="totalAmount"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">交货日期</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker1'>
+										<input type='text' class="form-control" name="deliveryDate" id="deliveryDate"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+							        <script type="text/javascript">
+										$(function () {
+											$('#datetimepicker1').datetimepicker();
+										});
+									</script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                    <textarea name="remark" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            	<label class="col-lg-3 control-label">附件</label>
+                            	<div class="col-lg-5">
+                                	<input name="att" type="file" value="添加附件"> 
+                                </div>
+                            </div>                       
+<br> 
+<br> 
+                            <br>
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">保存</button>
+                                <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+	$('#codeCo\\.idDic').selectautofill('dic/codeCo');
+	$('#stk\\.idDic').selectautofill('dic/stk');
+	$('#status\\.idDic').selectautofill('dic/status');
+	$('#term1\\.idDic').selectautofill('dic/term1');
+	$('#term2\\.idDic').selectautofill('dic/term2');
+		
+	var idSo = $('#_key10').val();
+	$.soInfo({"id":idSo},token,function(data){
+		$('#soForm').populate(data,true);
+	});
+		
+	var idMat = $('#_key3').val();
+	$.materialInfo({"id":idMat},token,function(data){
+		$('#pno').html(data.pno);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+		$('#unitPur').html(data.unitPur);
+	});
+	
+	
+		
+	    $('#table1').DataTable( {
+       		deferRender:  true,
+        	"processing": true,
+        	"serverSide": true,
+        	scrollY:"350px",
+        	scrollCollapse: true,
+        	"ajax": {
+            	"url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            	"dataType": "json"
+        	},
+       		"language": {
+                "url": "js/datatable/chinese.json"
+            },
+      		dom: "rtiS",
+        	scroller: {
+           		loadingIndicator: true
+        	}
+    	} );
+    	
+
+    
+    	$('#soForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'taxRate': {
+                	validators: {
+                    	notEmpty: {
+                        	message: '税率不能为空'
+                    	}
+                	}	
+            	}
+			}
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var so =JSON.stringify($('#soForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createSo(so,jmstoken,function(data){
+			      	$.get("views/so.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	   
+	   $('cancel').click(function(){
+	 		$.get("views/so.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	
+	});
+	</script>

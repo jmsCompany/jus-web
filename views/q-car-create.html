@@ -1,0 +1,522 @@
+﻿<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+	<!--<head>-->
+		<!--<meta charset="utf-8">-->
+		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+		<!--&lt;!&ndash;-->
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+		<!--<meta name="format-detection" content="telephone=no">-->
+		<!--&ndash;&gt;-->
+		<!--<title>表格页面</title>-->
+		<!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap.css">-->
+		<!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap-customize.css">-->
+		<!--<link rel="stylesheet" type="text/css" href="js/quality/css/style.css">-->
+		<!--<link rel="stylesheet" type="text/css" href="js/quality/css/pages.css">-->
+		<!--<script type="text/javascript" src="js/quality/js/html5.js"></script>-->
+		<!--<script type="text/javascript" src="js/quality/js/jquery.js"></script>-->
+		<!--<script type="text/javascript" src="js/quality/js/bootstrap.js"></script>-->
+		<!--<script type="text/javascript" src="js/quality/js/respond.src.js"></script>-->
+		<!--<script type="text/javascript" src="js/quality/js/base.js"></script>-->
+		<!--<script type="text/javascript" src="js/quality/js/main.js"></script>-->
+		<!--&lt;!&ndash;plugin&ndash;&gt;-->
+	<!--</head>-->
+	<body>
+		<!-------------------------------------- 头部开始 -------------------------------------->
+		<header>
+			<div class="container1">
+				
+			</div>
+		</header>
+		<!-------------------------------------- 头部结束 -------------------------------------->
+		<!-------------------------------------- 内容开始 -------------------------------------->
+		<main>
+			<form id="carForm"  method="post" action="index.html">
+			<div class="container1">
+				<div class="ui-table1">
+					<table>
+						<tr>
+							<td colspan="2" align="center">
+								<!--<img src="img/logo1.png" alt="" class="logo">-->
+							</td>
+							<td colspan="8">
+								<div class="title1">
+									纠正措施报告<br>Corrective Action Request
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="8">
+								<p><b class="name">To:</b></p>
+								<!--<p contenteditable></p>-->
+								<input id="to1" name="to1" class="no-show-border" style="width:690px;">
+							</td>
+							<td colspan="2">
+								<p><b class="name">NCR No:</b></p>
+
+								<input id="ncrNo" name="ncrNo" class="no-show-border">
+								<!--<p contenteditable></p>-->
+							</td>
+						</tr>
+						<tr>
+							<td colspan="10">
+								<p><b class="name">问题描述 Problem Description:</b></p>
+								<!--<div class="input-line" contenteditable>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+								<!--</div>-->
+
+								<textarea id="problemDes" name="problemDes"  class="input-line" style="width:855px;height:40px;"></textarea>
+								<div class="ht20"></div>
+								<table width="100%;" style="padding-right: 20px;">
+									<tr>
+										<td colspan="5">
+											<b class="name">问题源头 Problem Origin：</b>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input id="ia" name="ia" type="checkbox" value=1>
+											<!--<span class="wh10"></span>-->
+											内审 IA
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="ea" id="ea" value=1>
+											<!--<span class="wh10"></span>-->
+											外审(包括第二、三方审核) EA
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="quality" id="quality" value=1>
+											<!--<span class="wh10"></span>-->
+											质量 Quality
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="ehs" id="ehs" value=1>
+											<!--<span class="wh10"></span>-->
+											EHS
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="other1" id="other1" value=1>
+											<!--<span class="wh10"></span>-->
+											其它Other
+
+											<input id="other1Des" name="other1Des" class="no-show-border" style="width:100px;">
+											<!--<span class="input-line" contenteditable style="width: 160px; vertical-align: middle;">-->
+												<!--<span style="margin-top: 0;"></span>-->
+											<!--</span>-->
+										</td>
+										<!--<td>&nbsp;&nbsp;&nbsp;</td>-->
+									</tr>
+									<tr>
+										<td colspan="5">
+											<b class="name">问题分类Categories by problem</b>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="man" id="man" value=1>
+											<!--<span class="wh10"></span>-->
+											人Man
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="machine" id="machine" value=1>
+											<!--<span class="wh10"></span>-->
+											机器Machine/Equipment
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="material" id="material" value=1>
+											<!--<span class="wh10"></span>-->
+											材料Material
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="method" id="method" value=1>
+											<!--<span class="wh10"></span>-->
+											方法Method
+										</td>
+										<td>
+											<!--<span class="wh25"></span>-->
+											<input type="checkbox" name="other2" id="other2" value=1>
+											<!--<span class="wh10"></span>-->
+											其它Other
+
+											<input id="other2Des" name="other2Des" class="no-show-border" style="width:100px;">
+											<!--<span class="input-line" contenteditable style="width: 160px; vertical-align: middle; ">-->
+												<!--<span style="margin-top: 0;"></span>-->
+											<!--</span>-->
+										</td>
+										<!--<td>&nbsp;&nbsp;</td>-->
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="10">
+								<p><b class="name">临时措施 Interim Corrective Action:</b></p>
+								<textarea id="interimCorrectiveAction" name="interimCorrectiveAction"  class="input-line" style="width:855px;height:100px;"></textarea>
+								<!--<div class="input-line" contenteditable>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+								<!--</div>-->
+								<p class="text-right">
+									<b class="name" style="position: relative; top: 12px;">承诺日期Commit Date:</b>
+									&nbsp;
+									<input id="commitDate1" name="commitDate1" class="no-show-border">
+									<!--<span class="input-line" contenteditable style="width: 180px; margin-right: 20px; position: relative; top: 10px; float: right;">-->
+										<!--<span></span>-->
+									<!--</span>-->
+								</p>
+								<div class="clearfix"></div>
+								<div class="ht10"></div>
+								<p><b class="name">永久措施Permanent Corrective Action:</b></p>
+								<textarea id="permanentCorrectiveAction" name="permanentCorrectiveAction" class="input-line" style="width:855px;height:100px;"></textarea>
+								<!--<div class="input-line" contenteditable>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+									<!--<span></span>-->
+								<!--</div>-->
+								<p class="text-right">
+									<b class="name" style="position: relative; top: 12px;">承诺日期Commit Date:</b>
+									&nbsp;
+									<input id="commitDate2" name="commitDate2" class="no-show-border">
+									<!--<span class="input-line" contenteditable style="width: 180px; margin-right: 20px; position: relative; top: 10px; float: right;">-->
+										<!--<span></span>-->
+									<!--</span>-->
+								</p>
+								<div class="clearfix"></div>
+								<div class="ht10"></div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<p><span class="name">作成人Response:</span></p>
+								<!--<input id="ncrNo5" name="ncrNo" class="no-show-border">-->
+								<select id="response" name="response:number" style="width:80px;"></select>
+								<!--<p class="text-right" style="line-height: 0;">-->
+									<!--<span class="input-line" contenteditable style="width: 70%;">-->
+										<!--<span style="margin-top: 0;"></span>-->
+									<!--</span>-->
+								<!--</p>-->
+							</td>
+							<td colspan="3">
+								<p style="position: absolute;"><span class="name">日期Date:</span>
+									<input id="date1" name="date1" class="no-show-border"></p>
+								<!--<p class="text-right" style="line-height: 0;">-->
+									<!--<span class="input-line" contenteditable style="width: 70%;">-->
+										<!--<span style="margin-top: 0;"></span>-->
+									<!--</span>-->
+								<!--</p>-->
+							</td>
+							<td colspan="4">
+								<!--<p><b class="name">&nbsp;</b></p>-->
+								<!--<p></p>-->
+							</td>
+						</tr>
+						<tr>
+							<td colspan="10"><p class="text-center"><b class="name">纠正措施确认<br>Corrective Action Verification</b></p></td>
+						</tr>
+						<tr>
+							<td colspan="10">
+								<span class="name text-center" style="width: 100px; display: inline-block; font-weight: normal; float: left;">确认结果: <br>Result</span>
+								<!--<p contenteditable style="margin-left: 100px;"></p>-->
+
+								<textarea id="result" name="result"  class="input-line" style="width:755px;height:40px;"></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="10">
+								<span class="name text-center" style="width: 100px; display: inline-block; font-weight: normal; float: left;">行动计划：<br>Action Plan</span>
+								<textarea id="actionPlan" name="actionPlan"  class="input-line" style="width:755px;height:40px;"></textarea>
+								<!--<p contenteditable style="margin-left: 100px;"></p>-->
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<p><span class="name">确认人Confirmor:</span></p>
+								<select id="confirmor" name="confirmor:number" style="width:80px;"></select>
+								<!--<input id="confirmor" name="confirmor" class="no-show-border">-->
+								<!--<p class="text-right" style="line-height: 0;">-->
+									<!--<span class="input-line" contenteditable style="width: 70%;">-->
+										<!--<span style="margin-top: 0;"></span>-->
+									<!--</span>-->
+								<!--</p>-->
+							</td>
+							<td colspan="3">
+								<p style="position: absolute;"><span class="name">日期Date:</span>
+									<input id="date2" name="date2" class="no-show-border"></p>
+								<!--<p class="text-right" style="line-height: 0;">-->
+									<!--<span class="input-line" contenteditable style="width: 70%;">-->
+										<!--<span style="margin-top: 0;"></span>-->
+									<!--</span>-->
+								<!--</p>-->
+							</td>
+							<td colspan="4" align="center">
+								<p><span class="name">文件编号 File No.:FM-08-01</span></p>
+							</td>
+						</tr>
+					</table>
+					<input id="idCar" name="idCar" class="no-show-border" type="hidden">
+					<input id="idQNcr2" name="idQNcr2" class="no-show-border" type="hidden">
+				</div>
+			</div>
+				<div class="clearfix"></div>
+				<div class="foot-btn-box">
+					<div class="form-group">
+						<button class="btn btn-primary" id="save01">保存</button>
+						<button class="btn  btn-info" type="button" id="return01">返回</button>
+					</div>
+				</div>
+			</form>
+		</main>
+		<!-------------------------------------- 内容结束 -------------------------------------->
+		<!-------------------------------------- 尾部开始 -------------------------------------->
+		<footer>
+			<div class="container1">
+				
+			</div>
+		</footer>
+		<!-------------------------------------- 尾部开始 -------------------------------------->
+	</body>
+<!--</html>-->
+<style>
+
+	.no-show-border{
+		border-left:0px;border-top:0px;border-right:0px;border-bottom:1px;
+	}
+
+</style>
+
+<script type="text/javascript">
+	var jmstoken= store.get('JMS-TOKEN');
+
+	function formatRepo (repo) {
+		if (repo.loading) return repo.text;
+
+		var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+		return markup;
+	}
+
+	function formatRepoSelection (repo) {
+		return repo.name || repo.text;
+	}
+	var carCreate={
+		init:function(){
+			var self = this;
+			var params = this.params = RouterManager.getParams();
+			var action = params['action'];
+			var ncrNo = params['ncrNo'];
+			var idQNcr2 = params['idNcr'];
+			var idCar =  params['idCar'];
+			if(ncrNo){
+				$('#ncrNo').val(ncrNo);
+				$('#idQNcr2').val(idQNcr2);
+			}
+			if(idCar){
+				this.loadDetail(idCar,action);
+			}
+			this.autoFill();
+			this.bindEvents();
+			this.form();
+		},
+		loadDetail:function(idCar,action, callback){
+			var self = this;
+			$.carInfo(idCar,jmstoken,function(data){
+				debugger;
+				$('#carForm').populate(data,true);
+
+				var $response = $('#response');
+				self.fillUser($response,function(){
+					$response.append('<option value="'+data.response+'"></option>');
+					$response.val(data.responseName);
+				});
+				$('#select2-response-container').text(data.responseName);
+
+				var $confirmor = $('#confirmor');
+				self.fillUser($confirmor,function(){
+					$confirmor.append('<option value="'+data.confirmor+'"></option>');
+					$confirmor.val(data.confirmorName);
+				});
+				$('#select2-confirmor-container').text(data.confirmorName);
+
+				if(data.ia == 1){
+					$('#ia').attr('checked',true);
+				}
+				if(data.ea == 1){
+					$('#ea').attr('checked',true);
+				}
+				if(data.quality == 1){
+					$('#quality').attr('checked',true);
+				}
+				if(data.ehs == 1){
+					$('#ehs').attr('checked',true);
+				}
+				if(data.other1 == 1){
+					$('#other1').attr('checked',true);
+				}
+				if(data.man == 1){
+					$('#man').attr('checked',true);
+				}
+				if(data.machine == 1){
+					$('#machine').attr('checked',true);
+				}
+				if(data.material == 1){
+					$('#material').attr('checked',true);
+				}
+				if(data.method == 1){
+					$('#method').attr('checked',true);
+				}
+				if(data.other2 == 1){
+					$('#other2').attr('checked',true);
+				}
+
+				if(data.isDeviation == 5){
+					$('#isDeviation').attr('checked',true);
+					if(data.idDeviation){
+//            $('#deviationNo').html('<a>'+data.deviationNo +'</a>');
+						$('#deviationNo').html('<button type="button" class="btn btn-info" id="deviation">'+ data.deviationNo +'</button>' +
+								'<input id="idDeviation" name="idDeviation" type="hidden" value="'+ data.idDeviation +'">');
+					}
+					else{
+						$('#deviationNo').html('<button type="button" class="btn btn-info" id="createDeviation">新建偏差申请</button>');
+					}
+				}
+
+
+				if(data.concernOrNot == 0){
+					$('#concern0').attr('checked',true);
+					if(data.idNcr){
+//            $('#concernNo').html('<a>'+data.concernNo +'</a>');
+						$('#concernNo').html('<button type="button" class="btn btn-info" id="ncr">'+ data.ncrNo +'</button>' +
+								'<input id="idNcr" name="idNcr" type="hidden" value="'+ data.idNcr +'">');
+					}
+					else{
+						$('#concernNo').html('<button type="button" class="btn btn-info" id="createConcern">新建抱怨单</button>');
+					}
+				}
+				else{
+					$('#concern1').attr('checked',true);
+				}
+
+				self.dealAction(action);
+				callback;
+			});
+		},
+		dealAction:function(action){
+			if(action == 'detail'){
+				$('input,select,textarea', $('#carForm')).prop('readonly', true);
+				$("input:not(:button,:hidden)").prop("disabled", 'disabled');
+				$('select', $('#carForm')).prop("disabled", 'disabled');
+				$('#save01').remove();
+//				$('.clearfix').remove();
+//				$('.foot-btn-box').remove();
+			}
+		},
+		fillUser: function($user,callback) {
+			$user.select2({
+				ajax: {
+					url: $clientURL + 'u/getUsersByQ',
+					dataType: 'json',
+					headers: {'JMS-TOKEN': jmstoken},
+					delay: 200,
+					data: function (params) {
+						return {
+							q: params.term
+						}
+					},
+					processResults: function (data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function (markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 200,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open',function(evt){
+				$('#select2-js-data-example-ajax-container').html('');
+				$('#js-data-example-ajax').empty();
+			});
+			callback && callback();
+		},
+		autoFill:function(){
+			var self = this;
+			self.fillUser($('#response'));
+			self.fillUser($('#confirmor'));
+			var dataPickerOpt = {
+				format: "YYYY-MM-DD"
+			};
+			$('#commitDate1').datetimepicker(dataPickerOpt);
+			$('#commitDate2').datetimepicker(dataPickerOpt);
+			$('#date1').datetimepicker(dataPickerOpt);
+			$('#date2').datetimepicker(dataPickerOpt);
+		},
+		bindEvents(){
+			var self = this;
+			$('#carForm').on('click','#return01',function(){
+				$.get("views/q-carList.html",function(data){
+					RouterManager.setUrl({
+						groupId :'q-noProcessingSheetList',
+						viewId:'q-carList'
+					});
+					$("#body").html(data);
+				});
+			});
+		},
+		form:function(){
+			$('#carForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+//					'idMaterial': {
+//						validators: {
+//							notEmpty: {
+//								message: '零件不能为空'
+//							}
+//						}
+//					}
+				}
+			}).on('success.form.bv', function (e) {
+				e.preventDefault();
+				var $form = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var car = JSON.stringify($('#carForm').serializeJSON());
+				debugger;
+				$.saveCar(car, jmstoken, function (data) {
+					debugger;
+//					$.get("views/q-noProcessingSheetList.html", function (data) {
+//						$("#body").html(data);
+//						RouterManager.setUrl({
+//							groupId:'q-noProcessingSheetList'
+//						});
+//					});
+					history.go(-1);
+				});
+			});
+		}
+	};
+	carCreate.init();
+
+</script>

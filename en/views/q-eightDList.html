@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+        var jmstoken = store.get('JMS-TOKEN');
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.name || repo.text;
+        }
+        function showObj(objid){
+            $(objid).show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+        var noProcessing  = {
+            init:function(){
+                this.bindEvents();
+                this.autoFill();
+            },
+            autoFill:function(){
+                var dataPickerOpt = {
+                    format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                };
+                $('#datetimepicker1').datetimepicker(dataPickerOpt);
+                $('#datetimepicker2').datetimepicker(dataPickerOpt);
+            },
+            nullAlertShow:function(information){
+                var top = $('#body').scrollTop();
+                $('#nullAlert').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                $('#info').empty();
+                $('#info').append(information);
+            },
+            loadTable:function(){
+                var self = this;
+                var data = {};
+
+                var materialId = $('#js-data-example-ajax').val();
+                var fromDay = $('#datetimepicker1').val();
+                var toDay = $('#datetimepicker2').val();
+                if (!fromDay){
+                    self.nullAlertShow('Please input start date！');
+                    return
+                }
+                else if(!toDay) {
+                    self.nullAlertShow('Please input finish date！');
+                    return
+                }
+                else if(!materialId){
+                    self.nullAlertShow('Please choose material！');
+                    return
+                }
+                else{
+                    data.materialId = materialId;
+                    data.from = new Date(fromDay).getTime();
+                    data.to = new Date(toDay).getTime();
+                }
+                debugger;
+                if (this.table) {
+                    this.table.destroy();
+                }
+                this.table = $('#eightDList').DataTable( {
+//      deferRender:  true,
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "q/getQG8dList",
+                        "dataType": "json",
+                        "data":data,
+                        "headers":{'JMS-TOKEN':jmstoken}
+                    },
+                    "columnDefs": [ {
+                        "targets": -1,
+                        "data": null,
+                        "defaultContent": '<button class=button-edit>Edit</button><button class=button-bin>Detail</button><button class=button-delete>Delete</button>'
+                    } ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength:"50"
+                } );
+                $('#eightDList tbody').on( 'click', 'button', function () {
+                    var data = self.table.row( $(this).parents('tr') ).data();
+                    var clazz =$(this).attr('class');
+                    var idQ8d = data[5];
+                    if(clazz=='button-edit'){
+                        $.get("views/q-eightD-create.html",function(data){
+                            RouterManager.setUrl({
+                                groupId :'q-noProcessingSheetList',
+                                viewId:'q-eightD-create',
+                                action:'edit',
+                                idQ8d:idQ8d
+                            });
+                            $("#body").html(data);
+                        });
+                    }
+                    else if(clazz=='button-bin'){
+                        $.get("views/q-eightD-create.html",function(data){
+                            RouterManager.setUrl({
+                                groupId :'q-noProcessingSheetList',
+                                viewId:'q-eightD-create',
+                                action:'detail',
+                                idQ8d:idQ8d
+                            });
+                            $("#body").html(data);
+                        });
+                    }
+                    else{
+                        $.deleteEightD(idQ8d,jmstoken,function(data){
+                            $.get("views/q-carList.html",function(data){
+                                $("#body").html(data);
+                            });
+                        });
+                    }
+                });
+            },
+            bindEvents:function(){
+                var self = this;
+                //选择状态
+                $('#js-data-example-ajax').select2({
+                    ajax: {
+                        url: $clientURL + 's/getMaterialListObjs',
+                        dataType: 'json',
+                        headers:{'JMS-TOKEN':jmstoken},
+                        delay: 200,
+                        data: function(params) {
+                            return {
+                                q: params.term
+                            }
+                        },
+                        processResults: function(data, params) {
+                            return {
+                                results: data,
+                                pagination: null
+                            }
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) { return markup; },
+                    minimumInputLength: 1,
+                    width: 200,
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
+                }).on('select2:open',function(evt){
+                    $('#select2-js-data-example-ajax-container').html('');
+                    $('#js-data-example-ajax').empty();
+                });
+                //	点击新建
+                $('#create').click(function(){
+                    self.loadTable();
+                });
+                var historyOptions={
+                    groupId :'q-noProcessingSheetList'
+                };
+                $('#finalAudit').click(function(){
+                    $.get("views/q-noProcessingSheetList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#deviation01').click(function(){
+                    historyOptions.viewId='q-deviationList';
+                    $.get("views/q-deviationList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#ncr').click(function(){
+                    historyOptions.viewId='q-ncrList';
+                    $.get("views/q-ncrList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                $('#car').click(function(){
+                    historyOptions.viewId='q-carList';
+                    $.get("views/q-carList.html",function(data){
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+            }
+        };
+        noProcessing.init();
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="finalAudit">QRB</span>
+    <span class="h-title" id="deviation01">Deviation Request Form</span>
+    <span class="h-title" id="ncr">Concern Form</span>
+    <span class="h-title-selected"><b>8D</b></span>
+    <span class="h-title" id="car">CAR</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group btn-group-left" id="status-group">
+            <select class="js-data-example-ajax" id="js-data-example-ajax">
+                <option value="">Choose material</option>
+            </select>
+        </div>
+        <div class="btn-group btn-group-left" id="issue">
+            <div class="btn-group btn-group-left">
+                <label>Date：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+            </div>
+        </div>
+        <div class="right-list">
+            <!--<div class="sousuo">-->
+            <!--<div class="ss-input">-->
+            <!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+            <!--</div>-->
+            <!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+            <!--</div>-->
+            <!--<input type="text" id='des' style="width:150px">-->
+            <input type="button" class="button-sytle1" id="create" value="Search">
+        </div>
+    </div>
+    <table id="eightDList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>G8DNo</th>
+            <th>Start date</th>
+            <th>Goods</th>
+            <th>Routine</th>
+            <th>Close date</th>
+            <th>Operation</th><!--编辑、详情-->
+        </tr>
+        </thead>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                        
+                           
+							<fieldset>
+							<legend>出货单详情</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">出货单号</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="doNo" id="doNo"/></label>
+                                </div> 
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">客户</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="codeCo" id="codeCo"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">出货人</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="empDelivery" id="empDelivery"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">出货日期</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="dateDeilivery" id="dateDeilivery"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">物流公司</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="expressCompany" id="expressCompany"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">运单号</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="expressNo" id="expressNo"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>销售单号</th>
+                                            <th>物料编码</th>
+                                            <th>版本</th>
+                                            <th>描述</th>
+                                            <th>单位</th>
+                                            <th>订单数量</th>
+                                            <th>单价</th>
+                                            <th>总价</th>
+                                            <th>交货日期</th>
+                                            <th>已出货数量</th>
+                                            <th>本次出货数量</th>
+                                            <th>出货仓库</th>
+                                            <th>检验状态</th>
+                                        </tr>
+                                    </thead> 
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary" id="return">返回</button>
+                                </div>
+                            </div>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var idDo = $('#_key9').val();
+	$.incomeInfo({"id":idDo},token,function(data){
+		$('#doNo').html(data.doNo);
+		$('#codeCo').html(data.codeCo);
+		$('#empDelivery').html(data.empDelivery);
+		$('#dateDeilivery').html(data.dateDeilivery);
+		$('#expressCompany').html(data.expressCompany);
+		$('#expressNo').html(data.expressNo);
+		
+	});
+	
+	$('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json",
+            "data":idDo
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+	
+	$('return').click(function(){
+	 		$.get("views/doList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    
+    
+
+} );
+</script>
+    
+
+
+

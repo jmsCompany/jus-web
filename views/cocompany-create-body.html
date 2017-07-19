@@ -1,0 +1,446 @@
+<script type="text/template" id="companyCreate">
+	<div class="container-fluid">
+		<div class="row">
+			<section>
+
+				<div class="body-head-title">
+					<span class="h-title" id="po1">采购订单</span>
+					<span class="h-title" id="createPo">新建采购订单</span>
+					<span class="h-title" id="cocoMpany">供应商</span>
+					<span class="h-title-selected" id="createCo"><b>新建供应商</b></span>
+					<span class="h-title" id="importPo">采购订单导入</span>
+					<span class="h-title" id="imporCo">供应商导入</span>
+				</div>
+				<form id="cocompanyForm" method="post" action="index.html" class="form-inline">
+					<div class="form-box">
+						<div class="clearfix"></div>
+						<div class="title-box">
+							<span>基本信息</span>
+						</div>
+						<div class="col-xs-12 mar-top-20px">
+							<div class="form-group">
+								<label for="exampleInputEmail1" class="input-w-160">公司编码</label>
+								<input class="form-control input-w-300"  placeholder="" name="code" id="code">
+								</div>
+							</div>
+							<div class="col-xs-12 mar-top-20px">
+								<div class="form-group">
+									<label for="exampleInputEmail1" class="input-w-160">公司简称</label>
+									<input class="form-control input-w-300"  placeholder="" name="shortName" id="shortName">
+									</div>
+								</div>
+								<div class="col-xs-12 mar-top-20px">
+									<div class="form-group">
+										<label for="exampleInputEmail1" class="input-w-160">公司名称</label>
+										<input class="form-control input-w-300" placeholder="" name="name" id="name">
+										</div>
+									</div>
+									<input type="hidden" id="typeId" name="typeId:number" value="1"/>
+									<!--<div class="col-xs-12 mar-top-20px">-->
+										<!--<div class="form-group">-->
+											<!--<label for="exampleInputEmail1" class="input-w-160">公司类别</label>-->
+											<!--<select  class="input-w-3 select-cs1 form-control" name="typeId:number" id="typeId">-->
+											<!--</select>-->
+										<!--</div>-->
+									<!--</div>-->
+									<div class="col-xs-12 mar-top-20px">
+										<div class="form-group">
+											<label for="exampleInputEmail1" class="input-w-160">重要等级</label>
+											<select  class="input-w-3 select-cs1 form-control" name="lvlId:number" id="lvlId">
+											</select>
+											<!--<select name="公司类别" class="form-control  select-cs1 input-w-300">
+                                                <option value="">公司类别1</option>
+                                            </select>-->
+										</div>
+									</div>
+									<div class="col-xs-12 mar-top-20px">
+										<div class="form-group">
+											<label for="exampleInputEmail1" class="input-w-160">公司电话</label>
+											<input class="form-control input-w-3" placeholder="" name="tel" id="tel">
+											</div>
+											<div class="form-group">
+												<label for="exampleInputEmail1" class="input-w-160">公司传真</label>
+												<input class="form-control input-w-3" placeholder="" name="fax" id="fax">
+												</div>
+											</div>
+											<div class="col-xs-12 mar-top-20px">
+												<div class="form-group">
+													<label for="exampleInputEmail1" class="input-w-160">实际地址</label>
+													<input class="form-control input-w-300" id="addressAct" name="addressAct" placeholder="">
+													</div>
+												</div>
+												<div class="col-xs-12 mar-top-20px">
+													<div class="form-group">
+														<label for="exampleInputEmail1" class="input-w-160">注册地址</label>
+														<input class="form-control input-w-300" id="addressReg" name="addressReg" placeholder="">
+														</div>
+													</div>
+													<div class="col-xs-12 mar-top-20px">
+														<div class="form-group">
+															<label for="exampleInputEmail1" class="input-w-160 ">国家地区</label>
+															<select  class="input-w-3 select-cs1 form-control" name="countryId:number" id="countryId">
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="exampleInputEmail1" class="input-w-160">法人代表</label>
+															<input class="form-control input-w-3" id="artificialPerson" name="artificialPerson" placeholder="">
+															</div>
+														</div>
+														<div class="col-xs-12 mar-top-20px">
+															<div class="form-group">
+																<label for="exampleInputEmail1" class="input-w-160">公司网址</label>
+																<input class="form-control input-w-300" id="url" name="url" placeholder="">
+																</div>
+															</div>
+															<div class="clearfix"></div>
+															<div class="title-box">
+																<span>交易信息</span>
+															</div>
+															<!--
+                                                            <div class="col-xs-12 mar-top-20px">
+                                                                <div class="form-group">
+                                                                    <label for="exampleInputEmail1" class="input-w-160">公司税号</label>
+                                                                    <input class="form-control input-w-300" id="taxNo" name="taxNo" placeholder="">
+                                                                </div>
+                                                            </div>-->
+															<div class="col-xs-12 mar-top-20px">
+																<div class="form-group">
+																	<label for="exampleInputEmail1" class="input-w-160">开户银行</label>
+																	<input class="form-control input-w-300" id="bank" name="bank" placeholder="">
+																	</div>
+																</div>
+																<div class="col-xs-12 mar-top-20px">
+																	<div class="form-group">
+																		<label for="exampleInputEmail1" class="input-w-160">银行账户</label>
+																		<input class="form-control input-w-300" id="bankAccNo" name="bankAccNo" placeholder="">
+																		</div>
+																	</div>
+																	<div class="col-xs-12 mar-top-20px">
+																		<div class="form-group">
+																			<label for="exampleInputEmail1" class="input-w-160">货运贷款</label>
+																			<select  class="input-w-3 select-cs1 form-control" name="freightTermId:number" id="freightTermId">
+																			</select>
+																		</div>
+																	</div>
+																	<div class="col-xs-12 mar-top-20px">
+																		<div class="form-group">
+																			<label for="exampleInputEmail1" class="input-w-160">付款条件</label>
+																			<select  class="input-w-3 select-cs1 form-control" name="paymentTermId:number" id="paymentTermId">
+																			</select>
+																		</div>
+																	</div>
+																	<div class="col-xs-12 mar-top-20px">
+																		<div class="form-group">
+																			<label for="exampleInputEmail1" class="input-w-160">检核人</label>
+																			<input class="form-control input-w-300" id="auditBy" name="auditBy" placeholder="">
+																			</div>
+																		</div>
+																		<div class="col-xs-12 mar-top-20px">
+																			<div class="form-group">
+																				<label for="exampleInputEmail1" class="input-w-160">状态</label>
+																				<input type="radio" name="statusId:number" id="status21" class="radio-w" value="21"/><label for="stateOn">有效</label>
+																				<input type="radio" name="statusId:number" id="status22" class="radio-w" value="22" /><label for="stateOoff">无效</label>
+																			</div>
+																		</div>
+																		<div class="col-xs-12 mar-top-20px">
+																			<div class="form-group">
+																				<label for="exampleInputEmail1" class="input-w-160">备注</label>
+																				<textarea class="form-control input-w-300" rows="3" id="remark" name="remark"></textarea>
+																			</div>
+																		</div>
+																		<div class="col-xs-12 mar-top-20px">
+																			<div class="form-group">
+																				<label for="exampleInputEmail1" class="input-w-160">自动备注</label>
+																				<textarea class="form-control input-w-300" rows="3" id="autoRemark" name="autoRemark"></textarea>
+																			</div>
+																		</div>
+																		<!--<div class="clearfix"></div>
+                                                                        <div class="title-box">
+                                                                            <span>公司认证</span>
+                                                                        </div>
+                                                                        <div class="col-xs-12 mar-top-20px">
+                                                                            <div class="form-group">
+                                                                                <label for="exampleInputEmail1" class="input-w-160">上传附件</label>
+                                                                                <input type="file" class="inherit" id="exampleInputEmail1" name="url" placeholder="">
+                                                                            </div>
+                                                                        </div>-->
+
+																	</div>
+
+																	<div class="clearfix"></div>
+																	<div class="foot-btn-box">
+																		<div class="form-group">
+																			<button type="submit" class="btn btn-primary" id="save">保存</button>
+																			<button type="button" class="btn  btn-info" id="return01">返回</button>
+																		</div>
+																	</div>
+																	<input type="hidden" id="id" name="id:number"/>
+																</form>
+															</section>
+														</div>
+													</div>
+</script>
+<script type="text/javascript">
+	var params = RouterManager.getParams();
+		var app={
+			init:function(){
+				$('#body').html($('#companyCreate').html())
+				this.bindEvents();
+			},
+			bindEvents:function(){
+				var id = params['coCompanyId'];
+				var companyCoTypeId = params['companyCoTypeId'];
+				var groupId = params['groupId'];
+				if(companyCoTypeId == 2){
+					$('#po1').html('销售订单');
+					$('#createPo').html('新建销售订单');
+					$('#cocoMpany').html('客户');
+					$('#createCo').html('<b>新建客户</b>');
+					$('#importPo').remove();
+					$('#imporCo').html('客户导入');
+					$('#typeId').val(2);
+					$('#po1').click(function(){
+						$.get("views/so.html",function(data){
+							RouterManager.setUrl({
+								groupId:'so'
+							});
+							$("#body").html(data);
+						});
+					});
+					$('#createPo').click(function(){
+						$.get("views/so-order.html",function(data){
+							RouterManager.setUrl({
+								groupId:'so',
+								viewId:'so-order'
+							});
+							$("#body").html(data);
+						});
+					});
+				}
+				else{
+					// 采购订单
+					$('#po1').click(function(){
+						$.get("views/po.html",function(data){
+							RouterManager.setUrl({
+								groupId:'po'
+							});
+							$("#body").html(data);
+						});
+					});
+					//	创建采购订单
+					$('#createPo').click(function(){
+						$.get("views/po-order.html",function(data){
+							RouterManager.setUrl({
+								groupId:'po',
+								viewId:'po-order'
+							});
+							$("#body").html(data);
+						});
+					});
+				}
+
+				$('#cocoMpany').click(function(){
+					$.get("views/cocompany.html",function(data){
+						RouterManager.setUrl({
+							groupId:groupId,
+							viewId:'cocompany',
+							companyCoTypeId:companyCoTypeId
+						});
+						$("#body").html(data);
+					});
+				});
+				$('#imporCo').click(function(){
+					$.get("views/co-import.html",function(data){
+						RouterManager.setUrl({
+							groupId:groupId,
+							companyCoTypeId:companyCoTypeId,
+							viewId:'co-import'
+						});
+						$("#body").html(data);
+					});
+				});
+                // 采购订单导入
+                $('#importPo').click(function(){
+                    $.get("views/po-import.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'po-import'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+				$('#typeId').selectautofill('s/companyCoTypes',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+				$('#lvlId').selectautofill('s/companyCoLevels',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+				$('#freightTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'freight'}});
+				$('#paymentTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'payment'}});
+				$('#countryId').selectautofill('s/countries',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+
+
+				var isEdit = params['action']=='edit';
+				$('#id').val(id);
+				var jmstoken= store.get('JMS-TOKEN');
+				if(id!=null){
+
+					$.cocompanyInfo(id,jmstoken,function(data){
+						$('#cocompanyForm').populate(data,true);
+						if(data.status=='有效'){
+							$('#status21').attr('checked',true);
+						}
+						else{
+							$('#status22').attr('checked',true);
+						}
+					});
+					if(!isEdit){
+						$('input,select,textarea').prop('readonly',true);
+						$('select').prop('disabled',true);
+						$('.radio-w').prop('disabled',true);
+						$("input:not(:button,:hidden)").prop("readonly", true);
+						$('#save').hide();
+						if(companyCoTypeId == 1){
+							$('#createCo').html('<b>供应商详情</b>');
+						}
+						else{
+							$('#createCo').html('<b>客户详情</b>');
+						};
+					}
+					else{
+						if(companyCoTypeId == 1){
+							$('#createCo').html('<b>编辑供应商</b>');
+						}
+						else{
+							$('#createCo').html('<b>编辑客户</b>');
+						};
+					}
+				}
+				else{
+					$('#status21').attr('checked',true);
+				}
+
+				$('#cocompanyForm').bootstrapValidator({
+					message: 'This value is not valid',
+					feedbackIcons: {
+						valid: 'glyphicon glyphicon-ok',
+						invalid: 'glyphicon glyphicon-remove',
+						validating: 'glyphicon glyphicon-refresh'
+					},
+					fields: {
+						'code': {
+							validators: {
+								notEmpty: {
+									message: '公司编码不能为空'
+								},
+							}
+						},
+						'shortName': {
+							validators: {
+								notEmpty: {
+									message: '公司简称不能为空'
+								},
+								regexp: {
+									regexp: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母、数字、下划线。'
+								},
+							}
+						},
+						'name': {
+							validators: {
+								notEmpty: {
+									message: '公司名称不能为空'
+								},
+								regexp: {
+									regexp: /^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母、数字、下划线。'
+								},
+							}
+						},
+                    	'tel': {
+                        	validators: {
+                            	phone: {
+                                	message: '电话号码不合法',
+                                	country: 'CN'
+                            	}
+                        	}
+                    	},
+						'fax': {
+							validators: {
+								digits: {
+									message: '传真不合法'
+								}
+							}
+						},
+						'bankAccNo': {
+							validators: {
+								digits: {
+									message: '银行帐号不合法'
+								}
+							}
+						},
+						'addressAct': {
+							validators: {
+								regexp: {
+									regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母、数字、下划线。'
+								},
+							}
+						},
+						'addressReg': {
+							validators: {
+								regexp: {
+									regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母、数字、下划线。'
+								},
+							}
+						},
+						'artificialPerson': {
+							validators: {
+								regexp: {
+									regexp: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母。'
+								},
+							}
+						},
+						'bank': {
+							validators: {
+								regexp: {
+									regexp: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母、数字、下划线。'
+								},
+							}
+						},
+						'auditBy': {
+							validators: {
+								regexp: {
+									regexp: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+									message: '只能是中文、字母。'
+								},
+							}
+						},
+					}
+				}).on('success.form.bv', function(e) {
+					e.preventDefault();
+					var $form     = $(e.target),
+							validator = $form.data('bootstrapValidator');
+					var cocompany =JSON.stringify($('#cocompanyForm').serializeJSON());
+					var jmstoken= store.get('JMS-TOKEN');
+					$.saveCocompany(cocompany,jmstoken,function(data){
+//						$.get("views/cocompany.html",function(data){
+//							$("#body").html(data);
+//						});
+						history.go(-1);
+					});
+				});
+
+				$('#return01').click(function(){
+					history.go(-1);
+//					$.get("views/cocompany.html",function(data){
+//						$("#body").html(data);
+//					});
+				});
+
+			}
+		};
+		app.init();
+//	}
+</script>

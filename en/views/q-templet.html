@@ -1,0 +1,239 @@
+<script type="text/html" id="qTemplate">
+    <div class="container-fluid" id="container-routine">
+        <div id="dropzone-template-container" style="display: none;">
+            <div class="dz-preview dz-file-preview">
+                <div class="dz-details">
+                    <div class="dz-filename"><span data-dz-name></span><span data-dz-remove title="Delete">✘</span><span data-dz-size></span></div>
+                </div>
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                <div class="dz-success-mark"><span>✔</span></div>
+                <div class="dz-error-mark"><span>✘</span></div>
+                <div class="dz-error-message"><span data-dz-errormessage></span></div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title" id="list01">QEHS</span>
+                    <span class="h-title" id="qm01">Create File</span>
+                    <span class="h-title-selected"><b>File Template</b></span>
+                </div>
+
+                <div class="cont">
+                <form id="qmForm" method="post" action="index.html" class="form-inline">
+                    <table class="pwoDetail" id="temTable" cellspacing="0" width="100%">
+                    </table>
+
+
+                    <input type="hidden" id="idFile" name="idFile" />
+                    <input type="hidden" name="fileName" id="fileName" />
+
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="save">Save</button>
+                            <button class="btn  btn-info" type="button" id="return01">Return</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    function count(o){
+        var t = typeof o;
+        if(t == 'string'){
+            return o.length;
+        }else if(t == 'object'){
+            var n = 0;
+            for(var i in o){
+                n++;
+            }
+            return n;
+        }
+        return false;
+    }
+    var app={
+        init:function(){
+            var self = this;
+
+            $('#body').html($('#qTemplate').html());
+            this.bindEvents();
+            this.form();
+            setTimeout(function(){
+                // 多选
+                $('body .multipleSelect').multiselect({
+                    buttonWidth: '65px'
+                });
+            },200);
+            this.loadDetail()
+        },
+        loadDetail: function(callback) {
+            var self = this;
+            $.temList(jmstoken, function(data){
+                if(count(data)>0){
+                    _(data).each(function(item) {
+                        if(!item.filename){
+                            $('#temTable').append('<th>'+item.fileType+'</th><td><div class="col-xs-3">' +
+                                    '<div class="a-upload bg-img dropzone" id="drawId">Upload Attachment</div></div></td>');
+                        }
+                        else{
+                            var uri = $clientURL+'getFile/'+data['fileName']+'/'+data['fileName']+'/';
+                            $('#temTable').append('<th>'+item.fileType+'</th><td><div class="dz-preview dz-file-preview dz-processing dz-success dz-complete">' +
+                                    '<div class="dz-details"><div class="dz-filename"><span data-dz-name=""><a href="' + uri + '">' + data['fileName'] + '</a></span><span data-dz-size=""><strong>59</strong> b</span></div></div></div></td>');
+                        }
+                    });
+                }
+
+
+                self.dealAction('');
+                callback && callback();
+            });
+        },
+        dealAction: function(action) {
+            var self = this;
+            if(action == 'detail') {
+                $("input:not(:button, :hidden)").prop("disabled", true);
+                $("select").prop("disabled", true);
+                $('#save').hide();
+            }
+        },
+        bindEvents:function(){
+            var self = this;
+            var frameContainer = $('#container-routine');
+            frameContainer.on('focus', 'input, select, textarea', function(e) {
+                $(this).removeClass('error');
+                $('#save').removeAttr('disabled');
+            });
+
+            frameContainer.on('change','#idWo',function(){
+                var idWo = $('#idWo').val();
+                $('#idMaterial').empty();
+                $('#idRoutineD').empty();
+                if(idWo){
+                    $('#idMaterial').selectautofill('p/getMaterialByWoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'woId':idWo}});
+                    $("#idRoutineD").selectautofill('p/findRoutineDObjsByWoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'woId':idWo}},function(){
+                        $('#idRoutineD').append('<option value="">Other</option>');
+                    });
+                }
+                else{
+                    $('#idMaterial').append('<option value="">Goods/NO.</option>');
+                }
+            });
+
+            var historyParams={
+                groupId:'q-inProcessingList'
+            };
+
+            //出货管理
+            $("#list01").click(function(){
+                $.get("views/q-inProcessingList.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $("#qm01").click(function(){
+                $.get("views/q-qm-body.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'q-inProcessingList',
+                        viewId:'q-qm-body'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            $("#return01").click(function(){
+                history.go(-1);
+            });
+
+
+            $("#templet").click(function(){
+                $.get("views/q-templet.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'q-inProcessingList',
+                        viewId:'q-templet'
+                    });
+                    $("#body").html(data);
+                });
+            });
+            var uploadImageUrl = 'q/uploadQFile';
+            jmstoken = store.get('JMS-TOKEN');
+
+            //上传图片
+            if(self.params&&self.params.action != 'detail') {
+                $('.dropzone').dropzone({
+                    previewTemplate: document.querySelector('#dropzone-template-container').innerHTML,
+                    url: $clientURL+uploadImageUrl,
+                    headers: {'JMS-TOKEN':jmstoken},
+                    maxFiles: 1,
+                    maxFilesize: 10,
+                    dictDefaultMessage:"",
+                    init:function(){
+                        var that = this;
+                        this.on('success',function(file,res){
+                            console.log('Upload picture success');
+                            $('#fileName').val(res.fileName);
+                        });
+                        this.on('removedfile',function(){
+                            console.log('Upload picture failed');
+                        });
+                    }
+                });
+            }
+
+        },
+        form:function(){
+            var self = this;
+            $('#qmForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+//                    'materialId:number': {
+//                        validators: {
+//                            notEmpty: {
+//                                message: '物料不能为空'
+//                            }
+//                        }
+//                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var qm =JSON.stringify($('#qmForm').serializeJSON());
+                debugger;
+//                var jmstoken= store.get('JMS-TOKEN');
+                qm.creationTime = new Date(qm.creationTime).getTime();
+                $.saveQm(qm,jmstoken,function(data){
+                    debugger;
+                    history.go(-1);
+//                    $.get("views/p-routineList.html",function(data){
+//                        $("#body").html(data);
+//                    });
+                });
+            });
+        }
+    };
+    app.init();
+
+</script>

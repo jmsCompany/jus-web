@@ -1,0 +1,433 @@
+<script type="text/template" id="mtfList01">
+<div class="body-head-title">
+    <span class="h-title-selected"><b>MTF querying</b></span>
+    <!--<span class="h-title" id="kanban">看板信息</span>-->
+    <span class="h-title" id="woMtf">WO Transfer</span>
+    <span class="h-title" id="create">Manually create</span>
+    <span class="h-title" id="issueList">Store issue</span>
+    <span class="h-title" id="mtfDetail">Logistics detail</span>
+</div>
+<div class="cont">
+
+    <div class="r-header-body">
+        <!--<div class="btn-group-left link-title">
+             <span id=""><a href="#">全部</a></span>
+             <span id=""><a href="#">发起</a></span>
+             <span id=""><a href="#">接收</a></span>
+            <span id=""><a href="#">作废</a></span>
+        </div>-->
+        <div class="btn-group btn-group-left" id="type-group">
+            <select name="none" id="type-select" style="display: none;"></select>
+            <button class="btn btn-default" type="button" style="" id="mtfType">Type</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle type01" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">Type</span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>
+        <div class="btn-group btn-group-left" id="issue">
+            <div class="btn-group btn-group-left">
+                <label>Date：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+            </div>
+        </div>
+        <div class="btn-group btn-group-left" id="fromStk-group">
+            <select name="none" id="fromStk-select" style="display: none;"></select>
+            <button class="btn btn-default" type="button" style="" id="fromStk">From stock</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle fromStk01" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">From stock</span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>
+        <div class="btn-group btn-group-left" id="toStk-group">
+            <select name="none" id="toStk-select" style="display: none;"></select>
+            <button class="btn btn-default" type="button" style="" id="toStk">To stock</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle toStk01" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">To stock</span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>
+        <div class="right-list">
+            <input type="text" id='q'>
+            <button id="search" class="button-sytle1">Search</button>
+            <button id="print01" class="button-sytle1">Print</button>
+        </div>
+        <!--<div class="right-list">-->
+            <!--<select class="js-data-example-ajax" id="js-data-example-ajax">-->
+                <!--<option value="">选择物料</option>-->
+            <!--</select>-->
+        <!--</div>-->
+    </div>
+    <table id="tableMtf" class="display" cellspacing="0" width="100%">
+        <style>
+            @media print {
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+
+                td {
+                    border: 1px solid #000;
+                    text-align: center;
+                }
+            }
+        </style>
+        <thead>
+        <tr>
+            <th>MTF No.</th>
+            <th>Type</th>
+            <th>Material</th>
+            <th>Lot No.</th>
+            <th>From bin</th>
+            <th>To bin</th>
+            <th>Quantity</th>
+            <th>Initiator</th>
+            <th>Creation time</th>
+            <th>Operation</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/javascript">
+    var jmstoken = store.get('JMS-TOKEN');
+    $('#body').html($('#mtfList01').html());
+    //弹窗
+    function showObj(objid){
+        $(objid).show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    $(function () {
+        $('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
+        $('#datetimepicker2').datetimepicker({format:"YYYY-MM-DD"});
+    });
+//    function hideCol(colIndex) {
+//        $("table tr").each(function () {
+//            $(this).find("td:eq("+colIndex+")").hide();
+//        });
+//        $("table tr th:eq("+colIndex+")").hide();
+//    }
+  var mtf= {
+      init: function () {
+          var jmstoken = store.get('JMS-TOKEN');
+          this.bindEvens();
+      },
+      loadTable: function () {
+          var self = this;
+          var data = {};
+          if ($('#mtfType').html() == 'Type'){
+              data.typeId = null;
+          }
+          else{
+              var typeId = $('#type-select').val();
+              data.typeId = typeId;
+          }
+          var fromDay = $('#datetimepicker1').val();
+          if (fromDay) {
+              data.fromDay = fromDay;
+          }
+          var toDay = $('#datetimepicker2').val();
+          if (toDay) {
+              data.toDay = toDay;
+          }
+          if ($('#fromStk').html() == 'From stock'){
+              data.fromStkId = null;
+          }
+          else{
+              var fromStkId = $('#fromStk-select').val();
+              data.fromStkId = fromStkId;
+          }
+          if ($('#toStk').html() == 'To stock'){
+              data.toStkId = null;
+          }
+          else{
+              var toStkId = $('#toStk-select').val();
+              data.toStkId = toStkId;
+          }
+          var q = $('#q').val();
+          if (q) {
+              data.q = q;
+          }
+          if (this.table) {
+              this.table.destroy();
+          }
+          if(typeId == 7){
+              this.table = $('#tableMtf').DataTable({
+                  "processing": true,
+                  "serverSide": true,
+                  "stateSave": true,
+                  "stateDuration": -1,
+                  "ajax": {
+                      "type": 'POST',
+                      "url": $clientURL + "s/getSmtfMaterialList",
+                      "dataType": "json",
+                      "headers": {'JMS-TOKEN': jmstoken},
+                      "data": data
+                  },
+                  "language": {
+                      "url": "js/datatable/chinese.json"
+                  },
+                  "aoColumns": [ null,null,null,null,null,null,null,null,null,{"bSearchable": false,"bVisible":false}],
+                  dom: "tip",
+                  pageLength: "50"
+              });
+          }else{
+         this.table = $('#tableMtf').DataTable({
+              "processing": true,
+              "serverSide": true,
+             "stateSave": true,
+             "stateDuration": -1,
+              "ajax": {
+                  "type": 'POST',
+                  "url": $clientURL + "s/getSmtfMaterialList",
+                  "dataType": "json",
+                  "headers": {'JMS-TOKEN': jmstoken},
+                  "data": data
+              },
+              "columnDefs": [{
+                  "targets": -1,
+                  "data": null,
+                  "defaultContent": '<button class=button-sytle1>Detail</button>'
+              } ],
+              "language": {
+                  "url": "js/datatable/chinese.json"
+              },
+
+              dom: "tip",
+              pageLength: "50"
+          });
+          };
+          $('#tableMtf').on('xhr.dt', function (e, settings, json, xhr) {
+              if (json.jmsError) {
+                  var top = $('#body').scrollTop();
+                  $('#nullAlert').css({
+                      top: $(window).height() * 0.2 + top
+                  }).show();
+                  $('#info').empty();
+                  $('#info').append(json.jmsError);
+//                  alert(json.jmsError)
+              }
+          });
+//          $('#tableMtf').on( 'draw.dt', function (e, setting) {
+//              $.each(setting.aoData, function(i, v) {
+//                  if($('#mtfType').html() == '发料') {
+//                      $(v.anCells[10]).find('.button-sytle1').remove();
+//                  }
+//              });
+//          } );
+//          if($('#mtfType').html() == '发料') {
+//              $("table tr").each(function () {
+//                  debugger;
+//                  $(this).find("td:eq(10)").Visible=false;
+//              });
+//              $("table tr th:eq(10)").hide();
+//          }
+          $('#tableMtf tbody').on( 'click', 'button', function () {
+              var rowData = self.table.row( $(this).parents('tr') ).data();
+              var historyOptions = {
+                  groupId:'mtfList',
+                  action:'detail'
+              };
+              var type =rowData[1];
+              //手动完成
+              var actions={
+                  '来料清单':function(){
+                      historyOptions.viewId='incomeList-create-body';
+                      historyOptions.incomeId=rowData[9];
+                      $.get("views/incomeList-create-body.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  },
+                  '采购退货':function(){
+                      historyOptions.viewId='mrb-body';
+                      historyOptions.mrbId=rowData[9];
+                      $.get("views/mrb-body.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  },
+                  '手动流转':function(){
+                      historyOptions.viewId='mtfList-body';
+                      historyOptions.mtfId=rowData[9];
+                      $.get("views/mtfList-body.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  },
+                  '工单流转':function(){
+                      historyOptions.viewId='s-wo-mtf';
+                      historyOptions.mtfId=rowData[9];
+                      $.get("views/s-wo-mtf.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  },
+                  '出货':function(){
+                      historyOptions.viewId='doList-create-body';
+                      historyOptions.doListId=rowData[9];
+                      $.get("views/doList-create-body.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  },
+                  '销售退货':function(){
+                      historyOptions.viewId='rma-body';
+                      historyOptions.rmaId=rowData[9];
+                      $.get("views/rma-body.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  },
+                  '检验入库':function(){
+                      historyOptions.viewId='incomeList-checked-body';
+                      historyOptions.incomeId=rowData[9];
+                      $.get("views/incomeList-checked-body.html",function(data){
+                          RouterManager.setUrl(historyOptions);
+                          $("#body").html(data);
+                      });
+                  }
+              };
+              actions[type]();
+          });
+      },
+      bindEvens: function () {
+          var self = this;
+          $("#q").keydown(function() {
+              if (event.keyCode == "13") {//keyCode=13是回车键
+                  self.loadTable();
+              }
+          });
+//        打印
+            $("#print01").on('click',function(){
+                $("#tableMtf_wrapper").printArea();
+            });
+          //类别下拉框
+          $('#type-select').selectautofill('s/getMtfTypes', {headers: {'JMS-TOKEN': jmstoken}, data: {'statusId': 27}}, function (data) {
+              var routeParams = RouterManager.getParams();
+              var typeId = routeParams.typeId;
+              var _html = '';
+              _(data).each(function (d, i) {
+                  _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                  if(typeId == d.id){
+                      $('#type-select').val(parseInt(typeId));
+                      $('#mtfType').html(d.name);
+                      self.loadTable();
+                  }
+              });
+              $('#type-group').find('.dropdown-menu').append(_html);
+          });
+          $('.type01').on('click',function(e){
+              $('#mtfType').html('Type');
+          });
+          $('#type-group').on('click', 'li a', function (e) {
+              var $t = $(this);
+              var id = $t.data('id');
+              $('#type-select').val(parseInt(id));
+              $('#mtfType').html($t.text());
+          });
+          //从仓库下拉框
+          $('#fromStk-select').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}}, function (data) {
+              var _html = '';
+              _(data).each(function (d, i) {
+                  _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+              });
+              $('#fromStk-group').find('.dropdown-menu').append(_html);
+          });
+          $('.fromStk01').on('click',function(e){
+              $('#fromStk').html('From stock');
+          });
+          $('#fromStk-group').on('click', 'li a', function (e) {
+              var $t = $(this);
+              var id = $t.data('id');
+              $('#fromStk-select').val(parseInt(id));
+              $('#fromStk').html($t.text());
+          });
+          //到仓库下拉框
+          $('#toStk-select').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}}, function (data) {
+              var _html = '';
+              _(data).each(function (d, i) {
+                  _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+              });
+              $('#toStk-group').find('.dropdown-menu').append(_html);
+          });
+          $('.toStk01').on('click',function(e){
+              $('#toStk').html('To stock');
+          });
+          $('#toStk-group').on('click', 'li a', function (e) {
+              var $t = $(this);
+              var id = $t.data('id');
+              $('#toStk-select').val(parseInt(id));
+              $('#toStk').html($t.text());
+          });
+
+          $('#search').on('click',function(){
+              self.loadTable();
+          });
+
+          var historyOptions = {
+              groupId: 'mtfList'
+          };
+          // 看板信息
+//
+          //工单流转$('#kanban').click(function () {
+//              $.get("views/p-kanban.html", function (data) {
+//                  historyOptions.viewId = 'p-kanban';
+//                  RouterManager.setUrl(historyOptions);
+//                  $("#body").html(data);
+//              });
+//          });
+          $('#woMtf').click(function () {
+              $.get("views/s-wo-mtf.html", function (data) {
+                  historyOptions.viewId = 's-wo-mtf';
+                  RouterManager.setUrl(historyOptions);
+                  $("#body").html(data);
+              });
+          });
+          // 手动创建
+          $('#create').click(function () {
+              $.get("views/mtfList-body.html", function (data) {
+                  historyOptions.viewId = 'mtfList-body';
+                  RouterManager.setUrl(historyOptions);
+                  $("#body").html(data);
+              });
+          });
+          // 发料清单
+          $('#issueList').click(function () {
+              $.get("views/s-issueList.html", function (data) {
+                  historyOptions.viewId = 's-issueList';
+                  RouterManager.setUrl(historyOptions);
+                  $("#body").html(data);
+              });
+          });
+          // 物流详情
+          $('#mtfDetail').click(function () {
+              $.get("views/s-mtfDetailList.html", function (data) {
+                  historyOptions.viewId = 's-mtfDetailList';
+                  RouterManager.setUrl(historyOptions);
+                  $("#body").html(data);
+              });
+          });
+      }
+  };
+    mtf.init();
+</script>
+
+

@@ -1,0 +1,342 @@
+<!--主模板-->
+<script type="text/template" id="mainContent">
+    <div class="body-head-title">
+        <span class="h-title-selected"><b>往来公司列表</b></span>
+    </div>
+    <div class="cont">
+        <div class="r-header-body">
+
+            <div class="right-list">
+                <input type="text" id='q' placeholder="">
+                <button id="search" class="button-sytle1">查询</button>
+                <button id="create" class="button-sytle1">新建</button>
+            </div>
+        </div> <!--检索结束-->
+
+        <table id="table-materialList" class="display" cellspacing="0" cellpadding="0" width="100%">
+            <thead>
+            <tr>
+                <th>公司名</th>
+                <th>用户名</th>
+                <th>手机号</th>
+                <th>邮箱</th>
+                <th>公司类型</th>
+                <th>公司规模</th>
+                <th>容量</th>
+                <th>有效期</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="mainer" >
+                <div class="pt_lbox gt backend none" id="register">
+                    <!--<p><img src="../images/login/logo-in.png" alt=""></p>-->
+                    <div class="ht55"></div>
+                    <div class="lbox br5 ">
+                        <form id="regForm" method="post" action="index.html" class="form-horizontal">
+                            <div class="alert alert-success" style="display: none;"></div>
+                            <div class=" alert-error error-box" style="display: none;"></div>
+                            <div class="ht25"></div>
+                            <div class="hd"><p>注册账号</p></div>
+                            <div class="ht15"></div>
+                            <div class="ct row">
+                                <div class="pt_frma font-12px ">
+                                    <div class="p">
+                                        <div class="input  form-group  ">
+                                            <input type="text" value="" placeholder="公司名" name="companyName" class="input-css" >
+                                        </div>
+
+                                    </div>
+                                    <div class="p">
+                                        <div class="input  form-group">
+                                            <input type="text" value="" placeholder="用户名" name="wsUsers[username]" class="input-css">
+                                        </div>
+
+                                    </div>
+                                    <div class="p">
+                                        <div class="input  form-group">
+                                            <input type="text" value="" placeholder="手机号" name="wsUsers[mobile]" class="input-css">
+                                        </div>
+
+                                    </div>
+                                    <div class="p">
+                                        <div class="input  form-group">
+                                            <input type="text" value="" placeholder="邮箱" name="wsUsers[email]" class="input-css">
+                                        </div>
+
+                                    </div>
+                                    <div class="p">
+
+                                        <div class="form-group input  input ">
+
+                                            <input type="password" placeholder="密码" name="wsUsers[password]" class="input-css">
+
+                                        </div>
+                                        <div class="form-group input ">
+
+                                            <input type="password" placeholder="确认密码" name="confirmPassword:skip" class="input-css">
+
+                                        </div>
+                                    </div>
+                                    <div class="ht15" style="border-bottom: 1px solid #dfdfdf;"></div>
+                                    <div class="ht15"></div>
+                                    <div class="p">
+                                        <div class="form-group  select-div">
+                                            <select class="" name="companyType[idDic]:number" id="CompanyType">
+                                                <!--<option value="">公司规模</option>-->
+                                            </select>
+                                        </div>
+                                        <div class="form-group select-div " id="companySizeDiv" >
+                                            <select class="" style="padding: 0px;" name="companySize[idDic]:number" id="companySize">
+                                                <!--<option value="">所属行业</option>-->
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="ht15"></div>
+                                    <div class="p">
+                                        <button type="submit" class="btn-reg">注册</button>
+                                    </div>
+                                    <div class="ht15"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="ht35"></div>
+                    <div class="height50"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var flag=0;
+    var jmstoken = store.get('JMS-TOKEN');
+    function showObj(objid){
+        $(objid).show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+        flag=0;
+    }
+
+    var app={
+        init:function(){
+            $("#body").html($('#mainContent').html());
+            this.bindEvents();
+        },
+        nullAlertShow:function(information){
+            var top = $('#body').scrollTop();
+            $('#nullAlert').css({
+                top: $(window).height() * 0.2 + top
+            }).show();
+            $('#info').empty();
+            $('#info').append(information);
+        },
+        loadTable: function() {
+            var self = this;
+            var data = {};
+//            if ($('#handle-bar').html() == '大类'){
+//                data.materialTypeId = null;
+//            }
+//            else{
+//                var materialTypeId = $('#type-select').val();
+//                data.materialTypeId = materialTypeId;
+//            }
+            var q = $('#q').val();
+            if (q) {
+                data.q = q;
+            }
+            if(this.table) {
+                this.table.destroy();
+            }
+            this.table=$('#table-materialList').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "s/materialList",
+                    "dataType": "json",
+                    "headers":{'JMS-TOKEN':jmstoken},
+                    data: data,
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-bin>编辑</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+
+            $('#table-materialList tbody').on( 'click', 'button', function () {
+                if(!flag){
+                    flag=1;
+                    var rowData = self.table.row( $(this).parents('tr') ).data();
+                    var clazz =$(this).attr('class');
+                    if(clazz=='button-bin'){
+                        $.get("views/materialList-create-body.html",function(data){
+                            RouterManager.setUrl({
+                                groupId:'materialList',
+                                viewId:'materialList-create-body',
+                                materialIndex:rowData[7],// data[7]为数据库主键，即可标示数据
+                                action:'edit'
+                            });
+                            $("#body").html(data);
+                        });
+
+                    }
+                    else if(clazz=='button-edit'){
+                        $.get("views/materialList-create-body.html",function(data){
+                            RouterManager.setUrl({
+                                groupId:'materialList',
+                                viewId:'materialList-create-body',
+                                materialIndex:rowData[7],
+                                action:'detail'
+                            });
+                            $("#body").html(data);
+                        });
+                    }
+                    else {
+                        $.deleteMaterial(rowData[7],jmstoken,function(data){
+                            if(data.valid == false){
+                                var information = '此物料已被使用，不能删除！！';
+                                self.nullAlertShow(information);
+                                //                                showObj('.tcbox');
+                                //                                var top = $('#body').scrollTop();
+                                //                                $('.tcbox').css({
+                                //                                    top: $(window).height() * 0.2 + top
+                                //                                }).show();
+                            }
+                            else{
+                                $.get("views/materialList.html",function(data){
+                                    $("#body").html(data);
+                                });
+                            }
+                        });
+                    }
+                }
+                else{
+                    return false;
+                }
+            } );
+        },
+        bindEvents:function(){
+            var self = this;
+
+            $("#q").keydown(function() {
+                if (event.keyCode == "13") {//keyCode=13是回车键
+                    self.loadTable();
+                }
+            });
+            $('#type-select').selectautofill('s/materialTypes',{headers:{'JMS-TOKEN':jmstoken}}, function(data) {
+                var routeParams = RouterManager.getParams();
+                var typeId = routeParams.typeId;
+                var _html = '';
+                _(data).each(function(d, i) {
+                    _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                    if(typeId == d.id){
+                        $('#type-select').val(parseInt(typeId));
+                        $('#handle-bar').html(d.name);
+                        self.loadTable();
+                    }
+                });
+                $('#type-group').find('.dropdown-menu').append(_html);
+            });
+            $('.dropdown-toggle').on('click',function(e){
+                $('#handle-bar').html('大类');
+            });
+            /*   $('#js-data-example-ajax').select2({
+             ajax: {
+             url: $clientURL + 's/getMaterialListObjs',
+             dataType: 'json',
+             headers: {'JMS-TOKEN': jmstoken},
+             delay: 200,
+             data: function (params) {
+             return {
+             q: params.term
+             }
+             },
+             processResults: function (data, params) {
+             return {
+             results: data,
+             pagination: null
+             }
+             },
+             cache: true
+             },
+             escapeMarkup: function (markup) {
+             return markup;
+             },
+             minimumInputLength: 1,
+             width: 200,
+             templateResult: formatRepo,
+             templateSelection: formatRepoSelection
+             }).on('select2:open',function(evt){
+             $('#select2-js-data-example-ajax-container').html('');
+             $('#js-data-example-ajax').empty();
+             });
+             $('.js-data-example-ajax').on('change', self.loadTable.bind(self));*/
+            $('#type-group').on('click', 'li a', function(e) {
+                var $t = $(this);
+                var id = $t.data('id');
+                $('#type-select').val(parseInt(id));
+                $('#handle-bar').html($t.text());
+                self.loadTable();
+                RouterManager.setUrl({
+                    groupId:'materialList',
+                    typeId:id
+                });
+            });
+
+            $('#search').on('click',function(){
+                self.loadTable();
+            });
+
+            //新建物料
+            $('#wul1').click(function(){
+                $.get("views/materialList-create-body.html",function(data){
+                    $("#body").html(data);
+                    RouterManager.setUrl({
+                        groupId:'materialList',
+                        viewId:'materialList-create-body',
+                        action:'createMaterial'
+                    });
+                });
+            });
+            //导入物料
+            $('#importMat').click(function(){
+                $.get("views/mat-import.html",function(data){
+                    $("#body").html(data);
+                    RouterManager.setUrl({
+                        groupId:'materialList',
+                        viewId:'mat-import'
+                    });
+                });
+            });
+            //测试
+            $('#cost').click(function(){
+                $.get("views/sys-cost-center.html",function(data){
+                    $("#body").html(data);
+                    RouterManager.setUrl({
+                        groupId:'sys-cost-center',
+                        type:'list'
+                    });
+                });
+            });
+        }
+    };
+    app.init();
+</script>

@@ -1,0 +1,98 @@
+<form id="paForm" method="post" action="index.html" class="form-horizontal">
+	
+	<table id="tableCppList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>工单号</th>
+                <th>工艺</th>
+                <th>产品</th> 
+                <th>版本</th>
+                <th>计划开始时间</th>
+                <th>计划结束时间</th>
+                <th>计划数量</th>
+                <th>操作</th>  
+                <!--详细-->
+                <!--	
+                	<th>计划检查时间</th>
+                	<th>计划检查数量</th> 
+                	<th>检查时间</th>
+                	<th>完成数</th>
+                	<th>应完成数</th>
+                	<th>差异</th>
+                	<th>操作</th>  <编辑、保存>-->
+            </tr>
+        </thead>
+	</table>
+</form>
+
+
+<script type="text/javascript">
+var jmstoken= store.get('JMS-TOKEN');
+$(document).ready(function() {
+	
+	var idSpp = $('#_key12').val();
+    $('#tableCppList').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://192.168.30.107:9999/jms/s/materialList",
+            "dataType": "json",
+            "data":idSpp
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        //dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+	$('#paForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'checkTime': {
+                    	notEmpty: {
+                        	message: '检查时间不能为空'
+                    	}
+                	},
+            	'finQty': {
+                    	notEmpty: {
+                        	message: '检查数量不能为空'
+                    	}
+                	}
+            	}
+            }
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var pa =JSON.stringify($('#paForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createPa(pa,jmstoken,function(data){
+			      	$.get("views/p-paList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   	});
+		$('cancel').click(function(){
+	 		$.get("views/p-paList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+
+
+
+
+	

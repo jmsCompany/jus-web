@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>计划发料</title>
+    <script type="text/template" id="matIssueItem">
+        <tr id="item<%= item %>">
+            <td><%= data.woNo %></td>
+            <td><%= data.production %></td>
+            <td><%= data.plannedQty %></td>
+            <td><%= data.plannedSt %></td>
+            <td><%= data.shiftD %></td>
+            <td><%= data.machine %></td>
+            <td><%= data.wip %></td>
+            <td><%= data.material %></td>
+            <td><%= data.lotNo %></td>
+            <td><%= data.bin %></td>
+            <td class="i"><%= data.qtyStored %></td>
+            <td><%= data.shouldQty %></td>
+            <td class="j"><%= data.qtyDelivered %></td>
+            <td>
+                <input style="width:65px" type="text" class="a" name="smtfItems[item<%= item %>][qty]" id="smtfItems.item<%= item %>.qty" value="<%= data.qty %>"/>
+            </td>
+            <input type="hidden" class="b" name="smtfItems[item<%= item %>][pwoBomId]" id="smtfItems.item<%= item %>.pwoBomId" value="<%= data.bomId %>"/>
+            <input type="hidden" class="c" name="smtfItems[item<%= item %>][cppId]" id="smtfItems.item<%= item %>.cppId" value="<%= data.cppId %>"/>
+            <input type="hidden" class="d" name="smtfItems[item<%= item %>][inventoryId]" id="smtfItems.item<%= item %>.inventoryId" value="<%= data.invId %>"/>
+            <input type="hidden" class="e" name="smtfItems[item<%= item %>][fromBinId]" id="smtfItems.item<%= item %>.fromBinId" value="<%= data.fromBinId %>"/>
+            <input type="hidden" class="f" name="smtfItems[item<%= item %>][toBinId]" id="smtfItems.item<%= item %>.toBinId" value="<%= data.toBinId %>"/>
+            <input type="hidden" class="g" name="smtfItems[item<%= item %>][lotNo]" id="smtfItems.item<%= item %>.lotNo" value="<%= data.lotNo %>"/>
+            <input type="hidden" class="h" name="smtfItems[item<%= item %>][materialId]" id="smtfItems.item<%= item %>.materialId" value="<%= data.idMaterial %>"/>
+            <input type="hidden" class="qtyInv" value="<%= data.qtyStored %>"/>
+            <input type="hidden" class="qtyDer" value="<%= data.qtyDelivered %>"/>
+        </tr>
+    </script>
+    <script type="text/javascript">
+        var jmstoken= store.get('JMS-TOKEN');
+        //弹窗
+        function showObj(objid){
+            $(objid).show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+        function count(o){
+            var t = typeof o;
+            if(t == 'string'){
+                return o.length;
+            }else if(t == 'object'){
+                var n = 0;
+                for(var i in o){
+                    n++;
+                }
+                return n;
+            }
+            return false;
+        }
+//        $(function () {
+//            $('#datetimepicker1').datetimepicker({
+//                format:"YYYY-MM-DD"
+//            });
+//            $('#datetimepicker2').datetimepicker({
+//                format:"YYYY-MM-DD"
+//            });
+//        });
+        var issueDetail={
+            init:function(){
+                var self = this;
+                this.matIssueItem = _.template($('#matIssueItem').html());
+                var params = this.params = RouterManager.getParams();
+                var action = params['action'];
+                this.bindEvents();
+                this.$issueList = $('#issueList');
+                this.form();
+                this.autoFill();
+//                this.loadTable();
+            },
+            nullAlertShow:function(information){
+                var top = $('#body').scrollTop();
+                $('#nullAlert').css({
+                    top: $(window).height() * 0.2 + top
+                }).show();
+                $('#info').empty();
+                $('#info').append(information);
+            },
+            autoFill:function(){
+                var dataPickerOpt = {
+                    format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+                }
+                $('#datetimepicker1').datetimepicker(dataPickerOpt);
+                $('#datetimepicker2').datetimepicker(dataPickerOpt);
+            },
+            loadTable: function() {
+                var self = this;
+                var data = {};
+                var fromDate = $('#datetimepicker1').val();
+                var toDate = $('#datetimepicker2').val();
+                if ($('#fromStk').html() == '从仓库'){
+                    var information = '请选择从仓库！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else if($('#toStk').html() == '到仓库'){
+                    var information = '请选择到仓库！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else if(!fromDate){
+                    var information = '请选择起始时间！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else if(!toDate){
+                    var information = '请选择截至时间！';
+                    self.nullAlertShow(information);
+                    return
+                }
+                else{
+                    var fromStkId = $('#fromStk-select').val();
+                    data.fromStkId = fromStkId;
+                    var toStkId = $('#toStk-select').val();
+                    data.toStkId = toStkId;
+
+                    data.fromDate = new Date(fromDate).getTime();
+                    data.toDate = new Date(toDate).getTime();
+                }
+                if (this.table) {
+                    this.table.destroy();
+                }
+                debugger;
+                $.mtfIssueInfo(data, jmstoken, function (data) {
+                    debugger;
+                    var cit= $("#issueList");
+                    if(cit.size()>0) {
+                        cit.find("tr:not(:first)").remove();
+                    }
+
+//                    $('#issueList tr td').empty();
+                    $('#fromStkId').val(data.fromStkId);
+                    $('#toStkId').val(data.toStkId);
+
+                    if(count(data.items)>0){
+                        _(data.items).each(function(item) {
+                            item.plannedSt = $.dateFormat.date(new Date(item.plannedSt), 'yyyy-MM-dd HH:mm');
+                            var html = self.createRow(item);
+                            $('#issueList').append(html);
+                        });
+                    }
+                });
+
+            },
+            defaultData: { },
+            createRow: function(data) {
+                var self = this;
+                var row = parseInt(self.$issueList.data('row'));
+                if(!row) {
+                    row = 1;
+                }
+
+                if(!data) {
+                    data = self.defaultData;
+                }
+
+                var param = {
+                    data: data,
+                    item: row,
+                    action: self.params.action
+                }
+
+                var html = self.matIssueItem(param);
+                self.$issueList.data('row', row + 1);
+
+                return html;
+            },
+            bindEvents:function(){
+                var self = this;
+                var $cnt = $('#mtfIssueForm');
+                $cnt.on('focus', 'input, select, textarea', function(e) {
+                    $(this).removeClass('error');
+                    $('#save').removeAttr('disabled');
+                });
+
+                $cnt.on("change",".a",function(){
+                    var $itemi = $(this).closest('tr');
+                    self.checkQty($itemi);
+                });
+                //从仓库下拉框
+                $('#fromStk-select').selectautofill('s/getStksByTypes?statusId=27&types=1',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, function (data) {
+                    var _html = '';
+                    _(data).each(function (d, i) {
+                        _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                    });
+                    $('#fromStk-group').find('.dropdown-menu').append(_html);
+                });
+                $('.fromStk01').on('click',function(e){
+                    $('#fromStk').html('从仓库');
+                });
+                $('#fromStk-group').on('click', 'li a', function (e) {
+                    var $t = $(this);
+                    var id = $t.data('id');
+                    $('#fromStk-select').val(parseInt(id));
+                    $('#fromStk').html($t.text());
+                });
+                //到仓库下拉框
+                $('#toStk-select').selectautofill('s/getStksByTypes?statusId=27&types=2',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, function (data) {
+                    var _html = '';
+                    _(data).each(function (d, i) {
+                        _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                    });
+                    $('#toStk-group').find('.dropdown-menu').append(_html);
+                });
+                $('.toStk01').on('click',function(e){
+                    $('#toStk').html('到仓库');
+                });
+                $('#toStk-group').on('click', 'li a', function (e) {
+                    var $t = $(this);
+                    var id = $t.data('id');
+                    $('#toStk-select').val(parseInt(id));
+                    $('#toStk').html($t.text());
+                });
+
+//                $('#search').on('click',self.loadTable.bind(self));
+                $('#search').on('click',function(){
+                    self.loadTable();
+                });
+
+                var historyOptions = {
+                    groupId: 'mtfList'
+                };
+                //物流查询
+                $('#mtf01').click(function () {
+                    $.get("views/mtfList.html", function (data) {
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                // 工单流转
+                $('#woMtf').click(function () {
+                    $.get("views/s-wo-mtf.html", function (data) {
+                        historyOptions.viewId = 's-wo-mtf';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                // 物流详情
+                $('#mtfDetail').click(function () {
+                    $.get("views/s-mtfDetailList.html", function (data) {
+                        historyOptions.viewId = 's-mtfDetailList';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                // 手动创建
+                $('#create').click(function () {
+                    $.get("views/mtfList-body.html", function (data) {
+                        historyOptions.viewId = 'mtfList-body';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+
+            },
+            checkQty:function($itemi){
+                var self = this;
+                var qty = $itemi.find('.a').val();
+
+                var reg =/^\d+$/;
+
+                if(qty && reg.test(qty)==false) {
+                    $itemi.find('.a').addClass('error').val('');
+                    return;
+                }
+
+                var inventoryId = $itemi.find('.d').val();
+                var pwoBomId = $itemi.find('.b').val();
+                var cppId = $itemi.find('.c').val();
+                var $list = $('#issueList');
+                var $items = $list.find('tr');
+                var totalInvQty = 0;
+                var totalDeliveryQty = 0;
+                $items.each(function(i) {
+                    var $t = $(this);
+                    var presentInv = $t.find('.d').val();
+                    var presentCpp = $t.find('.c').val();
+                    var presentBom = $t.find('.b').val();
+                    var presentQty = $t.find('.a').val();
+                    if(!presentQty){
+                        presentQty = 0;
+                    }
+                    if(presentInv == inventoryId){
+                        totalInvQty =parseInt(totalInvQty) + parseInt(presentQty);
+                    }
+                    if(presentCpp == cppId){
+                        if(presentBom == pwoBomId){
+                            totalDeliveryQty =parseInt(totalDeliveryQty) + parseInt(presentQty);
+                        }
+                    }
+                });
+                var qtyInv = $itemi.find('.qtyInv').val();
+                if(parseInt(qtyInv) - parseInt(totalInvQty) < 0){
+                    totalInvQty = parseInt(totalInvQty) - parseInt(qty);
+                    totalDeliveryQty =parseInt(totalDeliveryQty) - parseInt(qty);
+                    $itemi.find('.a').addClass('error').val('');
+                    var information = '库存不足！';
+                    self.nullAlertShow(information);
+                }
+
+                $items.each(function(i){
+                    var $t = $(this);
+                    var presentInv = $t.find('.d').val();
+                    var presentCpp = $t.find('.c').val();
+                    var presentBom = $t.find('.b').val();
+                    if(presentInv == inventoryId){
+                        var $inv = $t.find('.i');
+                        var newQtyInv = parseInt($t.find('.qtyInv').val()) - parseInt(totalInvQty);
+                        $inv.empty();
+                        $inv.append(newQtyInv);
+                    }
+                    if(presentCpp == cppId){
+                        if(presentBom == pwoBomId){
+                            var $qtyDelivered = $t.find('.j');
+                            var newQtyDer = parseInt($t.find('.qtyDer').val()) + parseInt(totalDeliveryQty);
+                            $qtyDelivered.empty();
+                            $qtyDelivered.append(newQtyDer);
+                        }
+                    }
+                });
+            },
+            form:function(){
+                var self = this;
+                $('#mtfIssueForm').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                    }
+                }).on('success.form.bv', function (e) {
+                    e.preventDefault();
+                    if(!self.validateMatlist()) {
+                        alert('验证不通过');
+                        return;
+                    }
+                    var $form = $(e.target),
+                    validator = $form.data('bootstrapValidator');
+                    var mtf = JSON.stringify($('#mtfIssueForm').serializeJSON());
+                    debugger;
+                    $.saveMtf(mtf, jmstoken, function (data) {
+                        debugger;
+                        $.get("views/s-issueList.html", function (data) {
+                            $("#body").html(data);
+                        });
+                    });
+                });
+            },
+            validateMatlist: function() {
+                var $list = $('#issueList');
+                var $items = $list.find('tr');
+                var flag = true;
+                var reg =/^\d+$/;
+                if(!$items.length) {
+                    flag = false;
+                }
+
+                $items.each(function(i) {
+                    if(i>0){
+                        var $t = $(this);
+                        var qty = $t.find('.a').val();
+                        if(qty && reg.test(qty)==false) {
+                            $t.find('.a').addClass('error');
+                            flag = false;
+                        }
+                    }
+                });
+
+                return flag;
+            }
+        };
+        issueDetail.init();
+
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="mtf01">物流查询</span>
+    <span class="h-title" id="woMtf">工单流转</span>
+    <span class="h-title" id="create">手动创建</span>
+    <span class="h-title-selected"><b>计划发料</b></span>
+    <span class="h-title" id="mtfDetail">物流详情</span>
+</div>
+<form id="mtfIssueForm" method="post" action="index.html" class="form-inline">
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group btn-group-left" id="issue">
+            <div class="btn-group btn-group-left">
+                <label>日期：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+            </div>
+        </div>
+        <div class="btn-group btn-group-left form-group" id="fromStk-group">
+            <select id="fromStk-select" style="display: none;"></select>
+            <button class="btn btn-default" type="button" style="" id="fromStk">从仓库</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle fromStk01" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">从仓库</span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>
+        <div class="btn-group btn-group-left form-group" id="toStk-group">
+            <select id="toStk-select" style="display: none;"></select>
+            <button class="btn btn-default" type="button" style=""  class="input-w-3 select-cs1 form-control" id="toStk">到仓库</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle toStk01" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">到仓库</span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>
+        <div class="right-list">
+            <button id="search" type="button" class="button-sytle1">查询</button>
+        </div>
+    </div>
+    <table id="issueList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>工单</th>
+            <th>成品</th>
+            <th>计划数</th>
+            <th>计划开始时间</th>
+            <th>班次</th>
+            <th>机台</th>
+            <th>车间</th>
+            <th>原料</th>
+            <th>批号</th>
+            <th>货架</th>
+            <th>库存</th>
+            <th>应发</th>
+            <th>已发</th>
+            <th>本次</th>
+            <!--<th>操作</th>-->
+        </tr>
+        </thead>
+    </table>
+    <div class="clearfix"></div>
+    <div class="foot-btn-box">
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" id="save">保存</button>
+            <!--<button type="button" class="btn  btn-info" id="return">返回</button>-->
+        </div>
+    </div>
+    <input type="hidden" id="typeId" name="typeId:number" value="7" />
+    <input type="hidden" id="savePmr" name="savePmr" value="true" />
+    <input type="hidden" id="fromStkId" name="fromStkId:number"/>
+    <input type="hidden" id="toStkId" name="toStkId:number"/>
+</div><!-- 错误提示弹窗 start -->
+</form>
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

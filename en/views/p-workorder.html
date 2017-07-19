@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).draggable().show();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+function formatRepo (repo) {
+	if (repo.loading) return repo.text;
+
+	var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+	return markup;
+}
+
+function formatRepoSelection (repo) {
+	return repo.name || repo.text;
+}
+
+var jmstoken= store.get('JMS-TOKEN');
+var workorder={
+	init:function(){
+		var self = this;
+		this.loadTable();
+		this.autoFill();
+		this.bindEvents();
+		this.form();
+	},
+	loadTable:function(){
+		var self = this;
+		var data = {};
+
+		var idMaterial = $('#js-data-example-ajax').val();
+		if(idMaterial) {
+			data.materialId = idMaterial;
+		}
+
+		var q = $('#q').val();
+		if (q) {
+			data.q = q;
+		}
+
+		if(this.table) {
+			this.table.destroy();
+		}
+		this.table =$('#tableWorkorder').DataTable( {
+
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL + "p/getWoList",
+				"dataType": "json",
+				headers: {'JMS-TOKEN':jmstoken},
+				"data": data
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-bin>Detail</button><button class=button-edit>Edit</button><button class=button-finish>End</button><button class=button-delete>Delete</button>'
+			} ],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+			dom: "tip",
+			pageLength:"50"
+		} );
+		$('#tableWorkorder tbody').on( 'click', 'button', function () {
+			var data = self.table.row( $(this).parents('tr') ).data();
+			var clazz =$(this).attr('class');
+			if(clazz=='button-bin'){
+				var historyOptions = {
+					groupId:'p-workorder',
+					viewId:'p-wo-detail',
+					action:'detail',
+					idWo:data[6]
+				}
+				$.get("views/p-wo-detail.html",function(data){
+					RouterManager.setUrl(historyOptions);
+					$("#body").html(data);
+				});
+
+			}
+			else if(clazz=='button-edit'){
+				var top = $('#body').scrollTop();
+				$('#tcbox-pcpplist').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+				// showObj('#tcbox-pcpplist');
+				$.woInfo(data[6],jmstoken,function(data){
+					$('#woForm').populate(data,true);
+				});
+				$('#woNo').prop('readonly', true);
+				$('#soId').prop('disabled', true);
+			}
+			else if(clazz=='button-finish'){
+				var top = $('#body').scrollTop();
+				$('#tcbox-pcpplist1').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+//			showObj('#tcbox-pcpplist1');
+				$('#woId').val(data[6]);
+			}
+			else {
+				$.deleteWo(data[6],jmstoken,function(data){
+					$.get("views/p-workorder.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			}
+		} );
+	},
+	autoFill:function(){
+		$('#soId').selectautofill('s/getSoListObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		$('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_wo'}});
+	},
+	bindEvents:function(){
+		var self = this;
+		$("#q").keydown(function() {
+			if (event.keyCode == "13") {//keyCode=13是回车键
+				self.loadTable();
+			}
+		});
+		$('#js-data-example-ajax').select2({
+			ajax: {
+				url: $clientURL + 's/getMaterialListObjs',
+				dataType: 'json',
+				headers:{'JMS-TOKEN':jmstoken},
+				delay: 200,
+				data: function(params) {
+					return {
+						q: params.term
+					}
+				},
+				processResults: function(data, params) {
+					return {
+						results: data,
+						pagination: null
+					}
+				},
+				cache: true
+			},
+			escapeMarkup: function (markup) { return markup; },
+			minimumInputLength: 1,
+			width: 200,
+			templateResult: formatRepo,
+			templateSelection: formatRepoSelection
+		}).on('select2:open',function(evt){
+			$('#select2-js-data-example-ajax-container').html('');
+			$('#js-data-example-ajax').empty();
+		});
+
+
+		$('#search').on('click',function(){
+			self.loadTable();
+		});
+
+		$('#woForm').on('change','#soId',function(){
+			var soId = $('#soId').val();
+			$.soInfo(soId, jmstoken, function (data) {
+				$('#qty').val(data.qtySo);
+			});
+		});
+		$('#wocloseForm').on('click','#yes01',function(){
+			var woId = $('#woId').val();
+			$.closeWo(woId,jmstoken,function(data){
+				$.get("views/p-workorder.html",function(data){
+					$("#body").html(data);
+				});
+			})
+		});
+		$('#detail').click(function(){
+			RouterManager.setUrl({
+				groupId:'p-workorder',
+				viewId:'p-wo-detail'
+			});
+			$.get("views/p-wo-detail.html",function(data){
+				$("#body").html(data);
+			});
+		});
+		$('#bom').click(function(){
+			$.get("views/p-bom-create.html",function(data){
+				$("#body").html(data);
+			});
+		});
+		$('#routine').click(function(){
+			$.get("views/p-routine-create.html",function(data){
+				$("#body").html(data);
+			});
+		});
+
+		$('#return, #close01').click(function(){
+//	 		$('#tcbox-pcpplist').hide();
+			$.get("views/p-workorder.html",function(data){
+				$("#body").html(data);
+			});
+		});
+	},
+	form:function(){
+		$('#woForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'woNo': {
+					validators: {
+						notEmpty: {
+							message: 'WO/NO.cannot be empty.'
+						},
+						regexp: {
+							regexp: /^([a-z_A-Z-.+0-9]+)$/,
+							message: 'Only English letters, Numbers, add and subtract Numbers, horizontal lines and points.'
+						},
+					}
+				},
+				'idSo': {
+					validators: {
+						notEmpty: {
+							message: 'SO/NO.cannot be empty.'
+						}
+					}
+				},
+				'qty:number': {
+					validators: {
+						notEmpty: {
+							message: 'Quantity cannot be empty.'
+						},
+						regexp: {
+							regexp: /^[1-9]\d*$/,
+							message: 'Only positive integer'
+						},
+					}
+				}
+			}
+		}).on('success.form.bv', function(e) {
+			e.preventDefault();
+			var $form     = $(e.target),
+					validator = $form.data('bootstrapValidator');
+			var wo =JSON.stringify($('#woForm').serializeJSON());
+			$.saveWo(wo,jmstoken,function(data){
+				$.get("views/p-workorder.html",function(data){
+					$("#body").html(data);
+				});
+			});
+		});
+	}
+};
+ workorder.init();
+
+
+//	$(function () {
+//		$('#tcbox-pcpplist').draggabilly();
+//	});
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>WO Information</b></span>
+	<!--<span class="h-title" id="detail">工单详情</span>-->
+</div>
+
+<div class="cont">
+
+	<div class="r-header-body">
+
+		<div class="btn-group btn-group-left" >
+			<select class="js-data-example-ajax" id="js-data-example-ajax">
+				<option value="">choose materials</option>
+			</select>
+		</div>
+  		<div class="right-list">
+   			<!--搜索框-->
+    		<!--<div class="sousuo">-->
+    			<!--<div class="ss-input">    		-->
+    				<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    			<!--</div>-->
+    			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    		<!--</div>&lt;!&ndash;检索结束&ndash;&gt;-->
+			<input type="text" id='q' placeholder="WO/NO.">
+			<input type="button" class="button-sytle1" id="search" value="Search">
+    	 	<input type="button" class="button-sytle1" id="create" value="Create" onClick="javascript:showObj('#tcbox-pcpplist');">
+  		</div>
+	</div>  
+
+ <table id="tableWorkorder" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>WO/NO.</th>
+                <th>SO/NO.</th>
+                <th>Quantity</th>
+                <th>Creaction Time</th>
+                <th>Creator</th>
+                <th>Status</th>
+                <th style="min-width:250px;">Operation</th>
+            </tr>
+        </thead>
+</table>
+</div>
+<!-- 弹窗1 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+			<span class="h-title">WO Information</span>
+		</div>
+      <input type="button" class="tc_close" id="close01">
+     <form id="woForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>WO/NO.</label>
+						<input type="text" class="form-control"  name="woNo" id="woNo"/>
+				    	<!--<input type="text" class="form-control"  name="woNo" id="woNo" readonly  unselectable="on"/>-->
+				    </div>
+					<div class="form-group">
+						<label>SO/NO.</label>
+						<select  class="form-control" name="soId:number" id="soId">
+							<option value="">SO/NO.</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>Quantity</label>
+                        <input type="text" class="form-control"  name="qty:number" id="qty"/>
+				    </div>
+					<div class="form-group">
+						<label>Status</label>
+						<select  type="hidden" class="form-control" name="statusId:number" id="statusId" />
+						</select>
+					</div>
+                </div>
+				 <div class="col-xs-12 mar-top-20px">
+					 <div class="form-group">
+						 <label>Type</label>
+						 <select  type="hidden" class="form-control" name="typeId:number" id="typeId">
+						 	<option value=0>Normal</option>
+						 	<option value=1>Rework</option>
+						 </select>
+					 </div>
+					 <div class="form-group">
+						 <label>Original WO</label>
+						 <input type="text" class="form-control"  name="orgWo" id="orgWo"/>
+					 </div>
+				 </div>
+		 		<!--<div class="col-xs-12 mar-top-20px">
+			 		<div class="form-group">
+				 		<label>物料清单</label>
+						<select  type="hidden" class="form-control" name="idBomLabel:number" id="idBomLabel" />
+						</select>
+						<button id="bom" type="reset" class="btn  btn-info">新建</button>
+			 		</div>
+			 		<div class="form-group">
+				 		<label>工艺路线</label>
+				 		<select  type="hidden" class="form-control" name="idRoutine:number" id="idRoutine" />
+				 		</select>
+						<button id="routine" type="reset" class="btn  btn-info">新建</button>
+			 		</div>
+		 		</div>-->
+				
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary">Save</button>
+                 		<button id="return" type="reset" class="btn  btn-info">Return</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idWo" name="idWo:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+
+<!-- 弹窗2 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist1">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+			<span class="h-title">WO Information</span>
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#tcbox-pcpplist1');">
+		<form id="wocloseForm" method="post" action="index.html" class="form-inline">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label>Do you want to end this WO?</label>
+			</div>
+		</div>
+			<div class="aligncenter">
+				<div class="form-group">
+					<button type="button" class="btn btn-primary" id="yes01">Yes</button>
+					<button type="reset" class="btn  btn-info" onClick="javascript:hideObj('#tcbox-pcpplist1');">No</button>
+				</div>
+			</div>
+			<input type="hidden" id="woId" name="woId:number"/>
+		</form>
+	</div>
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+

@@ -1,0 +1,385 @@
+<script type="text/template" id="poMain">
+    <div class="body-head-title">
+        <span class="h-title-selected"><b>PO</b></span>
+        <span class="h-title" id="createPo">Maintain PO</span>
+        <span class="h-title" id="cocoMpany">Supplier</span>
+        <span class="h-title" id="createCocompany">Create supplier</span>
+        <span class="h-title" id="importPo">Import PO</span>
+    </div>
+    <div class="cont">
+
+        <div class="r-header-body">
+            <div class="btn-group btn-group-left" id="issue">
+                <div class="btn-group btn-group-left">
+                    <label>Date：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+                </div>
+            </div>
+            <div class="btn-group btn-group-left" id="status-group">
+                <select name="none" id="status-select" style="display: none;"></select>
+                <button class="btn btn-default" type="button" style="" id="status">Status</button>
+                <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle status01" type="button">
+                    <span class="caret"></span>
+                    <span class="sr-only">Status</span>
+                </button>
+                <ul class="dropdown-menu"></ul>
+            </div>
+            <div class="right-list">
+                <input type="text" id='q' placeholder="No./Supplier/Material">
+                <button id="search" class="button-sytle1">Search</button>
+                <!--<button id="input" class="button-sytle1">Import</button>-->
+            </div>
+            <!--<div class="btn-group-left link-title" id="po-filter-list">-->
+                <!--<span id="all"><a href="javascript:void(0)">所有订单</a></span>-->
+                <!--<span id="edit"><a href="javascript:void(0)">编辑</a></span>-->
+                <!--<span id="write"><a href="javascript:void(0)">签字</a></span>-->
+                <!--<span id="processing"><a href="javascript:void(0)">激活</a></span>-->
+                <!--<span id="finished"><a href="javascript:void(0)">结束</a></span>-->
+                <!--<span id="canceled"><a href="javascript:void(0)">作废</a></span>-->
+            <!--</div>-->
+        </div>
+        <table id="tablePo" class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Order time</th>
+                    <th>Order clerk</th>
+                    <th>Supplier</th>
+                    <th>Status</th>
+                    <th>Material</th>
+                    <th>Unit</th>
+                    <th>Quantity</th>
+                    <th>Total amount</th>
+                    <th>Delivery date</th>
+                    <th>Received qty</th>
+                    <th style="min-width:200px;">Operation</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- 弹窗 start -->
+    <div class="tcbox container-fluid" id="draggable1">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">Manual completion</span>
+            </div>
+            <input type="button" class="tc_close">
+            <form id="poForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label style="text-align:center;width:80px;">No.</label>
+                        <input type="text" class="form-control input-w-3" name="codePo" id="codePo" readonly  unselectable="on"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label style="text-align:center;width:80px;">Status</label>
+                        <select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label style="text-align:center;width:80px;">Remark</label>
+                        <textarea class="form-control" style="width:180px" rows="3" name="remark" id="remark"></textarea>
+                    </div>
+                </div>
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary ">Save</button>
+                        <!--<button id="return" type="reset" class="btn  btn-info">返回</button>-->
+                    </div>
+                </div>
+                <input type="hidden" id="idPo" name="idPo:number" />
+            </form>
+        </div>
+    </div>
+</script>j
+<script type="text/javascript">
+    //初始化页面
+        $('#body').html($('#poMain').html());
+        // tab 切换
+        //弹窗
+        function hideObj(objid){
+            $(objid).hide();
+        }
+    $(function () {
+        $('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
+        $('#datetimepicker2').datetimepicker({format:"YYYY-MM-DD"});
+    });
+        var jmstoken= store.get('JMS-TOKEN');
+
+        var app={
+            init:function(){
+                this.bindEvents();
+                this.autoFill();
+//                this.loadTable();
+            },
+            autoFill:function(){
+                $('#statusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_po','removeEdit':true}});
+            },
+            loadTable:function(){
+                var self = this;
+                var data = {};
+
+                if ($('#status').html() == 'Status'){
+                    data.type = null;
+                }
+                else{
+                    var type = $('#status-select').val();
+                    data.type = type;
+                }
+
+                var fromDay = $('#datetimepicker1').val();
+                if (fromDay) {
+                    data.fromDay = fromDay;
+                }
+                var toDay = $('#datetimepicker2').val();
+                if (toDay) {
+                    data.toDay = toDay;
+                }
+                var q = $('#q').val();
+                if (q) {
+                    data.q = q;
+                }
+                if (this.table) {
+                    this.table.destroy();
+                }
+                this.table = $('#tablePo').DataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL+"s/spoMaterialList",
+                        "dataType": "json",
+                        "headers":{'JMS-TOKEN':jmstoken},
+                        "beforeSend": jmsGlobalBlock,
+                        "complete": jmsGlobalUnBlock,
+                        "error": jmsGlobalUnBlock,
+                        "data": data
+                    },
+                    "columnDefs": [{
+                        "targets": -1,
+                        "data": null,
+//                "defaultContent": '<button class=button-sytle1>状态</button>' +
+//                '<button class=button-delete>打印</button>' +
+                        "defaultContent": '<button class=button-finish>Status</button>' +
+                        '<button class=button-print>Print</button>' +
+                        '<button class=button-edit>Edit</button>' +
+                        '<button class=button-bin>Detail</button>'
+                    } ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength:"50"
+                } );
+
+                $('#tablePo').on( 'draw.dt', function (e, setting) {
+                    $.each(setting.aoData, function(i, v) {
+                        if(v._aData[4] !== 'Edit') {
+                            $(v.anCells[11]).find('.button-edit').remove();
+                        }
+                    });
+                } );
+
+                $('#tablePo tbody').on( 'click', 'button', function () {
+                    debugger;
+                    var rowData = self.table.row( $(this).parents('tr') ).data();
+                    var historyOptions = {
+                        groupId:'po',
+                        orderId:rowData[11]
+                    };
+                    var clazz =$(this).attr('class');
+                    //手动完成
+                    var actions={
+                        'button-finish':function(){
+                            var top = $('#body').scrollTop();
+                            var left = $('#body').scrollLeft();
+                            $('.tcbox').css({
+                                top: $(window).height() * 0.2 + top,
+                                left:$(window).height() * 0.5 + left
+                        }).draggable().show();
+//                        }).show();
+//                            $('#statusId').empty();
+                            $.poInfo(rowData[11], jmstoken, function (data) {
+                                $('#poForm').populate(data,true);
+//                                $('#statusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_po','removeEdit':true}},function(){
+                                    $('#statusId').val(data.sStatusId);
+//                                });
+                            });
+                        },
+                        'button-print':function(){
+                            //打印订单编号
+                            historyOptions.viewId='print-po';
+                            $.get("views/print-po.html",function(data){
+                                RouterManager.setUrl(historyOptions);
+                                $("#body").html(data);
+                            });
+
+                        },
+                        'button-bin':function(){
+                            historyOptions.viewId='po-order';
+                            historyOptions.action='detail';
+                            $.get("views/po-order.html",function(data){
+                                RouterManager.setUrl(historyOptions);
+                                $("#body").html(data);
+                            });
+                        },
+                        'button-edit':function(){
+                            historyOptions.viewId='po-order';
+                            historyOptions.action='edit';
+                            $.get("views/po-order.html",function(data){
+                                RouterManager.setUrl(historyOptions);
+                                $("#body").html(data);
+                            });
+                        }
+                    };
+                    actions[clazz]();
+                });
+            },
+            bindEvents:function(){
+                var self = this;
+
+                //状态下拉框
+                $('#status-select').selectautofill('s/getSStatusList', {headers: {'JMS-TOKEN': jmstoken}, data: {'source':'s_po'}}, function (data) {
+                    var routeParams = RouterManager.getParams();
+//                    var statusId = routeParams.statusId;
+                    var _html = '';
+                    _(data).each(function (d, i) {
+                        _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                        if(d.name=='激活'){
+                            $('#status-select').val(parseInt(d.id));
+                            $('#status').html(d.name);
+                            self.loadTable();
+                        }
+                    });
+                    $('#status-group').find('.dropdown-menu').append(_html);
+                });
+                $('.status01').on('click',function(e){
+                    $('#status').html('Status');
+                });
+                $('#status-group').on('click', 'li a', function (e) {
+                    var $t = $(this);
+                    var id = $t.data('id');
+                    $('#status-select').val(parseInt(id));
+                    $('#status').html($t.text());
+                });
+
+                $('#search').on('click',function(){
+
+//                    $('#statusId').empty();
+                    self.loadTable();
+                });
+
+                $("#q").keydown(function() {
+                    if (event.keyCode == "13") {//keyCode=13是回车键
+                        self.loadTable();
+                    }
+                });
+
+//                $('#sStatusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_po'}});
+                //	创建采购订单
+                $('#createPo').click(function(){
+                    $.get("views/po-order.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'po-order'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+
+                $('#input').click(function(){
+                    $.get("views/po-input.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'po-input'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 供应商
+                $('#cocoMpany').click(function(){
+                    $.get("views/cocompany.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'cocompany'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 新建供应商
+                $('#createCocompany').click(function(){
+                    $.get("views/cocompany-create-body.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'cocompany-create-body',
+                            companyCoTypeId:'1'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 采购订单导入
+                $('#importPo').click(function(){
+                    $.get("views/po-import.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'po-import'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 返回
+                $('#return').click(function(){
+                    $.get("views/po.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+                $('.tcbox').on('click','.tc_close',function(){
+			        $('.tcbox').hide();
+			        $('#poForm')[0].reset();
+//                    $('#statusId').empty();
+                });
+
+                $('.button-sytle1').ready(function() {
+                    $('#poForm').bootstrapValidator({
+                        message: 'This value is not valid',
+                        feedbackIcons: {
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {
+                        }
+                    }).on('success.form.bv', function (e) {
+                        e.preventDefault();
+                        var $form = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                        var remark = JSON.stringify($('#poForm').serializeJSON());
+                        debugger;
+                        $.saveSpoRemark(remark, jmstoken, function (data) {
+                            $.get("views/po.html", function (data) {
+                                $("#body").html(data);
+                            });
+                        });
+                    });
+                });
+
+            }
+        };
+        app.init();
+		
+      // 弹窗拖拽	
+//        $(function () {
+//            $('#draggable1').draggabilly();
+//        });
+</script>

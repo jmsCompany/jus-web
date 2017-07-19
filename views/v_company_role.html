@@ -1,0 +1,76 @@
+
+
+
+
+
+<div class="container">
+
+    <div class="row">
+        <!-- form: -->
+
+        <section>
+
+
+
+            <br>
+            <div class="col-lg-8 col-lg-offset-2">
+                <form id="defaultForm" method="post" action="index.html" class="form-horizontal">
+
+                    <fieldset>
+                        <legend>角色信息</legend>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">角色名称</label>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" name="role" id="role"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">描述</label>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" name="description" id="description"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">级别</label>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" name="level" id="level"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">状态</label>
+                            <div class="col-lg-5">
+                                <select class="form-control" name="enabled:number" id="enabled">
+                                </select>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary ">保存</button>
+                                <button id="return" type="reset" class="btn  btn-info">返回</button>
+                            </div>
+                            <input type="hidden" class="form-control" name="idRole:number" id="idRole"/>
+                        </div>
+                </form>
+            </div>
+        </section>
+        <!-- :form -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.companyInfo(store.get('JMS-TOKEN'),function(company){
+            $('#defaultForm').populate(company,true);
+        });
+        $('#province').selectautofill('dic/provinces');
+        $('#province').change(function(){ $('#city option').each(function(){if($(this).val()!='-100'){$(this).remove()};});var idProvince = $('#province').val();  $('#city').selectautofill('dic/provinces/'+idProvince+'/cities');                });
+
+        $('#city').change(function(){ $('#district option').each(function(){if($(this).val()!='-100'){$(this).remove()};});var idCity = $('#city').val();  $('#district').selectautofill('dic/cities/'+idCity+'/districts');                });
+
+
+    });
+</script>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>设备故障率</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="breakdownRate">设备故障率</span>
+    <span class="h-title-selected"><b>MTBF&MTTR</b></span>
+	<span class="h-title" id="dailyMain">日常保养报表</span>
+	<span class="h-title" id="preMain">预防保养报表</span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+         <!--<div class="btn-group btn-group-left">-->
+      		<!--<button class="btn btn-default" type="button" name="idDept:number" id="idDept">年份</button>-->
+      		<!--<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">-->
+        		<!--<span class="caret"></span>-->
+        		<!--<span class="sr-only">请选择</span>-->
+      		<!--</button>-->
+      		<!--<ul class="dropdown-menu">-->
+      		<!--</ul>-->
+    	<!--</div>-->
+	<!-- 年份 -->
+
+	<div class="btn-group btn-group-left">
+		<div class="btn-group btn-group-left">
+			<label>年份：</label><input type="text" id='year'>
+			<!--<script type="text/javascript">-->
+			<!--$(function () {-->
+			<!--$('#date').datetimepicker({format:"YYYY"});-->
+			<!--});-->
+			<!--</script>-->
+		</div>
+		<div class="btn-group btn-group-left" id="machine-group">
+			<select name="none" id="machine-select" style="display: none;"></select>
+			<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">设备</button>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+				<span class="caret"></span>
+				<span class="sr-only">设备</span>
+			</button>
+			<ul class="dropdown-menu"></ul>
+		</div>
+	</div>
+
+	<div class="right-list">
+       <button id="view" class="button-sytle1">查询</button>
+	</div>
+
+</div> 
+        
+</div>                 
+
+<script type="text/javascript">
+
+	var jmstoken= store.get('JMS-TOKEN');
+　function openwin()
+　　{ window.open ("views/m-mtbf-mttrr-print.html", "newwindow", "height=auto, width=auto, top=0,left=0,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no") 
+}
+ var mbrSearch ={
+	 init:function(){
+		 var self = this;
+		 var now = new Date();
+		 $('#year').val(now.getFullYear());
+		 this.bindEvents();
+	 },
+	 bindEvents:function(){
+		 var self = this;
+		 //设备下拉框
+		 $('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+			 var _html = '';
+			 _(data).each(function (d, i) {
+				 _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+			 });
+			 $('#machine-group').find('.dropdown-menu').append(_html);
+		 });
+		 $('#machine-group').on('click', 'li a', function (e) {
+			 var $t = $(this);
+			 var id = $t.data('id');
+			 $('#machine-select').val(parseInt(id));
+			 $('#machineNo').html($t.text());
+		 });
+		 $('.machine').on('click',function(e){
+			 $('#machineNo').html('设备');
+		 });
+
+		 $('#view').on('click',function(){
+			 var year = $('#year').val();
+			 var idMachine = $('#machine-select').val();
+			 if (!year){
+				 self.nullAlertShow('请输入年份！');
+				 return
+			 }
+			 else if($('#machineNo').html() == '设备'){
+				 self.nullAlertShow('请选择设备！');
+			 }
+			 else{
+				 var machine = $('#machine-select option:selected').text();
+				 $.get("views/m-mtbf-mttrr-print-test.html", function (data) {
+					 RouterManager.setUrl({
+						 groupId:"m-br",
+						 viewId:"m-mtbf-mttrr-print-test",
+						 year:year,
+						 idMachine:idMachine,
+						 machine:machine
+					 });
+					 $("#body").html(data);
+				 });
+			 }
+		 });
+
+		 $('#breakdownRate').click(function(){
+			 $.get("views/m-br.html", function (data) {
+				 RouterManager.setUrl({
+					 groupId:"m-br"
+				 });
+				 $("#body").html(data);
+			 });
+		 });
+		 $('#dailyMain').click(function(){
+			 $.get("views/m-dailymainRecord-report.html", function (data) {
+				 RouterManager.setUrl({
+					 groupId:"m-br",
+					 viewId:"m-dailymainRecord-report"
+				 });
+				 $("#body").html(data);
+			 });
+		 });
+		 $('#preMain').click(function(){
+			 $.get("views/m-premainRecord-report.html", function (data) {
+				 RouterManager.setUrl({
+					 groupId:"m-br",
+					 viewId:"m-premainRecord-report"
+				 });
+				 $("#body").html(data);
+			 });
+		 });
+	 }
+ };
+ mbrSearch.init();
+</script>
+
+</body>
+</html>
+

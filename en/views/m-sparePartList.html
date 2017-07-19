@@ -1,0 +1,397 @@
+<script type="text/html" id="sparePartMain">
+	<div class="body-head-title">
+		<span class="h-title-selected"><b>Spare List</b></span>
+	</div>
+	<div class="cont">
+		<div class="r-header-body">
+			<div class="btn-group btn-group-left" id="machine-group">
+				<select name="none" id="machine-select" style="display: none;"></select>
+				<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">Machine</button>
+				<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+					<span class="caret"></span>
+					<span class="sr-only">Device Code</span>
+				</button>
+				<ul class="dropdown-menu">
+				</ul>
+			</div>
+			<!--搜索框-->
+			<!--<div class="sousuo">-->
+			<!--<div class="ss-input">-->
+			<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+			<!--</div>-->
+			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+			<!--</div>-->
+			<div class="right-list">
+
+				<input type="button" class="button-sytle1" id="create" value="Create">
+				<input type="button" class="button-sytle1" id="add" value="Add Spare">
+				<!--<input type="button" class="button-sytle1" id="add" value="添加备件">-->
+				<input type="button" class="button-sytle1" id="output" value="Output">
+			</div>
+		</div>
+
+		<table id="sparePartList" class="display" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>Spare</th>
+				<!--<th>备件名称</th>-->
+				<th>Safe Inventory</th>
+				<th>Actual Inventory</th>
+				<th>Incoming Quantity</th>
+				<th>Delivery Quantity</th>
+				<th>Remark</th>
+				<th>Status</th>
+				<th style="min-width:100px;">Operation</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="aligncenter">
+		<div class="form-group">
+			<button id="return01" type="button" class="btn  btn-info" style="VISIBILITY: hidden">Return</button>
+		</div>
+	</div>
+
+	<!-- 弹窗 start -->
+	<!--<div class="tcbox container-fluid" id="tcbox-pcpplist" style="display:block;">-->
+	<div class="tcbox container-fluid" id="tcbox-pcpplist">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">Add Spare</span>
+			</div>
+			<input type="button" class="tc_close">
+			<form id="spareForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Spare</label>
+						<select  class="form-control" name="idMaterial:number" id="idMaterial">
+						</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Device</label>
+						<select  class="form-control" name="idMachine:number" id="idMachine">
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Safe Inventory</label>
+						<input type="text" class="form-control" name="safetyQty" id="safetyQty" readonly  unselectable="on"/>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Actual Inventory</label>
+						<input type="text" class="form-control"  name="qty" id="qty" readonly  unselectable="on"/>
+					</div>
+					<div class="form-group">
+						<label>Incoming Quantity</label>
+						<input type="text" class="form-control"  name="incoming" id="incoming" readonly  unselectable="on"/>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Delivery Quantity</label>
+						<input type="text" class="form-control"  name="outgoing" id="outgoing" readonly  unselectable="on"/>
+					</div>
+					<div class="form-group">
+						<label>Remark</label>
+						<input type="text" class="form-control"  name="remark" id="remark" readonly  unselectable="on"/>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>Status</label>
+						<select  class="form-control" name="idStatus:number" id="idStatus">
+						</select>
+					</div>
+				</div>
+				<div class="aligncenter">
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary ">Save</button>
+						<button id="return02" type="button" class="btn  btn-info">Return</button>
+					</div>
+				</div>
+				<input type="hidden" id="idPart" name="idPart:number"/>
+			</form>
+		</div>
+	</div>
+</script>
+
+
+
+<script type="text/javascript">
+
+	$('#create').poshytip({
+		content: 'Add device that the system does not have',
+	});
+	$('#add').poshytip({
+		content: 'Add spare we have to this device',
+	});
+
+	//弹窗
+	function showObj(objid){
+		$(objid).draggable().show();
+
+	}
+	function hideObj(objid){
+		$(objid).hide();
+	}
+	function formatRepo (repo) {
+		if (repo.loading) return repo.text;
+
+		var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+		return markup;
+	}
+
+	function formatRepoSelection (repo) {
+		return repo.name || repo.text;
+	}
+	var jmstoken = store.get('JMS-TOKEN');
+
+	var sparePart = {
+		init:function(){
+			$('#body').html($('#sparePartMain').html());
+			this.bindEvens();
+			this.form();
+//			this.autoFill();
+		},
+		autoFill:function(){
+			var self = this;
+			var $el = $('#idMaterial');
+			self.fillMaterialId($el);
+			$('#idStatus').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_spare_part'}});
+		},
+		fillMaterialId: function($el,callback) {
+			$el.select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {'JMS-TOKEN': jmstoken},
+					delay: 200,
+					data: function (params) {
+						var paramsObj ={
+							q: params.term,
+							types:[5]
+						};
+						var params = $.param(paramsObj,true);
+						return params;
+					},
+					processResults: function (data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function (markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 150,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open',function(evt){
+				$('#select2-js-data-example-ajax-container').html('');
+				$('#js-data-example-ajax').empty();
+			});
+			callback && callback();
+		},
+		updateSpartInfo:function(){
+			var $mat = $('#idMaterial');
+			var materialId = $mat.val() || $mat.data('id');
+			if(!$mat.val()){
+				$mat.append('<option value="'+materialId+'"></option>');
+				$mat.val(materialId);
+			}
+
+		},
+		bindEvens:function(){
+			var self = this;
+			var $cnt = $('#tcbox-pcpplist');
+			$cnt.on("change","#idMaterial",function () {
+				self.updateSpartInfo();
+			});
+			$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+//				var _html = '';
+//				_(data).each(function (d, i) {
+//					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+//				});
+//				$('#machine-group').find('.dropdown-menu').append(_html);
+				var routeParams = RouterManager.getParams();
+				var machineId = routeParams.machineId;
+				var _html = '';
+				_(data).each(function(d, i) {
+					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+					if(machineId == d.id){
+						$('#machine-select').val(parseInt(machineId));
+						$('#machineNo').html(d.name);
+						self.loadTable();
+					}
+				});
+				$('#machine-group').find('.dropdown-menu').append(_html);
+			});
+
+
+			$('#machine-group').on('click', 'li a', function (e) {
+				var $t = $(this);
+				var id = $t.data('id');
+				$('#machine-select').val(parseInt(id));
+				$('#machineNo').html($t.text());
+				self.loadTable();
+				RouterManager.setUrl({
+					groupId:'m-sparePartList',
+					machineId:id
+				});
+			});
+
+			//点击新建备件
+			$('#create').click(function(){
+				$.get("views/m-sparePart-create.html",function(data){
+					RouterManager.setUrl({
+						groupId:'m-sparePartList',
+						viewId:'m-sparePart-create',
+						action:'createMaterial'
+					});
+					$("#body").html(data);
+				});
+			});
+			$('#add').click(function(){
+				showObj('#tcbox-pcpplist');
+				var idMachine = $('#machine-select').val();
+				$('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+					if(idMachine){
+						$('#idMachine').val(idMachine);
+					}
+				});
+				self.autoFill();
+			});
+
+			$('#tcbox-pcpplist').on('click','.tc_close',function(){
+				$.get("views/m-sparePartList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+			$('#return02').click(function(){
+				$.get("views/m-sparePartList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+		},
+		loadTable:function(){
+			var self = this;
+			var data = {};
+			var idMachine = $('#machine-select').val();
+			if (idMachine) {
+				data.idMachine = idMachine;
+			}
+			if (this.table) {
+				this.table.destroy();
+			}
+			this.table = $('#sparePartList').DataTable( {
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "m/sparePartsList",
+					"dataType": "json",
+					"data":data,
+					"headers":{'JMS-TOKEN':jmstoken}
+				},
+				"columnDefs": [ {
+					"targets": -1,
+					"data": null,
+					"defaultContent": '<button class=button-edit>Edit</button><button class=button-delete>Delete</button>'
+				} ],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+				dom: "tip",
+				pageLength:"50"
+			} );
+			$('#sparePartList tbody').on( 'click', 'button', function () {
+				var data = self.table.row( $(this).parents('tr') ).data();
+				var clazz =$(this).attr('class');
+				if(clazz=='button-edit'){
+					showObj('#tcbox-pcpplist');
+					$.sparePartInfo(data[7],jmstoken,function(data){
+						$('#spareForm').populate(data,true);
+						var materialId = data.materialId;
+						var $mat = $('#idMaterial');
+						self.fillMaterialId($mat,function(){
+							$mat.append('<option value="'+materialId+'"></option>');
+							$mat.val(materialId);
+							$('#select2-idMaterial-container').text(data.material);
+						});
+						$('#idStatus').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_spare_part'}},function(){
+							$('#idStatus').val(data.idStatus);
+						});
+						$('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+							$('#idMachine').val(data.idMachine);
+						});
+					});
+				}
+				else {
+					$.deleteSparePart(data[7],jmstoken,function(data){
+						var machineId = $('#machine-select').val();
+						$.get("views/m-sparePartList.html",function(data){
+							$("#body").html(data);
+							RouterManager.setUrl({
+								groupId:'m-sparePartList',
+								machineId:machineId
+							});
+						});
+					});
+				}
+			} );
+		},
+		form:function(){
+
+			$('#spareForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'idMaterial': {
+						validators: {
+							notEmpty: {
+								message: 'Device cannot be empty.'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				var $form     = $(e.target),
+						validator = $form.data('bootstrapValidator');
+				var sparePart =JSON.stringify($('#spareForm').serializeJSON());
+				var machineId = $('#idMachine').val();
+				$.saveSparePart(sparePart,jmstoken,function(data){
+					$.get("views/m-sparePartList.html",function(data){
+						RouterManager.setUrl({
+							groupId:'m-sparePartList',
+							machineId:machineId
+						});
+						$("#body").html(data);
+					});
+				});
+
+			});
+		}
+	};
+	sparePart.init();
+
+</script>
+
+
+    
+
+
+

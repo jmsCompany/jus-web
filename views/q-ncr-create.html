@@ -1,0 +1,589 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+  <!--<head>-->
+    <!--<meta charset="utf-8">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--&lt;!&ndash;-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <!--<meta name="format-detection" content="telephone=no">-->
+    <!--&ndash;&gt;-->
+    <!--<title>表格页面</title>-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap-customize.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/style.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/pages.css">-->
+    <!--<script type="text/javascript" src="js/quality/js/html5.js"></script>-->
+    <!--<script type="text/javascript" src=js/quality/"js/jquery.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/bootstrap.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/respond.src.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/base.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/main.js"></script>-->
+    <!--&lt;!&ndash;plugin&ndash;&gt;-->
+  <!--</head>-->
+  <body>
+    <!-------------------------------------- 头部开始 -------------------------------------->
+    <header>
+      <div class="container1">
+        
+      </div>
+    </header>
+    <!-------------------------------------- 头部结束 -------------------------------------->
+    <!-------------------------------------- 内容开始 -------------------------------------->
+    <main>
+      <form id="ncrForm"  method="post" action="index.html">
+      <div class="container1">
+        <div class="ui-table1">
+          <table>
+            <tr>
+              <td colspan="2" align="center">
+                <!--<img src="img/logo1.png" alt="" class="logo">-->
+              </td>
+              <td colspan="8">
+                <div class="title1">
+                  不符合报告<br>Non-conformance Report
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" rowspan="2" align="center">
+                <p><b class="name">零件号<br>Part Number</b></p>
+              </td>
+              <td colspan="3" rowspan="2">
+                <!--<p contenteditable></p>-->
+                <input id="material" name="material" class="no-show-border" readonly>
+                <input type="hidden" id="idMaterial" name="idMaterial" class="no-show-border" >
+              </td>
+              <td colspan="1" rowspan="2" align="center" style="width:100px;">
+                <p><b class="name">零件名称<br>Part Name</b></p>
+              </td>
+              <td colspan="3" rowspan="2">
+                <!--<p contenteditable></p>-->
+                <label id="matDes" style="width:200px;"></label>
+              </td>
+              <td colspan="2" align="center">
+                <p><b class="name">NCR No:</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <input id="ncrNo" name="ncrNo" class="no-show-border">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="10">
+                <p><b class="name">问题描述 Problem Description:</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" align="center"><p><b>何人 Who</b></p></td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <!--<input id="who" name="who" class="no-show-border" style="width:120px;">-->
+                <select id="who" name="who:number" style="width:150px;"></select>
+              </td>
+              <td colspan="1" align="center"><p><b>何时 When</b></p></td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <input id="when1" name="when1" class="no-show-border">
+              </td>
+              <td colspan="1" align="center"><p><b>何地 Where</b></p></td>
+              <td colspan="3">
+                <!--<p contenteditable></p>-->
+                <input id="where1" name="where1" class="no-show-border">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" align="center"><p><b style="letter-spacing: -1px;">多少 How Much</b></p></td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <input id="howMuch" name="howMuch" class="no-show-border" style="width:120px;">
+              </td>
+              <td colspan="1" align="center"><p><b>怎样 How</b></p></td>
+              <td colspan="6">
+                <!--<p contenteditable></p>-->
+                <input id="how" name="how" class="no-show-border">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" align="center"><p><b>何事 What</b></p></td>
+              <td colspan="9">
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <textarea id="what" name="what" style="width:750px;height:50px;"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="10" align="center"><p><span class="name">图片/示例 Picture</span></p></td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <div class="img" style="border: 3px solid #66ff33; height: 300px;" id="pic1OrgFile">
+                  <input type="hidden" name="pic1Filename" id="pic1Filename">
+                  <input type="hidden" name="pic1OrgFilename" id="pic1OrgFilename">
+                </div>
+              </td>
+              <td colspan="5">
+                <div class="img" style="border: 3px solid #ff0000; height: 300px;"  id="pic2OrgFile">
+                  <input type="hidden" name="picFilename" id="picFilename">
+                  <input type="hidden" name="pic2OrgFilename" id="pic2OrgFilename">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="10">
+                <p><b class="name">紧急措施Emergency  Action:</b></p>
+
+                <textarea id="emergencyAction" name="emergencyAction" class="input-line" style="width:850px;height:100px;"></textarea>
+                <!--<div class="input-line" contenteditable>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                  <!--<span></span>-->
+                <!--</div>-->
+                <p class="text-right">
+                  <b class="name" style="position: relative; top: 12px;">行动日期Action Date:</b>
+                  &nbsp;
+                  <span class="input-line"  style="width: 180px; margin-right: 20px; position: relative; top: 10px; float: right;">
+                    <!--<span></span>-->
+                    <input id="actionDate" name="actionDate" class="no-show-border">
+
+                  </span>
+
+                  <!--<input id="actionDate" name="actionDate" class="no-show-border">-->
+                </p>
+                <div class="clearfix"></div>
+                <div class="ht10"></div>
+              </td>
+            </tr>
+            <tr style="border-bottom-style: dotted;">
+              <td colspan="10"><p><span class="name">
+                请调查原因和制定措施消除问题<br>Please investigate root cause and perform the corrective action to eliminate this problem
+              </span></p></td>
+            </tr>
+            <tr>
+              <td colspan="2" class="nobr">
+                <p><span class="name">回复方式: <br>Reply Format</span></p>
+              </td>
+              <td colspan="3" class="nobr">
+                <p><span class="name">纠正措施报告<br>Corrective Action Report</span>
+                  <input type="radio" name="car" id="car" style="position: relative; top: -10px; left: 30px;" value="car">
+                </p>
+              </td>
+              <td colspan="3" class="nobr">
+                <p><span class="name">8D报告<br>8D Report</span>
+                  <input type="radio" name="car" id="q8d" style="position: relative; top: -10px; left: 30px;" value="q8d">
+                </p>
+              </td>
+              <td colspan="2" class="nobr" id="appendOrder">
+
+              </td>
+            </tr>
+            <tr style="border-bottom-style: dotted;" >
+              <td colspan="10">
+                <p><span class="name">请在此日期前回复:(月/日/年)</span></p>
+                <p><span class="name">Please reply answer preferably within:
+                  <span class="name" style=" position: absolute;">
+                  <input id="deadline" name="deadline" class="no-show-border" style="width:500px;"></span>
+                </span>
+                  <!--<span contenteditable>&nbsp;</span>-->
+
+                  </p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <p><span class="name">作成人Response:</span></p>
+                <p class="text-right" style="line-height: 0;">
+                  <!--<input id="response" name="response" class="no-show-border">-->
+                  <select id="respnose" name="respnose" style="width:150px;"></select>
+                  <!--<span class="input-line" contenteditable style="width: 70%;">-->
+                    <!--<span style="margin-top: 0;"></span>-->
+                  <!--</span>-->
+                </p>
+              </td>
+              <td colspan="3">
+                <p><span class="name">日期Date:</span><span class="name" style=" position: absolute;">
+                  <input id="date" name="date" class="no-show-border" style="width:100px;"></span></p>
+
+
+                <!--<p  style="line-height: 0;position:absolute;padding-left: 50px;">-->
+                <!--<p class="text-right" style="line-height: 0;">-->
+                  <!--<span class="input-line" contenteditable style="width: 70%;">-->
+                    <!--<span style="margin-top: 0;"></span>-->
+                  <!--</span>-->
+                  <!--<input id="date" name="date" class="no-show-border">-->
+                <!--</p>-->
+              </td>
+              <td colspan="4" align="center">
+                <p><span class="name">文件编号 File No.:FM-08-15</span></p>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+        <div class="clearfix"></div>
+        <div class="foot-btn-box">
+          <div class="form-group">
+            <button class="btn btn-primary" id="save01">保存</button>
+            <button class="btn  btn-info" type="button" id="return01">返回</button>
+          </div>
+        </div>
+        <input id="idNcr" name="idNcr" type="hidden">
+        <input id="idQNoProcess" name="idQNoProcess" type="hidden">
+      </form>
+    </main>
+    <!-------------------------------------- 内容结束 -------------------------------------->
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+    <footer>
+      <div class="container1">
+        
+      </div>
+    </footer>
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+  </body>
+<!--</html>-->
+<style>
+
+  .no-show-border{
+    border-left:0px;border-top:0px;border-right:0px;border-bottom:1px;
+  }
+</style>
+<script type="text/javascript">
+  var jmstoken= store.get('JMS-TOKEN');
+
+  function formatRepo (repo) {
+    if (repo.loading) return repo.text;
+
+    var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+    return markup;
+  }
+
+  function formatRepoSelection (repo) {
+    return repo.name || repo.text;
+  }
+  var ncrCreate={
+    init:function(){
+      var self = this;
+      var params = this.params = RouterManager.getParams();
+      var action = params['action'];
+      var idNoProcess = params['idNoProcess'];
+      var ncrId = params['idNcr'];
+      var materialId = params['materialId'];
+      var material = params['material'];
+      $('#idQNoProcess').val(idNoProcess);
+      if(material){
+        arr = material.split('_');
+        $('#material').val(material);
+        $('#idMaterial').val(materialId);
+        $('#matDes').html(arr[2]);
+
+      }
+      if(ncrId){
+        this.loadDetail(ncrId,action);
+      }
+      this.autoFill();
+      this.bindEvents(action);
+      this.initUpload1Image();
+      this.initUpload2Image();
+      this.form();
+    },
+    loadDetail:function(ncrId,action,callback){
+      var self = this;
+      $.ncrInfo(ncrId,jmstoken,function(data){
+        debugger;
+        $('#ncrForm').populate(data,true);
+        var materialId = data.idMaterial;
+        arr = data.material.split('_');
+        $('#matDes').html(arr[2]);
+
+        var $who = $('#who');
+        self.fillUser($who,function(){
+          $who.append('<option value="'+data.who+'"></option>');
+          $who.val(data.whoName);
+        });
+        $('#select2-who-container').text(data.whoName);
+
+        var $response = $('#respnose');
+        self.fillUser($response,function(){
+          $response.append('<option value="'+data.respnose+'"></option>');
+          $response.val(data.respnoseName);
+        });
+        $('#select2-respnose-container').text(data.respnoseName);
+
+        $('#pic1OrgFile').append('<img style="float: left;width: 100px;" class="custom-preview" src="' + $clientURL+'getFile/'+data['pic1Filename']+'/orgFileName/' + '">');
+        $('#pic2OrgFile').append('<img style="float: left;width: 100px;" class="custom-preview" src="' + $clientURL+'getFile/'+data['picFilename']+'/orgFileName/' + '">');
+        if(data.car == 'car'){
+          $('#car').attr('checked',true);
+          if(data.idCar){
+            $('#appendOrder').html('<button type="button" class="btn btn-info" id="car01"> 纠正措施报告 </button>' +
+                    '<input id="idCar" name="idCar" type="hidden" value="'+ data.idCar +'">');
+          }
+          else{
+            $('#appendOrder').html('<button type="button" class="btn btn-info" id="createCar">新建纠正措施报告</button>');
+          }
+        }
+        else{
+          $('#q8d').attr('checked',true);
+          if(data.idQ8d){
+            $('#appendOrder').html('<button type="button" class="btn btn-info" id="q8d01">8D报告</button>' +
+                    '<input id="idQ8d" name="idQ8d" type="hidden" value="'+ data.idQ8d +'">');
+          }
+          else{
+            $('#appendOrder').html('<button type="button" class="btn btn-info" id="createQ8d">新建8D报告</button>');
+          }
+        }
+
+        self.dealAction(action);
+        callback && callback();
+      });
+    },
+    dealAction:function(action){
+//      $('.remark01').show();
+      if(action == 'detail'){
+        $('input,select,textarea', $('#ncrForm')).prop('readonly', true);
+        $("input:not(:button,:hidden)").prop("disabled", 'disabled');
+        $('select', $('#ncrForm')).prop("disabled", 'disabled');
+        $('.clearfix').remove();
+        $('.foot-btn-box').remove();
+      }
+    },
+    fillUser: function($user,callback) {
+      $user.select2({
+        ajax: {
+          url: $clientURL + 'u/getUsersByQ',
+          dataType: 'json',
+          headers: {'JMS-TOKEN': jmstoken},
+          delay: 200,
+          data: function (params) {
+            return {
+              q: params.term
+            }
+          },
+          processResults: function (data, params) {
+            return {
+              results: data,
+              pagination: null
+            }
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        },
+        minimumInputLength: 1,
+        width: 120,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      }).on('select2:open',function(evt){
+        $('#select2-js-data-example-ajax-container').html('');
+        $('#js-data-example-ajax').empty();
+      });
+      callback && callback();
+    },
+    autoFill:function(){
+      var self = this;
+      self.fillUser($('#who'));
+      self.fillUser($('#respnose'));
+      var dataPickerOpt = {
+        format: "YYYY-MM-DD"
+      };
+      $('#actionDate').datetimepicker(dataPickerOpt);
+      $('#date').datetimepicker(dataPickerOpt);
+      $('#when1').datetimepicker(dataPickerOpt);
+      $('#deadline').datetimepicker(dataPickerOpt);
+    },
+    bindEvents:function(action){
+      var self = this;
+      var $form = $('#ncrForm');
+
+      $form.on('click','#q8d01',function(){
+        var idNcr = $('#idNcr').val();
+        var idQ8d = $('#idQ8d').val();
+        var historyOption = {
+          groupId :'q-noProcessingSheetList',
+          viewId:'q-eightD-create',
+          idQ8d:idQ8d,
+          idNcr:idNcr
+        };
+        $.get("views/q-eightD-create.html",function(data){
+          if(action){
+            historyOption.action = 'detail';
+          }
+          RouterManager.setUrl(historyOption);
+          $("#body").html(data);
+        });
+      });
+
+      $form.on('click','#car01',function(){
+        var idNcr = $('#idNcr').val();
+        var idCar = $('#idCar').val();
+        var historyOption = {
+          groupId :'q-noProcessingSheetList',
+          viewId:'q-car-create',
+          idCar:idCar,
+          idNcr:idNcr
+        };
+        $.get("views/q-car-create.html",function(data){
+          if(action){
+            historyOption.action = 'detail';
+          }
+          RouterManager.setUrl(historyOption);
+          $("#body").html(data);
+        });
+      });
+
+      $form.on('click','#createCar',function(){
+        var idNcr = $('#idNcr').val();
+        var ncrNo = $('#ncrNo').val();
+        $.get("views/q-car-create.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList',
+            viewId:'q-car-create',
+            idNcr:idNcr,
+            ncrNo:ncrNo
+          });
+          $("#body").html(data);
+        });
+      });
+
+      $form.on('click','#createQ8d',function(){
+        var idNcr = $('#idNcr').val();
+        var ncrNo = $('#ncrNo').val();
+        $.get("views/q-eightD-create.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList',
+            viewId:'q-eightD-create',
+            idNcr:idNcr,
+            ncrNo:ncrNo
+          });
+          $("#body").html(data);
+        });
+      });
+
+      $('#ncrForm').on('click','#return01',function(){
+        $.get("views/q-ncrList.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList',
+            viewId:'q-ncrList'
+          });
+          $("#body").html(data);
+        });
+      });
+    },
+    initUpload1Image: function() {
+      var uploadUrl = 'q/uploadNcrImage';
+      Dropzone.autoDiscover = false;
+      Dropzone.options.pic1OrgFile = {
+        paramName: "fileName", // The name that will be used to transfer the file
+        maxFilesize: 10, // MB
+        dictDefaultMessage:'点击或将文件拖拽至此处上传',
+        headers: {'JMS-TOKEN':jmstoken},
+        success:function(file,res){
+          /*图片上传后端错误处理@TODO hxg */
+          var uri = $clientURL+'getFile/'+res['fileName']+'/orgFileName/';
+          //替换图片
+          $('div#pic1OrgFile').find('[data-dz-thumbnail]').attr('src',uri).css({
+            'max-width': '100%'
+          });
+          $('div#pic1OrgFile').find('.dz-error-mark, .custom-preview, .dz-success-mark, .dz-progress, .dz-details').remove();
+          $('div#pic1OrgFile input#pic1Filename').val(res['fileName']);
+          $('div#pic1OrgFile input#pic1OrgFilename').val(res['orgName']);
+          if (file.previewElement) {
+            return file.previewElement.classList.add("dz-success");
+          }
+
+        },
+        error:function(file){
+          var  _ref;
+          if (file.previewElement) {
+            file.previewElement.classList.add("dz-error");
+            _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+            _ref[0].innerHTML='上传失败，请重新上传';
+          }
+        }
+      };
+      new Dropzone("div#pic1OrgFile",{
+        url:$clientURL+uploadUrl
+      });
+    },
+    initUpload2Image: function() {
+      var uploadUrl = 'q/uploadNcrImage';
+      Dropzone.autoDiscover = false;
+      Dropzone.options.pic2OrgFile = {
+        paramName: "fileName", // The name that will be used to transfer the file
+        maxFilesize: 10, // MB
+        dictDefaultMessage:'点击或将文件拖拽至此处上传',
+        headers: {'JMS-TOKEN':jmstoken},
+        success:function(file,res){
+          /*图片上传后端错误处理@TODO hxg */
+          var uri = $clientURL+'getFile/'+res['fileName']+'/orgFileName/';
+          //替换图片
+          $('div#pic2OrgFile').find('[data-dz-thumbnail]').attr('src',uri).css({
+            width:'inherit',
+            height:'inherit',
+            'max-width': '100%'
+          });
+          $('div#pic1OrgFile').find('.dz-error-mark, .custom-preview, .dz-success-mark, .dz-progress, .dz-details').remove();
+          $('div#pic2OrgFile input#picFilename').val(res['fileName']);
+          $('div#pic2OrgFile input#pic2OrgFilename').val(res['orgName']);
+          if (file.previewElement) {
+            return file.previewElement.classList.add("dz-success");
+          }
+
+        },
+        error:function(file){
+          var  _ref;
+          if (file.previewElement) {
+            file.previewElement.classList.add("dz-error");
+            _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+            _ref[0].innerHTML='上传失败，请重新上传';
+          }
+        }
+      };
+      new Dropzone("div#pic2OrgFile",{
+        url:$clientURL+uploadUrl
+      });
+    },
+    form:function(){
+      var self = this;
+      $('#ncrForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+//          'idMaterial:number': {
+//            validators: {
+//              notEmpty: {
+//                message: '物料编码不能为空'
+//              }
+//            }
+//          }
+        }
+      }).on('success.form.bv', function (e) {
+        e.preventDefault();
+        var $form = $(e.target),
+        validator = $form.data('bootstrapValidator');
+        var ncr = JSON.stringify($('#ncrForm').serializeJSON());
+        debugger;
+        $.saveNcr(ncr, jmstoken, function (data) {
+          debugger;
+          history.go(-1);
+//          $.get("views/q-deviationList.html", function (data) {
+//            $("#body").html(data);
+//            RouterManager.setUrl({
+//              groupId:'q-deviationList'
+//            });
+//          });
+        });
+      });
+    }
+  };
+  ncrCreate.init();
+
+</script>
+

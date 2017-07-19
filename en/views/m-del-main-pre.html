@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+var jmstoken= store.get('JMS-TOKEN');
+$(document).ready(function() {
+    $('#pmMainList').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://192.168.30.107:9999/jms/s/materialList",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        //dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+		//点击查看出现excel报表
+} );
+</script>
+
+</head>
+<body>
+<div class="col-lg-9 col-lg-offset-3">
+	<a href="javascript:" id="detail">明细</a>
+	<a href="javascript:" id="summary">汇总</a>
+	
+    <div class="search1"><input name="" type="text" /></div><!--搜索框-->
+	<div class="search2"><input name="" type="button" /></div><!--搜索按钮-->
+</div>
+ <table id="pmMainList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>设备名称</th>
+                <th>设备编号</th>
+                <th>设备归属</th>
+                <th>保养周期</th> 
+                <th>保养项目</th>
+                <th>保养日期</th>
+                <th>检查结果</th> 
+                <th>操作</th>  <!--编辑（只能对检查结果进行编辑）-->
+                <!--汇总
+                <th>序号</th>
+                <th>设备名</th>
+                <th>设备编号</th> 
+                <th>设备归属</th>
+                <th>备注</th>
+                <th>操作</th>	<!--查看、编辑、导出-->
+                -->
+            </tr>
+        </thead>
+</table>
+
+
+
+</body>
+</html>

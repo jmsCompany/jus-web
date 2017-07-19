@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>日生产详情</title>
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    function showObj(objid){
+        $(objid).show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    var paDetail={
+        init:function(){
+            var params = this.params = RouterManager.getParams();
+            var woId = params['woId'];
+
+            this.bindEvents();
+            this.loadTable(woId);
+            this.autoFill();
+        },
+        loadTable: function(woId) {
+//            var woId = $('#wo-select').val();
+//
+//            if(this.table) {
+//                this.table.destroy();
+//            }
+            var self = this;
+            this.table = $('#ppaList').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "p/getPaDayDetailListByWoId",
+                    "dataType": "json",
+                    "headers":{'JMS-TOKEN':jmstoken},
+                    "data": {'woId':woId}
+                },
+//                "columnDefs": [{
+//                    "targets": -1,
+//                    "data": null,
+//                    "defaultContent": '<button class=button-edit>编辑</button>'
+//                }],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+            $('#ppaList').on('xhr.dt', function ( e, settings, json, xhr ) {
+                if(json.jmsError) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).show();
+                    $('#info').empty();
+                    $('#info').append(json.jmsError);
+//                    alert(json.jmsError)
+                }
+            } );
+//            $('#ppaList tbody').on('click', 'button', function () {
+//                var data = self.table.row($(this).parents('tr')).data();
+//                var clazz = $(this).attr('class');
+//                    var top = $('#body').scrollTop();
+//                    $('.tcbox').css({
+//                        top: $(window).height() * 0.2 + top
+//                    }).show();
+//                    var cpp = data[10];
+//                    $('#idCpp').val(cpp);
+//                    self.loadDetail(cpp);
+//                    $('.detail01').show();
+//            });
+        },
+        bindEvents:function(){
+            var self = this;
+            /*
+            $('#wo-select').selectautofill('p/getWoObjsList',{headers:{'JMS-TOKEN': jmstoken}}, function(data) {
+                var _html = '';
+                _(data).each(function(d, i) {
+                    _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+                });
+                $('#wo-group').find('.dropdown-menu').append(_html);
+            });
+
+
+            $('#wo-group').on('click', 'li a', function(e) {
+                var $t = $(this);
+                var id = $t.data('id');
+                $('#wo-select').val(parseInt(id));
+                $('#handle-bar').html($t.text());
+                self.loadTable();
+            });
+*/
+//            $('#tcbox-pcpplist').on("click",".tc_close,#return ",function(){
+//                $('.tcbox').hide();
+//                $('#cppCheckForm')[0].reset();
+//            });
+            $('#summary').click(function(){
+                var historyParams={
+                    groupId:'p-palist'
+                };
+                $.get("views/p-palist.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+
+            $('#ppaList th:eq(1)').poshytip({
+                content: '产品:a 版本:b 计划开始时间:8:00 计划结束时间:17:00 计划数量:100',
+            });
+            $('#ppaList th:eq(2)').poshytip({
+                content: '产品:a 版本:b 计划开始时间:8:00 计划结束时间:17:00 计划数量:100',
+            });
+        },
+        autoFill:function(){
+            var dataPickerOpt = {
+                format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+            };
+            $('#checkTime').datetimepicker(dataPickerOpt);
+        },
+        form:function(){
+            $('#cppCheckForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+//                    'pwoId:number': {
+//                        validators: {
+//                            notEmpty: {
+//                                message: '工单号不能为空'
+//                            }
+//                        }
+//                    },
+                    'finQty': {
+                        validators: {
+                            regexp: {
+                                regexp: /^[1-9]\d*$/,
+                                message: '只能是正整数。'
+                            },
+                        }
+                    }
+                }
+            }).on('success.form.bv', function (e) {
+                e.preventDefault();
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var cpp = $('#cppCheckForm').serializeJSON();
+                cpp.planSt = cpp.planSt.replace('Z', '470+08:00');
+                cpp.planFt = cpp.planFt.replace('Z', '470+08:00');
+                cpp = JSON.stringify(cpp);
+                debugger;
+//                $.saveCpp(cpp, jmstoken, function (data) {
+//                    debugger;
+//                    $('.tcbox').hide();
+//                    $('#cppCheckForm')[0].reset();
+//                });
+
+            });
+        }
+    };
+    paDetail.init();
+
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="summary">总生产详情</span>
+	<span class="h-title"><b>日生产详情</b></span>
+</div>
+<div class="cont">
+    <!--<div class="r-header-body">-->
+        <!--<div class="btn-group btn-group-left" id="wo-group">-->
+            <!--<select name="none:number" id="wo-select" style="display: none;"></select>-->
+            <!--<button class="btn btn-default" type="button" style="" id="handle-bar">工单</button>-->
+            <!--<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">-->
+                <!--<span class="caret"></span>-->
+                <!--<span class="sr-only">工单</span>-->
+            <!--</button>-->
+            <!--<ul class="dropdown-menu"></ul>-->
+        <!--</div>-->
+    <!--</div>&lt;!&ndash;状态结束&ndash;&gt;-->
+ <!--日期-->
+<!--<div class="btn-group btn-group-left">-->
+       <!--<label>日期：</label><input type="text" id='datetimepicker1'>-->
+       		<!--<script type="text/javascript">-->
+				<!--$(function () {-->
+					<!--$('#datetimepicker1').datetimepicker();-->
+					<!--$('#datetimepicker2').datetimepicker();-->
+				<!--});-->
+			<!--</script>-->
+            <!--&#45;&#45; <input type="text" id='datetimepicker2'>-->
+<!--</div>-->
+
+ <table id="ppaList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <!--<th>编号</th>-->
+                <th>工单号</th>
+                <th>工序</th>
+                <th>计划开始时间</th>
+                <th>计划结束时间</th>
+                <th>计划数量</th>
+                <th>计划检查时间</th>
+                <th>检查时间</th>
+                <th>计划检查数量</th>
+                <th>完成数</th>
+                <th>差异</th>
+                <!--<th>操作</th>-->
+            </tr>
+        </thead>
+</table>
+
+</div>
+
+<!-- 弹窗 start --><!--
+<div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible;">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">编辑检查计划</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="cppCheckForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>工单</label>
+                    <input type="text" class="form-control"  name="woNo" id="woNo" readonly  unselectable="on">
+                </div>
+                <div class="form-group">
+                    <label>工序</label>
+                    <input type="text" class="form-control"  name="routineD" id="routineD" readonly  unselectable="on">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>计划开始时间</label>
+                    <input type="text" class="form-control" name="planSt" id="planSt" readOnly="true">
+                </div>
+                <div class="form-group">
+                    <label>计划结束时间</label>
+                    <input type="text" class="form-control"  name="planFt" id="planFt" readOnly="true">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>计划数量</label>
+                    <input type="text" class="form-control"  name="planQty" id="planQty" readOnly="true">
+                </div>
+                <div class="form-group">
+                    <label>计划检查时间</label>
+                    <input type="text" class="form-control"  name="planCheckTime" id="planCheckTime" readOnly="true">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>检查时间</label>
+                    <input type="text" class="form-control"  name="checkTime" id="checkTime">
+                </div>
+                <div class="form-group">
+                    <label>计划检查数量</label>
+                    <select  class="form-control" name="planCheckQty" id="planCheckQty">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>完成数</label>
+                    <input type="text" class="form-control time"  name="finQty" id="finQty">
+                </div>
+                <div class="form-group">
+                    <label>差异</label>
+                    <input type="text" class="form-control time"  name="deviation" id="deviation">
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary " id="save">保存</button>
+                    <button id="return" type="reset" class="btn  btn-info">返回</button>
+                </div>
+            </div>
+            <input type="hidden" id="idCpp" name="idCpp:number"/>
+        </form>
+    </div>
+</div>-->
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

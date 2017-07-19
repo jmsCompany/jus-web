@@ -1,0 +1,130 @@
+<script type="text/html" id="inProcessingListTmpl">
+        <div class="body-head-title">
+            <span class="h-title" id="po01"><b>过程检查</b></span>
+            <span class="h-title">可量化roller</span>
+            <span class="h-title">不可量化roller</span>
+            <span class="h-title">pulley</span>
+        </div>
+
+        <div class="cont">
+            <div class="r-header-body">
+                <div class="btn-group btn-group-left">
+                    <button class="btn btn-default" type="button" style="">类型</button>
+                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">类型</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">可量化</a></li>
+                        <li><a href="#">不可量化</a></li>
+                        <li><a href="#">pulley</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group btn-group-left" style="width: 180px;">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" name="opDate" id="opDate" style="height: 30px;" />
+                        <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="btn-group btn-group-left">
+                    <button class="btn btn-default" type="button" style="">结果</button>
+                    <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">结果</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">可量化</a></li>
+                        <li><a href="#">不可量化</a></li>
+                        <li><a href="#">pulley</a></li>
+                    </ul>
+                </div>
+                <div class="right-list">
+                    <!--搜索框-->
+                    <div class="sousuo">
+                        <div class="ss-input">
+                            <input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容">
+                        </div>
+                        <a href=""><span class="icon-ss-bg"></span>搜索</a>
+                    </div>
+                </div>
+            </div>
+            <table id="table1" class="display dataTable no-footer" cellspacing="0" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>图纸号</th>
+                        <th>零件名称</th>
+                        <th>工单号</th>
+                        <th>项目名称</th>
+                        <th>工序</th>
+                        <th>设备</th>
+                        <th>生产批次</th>
+                        <th>结果</th>
+                        <th>日期</th>
+                        <th>操作</th>
+                        <!--编辑、详情-->
+                    </tr>
+                </thead>
+            </table>
+        </div>
+</script>
+
+<script type="text/javascript">
+    var app = {
+        init: function() {
+            $('#body').html($('#inProcessingListTmpl').html());
+            this.bindEvents();
+            // this.loadTable();
+        },
+        bindEvents: function() {
+            $('#datetimepicker1').datetimepicker();
+            //	点击新建
+            $('？').click(function(){
+                $.get("views/q-inProcessing-create.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+            //	点击编辑
+            $('？').click(function(){
+                $('#_key23').val('?');
+                $.get("views/q-inProcessing-update.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+            //	点击详情
+            $('？').click(function(){
+                $('#_key23').val('?');
+                $.get("views/q-inProcessing-detail.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+        },
+        loadTable: function() {
+            $('#table1').DataTable({
+                deferRender:  true,
+                "processing": true,
+                "serverSide": true,
+                scrollY:"350px",
+                scrollCollapse: true,
+                "ajax": {
+                    "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+                    "dataType": "json"
+                },
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "rtiS",
+                scroller: {
+                    loadingIndicator: true
+                }
+            });
+        }
+    }
+    
+    app.init();
+
+</script>

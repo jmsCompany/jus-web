@@ -1,0 +1,22 @@
+<div class="body-head-title">
+    <span class="h-title-selected" data-view-id="s-company-turnover">公司流转</span>
+    <span class="h-title" data-view-id="s-company-report">公司往来报告</span>
+    <span class="h-title" data-view-id="s-company-setting">公司往来设置</span>
+</div>
+
+<div>公司流转</div>
+
+<script>
+    var historyOptions={
+        groupId:'subcontract'
+    };
+
+    $(".body-head-title span").on('click',function(){
+        var viewId = $(this).data('view-id');
+        historyOptions.viewId = viewId;
+        $.get("views/" + viewId + ".html",function(data){
+            RouterManager.setUrl(historyOptions);
+            $("#body").html(data);
+        });
+    });
+</script>

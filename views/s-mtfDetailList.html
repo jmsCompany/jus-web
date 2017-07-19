@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>计划发料</title>
+    <script type="text/javascript">
+        var jmstoken= store.get('JMS-TOKEN');
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.name || repo.text;
+        }
+        function showObj(objid){
+            $(objid).show();
+
+        }
+        function hideObj(objid){
+            $(objid).hide();
+        }
+        var issueDetail={
+            init:function(){
+                this.bindEvents();
+                this.loadTable();
+            },
+            loadTable: function() {
+                var self = this;
+                var data = {};
+                var materialId = $('#js-data-example-ajax').val();
+                if (materialId) {
+                    data.materialId = materialId;
+                }
+                var fromTime = $('#datetimepicker1').val();
+                var toTime = $('#datetimepicker2').val();
+                if (fromTime && toTime) {
+                    data.fromTime = fromTime;
+                    data.toTime = toTime;
+                }
+
+                if (this.table) {
+                    this.table.destroy();
+                }
+
+
+                this.table = $('#mtfDetailList').DataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "p/getPaDayDetailListByWoId",
+                        "dataType": "json",
+                        "headers":{'JMS-TOKEN':jmstoken},
+                        "data": data
+                    },
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength:"50"
+                } );
+                $('#mtfDetailList').on('xhr.dt', function ( e, settings, json, xhr ) {
+                    if(json.jmsError) {
+                        var top = $('#body').scrollTop();
+                        $('#nullAlert').css({
+                            top: $(window).height() * 0.2 + top
+                        }).show();
+                        $('#info').empty();
+                        $('#info').append(json.jmsError);
+//                        alert(json.jmsError)
+                    }
+                } );
+
+            },
+            bindEvents:function(){
+                $(function () {
+                    $('#datetimepicker1').datetimepicker({
+                        format:"YYYY-MM-DD"
+                    });
+                    $('#datetimepicker2').datetimepicker({
+                        format:"YYYY-MM-DD"
+                    });
+                });
+                var self = this;
+                $('#js-data-example-ajax').select2({
+                    ajax: {
+                        url: $clientURL + 's/getMaterialListObjs',
+                        dataType: 'json',
+                        headers: {'JMS-TOKEN': jmstoken},
+                        delay: 200,
+                        data: function (params) {
+                            return {
+                                q: params.term
+                            }
+                        },
+                        processResults: function (data, params) {
+                            return {
+                                results: data,
+                                pagination: null
+                            }
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    minimumInputLength: 1,
+                    width: 200,
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
+                }).on('select2:open',function(evt){
+                    $('#select2-js-data-example-ajax-container').html('');
+                    $('#js-data-example-ajax').empty();
+                });
+
+                $('.js-data-example-ajax').on('change', self.loadTable.bind(self));
+                var historyOptions = {
+                    groupId: 'mtfList'
+                };
+                //物流查询
+                $('#mtf01').click(function () {
+                    $.get("views/mtfList.html", function (data) {
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                // 工单流转
+                $('#woMtf').click(function () {
+                    $.get("views/s-wo-mtf.html", function (data) {
+                        historyOptions.viewId = 's-wo-mtf';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                // 手动创建
+                $('#create').click(function () {
+                    $.get("views/mtfList-body.html", function (data) {
+                        historyOptions.viewId = 'mtfList-body';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                // 发料清单
+                $('#issueList').click(function () {
+                    $.get("views/s-issueList.html", function (data) {
+                        historyOptions.viewId = 's-issueList';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+            }
+        };
+        issueDetail.init();
+
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="mtf01">物流查询</span>
+    <span class="h-title" id="woMtf">工单流转</span>
+    <span class="h-title" id="create">手动创建</span>
+    <span class="h-title" id="issueList">计划发料</span>
+    <span class="h-title-selected"><b>物流详情</b></span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="btn-group btn-group-left" id="issue">
+            <div class="btn-group btn-group-left">
+                <label>开始时间：</label><input type="text" id='datetimepicker1'>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker1').datetimepicker();
+                    });
+                </script>
+            </div>
+            <div class="btn-group btn-group-left">
+                <label>结束时间：</label><input type="text" id='datetimepicker2'>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker2').datetimepicker();
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="right-list">
+            <select class="js-data-example-ajax" id="js-data-example-ajax">
+                <option value="">选择物料</option>
+            </select>
+            <button id="search" class="button-sytle1">查询</button>
+        </div>
+        <!--<div class="right-list">-->
+            <!--<button id="search" class="button-sytle1">查询</button>-->
+        <!--</div>-->
+    </div>
+    <table id="mtfDetailList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>日期</th>
+            <th>单号</th>
+            <th>物料</th>
+            <th>开始数量</th>
+            <th>入货</th>
+            <th>出货</th>
+            <th>结束数量</th>
+        </tr>
+        </thead>
+    </table>
+
+</div>
+<div class="tcbox container-fluid" id="nullAlert">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+        </div>
+        <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+        <div class="col-xs-12 mar-top-20px">
+            <div class="form-group">
+                <label id="info"></label>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

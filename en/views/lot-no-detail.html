@@ -1,0 +1,126 @@
+<div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                        
+                           
+							<fieldset>
+							<legend>来料收货批号详情</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">采购单号</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="poCode" id="poCode"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">供应商</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="idCocompany" id="idCocompany"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">物料编码</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="pno" id="pno"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">版本</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="rev" id="rev"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">描述</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="des" id="des"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">订购数量</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="qtyPo" id="qtyPo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">已收数量</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="qtyReceived" id="qtyReceived"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">本次数量</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="qty" id="qty"></label>
+                                </div>
+                            </div>
+                            <table id="tableLot" class="display" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>批号</th>
+                                        <th>数量</th>
+                                        <th>箱数</th>
+                                        <th>货架号</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="button" class="btn btn-primary" id="return">返回</button>
+                                </div>
+                            </div>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+    
+<script type="text/javascript">    
+$(document).ready(function() {
+	var idIncome = $('#_key7').val();
+	$.incomeInfo({"id":idIncome},token,function(data){
+		$('#poCode').html(data.poCode);
+		$('#idCocompany').html(data.idCocompany);
+		$('#pno').html(data.pno);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+		$('#qtyPo').html(data.qtyPo);
+		$('#qtyReceived').html(data.qtyReceived);
+		$('#qty').html(data.qty);
+	});
+	$('#tableLot').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json",
+            "data":"idIncome"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+	
+	$('return').click(function(){
+	 		$.get("views/incomeList-detail.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    

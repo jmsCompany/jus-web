@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+
+	function showObj(objid){
+		$(objid).show();
+
+	}
+	function hideObj(objid){
+		$(objid).hide();
+	}
+
+//	function startrequest()
+//	{
+//		$("#date").text((new date()).tostring());
+//	}
+$(document).ready(function() {
+	var jmstoken= store.get('JMS-TOKEN');
+
+//	setinterval("startrequest()",3000);
+
+
+	$.fn.dataTable.ext.errMode = 'throw';
+    var table=$('#stkList').DataTable( {
+		
+      //  deferRender:  true,
+        "processing": true,
+		"serverSide": true,
+		"stateSave": true,
+		"stateDuration": -1,
+        //scrollY:"350px",
+        //scrollCollapse: true,
+        "ajax": {
+			"type": 'POST',
+            "url": $clientURL+"s/stkList",
+            "dataType": "json",
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-bin>货架</button><button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "tip",
+        pageLength:"50"
+		
+    } );
+
+	var historyOptions={
+		groupId:'stk'
+	};
+     $('#stkList tbody').on( 'click', 'button', function () {
+     	 var rowData = table.row( $(this).parents('tr') ).data();
+		 historyOptions.stkId = rowData[5];
+     	var clazz =$(this).attr('class');
+     	if(clazz=='button-bin'){
+			historyOptions.viewId='bin';
+			historyOptions.stkName=rowData[0];
+	 			$.get("views/bin.html",function(data){
+					RouterManager.setUrl(historyOptions);
+	            	 $("#body").html(data);
+	     		});
+	 		
+     	}
+     	else if(clazz=='button-edit'){
+				historyOptions.action='edit';
+				historyOptions.viewId='stk-body';
+     			$.get("views/stk-body.html",function(data){
+					RouterManager.setUrl(historyOptions);
+	                $("#body").html(data);
+	            });
+     	}
+     	else {
+     		  $.deleteStk(rowData[5],jmstoken,function(data){
+				  if(data.valid == false){
+//					  showObj('.tcbox');
+					  var top = $('#body').scrollTop();
+					  $('.tcbox').css({
+						  top: $(window).height() * 0.2 + top
+					  }).show();
+				  }
+				  else{
+					  $.get("views/stk.html",function(data){
+					  	$("#body").html(data);
+					  });
+				  }
+     		  });
+     	}
+       //
+       // alert( data[0] +"的id: "+ data[ 5 ] );
+    } );
+
+		$('#create').click(function(){
+			historyOptions.viewId='stk-body';
+	 		$.get("views/stk-body.html",function(data){
+				RouterManager.setUrl(historyOptions);
+	            $("#body").html(data);
+	     	});
+	 	});
+	 	
+	 	$('#wul1').click(function(){
+			historyOptions.viewId='materialListCategory';
+	 		$.get("views/materialListCategory.html",function(data){
+				RouterManager.setUrl(historyOptions);
+	            $("#body").html(data);
+	     	});
+	 	});
+	$('#matLoc').click(function(){
+		historyOptions.viewId='matLocList';
+		$.get("views/matLocList.html",function(data){
+			RouterManager.setUrl(historyOptions);
+			$("#body").html(data);
+		});
+	});
+} );
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+     <span class="h-title-selected"><b>仓库管理</b></span>
+	 <span class="h-title" id="wul1">物料分类</span>
+	 <span class="h-title" id="matLoc">物料库位</span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+<div class="right-list">
+    <!--搜索框-->
+    <!--<div class="sousuo">-->
+    	<!--<div class="ss-input">    		-->
+    	<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    	<!--</div>-->
+    	<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    <!--</div>-->
+    <button id="create" class="button-sytle1">新建</button>
+
+</div> <!--检索结束-->
+</div>
+ <table id="stkList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>仓库名称</th>
+                <th>描述</th>
+                <th>地址</th>
+                <th>仓库类别</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+</table>
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label>此仓库不能删除！</label>
+				</div>
+			</div>
+	</div>
+</div>
+</body>
+</html>
+

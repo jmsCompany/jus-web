@@ -1,0 +1,302 @@
+
+
+<script type="text/html" id="qFaiCreate">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title" id="FaiCheck"><b>首件检查</b></span>
+                    <span class="h-title" id="newFaiCheck">新建首件检查</span>
+                </div>
+
+
+
+                <form id="incomeForm" method="post" action="index.html" class="form-inline">
+                    <div class="alert alert-success" style="display: none;"></div>
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">工单号</label>
+                            <select class="input-w-3 select-cs1 form-control"  name="woNo" id="woNo">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="input-w-160 control-label">零件名称</label>
+                            <input type="text" class="form-control input-w-3" name="matDes" id="matDes"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label class="input-w-160 control-label">供应商</label>
+                            <select class="input-w-3 select-cs1 form-control" name="sCompanyCoId:number" id="sCompanyCoId">
+                                <option value="">供应商</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="input-w-160 control-label">采购单编码</label>
+                            <input type="text" class="form-control input-w-3" name="projectName" id="projectName"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 mar-top-20px">
+
+                        <div class="form-group">
+                            <label  class="input-w-160">工序</label>
+                            <select class="input-w-3 select-cs1 form-control" name="routeDes" id="routeDes"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="input-w-160">设备</label>
+                            <select class="input-w-3 select-cs1 form-control" name="machineName" id="machineName"></select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">收货日期</label>
+                            <input type="date" class="form-control input-w-3" name="creationTime" id="creationTime">
+                            <label for="" class="input-w-160">收货员</label>
+                            <input type="text" class="form-control input-w-3" name="recMtUser" id="recMtUser">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label class="input-w-160">生产批次</label>
+                            <input type="text" class="form-control input-w-3" name="lotNo" id="lotNo"/>
+                        </div>
+                    </div>
+                    <!-- +\- start -->
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group" id="matlist">
+                            <ul class="new-income-list-nav">
+                                <!--<li style="width:125px">编号</li>-->
+                                <li style="width:100px">检查项目</li>
+                                <li style="width:100px">检验方法</li>
+                                <li style="width:80px">规格</li>
+                                <li style="width:120px">作业员/检验员</li>
+                                <li style="width:140px">检验结果判定</li>
+                                <li style="width:80px">操作</li>
+                            </ul>
+                        </div>
+                    </div> <!-- +\- over -->
+
+
+                    <div class="clearfix"></div>
+
+
+                    <form id="faiForm" method="post" action="index.html" class="form-horizontal">
+                        <fieldset>
+
+                            <div class="col-xs-4 mar-top-20px">
+                                <div class="form-group col-xs-12">
+                                    <label class="col-lg-4 control-label">作业员</label>
+                                    <div class="col-lg-5">
+                                    <input type="text" class="form-control col-lg-5" name="op" id="op"/>
+                                        </div>
+                                </div>
+                                <div class="form-group mar-top-20px col-xs-12">
+                                    <label class="col-lg-4 control-label">日期</label>
+                                    <div class="col-lg-5">
+                                        <div class='input-group date' id='datetimepicker1'>
+                                            <input type='text' class="form-control" name="opDate" id="opDate"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-4 mar-top-20px ">
+                            <div class="form-group col-xs-12">
+                                <label class="col-lg-4 control-label">班长</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="shiftLeader" id="shiftLeader"/>
+                                </div>
+                            </div>
+                            <div class="form-group mar-top-20px col-xs-12">
+                                <label class="col-lg-4 control-label">日期</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker2'>
+                                        <input type='text' class="form-control" name="slDate" id="slDate"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+                                    </div>
+                                </div>
+                            </div>
+                                </div>
+                            <div class="col-xs-4 mar-top-20px col-xs-12">
+                            <div class="form-group col-xs-12">
+                                <label class="control-label col-lg-4">检验员</label>
+                                <div class="col-lg-5">
+                                <input type="text" class="form-control" name="inspector" id="inspector"/>
+                                    </div>
+                            </div>
+                            <div class="form-group mar-top-20px col-xs-12">
+                                <label class="col-lg-4 control-label">日期</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker3'>
+                                        <input type='text' class="form-control autosizejs" id="inspectorDate"/>
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+                                    </div>
+                                </div>
+                            </div>
+                                </div>
+
+                        </fieldset>
+                    </form>
+
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="save">保存</button>
+                            <button class="btn  btn-info" id="return">返回</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+</script>
+<script type="text/html" id="faiItem">
+    <dl class="matlist" id="item<%= item %>">
+        <dd class="income-create-list">
+            <!--<input style="width:125px;" name="smtfItems[item<%= item %>][poMaterialId]:number" id="smtfItems.item<%= item %>.poMaterialId" value="<%= data.poMaterialId %>" placeholder="填写编号" class="select-cs1 a" />-->
+            <input type="text" style="width:100px"  class="c" name="smtfItems[item<%= item %>][item]" id="smtfItems.item<%= item %>.item" value="<%= data.item %>" placeholder="填写检查项目"/>
+            <input type="text" style="width:100px"  class="d" name="smtfItems[item<%= item %>][testMethod]" id="smtfItems.item<%= item %>.testMethod" value="<%= data.testMethod %>" placeholder="填写检查方法"/>
+            <input type="text" class="e pay" style="width:80px" name="smtfItems[item<%= item %>][specification]:number" id="smtfItems.item<%= item %>.specification" value="<%= data.specification %>" placeholder="填写规格">
+            <select data-id="<%= data.testerId %>" class="select-cs1 h" style="width:120px" name="smtfItems[item<%= item %>][testerId]:number" id="smtfItems.item<%= item %>.testerId">
+                <option value="">作业员</option>
+                <option value="">检验员</option>
+            </select>
+            <input type="text" class="g pay" style="width:140px" name="smtfItems[item<%= item %>][result]:number" id="smtfItems.item<%= item %>.result" value="<%= data.result %>" placeholder="检查结果">
+            <a class="button-sytle1 fai-add">+</a>
+            <a class="button-sytle1 fai-delete">-</a>
+        </dd>
+    </dl>
+</script>
+<script type="text/javascript">
+    var app={
+        init:function(){
+            var self = this;
+            this.faiItem = _.template($('#faiItem').html());
+            $('#body').html($('#qFaiCreate').html());
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var faiId = params['faiId'];
+            this.$matList = $('#matlist');
+            if(faiId) {
+            } else {
+                this.$matList.append(this.createRow());
+            }
+            this.bindEvents();
+        },
+        defaultData: { },
+        createRow: function(data) {
+            var self = this;
+            var row = parseInt(self.$matList.data('row'));
+            if(!row) {
+                row = 1;
+            }
+
+            if(!data) {
+                data = self.defaultData;
+            }
+
+            var param = {
+                data: data,
+                item: row,
+                action: self.params.action
+            }
+
+            var html = self.faiItem(param);
+            self.$matList.data('row', row + 1);
+
+            return html;
+        },
+        addRow: function(e) {
+            e.stopPropagation();
+
+            var $t = $(e.target);
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
+        bindEvents:function(){
+            var self = this;
+            var frameContainer= $('.container-fluid');
+            //增加行
+            frameContainer.on('click','.fai-add',self.addRow.bind(self));
+            //删除行
+            frameContainer.on('click','.fai-delete', self.delRow.bind(self));
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+            $(function () {
+                $('#datetimepicker2').datetimepicker();
+            });
+            $(function () {
+                $('#datetimepicker3').datetimepicker();
+            });
+            $('#woNo.idDic').selectautofill('dic/woNo');
+            $('#routeNo.idDic').selectautofill('dic/routeNo');
+            $('#machineName.idDic').selectautofill('dic/machineName');
+            $('#faiForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'woNo': {
+                        validators: {
+                            notEmpty: {
+                                message: '工单号不能为空'
+                            }
+                        }
+                    },
+                    'routeDes': {
+                        validators: {
+                            notEmpty: {
+                                message: '工序不能为空'
+                            }
+                        }
+                    },
+                    'machine': {
+                        validators: {
+                            notEmpty: {
+                                message: '设备不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var fai =JSON.stringify($('#faiForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                $.createFai(fai,jmstoken,function(data){
+                    $.get("views/q-faiList.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+
+            $('#return').click(function(){
+                history.go(-1);
+            });
+        }
+    };
+    app.init();
+</script>
+    
+
+
+

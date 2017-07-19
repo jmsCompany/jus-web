@@ -1,0 +1,889 @@
+<script type="text/html" id="pRoutineCreate">
+    <div class="container-fluid" id="container-routine">
+        <div id="dropzone-template-container" style="display: none;">
+            <div class="dz-preview dz-file-preview">
+                <div class="dz-details">
+                    <div class="dz-filename"><span data-dz-name></span><span data-dz-remove title="Delete">✘</span><span data-dz-size></span></div>
+                </div>
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                <div class="dz-success-mark"><span>✔</span></div>
+                <div class="dz-error-mark"><span>✘</span></div>
+                <div class="dz-error-message"><span data-dz-errormessage></span></div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <div class="body-head-title">
+                    <span class="h-title" id="list01">Routine List</span>
+                    <span class="h-title-selected" id="title01"><b>Create Routine</b></span>
+                    <span class="h-title" id="standardRoute">Standard Routine</span>
+                </div>
+
+                <form id="routineForm" method="post" action="index.html" class="form-inline">
+                    <div class="col-xs-7 mar-top-20px">
+                        <div class="form-group mar-top-20px" style="display: block">
+                            <label class="input-w-160">Goods</label>
+                            <select class="input-w-3 select-cs1 form-control" data-id="" name="materialId:number" id="materialId">
+                                <option value="">Goods/NO.</option>
+                            </select>
+                        </div>
+                        <div class="form-group mar-top-20px" style="display: block">
+                            <label class="input-w-160">Produce Line</label>
+                            <select class="input-w-3 select-cs1 form-control" name="lineId:number" id="lineId">
+                                <option value="">Produce Line</option>
+                            </select>
+                        </div>
+                        <div class="form-group mar-top-20px" style="display: block">
+                            <label class="input-w-160">Draw/ No.</label>
+                            <input type="text" class="form-control input-w-3" name="drawNo" id="drawNo" />
+                        </div>
+                        <div class="form-group mar-top-20px" style="display: block">
+                            <label class="input-w-160">Draw Version</label>
+                            <input type="text" class="form-control input-w-3" name="drawVer" id="drawVer" />
+                        </div>
+                        <div class="form-group mar-top-20px status" style="display: block">
+                            <label class="input-w-160">Status</label>
+                            <select class="input-w-3 select-cs1 form-control" name="statusId:number" id="statusId">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="a-upload bg-img dropzone" id="drawId">Upload Attachment</div>
+                    </div>
+
+                    <!--<div class="col-xs-12 mar-top-20px">-->
+                        <!--<div class="form-group" id="matlist">-->
+                            <!--<ul class="new-income-list-nav">-->
+                                <!--<li style="width:104px">工艺序号</li>-->
+                                <!--<li style="width:104px">描述</li>-->
+                                <!--<li style="width:104px">工作中心</li>-->
+                                <!--<li style="width:104px">劳动工时</li>-->
+                                <!--<li style="width:104px">设备工时</li>-->
+                                <!--<li style="width:104px">装载工时</li>-->
+                                <!--&lt;!&ndash;<li style="width:104px">工种</li>&ndash;&gt;-->
+                                <!--<li>操作</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!-- +\- over -->
+                    <div class="col-xs-12 mar-top-20px changerep_cont">
+                        <table id="" cellpadding="0" cellspacing="0" width="817px">
+                            <tr>
+                                <th width="117px"> Routine/NO.</th>
+                                <th width="117px"> Description</th>
+                                <th width="117px"> Work Center</th>
+                                <th width="100px"> Working Hours</th>
+                                <th width="100px"> Machine Hours</th>
+                                <th width="100px"> Setup Hours</th>
+                                <th width="54px"> Goods Routine</th>
+                                <th width="111px" id="operation"> Operation</th>
+                            </tr>
+                        </table>
+
+                        <div class="form-group" id="matlist">
+                        </div>   <!-- +\- over -->
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button class="btn btn-primary" id="save">Save</button>
+                            <button class="btn  btn-info" type="button" id="return01">Return</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="idRoutine" name="idRoutine:number" />
+                    <input type="hidden" name="drawAtt" id="drawAtt" />
+                    <input type="hidden" id="edit" value="true" />
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    <!-- 附件弹窗 start -->
+    <div class="tcbox container-fluid att01">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">Add attachments</span>
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('.att01');">
+            <div class="aligncenter">
+                <div class="form-group">
+                    <div class="filelist" id="filelist"></div>
+                    <div tabindex="1" class="enclosure">
+                        The only supported formats for uploading attachments are：pdf，doc，docx
+                    </div>
+                    <input type="hidden" id="idRoutineD" name="idRoutineD" />
+                    <!-- <button type="submit" class="btn btn-primary ">保存</button> -->
+                    <!--<button id="return01" type="reset" class="btn  btn-info">关闭</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 弹窗 over -->
+    <!-- 编辑工序弹窗 start -->
+    <div class="tcbox container-fluid" id="editRoutineD" style="overflow: visible;">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">Edit Routine</span>
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#editRoutineD');">
+            <form id="routineDForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Routine/NO.</label>
+                        <input type="text" class="form-control"  name="routeNo" id="routeNo">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Description</label>
+                        <input type="text" class="form-control"  name="des" id="des"/>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Work Center</label>
+                        <select  class="form-control" style="width:182px;" name="workCenterId:number" id="workCenterId">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Working Hours</label>
+                        <input type="text" class="form-control"  name="stdWtLabor:number" id="stdWtLabor">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Machine Hours</label>
+                        <input type="text" class="form-control"  name="stdWtMachine:number" id="stdWtMachine">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Setup Hours</label>
+                        <input type="text" class="form-control"  name="stdWtSetup:number" id="stdWtSetup">
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label class="input-w-160">Goods Routine</label>
+                        <select  class="form-control" style="width:182px;" name="isFinished:number" id="isFinished">
+                            <option value=0>No</option>
+                            <option value=1>Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary " id="save01">Save</button>
+                        <button id="return" type="button" class="btn  btn-info" onClick="javascript:hideObj('#editRoutineD');">Return</button>
+                    </div>
+                </div>
+                <input type="hidden" id="idRoutineD01" name="idRoutineD:number" />
+                <input type="hidden" name="routineId" id="routineId" />
+            </form>
+        </div>
+    </div>
+
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label id="info"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</script>
+
+<script type="text/html" id="routineItem">
+    <dl class="matlist" id="item<%= item %>">
+        <dd class="income-create-list">
+            <input style="width:116px" type="text" class="a" name="wsRoutineDs[item<%= item %>][routeNo]" id="wsRoutineDs.item<%= item %>.routeNo"
+                placeholder="Routine/NO." value="<%= data.routeNo %>" />
+            <input style="width:110px" type="text" class="b" name="wsRoutineDs[item<%= item %>][des]" id="wsRoutineDs.item<%= item %>.des"
+                placeholder="Description" value="<%= data.des %>" />
+            <select style="width:109px" data-id="<%= data.workCenterId %>" class="select-cs1 c" name="wsRoutineDs[item<%= item %>][workCenterId]:number"
+                id="wsRoutineDs.item<%= item %>.workCenterId"><option>Work Center</option></select>
+            <input style="width:95px" type="text" class="d" name="wsRoutineDs[item<%= item %>][stdWtLabor]:number" id="wsRoutineDs.item<%= item %>.stdWtLabor"
+                placeholder="Working Hours" value="<%= data.stdWtLabor %>">
+            <input style="width:95px" type="text" class="e" name="wsRoutineDs[item<%= item %>][stdWtMachine]:number" id="wsRoutineDs.item<%= item %>.stdWtMachine"
+                placeholder="Machine Hours" value="<%= data.stdWtMachine %>">
+            <input style="width:95px" type="text" class="f" name="wsRoutineDs[item<%= item %>][stdWtSetup]:number" id="wsRoutineDs.item<%= item %>.stdWtSetup"
+                placeholder="Setup Hours" value="<%= data.stdWtSetup %>">
+            <!--<select style="width:10%" multiple="multiple" data-id="<%= data.userId %>" class="select-cs1 g multipleSelect" name="wsRoutineDs[item<%= item %>][userId]:number"-->
+                <!--id="wsRoutineDs.item<%= item %>.userId"><option selected>工种</option></select>-->
+            <input style="width:114px" type="hidden" class="h routineDId" name="smtfItems[item<%= item %>][idRoutineD]" id="smtfItems.item<%= item %>.idRoutineD"
+                value="<%= data.idRoutineD %>">
+            <select style="width:65px" data-id="<%= data.isFinished %>" class="select-cs1 fin" name="wsRoutineDs[item<%= item %>][isFinished]"
+                    id="wsRoutineDs.item<%= item %>.isFinished"><option  value=0>No</option><option  value=1>Yes</option></select>
+            </select>
+            <% if(action == 'detail') { %>
+            <span class="action action-txt">
+                <a class="button-sytle1 att" href="">Employee Handbook</a><a class="button-sytle1 checkList">Check List</a><a class="button-sytle1  del">-</a>
+            </span>
+            <% } else { %>
+            <span class="action">
+                <a class="button-sytle1 new-income-add">+</a><a class="button-sytle1 new-income-delete">-</a>
+            </span>
+            <% } %>
+        </dd>
+    </dl>
+</script>
+
+<script type="text/javascript">
+    function showObj(objid){
+        $(objid).draggable().show();
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    var jmstoken= store.get('JMS-TOKEN');
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var app={
+        init:function(){
+            var self = this;
+            this.routineItem = _.template($('#routineItem').html());
+
+            $('#body').html($('#pRoutineCreate').html());
+
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var routineId = params['routineId'];
+
+            this.$matList = $('#matlist');
+            if(routineId) {
+                this.loadDetail(routineId,action);
+            } else {
+                this.$matList.append(this.createRow());
+                this.autoFill();
+            }
+
+           this.bindEvents();
+            this.form1();
+            this.form();
+            setTimeout(function(){
+                // 多选
+                $('body .multipleSelect').multiselect({
+                    buttonWidth: '65px'
+                });
+            },200);
+        },
+        loadDetail: function(routineId,action, callback) {
+            var self = this;
+            $.routineInfo(routineId, jmstoken, function(data){
+
+                var wsRoutineDs = '';
+                $('#edit').val(data.edit);
+
+                _(data.wsRoutineDs).each(function(item) {
+                    wsRoutineDs += self.createRow(item);
+//                    this.find(".fin").val(item.isFinished);
+//                    this.find('.fin option[value = 1]').attr("selected","selected");
+//                    if(item.isFinished == 1){
+//                        debugger;
+//
+//                    }
+                    // this.find('.att').prop('href',item.routineDId);
+                });
+                $('#routineForm').populate(data,true);
+
+                self.$matList.append(wsRoutineDs);
+                var materialId = data.materialId;
+                self.fillMaterialId(function(){
+                    $('#materialId').append('<option value="'+materialId+'"></option>');
+                    $('#materialId').val(materialId);
+                });
+                $('#select2-materialId-container').text(data.pNo + '_' + data.materialRev + '_' + data.materialDes);
+
+//                $("#materialId").selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}},function(){
+//                    $('#materialId').val(data.materialId);
+//                });
+                $("#lineId").selectautofill('p/m/findWSPLines', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}},function(){
+                    $('#lineId').val(data.lineId);
+                });
+                $("#statusId").selectautofill('p/getPStatusList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')},data:{'source':'p_routine'}},function(){
+                    $('#statusId').val(data.statusId);
+                });
+
+                if (data.drawAtt){
+                    var uri = $clientURL+'getFile/'+data['drawAtt']+'/'+data['drawAtt']+'/';
+                    $('#drawId').append('<div class="dz-preview dz-file-preview dz-processing dz-success dz-complete"><div class="dz-details"><div class="dz-filename"><span data-dz-name=""><a href="' + uri + '">' + data['drawAtt'] + '</a></span><span data-dz-size=""><strong>59</strong> b</span></div></div></div>');
+                    setTimeout(function(){
+                        $('.preview-node').click(function(){
+                            $('#material-list-uploader').click();
+                        });
+                    },0)
+                }
+
+                self.fillWorkCenter(null, function() {
+                    self.$matList.find('.income-create-list').each(function(i, ml) {
+                        $(ml).find('.c').val(parseInt($(ml).find('.c').data('id')));
+                        $(ml).find('.fin').val(parseInt($(ml).find('.fin').data('id')));
+                    });
+                });
+//                self.fillWorkCategory(null, function() {
+//                    self.$matList.find('.income-create-list').each(function(i, ml) {
+//                        $(ml).find('.g').val(parseInt($(ml).find('.g').data('id')));
+//                    });
+//
+//                });
+
+                self.dealAction(action,data.edit);
+                callback && callback();
+            });
+        },
+        fillMaterialId: function(callback) {
+            $('#materialId').select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        var paramsObj ={
+                            q: params.term,
+                            types:[2,3]
+                        };
+                        var params = $.param(paramsObj,true);
+                        return params;
+//                        return {
+//                            q: params.term
+//                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 180,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            callback && callback();
+        },
+        fillWorkCenter: function($el, callback) {
+            if(!$el) {
+                $el = $('.c');
+            } else {
+                $el = $el.find('.c');
+            }
+            $el.selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+        },
+      /*  fillWorkCategory: function($el, callback) {
+            if(!$el) {
+                $el = $('.g');
+            } else {
+                $el = $el.find('.g');
+            }
+            $el.selectautofill('p/findWorkCategoriesSelectObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            setTimeout(function(){
+                //多选
+                $el.multiselect();
+            },200)
+        },*/
+        dealEditAction:function(){
+            $('.action a').remove();
+            $('.action').append('<a class="button-sytle1 editRoutineD" href="">Edit</a>');
+            $("input:not(:button, :hidden,#drawNo,#drawVer)").prop("disabled", true);
+            $("select:not(#statusId)").prop("disabled", true);
+
+        },
+        dealAction: function(action,edit) {
+            var self = this;
+            $(".status").show();
+            if(action == 'detail') {
+                $('#title01').html('<b>Routine Detail</b>');
+                $("input:not(:button, :hidden)").prop("disabled", true);
+                $("select").prop("disabled", true);
+                $('#save').hide();
+                $('table','#routineForm').attr('width','905px');
+                $('#operation').attr('width','199px');
+            } else{
+                $('#title01').html('<b>Edit Routine</b>');
+                if(edit == false){
+                    $('.action a').remove();
+                    $('.action').attr("class",'action action-txt');
+                    $('.action').append('<a class="button-sytle1 editRoutineD" href="">Edit</a>');
+                    $('#operation').attr('width','60px');
+                    $('table','#routineForm').attr('width','770px');
+                    $("input:not(:button, :hidden,#drawNo,#drawVer)",'#routineForm').prop("disabled", true);
+                    $("select:not(#statusId,#lineId)",'#routineForm').prop("disabled", true);
+                }
+            }
+        },
+        defaultData: { },
+        createRow: function(data) {
+            var self = this;
+            var row = parseInt(self.$matList.data('row'));
+            if(!row) {
+                row = 1;
+            }
+
+            if(!data) {
+                data = self.defaultData;
+            }
+
+            var param = {
+                data: data,
+                item: row,
+                action: self.params.action
+            }
+
+            var html = self.routineItem(param);
+            self.$matList.data('row', row + 1);
+
+            return html;
+        },
+        addRow: function(e) {
+            e.stopPropagation();
+
+            var $t = $(e.target);
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+
+            this.fillWorkCenter($t.closest('dl').next());
+//            this.fillWorkCategory($t.closest('dl').next());
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
+        bindEvents:function(){
+            var self = this;
+            var frameContainer = $('#container-routine');
+            //增加行
+            frameContainer.on('click','.new-income-add',self.addRow.bind(self));
+            //删除行
+            frameContainer.on('click','.new-income-delete', self.delRow.bind(self));
+            //计算
+            frameContainer.on("change",".pay",function(){
+                var optid = $(this).parent().parent().attr("id");
+                pay(optid);
+            });
+            frameContainer.on('focus', 'input, select, textarea', function(e) {
+                $(this).removeClass('error');
+                $('#save').removeAttr('disabled');
+            });
+            var historyParams={
+                groupId:'p-routineList'
+            };
+
+
+            $('#standardRoute').click(function(){
+                $.get("views/p-standardRoute.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-routineList',
+                        viewId:'p-standardRoute'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+
+            $("#list01").click(function(){
+                $.get("views/p-routineList.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+
+            $("#return01").click(function(){
+                history.go(-1);
+            });
+
+            // $('[id*="return0"]').click(function(){
+            //     $.get("views/p-routine-create.html",function(data){
+            //         $("#body").html(data);
+            //     });
+            // });
+
+            frameContainer.on("click",".editRoutineD",function(e){
+                e.preventDefault();
+                var top = $('#body').scrollTop();
+                $('#editRoutineD').css({
+                    top: $(window).height() * 0.2 + top
+                }).draggable().show();
+                var routineD = $(this).closest('dl').find('.routineDId').val();
+                $('#idRoutineD01').val(routineD);
+                debugger;
+                $.routineDInfo(routineD,jmstoken,function(data){
+                    debugger;
+                    $('#routineDForm').populate(data,true);
+                    $('#workCenterId').html('<option value="' + data.workCenterId + '">' + data.workCenter + '</option>');
+                });
+            });
+
+
+            frameContainer.on("click",".checkList",function(e){
+                e.preventDefault();
+                var mat = $("#materialId").find("option:selected").text();
+                var routineD = $(this).closest('dl').find('.routineDId').val();
+                var routeNo = $(this).closest('dl').find('.a').val();
+                historyParams.viewId = 'p-routine-checkList';
+                historyParams.routineDId = routineD;
+                historyParams.material = mat;
+                historyParams.routeNo = routeNo;
+                $.get("views/p-routine-checkList.html",function(data){
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+
+            frameContainer.on("click",".del",function(e){
+                e.preventDefault();
+                var routineD = $(this).closest('dl').find('.routineDId').val();
+                if($('.matlist').length == 1) {
+                    return;
+                }
+                else{
+                    $.deleteRoutineD(routineD,jmstoken,function(data){
+                        debugger;
+                        $.get("views/p-routine-create.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            });
+
+            //上传图片 drawId   filename  input#drawAtt
+            //上传附件 url:/p/uploadRoutineDAtt  参数：routineDId
+            //显示已经上传附件 url:p/getRoutineDAtts filename
+            //下载附件: url:getFile/文件名/
+
+            
+            var uploadImageUrl = 'p/uploadDrawImage',
+                getEnclosureList = 'p/getRoutineDAtts',
+                downloadEnclosure = 'getFile/';
+                jmstoken = store.get('JMS-TOKEN');
+
+            frameContainer.on("click",".att",function(e){
+                e.preventDefault();
+                var top = $('#body').scrollTop();
+                $('.att01').css({
+                    top: $(window).height() * 0.2 + top
+                }).draggable().show();
+                var routineD = $(this).closest('dl').find('.routineDId').val();
+                $('#idRoutineD').val(routineD);
+                
+                //显示附件列表
+                $.getEnclosureList(routineD,jmstoken,function(data){
+                    var $list = $('<ul class="enclosureList" style="position: relative;"></ul>');
+                    $('#filelist').html($list);
+                    for( var item in data ){
+                        var $li = $("<li class='enclosureItem'><a target='_blank' href='"+$clientURL+"getFile/"+data[item].fileName+"/"+data[item].orgName+"/'>"+data[item].orgName+"</a><a id="+data[item].fileId+" class='close'>×</a></li>");
+                        $li.appendTo($('.enclosureList'));
+                    }
+
+                });
+                self.uploadFile();
+            });
+            //上传图片
+            if(self.params.action != 'detail') {
+                $('.dropzone').dropzone({
+                    previewTemplate: document.querySelector('#dropzone-template-container').innerHTML,
+                    url: $clientURL+uploadImageUrl,
+                    headers: {'JMS-TOKEN':jmstoken},
+                    maxFiles: 1,
+                    maxFilesize: 10,
+                    dictDefaultMessage:"",
+                    init:function(){
+                        var that = this;
+                        this.on('success',function(file,res){
+                            console.log('Upload picture success');
+                            $('#drawAtt').val(res.fileName);
+                        });
+                        this.on('removedfile',function(){
+                            console.log('Uploading picture failed');
+                        });
+                    }
+                });
+            }
+
+            //上传附件
+
+            
+            // 删除文件
+            $('#filelist').on('click', '.close', function(e) {
+                var $t = $(this);
+                var fileId = $t.attr('id');
+                var $li = $t.closest('li');
+                $li.remove();
+                $.deleteRoutineDFil(fileId,jmstoken,function(data){});
+            });
+            
+        },
+        uploadFile:function(){
+            var uploadEnclosureUrl = 'p/uploadRoutineDAtt';
+            var $enclosure = $('.enclosure');
+            var inited = $enclosure.data('init');
+            
+            if(inited) {
+                return;
+            }
+            
+            $enclosure.data('init', true);
+            
+            $enclosure.dropzone({
+                url: $clientURL+uploadEnclosureUrl,
+                headers: {'JMS-TOKEN':jmstoken},
+                addRemoveLinks: true,
+                dictRemoveLinks: "x",
+                dictCancelUpload: "x",
+//                maxFiles: 1,
+                maxFilesize: 10,
+                dictDefaultMessage:"",
+                init:function(){
+                    var that = this;
+                    //发送请求时，挂载数据
+                    this.on("sending", function(file, xhr, formData) {
+                        var idRoutineD = $('#idRoutineD').val();
+                        formData.append("routineDId", (idRoutineD ? idRoutineD : 0));
+                        // formData.append("routineDId",$('.routineDId').val()?$('.routineDId').val():0);
+                    });
+
+                    this.on('success',function(file, res) {
+                        var $li = $("<li class='enclosureItem'><a target='_blank' href='"+$clientURL+"getFile/"+res.fileName+"/'>"+res.orgName+"</a><a class='close'>x</a></li>");
+                        $li.appendTo($('.enclosureList'));
+                        $('.enclosure').find('.dz-success').remove();
+                    });
+                    
+                }
+            });
+        },
+        autoFill:function(){
+            var self = this;
+            self.fillMaterialId();
+//            $("#materialId").selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            $("#lineId").selectautofill('p/m/findWSPLines', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+            $('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_routine'}});
+            $('.c').selectautofill('p/getWorkCenterList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('.g').selectautofill('p/findWorkCategoriesSelectObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+        },
+        form1:function(){
+            var self = this;
+            $('#routineDForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'stdWtLabor': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Working hours cannot be empty.'
+                            },
+                            regexp: {
+                                regexp: /^([0-9])+(\.[0-9]+)?$/,
+                                message: 'Only be data.'
+                            }
+                        }
+                    },
+                    'stdWtMachine': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Machine hours cannot be empty.'
+                            },
+                            regexp: {
+                                regexp: /^([0-9])+(\.[0-9]+)?$/,
+                                message: 'Only be data.'
+                            }
+                        }
+                    },
+                    'stdWtSetup': {
+                        validators: {
+                            digits: {
+                                message: 'Please fill number in setup hours.'
+                            },
+                            regexp: {
+                                regexp: /^([0-9])+(\.[0-9]+)?$/,
+                                message: 'Only be data.'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var routineD =JSON.stringify($('#routineDForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                debugger;
+                $.saveRoutineD(routineD,jmstoken,function(data){
+                    debugger;
+                    $.get("views/p-routine-create.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        },
+        form:function(){
+            var self = this;
+            $('#routineForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'materialId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Material cannot be empty.'
+                            }
+                        }
+                    },
+                    'lineId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Produce line cannot be empty.'
+                            }
+                        }
+                    },
+//                    'drawNo': {
+//                        validators: {
+//                            digits: {
+//                                message: '图纸号请填写数字'
+//                            }
+//                        }
+//                    },
+                    'drawVer': {
+                        validators: {
+                            regexp: {
+                                regexp: /^([a-z_A-Z-.+0-9]+)$/,
+                                message: 'Only English letters, Numbers, add and subtract Numbers, horizontal lines and points.'
+                            }
+                        }
+                    },
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                if(!self.validateRoute()) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+                    $('#info').empty();
+                    $('#info').append('Authentication does not pass');
+//                    alert('验证不通过');
+                    return;
+                }
+                var $form     = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var routine =JSON.stringify($('#routineForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                var edit = $('#edit').val();
+                if(edit == "true"){
+                    debugger;
+                    $.saveRoutine(routine,jmstoken,function(data){
+                        debugger;
+                        if(!data.saved){
+                            $('#nullAlert').css({
+                                top: $(window).height() * 0.2 + top
+                            }).draggable().show();
+                            $('#info').empty();
+                            $('#info').append('The product already has a corresponding routine, please re-submit').css({zIndex:1000});
+                            return false
+                        }
+                        history.go(-1);
+                        $.get("views/p-routineList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+                else{
+                    debugger;
+                    $.updateRoutine(routine,jmstoken,function(data){
+                        debugger;
+                        history.go(-1);
+                        $.get("views/p-routineList.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                }
+            });
+        },
+        validateRoute: function() {
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            var flag = true;
+            var reg =/^([0-9])+(\.[0-9]+)?$/;
+            var reg1 =/^[0-9]*$/;
+
+            if(!$items.length) {
+                flag = false;
+            }
+
+            $items.each(function(i) {
+                var $t = $(this);
+
+                var routineNo = $t.find('.a').val();
+                if(!routineNo||reg1.test(routineNo)==false) {
+                    $t.find('.a').addClass('error');
+                    flag = false;
+                }
+                if(!$t.find('.c').val() || parseInt($t.find('.c').val()) < 0) {
+                    $t.find('.c').addClass('error');
+                    flag = false;
+                }
+
+                var stdWtLabor = $t.find('.d').val();
+//                if(!parseFloat($t.find('.d').val()) || parseFloat($t.find('.d').val()) < 0) {
+                if(!stdWtLabor||reg.test(stdWtLabor)==false) {
+                    $t.find('.d').addClass('error');
+                    flag = false;
+                }
+                var stdWtMachine = $t.find('.e').val();
+//                if(!parseFloat($t.find('.e').val()) || parseFloat($t.find('.e').val()) < 0) {
+                if(!stdWtMachine||reg.test(stdWtMachine)==false) {
+                    $t.find('.e').addClass('error');
+                    flag = false;
+                }
+                var stdWtSetup = $t.find('.f').val();
+//                if(!parseFloat($t.find('.f').val()) || parseFloat($t.find('.f').val()) < 0) {
+                    if(!stdWtSetup||reg.test(stdWtSetup)==false) {
+                    $t.find('.f').addClass('error');
+                    flag = false;
+                }
+            });
+
+            return flag;
+        }
+    };
+    app.init();
+
+</script>

@@ -1,0 +1,171 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="defaultForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           
+							<fieldset>
+							<legend>销售订单创建</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">订单编码</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="so_code" id="so_code"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">下单日期</label>
+                                <div class="col-lg-5">
+                                    <div class='input-group date' id='datetimepicker1'>
+										<input type='text' class="form-control" />
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</span>
+									</div>
+							        <script type="text/javascript">
+										$(function () {
+											$('#datetimepicker1').datetimepicker();
+										});
+									</script>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">下单员</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="emp_order" id="emp_order"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">客户</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="code_co:number" id=""code_co.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">货运条款</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">付款条件</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="term[idDic]:number" id="term.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">发货仓库</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="stk:number" id="stk.id">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">总价</label>
+                                <div class="col-lg-5">
+                                        <input type="text" class="form-control" name="total_amount" id="total_amount"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">税率</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="tax_rate" id="tax_rate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">汇率</label>
+                                <div class="col-lg-5">
+                                	<input type="text" class="form-control" name="exchange" id="exchange"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                    <textarea name="remark" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">状态</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="status[idDic]:number" id="status.idDic">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">附件</label>
+                                <div class="col-lg-5">
+                                    <div class="Left"><a href="javascript:;" id="mdUploadMoreAttachment">添加更多附件</a></div>
+                                </div>
+                            </div>                         
+<br> 
+<br> 
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>物料名称</th>
+                                            <th>销售数量</th>
+                                            <th>总价</th>
+                                            <th>交货日期</th>
+                                            <th>已发货数量</th>
+                                            <th>状态</th>
+                                            <th>
+                                                <button type="button" class="btn btn-primary" id="add">
+                                                	<a href="javascript:" id="aa"></a>添加</button>	
+                                            </th>
+                                        </tr>
+                                    </thead> 
+                            </div>
+                            <br>
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+$(document).ready(function() {
+    $('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+    $("#aa").click(function () {
+        location.href = "";
+    });
+})
+
+} );
+</script>
+

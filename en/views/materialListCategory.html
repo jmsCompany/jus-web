@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+function showObj(objid){
+	$(objid).show();	
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+$(document).ready(function() {
+	var jmstoken= store.get('JMS-TOKEN');
+    var table=$('#tableMcate').DataTable( {	
+//      deferRender:  true,
+        "processing": true,
+		"serverSide": true,
+		"stateSave": true,
+		"stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+        "ajax": {
+			"type": 'POST',
+            "url": $clientURL + "s/materialCategoryList",
+            "dataType": "json",
+			 headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-edit>Edit</button><button class=button-delete>Delete</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      	dom: "tip",
+		pageLength:"50"
+		
+    } );
+    $('#tableMcate tbody').on( 'click', 'button', function () {
+     	var data = table.row( $(this).parents('tr') ).data();
+     	var clazz=$(this).attr('class');
+        if(clazz=='button-edit'){
+			var top = $('#body').scrollTop();
+			$('.tcbox').css({
+				top: $(window).height() * 0.2 + top
+			}).show();
+//        	showObj('.tcbox');
+     		//$("#_key27").val(data[3]);
+	 		//$.get("views/bin-body.html",function(data){
+	        //    $("#body").html(data);
+	     	//});
+	     	
+			$.mCateInfo(data[3],jmstoken,function(data){
+		 		$('#MCateForm').populate(data,true);
+			});
+     	}
+        else{
+        	$.deleteMCate(data[3],jmstoken,function(data){
+     		  	$.get("views/materialListCategory.html",function(data){
+	                $("#body").html(data);
+	            });
+     		});
+        }
+    } );
+    $('#MCateForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'name': {
+                validators: {
+                    notEmpty: {
+                        message: 'Category name cannot be empty'
+                    }   
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var category =JSON.stringify($('#MCateForm').serializeJSON());
+//     		alert(category);
+		 	$.saveMCate(category,jmstoken,function(data){
+			      	$.get("views/materialListCategory.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+
+        });
+	/*$('#create').click(function(){
+	 	$.get("views/materialListCategory-body.html",function(data){
+	         $("#body").html(data);
+	    });
+	});*/
+	$('#return01').click(function(){
+	 		$.get("views/materialListCategory.html",function(data){
+	         	$("#body").html(data);
+			});
+		});
+	$('.tcbox').on('click','.tc_close',function(){
+		$.get("views/materialListCategory.html",function(data){
+			$("#body").html(data);
+		});
+//		$('.tcbox').hide();
+//		$('#MCateForm')[0].reset();
+	});
+	var historyOptions={
+		groupId:'stk'
+	};
+		$('#wul1').click(function(){
+	 		$.get("views/stk.html",function(data){
+				RouterManager.setUrl(historyOptions);
+	             $("#body").html(data).appendTo("#tabcont1");
+	     	});
+	 	});
+	$('#matLoc').click(function(){
+		historyOptions.viewId='matLocList';
+		$.get("views/matLocList.html",function(data){
+			RouterManager.setUrl(historyOptions);
+			$("#body").html(data).appendTo("#tabcont1");
+		});
+	});
+	// 弹窗拖拽
+	$(function () {
+		$('#draggable1').draggabilly();
+	});
+});
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	 <span class="h-title" id="wul1">Stock management</span>
+     <span class="h-title-selected"><b>Material category</b></span>
+	<span class="h-title" id="matLoc">Material location</span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="right-list">
+    		<button id="create" class="button-sytle1" onClick="javascript:showObj('.tcbox');">Create</button>
+    	</div>
+	</div>
+
+ <table id="tableMcate" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+</table>
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">Create/edit material category</span>
+		</div>
+      <input type="button" class="tc_close">
+     <form id="MCateForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-80">Name</label>
+				    	<input type="text" class="form-control"  name="name" id="name">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-80">Description</label>
+				    	<textarea class="form-control" rows="3" name="des" id="des"></textarea>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+				    <div class="form-group">
+				    	<label for="exampleInputEmail1" class="input-w-80">Status</label>
+				    	<input type="radio" name="status:number" class="radio-w" value="29" checked/><label for="stateOn">Valid</label>
+				    	<input type="radio" name="status:number" class="radio-w" value="1" /><label for="stateOoff">Invalid</label>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">Save</button>
+                 		<button id="return01" type="button" class="btn  btn-info">Return</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="id" name="id:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+</body>
+</html>
+
+  
+
+

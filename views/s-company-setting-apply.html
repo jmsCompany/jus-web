@@ -1,0 +1,200 @@
+<form id="comComApplyForm" method="post" action="index.html" class="form-inline bv-form" novalidate="novalidate">
+    <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+    <div class="alert alert-success" style="display: none;"></div>
+    <div class="ht25"></div>
+    <div class="col-md-9 col-md-offset-1">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>往来公司</label>
+                    <input type="text" class="input-con" name="company2" data-bv-field="company2">
+                </div>
+                <!--<div class="form-group">-->
+                    <!--<label>物料</label>-->
+                    <!--<select class="form-control" name="materialId:number" data-bv-field="materialId" id="materialId">-->
+                        <!--<option value="">请选择</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+                <div class="form-group">
+                    <label>类别</label>
+                    <select name="type:number" class="form-control">
+                        <option value="0">流转</option>
+                        <option value="1">库存查看</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>本公司联系人</label>
+                    <input type="text" name="linkman1" data-bv-field="linkman1">
+                </div>
+                <div class="form-group">
+                    <label>本公司邮箱</label>
+                    <input type="text" name="email1" data-bv-field="email1">
+                </div>
+                <div class="form-group">
+                    <label>对方联系人</label>
+                    <input type="text" name="linkman2" data-bv-field="linkman2">
+                </div>
+                <div class="form-group">
+                    <label>对方邮箱</label>
+                    <input type="text" name="email2" data-bv-field="email2">
+                </div>
+                <!--<small class="help-block" data-bv-validator="notEmpty" data-bv-for="materialId" data-bv-result="NOT_VALIDATED"-->
+                       <!--style="display: none;">物料编码不能为空-->
+                <!--</small>-->
+            </div>
+            <input type="hidden" name="status" value="1"/>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="foot-btn-box">
+        <div class="form-group">
+            <button class="btn btn-primary" id="save">保存</button>
+            <button class="btn  btn-info" type="button" id="return01">返回</button>
+        </div>
+    </div>
+</form>
+<script>
+
+    $(function () {
+        var jmstoken = store.get('JMS-TOKEN');
+        var app = {
+            init: function () {
+//                $('#body').html($('#comComApplyForm').html());
+                var self = this;
+                setTimeout(self.bindEvents, 0);
+            },
+            bindEvents: function () {
+                $('#return01').click(function () {
+                    history.go(-1);
+                });
+                //处理页面操作
+                var params = RouterManager.getParams();
+
+                $('#materialId').select2({
+                    ajax: {
+                        url: $clientURL + 's/getMaterialListObjs',
+                        dataType: 'json',
+                        headers: {'JMS-TOKEN': jmstoken},
+                        delay: 200,
+                        data: function (params) {
+                            var paramsObj ={
+                                q: params.term,
+                                types:[1,2,3,4,5,6]
+                            };
+                            var params = $.param(paramsObj,true);
+                            return params;
+                        },
+                        processResults: function (data, params) {
+                            return {
+                                results: data,
+                                pagination: null
+                            }
+                        },
+                        cache: true
+                    },
+                    escapeMarkup: function (markup) {
+                        return markup;
+                    },
+                    minimumInputLength: 1,
+                    width: 200,
+                    templateResult: formatRepo,
+                    templateSelection: formatRepoSelection
+                }).on('select2:open',function(evt){
+                    $('#select2-js-data-example-ajax-container').html('');
+                    $('#js-data-example-ajax').empty();
+                });
+
+                function formatRepo (repo) {
+                    if (repo.loading) return repo.text;
+
+                    var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+                    return markup;
+                }
+
+                function formatRepoSelection (repo) {
+                    return repo.name || repo.text;
+                }
+
+                $('#comComApplyForm').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        'company2': {
+                            message: '公司名不合法。',
+                            validators: {
+                                notEmpty: {
+                                    message: '公司名不为空'
+                                },
+                                stringLength: {
+                                    min: 2,
+                                    max: 64,
+                                    message: '长度必须大于2小于64个字符'
+                                },
+
+                                remote: {
+                                    type: 'GET',
+                                    url: $clientURL + 'check1/existcompanyname',
+                                    name: 'companyname',
+                                    headers:{'JMS-TOKEN':jmstoken},
+                                    message: '该公司不存在或已为往来公司',
+                                    delay: 1000
+                                }
+                            }
+                        },
+                        'materialId:number': {
+                            validators: {
+                                notEmpty: {
+                                    message: '物料不能为空'
+                                },
+                            }
+                        },
+                        'linkman1': {
+                            validators: {
+                                notEmpty: {
+                                    message: '本公司联系人不能为空'
+                                },
+                            }
+                        },
+                        'email1': {
+                            validators: {
+                                emailAddress: {
+                                    message: '本公司邮箱格式不合法'
+                                }
+                            }
+                        },
+                        'linkman2': {
+                            validators: {
+                                notEmpty: {
+                                    message: '对方联系人不能为空'
+                                },
+                            }
+                        },
+                        'email2': {
+                            validators: {
+                                emailAddress: {
+                                    message: '对方邮箱格式不合法'
+                                }
+                            }
+                        },
+                    }
+                }).on('success.form.bv', function (e) {
+                    e.preventDefault();
+                    var $form = $(e.target), validator = $form.data('bootstrapValidator');
+                    var jmstoken = store.get('JMS-TOKEN');
+                    var bom = JSON.stringify($('#comComApplyForm').serializeJSON());
+                    $.saveCompanyCompany(bom, jmstoken, function (data) {
+                        history.go(-1);
+//                        loadTable('myApplyList');
+                    });
+                });
+            }
+        };
+        app.init();
+    })
+</script>

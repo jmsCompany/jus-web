@@ -1,0 +1,301 @@
+﻿
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="defaultForm" method="post" action="index.html" class="form-horizontal">
+                        <fieldset>
+                           
+							<legend>基本信息。用户名/手机/邮箱至少输入一个。</legend>
+                            <div class="alert alert-success" style="display: none;"></div>
+                            <div class="alert alert-error" style="display: none;"></div>
+
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">公司名</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="companyName" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">用户名</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="wsUsers[username]"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">手机号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="wsUsers[mobile]"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">邮箱</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="wsUsers[email]" />
+                                </div>
+                            </div>
+							
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">密码</label>
+                                <div class="col-lg-5">
+                                    <input type="password" class="form-control" name="wsUsers[password]" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">确认密码</label>
+                                <div class="col-lg-5">
+                                    <input type="password" class="form-control" name="confirmPassword:skip" />
+                                </div>
+                            </div>
+						</fieldset>
+
+                        <fieldset>
+                            <legend>公司属性</legend>
+                            <div class="form-group" id="companySizeDiv">
+                                <label class="col-lg-3 control-label">规模</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="companySize[idDic]:number" id="companySize">
+                                   
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">行业</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="companyType[idDic]:number" id="CompanyType">
+                                 
+
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="col-lg-5 col-lg-offset-3">
+                                    <div class="checkbox">
+                                        <input type="checkbox" name="acceptTerms:skip" /> 我接受使用协议
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="form-group">
+                            <div class="col-lg-9 col-lg-offset-3">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+<script type="text/javascript">
+ 
+$(document).ready(function() {
+    
+      $('#companySize').selectautofill('dic/companySize');
+      $('#CompanyType').selectautofill('dic/companyType');
+      $('#companySizeDiv').block({ 
+                message: 'Processing', 
+                css: { border: '3px solid #a00' },
+                timeout:2000 
+            }); 
+    $('#defaultForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'wsUsers[username]': {
+                message: '用户名不合法。',
+                validators: {
+                    /*notEmpty: {
+                        message: 'The username is required and can\'t be empty'
+                    },*/
+                    stringLength: {
+                        min: 2,
+                        max: 15,
+                        message: '长度必须大于2小于15个字符'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: '只能是字符、数字、点、下划线。'
+                    },
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/username',
+                        name:'login',
+                        message: '该用户名已经被注册',
+                        delay: 1000
+                    } 
+                }
+            },
+    'companyName': {
+                message: '公司名不合法。',
+                validators: {
+                    notEmpty: {
+                        message: '公司名不为空'
+                    },
+                    stringLength: {
+                        min: 2,
+                        max: 64,
+                        message: '长度必须大于2小于64个字符'
+                    },
+                  
+                    remote: {
+                        type: 'GET',
+                        url: $clientURL+'check/companyname',
+                        name:'companyname',
+                        message: '该公司已经被注册',
+                        delay: 1000
+                    }               
+                   }
+            },
+
+
+            'acceptTerms:skip': {
+                validators: {
+                    notEmpty: {
+                        message: '请点击接受使用协议。'
+                    }
+                }
+            },
+            'wsUsers[email]': {
+                validators: {
+                    /*notEmpty: {
+                        message: 'The email address is required and can\'t be empty'
+                    },*/
+                    emailAddress: {
+                        message: '邮箱格式不合法。'
+                    },
+                    remote: {
+                        type: 'GET',
+                         url: $clientURL+'check/username',
+                        name:'login',
+                        message: '该邮箱已经被注册',
+                        delay: 1000
+                    }   
+                }
+            },
+            'website': {
+                validators: {
+                    uri: {
+                        allowLocal: true,
+                        message: 'The input is not a valid URL'
+                    }
+                }
+            },
+
+
+            'wsUsers[mobile]': {
+                validators: {
+                    //notEmpty: {},
+                    digits: {},
+                    phone: {
+			//message: '电话号码不合法'
+                        country: 'CN'
+                    },
+                    remote: {
+                        type: 'GET',
+                         url: $clientURL+'check/username',
+                        name:'login',
+                        message: '该手机号码已经被注册',
+                        delay: 1000
+                    }  
+                }
+            },
+            'color': {
+                validators: {
+                    hexColor: {
+                        message: 'The input is not a valid hex color'
+                    }
+                }
+            },
+            'zipCode': {
+                validators: {
+                    zipCode: {
+                        country: 'US',
+                        message: 'The input is not a valid US zip code'
+                    }
+                }
+            },
+           'wsUsers[password]': {
+                validators: {
+                    notEmpty: {
+                        message: '密码不能为空'
+                    },
+                    identical: {
+                        field: 'confirmPassword:skip',
+                        message: '密码与确认密码不同！'
+                    }
+                }
+            },
+            'confirmPassword:skip': {
+                validators: {
+                    notEmpty: {
+                        message: '确认密码不能为空'
+                    },
+                    identical: {
+                        field: 'wsUsers[password]',
+                        message: '密码与确认密码不同！'
+                    }
+                }
+            },
+            'ages': {
+                validators: {
+                    lessThan: {
+                        value: 100,
+                        inclusive: true,
+                        message: 'The ages has to be less than 100'
+                    },
+                    greaterThan: {
+                        value: 10,
+                        inclusive: false,
+                        message: 'The ages has to be greater than or equals to 10'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            // Prevent submit form
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+           
+
+          var username = $.trim(validator.getFieldElements('wsUsers[username]').val());
+           var email = $.trim(validator.getFieldElements('wsUsers[email]').val());
+            var mobile = $.trim(validator.getFieldElements('wsUsers[mobile]').val());
+
+           if(username===''&&email===''&&mobile==='')
+           {
+                  $form.find('.alert-error').html('用户名/手机/邮箱至少输入一个').show();
+             }
+            else
+            {
+                 var wsCompany =JSON.stringify($('#defaultForm').serializeJSON());
+                 $.registCompany(wsCompany,function(data){
+                      $form.find('.alert-success').html('成功注册公司，公司注册信息为： ' + data).show();
+                 });
+            
+             }
+
+         
+
+ 
+        });
+
+});
+</script>

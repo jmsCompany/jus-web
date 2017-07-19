@@ -1,0 +1,100 @@
+    <div class="container">
+
+        <div class="row">
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                        
+                           
+							<fieldset>
+							<legend>维修历史列表</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">设备编号</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="machineNo" id="machineNo"/></label>
+                                </div> 
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">设备名称</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="machineName" id="machineName"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>报修者</th>
+                                            <th>报修时间</th>
+                                            <th>故障描述</th>
+                                            <th>维修人</th>
+                                            <th>维修完成时间</th>
+                                            <th>操作</th>  <!-- 详情 -->
+                                        </tr>
+                                    </thead> 
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary" id="return">返回</button>
+                                </div>
+                            </div>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    var idMachine = $('#_key18').val();
+	$.machineInfo({"id":idMachine},token,function(data){
+		$('#machineNo').html(data.machineNo);
+		$('#machineName').html(data.machineName);
+	});
+	
+	$('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json",
+            "data":idMachine
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+	//点击详情
+	$('').click(function(){
+		$('#_key19').val('?');
+	 		$.get("views/m-history-detail.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+	$('#return').click(function(){
+	 		$.get("views/m-machineList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    
+    
+
+} );
+</script>
+    
+
+
+

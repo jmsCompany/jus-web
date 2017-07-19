@@ -1,0 +1,101 @@
+<div class="container-fluid">
+	<div class="row">
+		<section>
+            <form id="binForm" method="post" action="index.html" class="form-inline">
+           		<div class="body-head-title">
+					<span class="h-title">新建或修改货架</span>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+       					<label for="" class="input-w-160">仓库：</label>
+       					<input name="stkName" id="stkName" type="text" readOnly="true">
+       					<input type="hidden" id="idStk" name="idStk:number"/>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">货架名称</label>
+				    	<input type="text" class="form-control input-w-3"  name="bin" id="bin">
+				    </div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">是否为退货货架</label>
+				    	<select  class="input-w-3 select-cs1 form-control" name="isReturnShelf" id="isReturnShelf">
+                		</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+				    <div class="form-group">
+				    	<label for="exampleInputEmail1" class="input-w-160">状态</label>			    	
+				    	<input type="radio" name="status:number" class="radio-w" value="27" checked/><label for="stateOn">有效</label>
+				    	<input type="radio" name="status:number" class="radio-w" value="28" /><label for="stateOoff">无效</label>
+					</div>
+				</div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button id="return" type="reset" class="btn  btn-info">返回</button>
+                 	</div>
+                 </div>
+                 <input type="hidden" id="idBin" name="idBin:number"/>
+           </form>         
+        </section>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var idStk = $('#_key5').val();
+	var stkName = $('#_key28').val();
+	var idBin = $('#_key27').val();
+	var jmstoken= store.get('JMS-TOKEN');
+	$('#stkName').val(stkName);
+	$('#idStk').val(idStk);
+	if(idBin!=null){
+	
+		$.binInfo(idBin,jmstoken,function(data){
+		 	$('#binForm').populate(data,true);
+		});
+	}
+	//$('#_key5').val("");
+	$('#_key27').val("");
+	//$('#_key28').val("");
+	
+	$('#isReturnShelf').selectautofill('s/getIsReturnShelfList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+	
+    $('#binForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'bin': {
+                validators: {
+                    notEmpty: {
+                        message: '货架名称不能为空'
+                    }  
+                }
+            }
+
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var bin =JSON.stringify($('#binForm').serializeJSON());
+		 	$.createBin(bin,jmstoken,function(data){
+			      	$.get("views/bin.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+
+        });
+		$('#return').click(function(){
+	 		$.get("views/bin.html",function(data){
+	         	$("#body").html(data);
+			});
+		});
+});
+</script>

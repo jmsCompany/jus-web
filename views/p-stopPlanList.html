@@ -1,0 +1,380 @@
+<script type="text/html" id="stopPlanListCnt">
+	<div class="body-head-title">
+		<span class="h-title" id="cpp">排产计划</span>
+		<!--<span class="h-title" id="spp">总计划</span>-->
+		<span class="h-title" id="cp">检查计划</span>
+		<span class="h-title" id="set">检查设置</span>
+		<span class="h-title-selected"><b>停工计划</b></span>
+		<span class="h-title" id="calendar">工作日历</span>
+		<span class="h-title" id="overtime">加班计划</span>
+		<span class="h-title" id="importCp">排产计划导入</span>
+	</div>
+
+	<div class="cont">
+		<div class="r-header-body">
+			<div class="right-list">
+				<!--搜索框-->
+				<!--<div class="sousuo">-->
+					<!--<div class="ss-input">-->
+						<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容" />-->
+					<!--</div>-->
+					<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+				<!--</div>-->
+				<input type="button" class="button-sytle1" id="create" value="新建">
+			</div>
+		</div>
+		<table id="tableStopPlanList" class="display" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>机器</th>
+					<th>主原因</th>
+					<!--<th>描述</th>-->
+					<th>计划开始时间</th>
+					<th>计划停止时间</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<!-- 弹窗 start -->
+	<div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible;">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">新建停工计划</span>
+			</div>
+			<input type="button" class="tc_close" id="tcbox-close">
+			<form id="stopPlanForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>机器</label>
+						<select class="form-control" name="machineId:number" id="machineId">
+							<option>机器</option>
+						</select>
+					</div>
+				<!--</div>-->
+				<!--<div class="col-xs-12 mar-top-20px">-->
+					<div class="form-group">
+						<label>原因</label>
+						<select class="form-control" name="pSubCodeId" id="pSubCodeId">
+							<option>原因</option>
+						</select>
+					</div>
+				</div>
+				<!--<div class="col-xs-12 mar-top-20px">-->
+					<!--<div class="form-group">-->
+						<!--<label>描述</label>-->
+						<!--<textarea class="form-control input-w-300" rows="3" name="des" id="des" style="width: 398px!important;"></textarea>-->
+					<!--</div>-->
+				<!--</div>-->
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>计划开始时间</label>
+						<input type="text" class="form-control" name="planSt" id="planSt">
+					</div>
+					<div class="form-group">
+						<label>计划停止时间</label>
+						<input type="text" class="form-control" name="planFt" id="planFt">
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px" id="idStatusCnt">
+					<div class="form-group">
+						<label>状态</label>
+						<select class="form-control" name="statusId:number" id="statusId"></select>
+					</div>
+				</div>
+
+				<div class="aligncenter">
+					<div class="form-group">
+						<button id="save" type="submit" class="btn btn-primary">保存</button>
+						<button id="return" type="button" class="btn  btn-info">返回</button>
+					</div>
+				</div>
+				<input type="hidden" id="idStopsPlan" name="idStopsPlan:number" />
+			</form>
+		</div>
+	</div>
+
+	<!-- 弹窗 over -->
+	<div class="tcbox container-fluid" id="nullAlert">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+			</div>
+			<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label id="info"></label>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/javascript">
+	//弹窗
+	function showObj(objid){
+		$(objid).draggable().show();
+	}
+	function hideObj(objid){
+		$(objid).hide();
+	}
+	var jmstoken= store.get('JMS-TOKEN');
+	var app = {
+	init: function() {
+		$('#body').html($('#stopPlanListCnt').html());
+		this.drowTable();
+		this.bindEvents();
+		this.autoFill();
+		this.form();
+	},
+	drowTable: function() {
+		var self = this;
+		var table = $('#tableStopPlanList').DataTable( {
+			// deferRender:  true,
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+			// scrollY:"350px",
+			// scrollCollapse: true,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL + "p/findPStopsPlanList",
+				"dataType": "json",
+				headers: {'JMS-TOKEN':jmstoken}
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-bin>编辑</button><button class=button-delete>删除</button>'
+			} ],
+		"language": {
+							"url": "js/datatable/chinese.json"
+					},
+		
+			dom: "tip",
+			pageLength:"50"
+		} );
+
+		$('#tableStopPlanList tbody').on( 'click', 'button', function () {
+			var data = table.row( $(this).parents('tr') ).data();
+			var clazz =$(this).attr('class');
+			if(clazz=='button-bin'){
+				var top = $('#body').scrollTop();
+				$('#tcbox-pcpplist').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+//				showObj('.tcbox');
+				var idStopsPlan = data[5];
+				$('#idStopsPlan').val(idStopsPlan);
+				self.loadDetail(idStopsPlan);
+			}
+			else if(clazz=='button-delete'){
+				$.deleteStopPlan(data[5],jmstoken,function(data){
+					$.get("views/p-stopPlanList.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			}
+//			else {
+//				$("#_key13").val(data[5]);
+//				$.get("views/p-actStopPlanList.html",function(data){
+//					$("#body").html(data);
+//				});
+//			}
+		} );
+	},
+	autoFill:function(){
+		var jmstoken= store.get('JMS-TOKEN');
+		$('#machineId').append('<option value="-1">全部</option>');
+		$('#machineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		$('#pSubCodeId').selectautofill('p/getPStopsCodeObjsList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+		$('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_stops_plan'}});
+	},
+	bindEvents: function() {
+		var dataPickerOpt = {
+			format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+			useCurrent: false,
+			sideBySide: true
+		}
+		$('#planSt').datetimepicker(dataPickerOpt);
+		$('#planFt').datetimepicker(dataPickerOpt);
+		$('#cpp').click(function(){
+	 		$.get("views/p-cppList.html",function(data){
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-cppList'
+				});
+	             $("#body").html(data);
+	     	});
+	 	});
+		$('#cp').click(function(){
+	 		$.get("views/p-checkPlan.html",function(data){
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-checkPlan'
+				});
+	             $("#body").html(data);
+	     	});
+	 	});
+		$('#set').click(function(){
+	 		$.get("views/p-checkSet.html",function(data){
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-checkSet'
+				});
+	             $("#body").html(data);
+	     	});
+	 	});
+		$('#spp').click(function(){
+	 		$.get("views/p-sppList.html",function(data){
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-sppList'
+				});
+	             $("#body").html(data);
+	     	});
+	 	});
+
+		$('#calendar').click(function () {
+			$.get("views/p-calendar.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-calendar'
+				});
+				$("#body").html(data);
+			});
+		});
+
+		$('#overtime').click(function () {
+			$.get("views/p-overtime.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-overtime'
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#importCp').click(function () {
+			$.get("views/p-import.html", function (data) {
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-import'
+				});
+				$("#body").html(data);
+			});
+		});
+	 	$('#create').on('click', function(e) {
+			$('#tcbox-pcpplist').draggable().show();
+		 })
+		$('#return, #tcbox-close').click(function(){
+//	 		$('#tcbox-pcpplist').hide();
+			$.get("views/p-stopPlanList.html",function(data){
+				$("#body").html(data);
+			});
+	 	});
+	},
+	form: function() {
+		var self = this;
+		$('#stopPlanForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'machineId': {
+					validators: {
+						notEmpty: {
+							message: '机器编号不能为空'
+						}  
+					}
+				},
+				'pSubCodeId': {
+					validators: {
+						notEmpty: {
+							message: '原因不能为空'
+						}  
+					}
+				},
+				'planSt': {
+					validators: {
+						notEmpty: {
+							message: '计划开始时间不能为空'
+						}
+					}
+				},
+				'planFt': {
+					validators: {
+						notEmpty: {
+							message: '计划停止时间不能为空'
+						}
+					}
+				}
+			}
+		}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				if(!self.validateTime()) {
+					var top = $('#body').scrollTop();
+					$('#nullAlert').css({
+						top: $(window).height() * 0.2 + top
+					}).draggable().show();
+					$('#info').empty();
+					$('#info').append('输入时间有误');
+//					alert('输入时间有误');
+					return;
+				}
+				var $form     = $(e.target),
+				validator = $form.data('bootstrapValidator');
+//				var stopPlan =JSON.stringify($('#stopPlanForm').serializeJSON());
+//				var jmstoken= store.get('JMS-TOKEN');
+
+				var stopPlan = $('#stopPlanForm').serializeJSON();
+				stopPlan.planSt = stopPlan.planSt.replace('Z', '470+08:00');
+				stopPlan.planFt = stopPlan.planFt.replace('Z', '470+08:00');
+				stopPlan = JSON.stringify(stopPlan);
+				$.saveStopPlan(stopPlan,jmstoken,function(data){
+						$.get("views/p-stopPlanList.html",function(data){
+							$("#body").html(data);
+						});
+				});
+
+		});
+	},
+		validateTime: function() {
+			var $planSt = $('#planSt');
+			var $planFt = $('#planFt');
+			var flag = true;
+			if($planSt.val() > $planFt.val()) {
+				$planSt.addClass('error');
+				$planFt.addClass('error');
+				flag = false;
+			}
+			return flag;
+		},
+		loadDetail:function(idStopsPlan){
+			$.stopPlanInfo(idStopsPlan,jmstoken,function(data){
+				$('#stopPlanForm').populate(data,true);
+				$('#planSt').val($.dateFormat.date(new Date(data.planSt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+				$('#planFt').val($.dateFormat.date(new Date(data.planFt), 'yyyy-MM-ddTHH:mm:ss.SSSZ'));
+
+//				$('#machineId').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+//					$('#machineId').val(data.machineId);
+//				});
+//
+				$.cppWoInfo(data.pwoId,jmstoken,function(data){
+					$('#pno').val(data.pno);
+					$('#rev').val(data.rev);
+					$('#des').val(data.des);
+					$('#woQty').val(data.qty);
+				});
+
+			});
+
+
+		}
+}
+app.init();
+
+</script>

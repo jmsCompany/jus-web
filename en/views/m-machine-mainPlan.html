@@ -1,0 +1,388 @@
+<script type="text/html" id="machineMainPlanList">
+<div class="body-head-title">
+	<span class="h-title-selected"><b>Maintain Plan</b></span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="btn-group btn-group-left" id="machine-group">
+			<select name="none" id="machine-select" style="display: none;"></select>
+			<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">Device</button>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle machine" type="button">
+				<span class="caret"></span>
+				<span class="sr-only">Device/ NO..</span>
+			</button>
+			<ul class="dropdown-menu">
+			</ul>
+		</div>
+		<div class="btn-group btn-group-left" id="dept-group">
+			<select name="none" id="dept-select" style="display: none;"></select>
+			<button class="btn btn-default" type="button" name="machineNo:number" id="dept">Department</button>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle dept"  type="button">
+				<span class="caret"></span>
+				<span class="sr-only">Department</span>
+			</button>
+			<ul class="dropdown-menu"></ul>
+		</div>
+		<div class="right-list">
+    		<!--搜索框-->
+    		<input type="button" class="button-sytle1" id="search" value="Search">
+    		<!--<input type="button" class="button-sytle1" id="create" value="新建">-->
+    		<button id="create" class="button-sytle1">Create</button>
+    	</div>
+   </div>
+	<table id="tableMainPlan" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Maintenance cycle</th>
+				<th>Department</th>
+				<th>Machine</th>
+                <th>Specific projects</th>
+                <th>Opeartion</th>
+            </tr>
+        </thead>
+   </table>
+</div>
+<div class="aligncenter">
+    <div class="form-group">
+        <button id="return" type="button" class="btn  btn-info" style="VISIBILITY: hidden">REturn</button>
+    </div>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="mainPlanItem">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">Create or edit maintenance plan</span>
+		</div>
+      <input type="button" class="tc_close">
+     <form id="mainPlanForm" method="post" action="index.html" class="form-inline">
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Machine</label>
+				 <select  class="input-w-3 select-cs1 form-control" name="idMachine:number" id="idMachine">
+				 </select>
+			 </div>
+		 </div>
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Department</label>
+				 <select  class="input-w-3 select-cs1 form-control" name="idMDept:number" id="idMDept">
+				 </select>
+			 </div>
+		 </div>
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Maintenance cycle</label>
+				 <select  class="input-w-3 select-cs1 form-control" name="idMainCycle:number" id="idMainCycle">
+				 </select>
+			 </div>
+		 </div>
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Interval days</label>
+				 <input type="text"  class="input-w-3 form-control" name="idMainCycle:number" id="idMainCycle"/>
+			 </div>
+		 </div>
+		 <div class="col-xs-12 mar-top-20px">
+			 <div class="form-group">
+				 <label for="" class="input-w-160">Maintenance project</label>
+				 <textarea class="form-control" style="width:180px;" rows="3" name="item" id="item"></textarea>
+			 </div>
+		 </div>
+		 <div class="aligncenter">
+			 <div class="form-group">
+				 <button type="submit" class="btn btn-primary " id="save">Save</button>
+				 <button id="return1" type="button" class="btn  btn-info">Return</button>
+			 </div>
+		 </div>
+		 <input type="hidden" id="idMainItem" name="idMainItem:number"/>
+	 </form>
+   </div>  
+</div>
+
+<div class="tcbox container-fluid" id="nullAlert">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label id="info"></label>
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+<script type="text/javascript">
+
+	function showObj(objid){
+		$(objid).draggable().show();
+
+	}
+	function hideObj(objid){
+		$(objid).hide();
+	}
+	var jmstoken = store.get('JMS-TOKEN');
+	var mainPlan={
+		init:function(){
+			var self = this;
+			$('#body').html($('#machineMainPlanList').html());
+			this.bindEvens();
+			this.form();
+			this.autoFill();
+		},
+		autoFill:function(){
+			$('#idMainCycle').selectautofill('m/getMainCycles', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+			$('#idMachine').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}});
+			$('#idMDept').selectautofill('m/getDepts', {headers: {'JMS-TOKEN': jmstoken}});
+		},
+		nullAlert:function(information){
+			var top = $('#body').scrollTop();
+			$('#nullAlert').css({
+				top: $(window).height() * 0.2 + top
+			}).draggable().show();
+			$('#info').empty();
+			$('#info').append(information);
+		},
+		bindEvens:function(){
+			var self = this;
+			var routeParams = RouterManager.getParams();
+			var machineId = routeParams.machineId;
+			var idDept = routeParams.idDept;
+			var data={};
+			if(machineId&&idDept){
+				data.idMachine = machineId;
+//				if(idDept){
+					data.idDept = idDept;
+//				}
+				self.loadTable(data);
+			}
+
+			//选择机器
+			$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+				var _html = '';
+				_(data).each(function (d, i) {
+					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+					if(machineId == d.id){
+						$('#machine-select').val(parseInt(machineId));
+						$('#machineNo').html(d.name);
+					}
+				});
+				$('#machine-group').find('.dropdown-menu').append(_html);
+			});
+			$('.machine').on('click',function(e){
+				$('#machineNo').html('Machine');
+			});
+			$('#machine-group').on('click', 'li a', function (e) {
+				var $t = $(this);
+				var id = $t.data('id');
+				$('#machine-select').val(parseInt(id));
+				$('#machineNo').html($t.text());
+			});
+			//选择部门
+			$('#dept-select').selectautofill('m/getDepts', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+				var _html = '';
+				_(data).each(function (d, i) {
+					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+					if(idDept == d.id){
+						$('#dept-select').val(parseInt(idDept));
+						$('#dept').html(d.name);
+					}
+				});
+				$('#dept-group').find('.dropdown-menu').append(_html);
+			});
+			$('.dept').on('click',function(e){
+				$('#dept').html('Department');
+			});
+			$('#dept-group').on('click', 'li a', function (e) {
+				var $t = $(this);
+				var id = $t.data('id');
+				$('#dept-select').val(parseInt(id));
+				$('#dept').html($t.text());
+//				self.loadTable();
+			});
+
+			//点击查询
+			$('#search').on('click',function(){
+				self.loadTable();
+				var historyOptions = null;
+				historyOptions = {
+					groupId:'m-machine-mainPlan',
+				};
+				if ($('#machineNo').html() != 'Machine'){
+					var idMachine = $('#machine-select').val();
+					historyOptions.machineId = idMachine;
+				}
+				else{
+					$('#nullAlert').draggable().show();
+					self.nullAlert('Please choose machine');
+				}
+				if ($('#dept').html() != 'Department'){
+					var idDept = $('#dept-select').val();
+					historyOptions.idDept = idDept;
+				}
+				else{
+					$('#nullAlert').draggable().show();
+					self.nullAlert('Please choose department');
+				}
+				RouterManager.setUrl(historyOptions);
+			});
+
+			//点击新建
+			$('#create').on('click',function(){
+				$('#mainPlanItem').draggable().show();
+				var idMachine = $('#machine-select').val();
+				$('#idMachine').val(idMachine);
+				var idDept = $('#dept-select').val();
+				$('#idMDept').val(idDept);
+				$('#idMainItem').val('');
+			});
+
+			//点击弹出框关闭和返回按钮
+			$('#mainPlanItem').on("click",'.tc_close,#return1',function(){
+				$('#mainPlanItem').hide();
+				$('#mainPlanForm')[0].reset();
+			});
+
+
+//			$('#return1').click(function(){
+//				history.go(-1);
+//			});
+			$('#return').click(function(){
+				$.get("views/m-machineList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+		},
+		loadTable:function(data){
+			var self = this;
+			if(!data){
+				var data = {};
+				if ($('#machineNo').html() == 'Machine'){
+//					data.idMachine = null;
+					return;
+				}
+				else{
+					var idMachine = $('#machine-select').val();
+					data.idMachine = idMachine;
+				}
+
+				if ($('#dept').html() == 'Department'){
+					data.idDept = null;
+					return;
+				}
+				else{
+					var idDept = $('#dept-select').val();
+					data.idDept = idDept;
+				}
+				if (this.table) {
+					this.table.destroy();
+				}
+			}
+			this.table = $('#tableMainPlan').DataTable( {
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "m/mainItemList",
+					"dataType": "json",
+					"data":data,
+					"headers":{'JMS-TOKEN':jmstoken}
+				},
+				"columnDefs": [ {
+					"targets": -1,
+					"data": null,
+					"defaultContent": '<button class=button-edit>Edit</button><button class=button-delete>Delete</button>'
+				} ],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+				dom: "tip",
+				pageLength:"50"
+			} );
+			$('#tableMainPlan tbody').on( 'click', 'button', function () {
+				var data = self.table.row( $(this).parents('tr') ).data();
+				var clazz=$(this).attr('class');
+				if(clazz=='button-edit'){
+					showObj('#mainPlanItem');
+					$.mainPlanInfo(data[4],jmstoken,function(data){
+						debugger;
+						$('#mainPlanForm').populate(data,true);
+					});
+				}
+				else{
+					$.deleteMainPlan(data[4],jmstoken,function(data){
+						$.get("views/m-machine-mainPlan.html",function(data){
+							$("#body").html(data);
+						});
+					});
+				}
+			} );
+		},
+		form:function(){
+			var self = this;
+			$('#mainPlanForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'item': {
+						validators: {
+							notEmpty: {
+								message: 'Maintenance project cannot be empty'
+							}
+						}
+					},
+					'idMachine:number': {
+						validators: {
+							notEmpty: {
+								message: 'Please choose machine'
+							}
+						}
+					},
+					'idMDept:number': {
+						validators: {
+							notEmpty: {
+								message: 'Please choose department'
+							}
+						}
+					},
+					'idMainCycle': {
+						validators: {
+							notEmpty: {
+								message: 'Please choose maintenance cycle'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				var $form = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var mainPlan =JSON.stringify($('#mainPlanForm').serializeJSON());
+				$('#machine-select').val($('#idMachine').val());
+				$('#dept-select').val($('#idMDept').val());
+				debugger;
+				$.saveMainPlan(mainPlan,jmstoken,function(data){
+					self.loadTable();
+					$('#mainPlanItem').hide();
+					$('#mainPlanForm')[0].reset();
+					$('#save').removeAttr('disabled');
+//					$.get("views/m-machine-mainPlan.html",function(data){
+//						$("#body").html(data);
+//					});
+				});
+
+			});
+		}
+	};
+	mainPlan.init();
+</script>
+    
+
+
+

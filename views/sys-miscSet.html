@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>成本中心</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title" id="position">职位</span>
+	<span class="h-title" id="dep">部门</span>
+	<span class="h-title" id="emp">员工</span>
+	<span class="h-title" id="role">角色</span>
+	<span class="h-title" id="notification">消息中心</span>
+	<span class="h-title" id="costCenter">成本中心</span>
+	<span class="h-title" id="stopDes">停机描述</span>
+	<span class="h-title" id="doSet">收、出货设置</span>
+	<span class="h-title" id="code">自动编码设置</span>
+	<span class="h-title" id="miscSet">其他设置</span>
+</div>
+<div class="cont">
+	<form id="doSetForm" method="post" action="index.html" class="form-inline">
+
+	<label for="exampleInputEmail1" class="input-w-200">是否自动创建采购订单编码：</label>
+	<input type="radio" name="receive:number" id='Rset1' class="radio-w" value="1" checked/><label for="stateOn">是</label>
+	<input type="radio" name="receive:number" id='Rset2' class="radio-w" value="0" /><label for="stateOoff">否</label>
+<br>
+
+	<label for="exampleInputEmail1" class="input-w-200">是否自动创建销售订单编码：</label>
+	<input type="radio" name="send:number" id='dRet1' class="radio-w" value="1" checked/><label for="stateOn">是</label>
+	<input type="radio" name="send:number" id='dRet2' class="radio-w" value="0" /><label for="stateOoff">否</label>
+
+<br>
+
+	<label for="exampleInputEmail1" class="input-w-200">是否自动创建出货单编码：</label>
+	<input type="radio" name="send:number" id='dRet1' class="radio-w" value="1" checked/><label for="stateOn">是</label>
+	<input type="radio" name="send:number" id='dRet2' class="radio-w" value="0" /><label for="stateOoff">否</label>
+
+<br>
+
+	<label for="exampleInputEmail1" class="input-w-200">是否自动创建工单编码：</label>
+	<input type="radio" name="send:number" id='dRet1' class="radio-w" value="1" checked/><label for="stateOn">是</label>
+	<input type="radio" name="send:number" id='dRet2' class="radio-w" value="0" /><label for="stateOoff">否</label>
+
+
+	<div class="clearfix"></div>
+	<div class="foot-btn-box">
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary ">保存</button>
+			<button id="return01" type="button" class="btn  btn-info">返回</button>
+		</div>
+	</div>
+	</form>
+</div>
+<!-- 弹窗 start -->
+
+<!-- 弹窗 over -->
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	var jmstoken= store.get('JMS-TOKEN');
+
+	 $('#doSetForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var co =JSON.stringify($('#doSetForm').serializeJSON());
+		 	$.saveReceiveSendSet(co,jmstoken,function(data){
+				debugger;
+			});
+
+        });
+
+	var historyParams={
+		groupId:'system'
+	}
+	$('#position').click(function(){
+		$.get("views/sys-position.html",function(data){
+			historyParams.viewId = 'sys-position';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#emp').click(function(){
+		$.get("views/sys-employee.html",function(data){
+			historyParams.viewId = 'sys-employee';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#role').click(function(){
+		$.get("views/sys-role.html",function(data){
+			historyParams.viewId = 'sys-role';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#notification').click(function(){
+		$.get("views/sys-notification.html",function(data){
+			historyParams.viewId = 'sys-notification';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#dep').click(function(){
+		$.get("views/sys-dept.html",function(data){
+			historyParams.viewId = 'sys-dept';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#stopDes').click(function(){
+		$.get("views/sys-stopDes.html",function(data){
+			historyParams.viewId = 'sys-stopDes';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#costCenter').click(function(){
+		$.get("views/sys-costCenter.html",function(data){
+			historyParams.viewId = 'sys-costCenter';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	$('#code').click(function(){
+		$.get("views/sys-code.html",function(data){
+			historyParams.viewId = 'sys-code';
+			RouterManager.setUrl(historyParams);
+			$("#body").html(data);
+		});
+	});
+	// 弹窗拖拽
+//	$(function () {
+//		$('#draggable1').draggabilly();
+//	});
+});
+//function focus_last(obj){
+//
+//	var text = obj.createTextRange();
+//
+//	text.collapse(false);text.select();
+//
+//}
+</script>
+</body>
+
+
+
+</html>

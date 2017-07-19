@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            var jmstoken= store.get('JMS-TOKEN');
+            var historyOptions={
+                groupId:'doList'
+            };
+            //出货管理
+            $("#do01").click(function(){
+                $.get("views/doList.html",function(data){
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            //新建出货单
+            $("#createDo").click(function(){
+                $.get("views/doList-create-body.html",function(data){
+                    historyOptions.viewId='doList-create-body';
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            //新建销售退货
+            $("#createRma").click(function(){
+                $.get("views/rma-body.html",function(data){
+                    historyOptions.viewId='rma-body';
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+
+
+            var table =$('#tableRma').DataTable( {
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "s/smtfMaterialList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken},
+                    "data": {'typeId':6}
+                },
+                "columnDefs": [ {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-bin>Detail</button>'
+                } ],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            } );
+
+            $('#tableRma tbody').on( 'click', 'button', function () {
+                var rowData = table.row( $(this).parents('tr') ).data();
+                var clickOption={
+                    groupId:'doList',
+                    viewId:'rma-body',
+                    rmaId:rowData[10]
+                };
+                var clazz =$(this).attr('class');
+//        if(clazz=='button-edit'){
+//            clickOption.action='edit';
+//            $.get("views/rma-body.html",function(data){
+//                RouterManager.setUrl(clickOption);
+//                $("#body").html(data);
+//            });
+//        }
+//        else {
+                clickOption.action='detail';
+                $.get("views/rma-body.html",function(data){
+                    RouterManager.setUrl(clickOption);
+                    $("#body").html(data);
+                });
+//        }
+            } );
+
+        } );
+    </script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="do01">Shipping Management</span>
+    <span class="h-title" id="createDo">Create delivery orders</span>
+    <span class="h-title-selected"><b>Sales return list</b></span>
+    <span class="h-title" id="createRma">Create sales return</span>
+</div>
+<div class="cont">
+    <!--<div class="r-header-body">-->
+    <!--<div class="right-list">-->
+    <!--<div class="sousuo">-->
+    <!--<div class="ss-input">    		-->
+    <!--<input type="text" name="" id="codeCo.id" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    <!--</div>-->
+    <!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <table id="tableRma" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>RMA No.</th>
+            <th>SO No.</th>
+            <th>Client</th>
+            <th>Shipping date</th>
+            <th>Pno</th>
+            <th>Rev</th>
+            <th>Des</th>
+            <th>Returning quantity</th>
+            <th>Operator</th>
+            <th>Returning date</th>
+            <th>Operation</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+</body>
+</html>
+

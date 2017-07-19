@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>工单详情</title>
+	</head>
+	<body>
+<div class="body-head-title">
+	<span class="h-title" id="p_info">工单信息</span>
+	<span class="h-title"><b>工单详情</b></span>
+</div>
+ <div class="cont">
+	<!--<div class="r-header-body">-->
+<!--工单-->
+	    <!--<div class="btn-group btn-group-left" id="wo-group">
+            <select name="none" id="wo-select" style="display: none;"></select>
+            <button class="btn btn-default" type="button" id="wo">工单</button>
+            <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                <span class="caret"></span>
+                <span class="sr-only">工单</span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>-->
+	<!--</div>  -->
+
+     <form id="woForm" method="post" action="index.html">
+        <table class="pwoDetail" cellspacing="0" width="100%">
+            <tr>
+                <th>工单号</th><td><input type="text" name="woNo" id="woNo" readOnly="true"></td>
+                <th>销售单号</th><td><input type="text" name="so" id="so" readOnly="true"></select></td>
+                <th>数量</th><td><input type="text" name="qty" id="qty" readOnly="true"></td>
+            </tr>
+            <tr>
+                <th>产品</th><td><input type="text" name="mat" id="mat" readOnly="true"></td>
+                <th>已生产</th><td><input type="text" name="qtyFinished" id="qtyFinished" readOnly="true"></td>
+            </tr>
+            <tr>
+                <th colspan="6" style="text-align:left;padding-left:10px;">物料清单</th>
+            </tr>
+        </table>
+     </form>
+        <table  id="tableWoBom" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>级别</th>
+                <th>物料</th>
+                <th>应发数量</th>
+                <th>已发数量</th>
+                <th>剩余数量</th>
+            </tr>
+            </thead>
+        </table>
+        <table class="pwoDetail" cellspacing="0" width="100%">
+            <tr>
+                <th colspan="6" style="text-align:left;padding-left:10px;">工艺路线</th>
+            </tr>
+        </table>
+        <table  id="tableWoRoutine" class="display" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>工序号</th>
+                <th>描述</th>
+                <th>数量</th>
+                <th>已生产数量</th>
+            </tr>
+            </thead>
+        </table>
+</div>  
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button class="btn btn-info" type="button" id="return01">返回</button>
+                 	</div>
+                 </div> 
+	</body>
+</html>
+<script type="text/javascript">
+
+    var jmstoken = store.get("JMS-TOKEN");
+    var woDetail = {
+        init:function(){
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var idWo = params['idWo'];
+            this.loadDetails(idWo);
+            this.loadBomTable(idWo);
+            this.loadRoutineTable(idWo);
+            this.bindEvents();
+        },
+        loadDetails:function(idWo){
+            $.woInfo(idWo,jmstoken,function(data){
+                $('#woForm').populate(data,true);
+                $('#mat').val(data.pno+'-'+data.rev+'-'+data.des);
+            });
+        },
+        loadBomTable:function(idWo){
+            $('#tableWoBom').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "p/getBomByWoId",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken},
+                    data:{'woId':idWo}
+                },
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            });
+        },
+        loadRoutineTable:function(idWo){
+            $('#tableWoRoutine').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "p/getRoutineDByWoId",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN':jmstoken},
+                    data:{'woId':idWo}
+                },
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength:"50"
+            });
+        },
+        bindEvents:function(){
+            $('#p_info').click(function(){
+                $.get("views/p-workorder.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+            $('#return01').click(function(){
+                history.go(-1);
+            });
+        }
+    };
+    woDetail.init();
+
+
+</script>

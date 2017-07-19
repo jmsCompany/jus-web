@@ -1,0 +1,802 @@
+﻿<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+  <!--<head>-->
+
+
+	<!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
+    <!--&lt;!&ndash;-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <!--<meta name="format-detection" content="telephone=no">-->
+    <!--&ndash;&gt;-->
+    <!--<title>表格页面</title>-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap-customize.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/style.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/pages.css">-->
+    <!--<script type="text/javascript" src="js/quality/js/html5.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/jquery.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/bootstrap.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/respond.src.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/base.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/main.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/bootstrap/bootstrapValidator.js"></script>-->
+
+    <!--&lt;!&ndash; 多选 &ndash;&gt;-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/jms/jmsclient.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/jms/jsonform.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/form/jquery.serializejson.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/store/store.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/jquery/jquery-ui.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/layout/jquery.layout.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/datatable/jquery.dataTables.min.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/datatable/dataTables.scroller.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src='js/textarea/jquery.autosize.js'></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/bootstrap/bootstrap-datetime.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/jms/jscroll.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/jms/utils.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/lib/jquery.blockUI.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/lib/underscore.js"></script>-->
+    <!--<script type="text/javascript" charset="UTF-8" src="js/jquery.dateFormat.js"></script>-->
+
+    <!--&lt;!&ndash;plugin&ndash;&gt;-->
+
+
+  <!--</head>-->
+  <body>
+    <!-------------------------------------- 头部开始 -------------------------------------->
+    <header>
+      <div class="container1">
+        
+      </div>
+    </header>
+    <!-------------------------------------- 头部结束 -------------------------------------->
+    <!-------------------------------------- 内容开始 -------------------------------------->
+    <main>
+      <form id="noProcessForm" method="post" action="index.html">
+      <div class="container1">
+        <div class="ht10"></div>
+        <div class="ui-table1 no-border">
+          <table>
+            <tr>
+              <td colspan="2">
+                日计划：<select id="idCpp" name="idCpp:number" style="width:150px;"></select>
+                <!--<img src="img/logo1.png" alt="" class="logo">-->
+              </td>
+              <td colspan="6" align="center">
+                <div class="title1">
+                  不合格处理单<br>Non-conforming process sheet
+                </div>
+              </td>
+              <td colspan="2" align="center">
+                文件编号 Document <br>No.:FM-08-40 <br>单号: <input id="ncpNo" name="ncpNo" class="no-show-border" style="width:60px;">
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="ht10"></div>
+        <div class="ui-table1">
+          <!--<i class="delline" style="width: 10%;height: 20px;top: 85px;left: 620px; border-left: 1px solid #000; border-right: 1px solid #000;"></i>-->
+          <table>
+            <tr>
+              <td colspan="1">
+                <p><b class="name">批次: <br>Batch No.</b></p>
+              </td>
+              <td colspan="3">
+                <!--<p contenteditable></p>-->
+                <input id="lotNo" name="lotNo" class="no-show-border">
+              </td>
+              <td colspan="1">
+                <p><b class="name">零件号 <br>Part No.</b></p>
+              </td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                  <select id="idMaterial" name="idMaterial:number" style="width:150px;"></select>
+              </td>
+              <td colspan="1" rowspan="5">
+              <!--<td colspan="1" rowspan="2">-->
+                <!--&nbsp;-->
+                <p style="margin-top: -60px;"><b class="name">库位: <br>Location</b></p>
+              </td>
+              <td colspan="2" rowspan="2">
+                <p>来料区域</p>
+                <p style="width: 80%;">Incoming <input type="radio" name="idLocation:number" id="location0" class="pull-right" value="0"></p>
+                <p>Area</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1">
+                <p><b class="name">零件名称: <br>Part Desc.</b></p>
+              </td>
+              <td colspan="3">
+                <!--<p contenteditable></p>-->
+                <!--<label id="matDes"></label>-->
+                <input id="material" name="material" class="no-show-border">
+              </td>
+              <td colspan="1">
+                <p><b class="name">数量 <br>Quantity</b></p>
+              </td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <input id="qty" name="qty" class="no-show-border">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" rowspan="3" align="center">
+                <p><b class="name">问题描述: <br>Problem <br>description</b></p>
+              </td>
+              <td colspan="6" rowspan="3">
+                <!--<p contenteditable></p>-->
+                日期：<input name="time" id="time"  class="no-show-border"/>
+                <br><textarea name='des' id="des" style="width:510px;height:192px;"></textarea>
+              </td>
+              <!--<td colspan="1" rowspan="3" align="center">-->
+                <!--<p style="margin-top: -60px;"><b class="name">库位: <br>Location</b></p>-->
+              <!--</td>-->
+              <td colspan="2">
+                <p>原材料仓库</p>
+                <p style="width: 80%;">Raw Material <input type="radio" name="idLocation:number" id="location1" class="pull-right" value="1"></p>
+                <p>stock</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>生产线</p>
+                <p style="width: 80%;">Raw Material <input type="radio" name="idLocation:number" id="location2" class="pull-right" value="2"></p>
+                <p>stock</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>成品仓</p>
+                <p style="width: 80%;">Raw Material <input type="radio" name="idLocation:number" id="location3" class="pull-right" value="3"></p>
+                <p>stock</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1">
+                <p><b class="name">发布: <br>Release</b></p>
+              </td>
+              <td colspan="4">
+                <!--<p contenteditable></p>-->
+                <!--<input id="release1" name="release1" class="no-show-border">-->
+                <select id="release1" name="release1" style="width:150px;"></select>
+              </td>
+              <td colspan="1">
+                <p><b class="name">审核: <br>Audit</b></p>
+              </td>
+              <td colspan="4">
+                <!--<p contenteditable></p>-->
+                <!--<input id="audit01" name="audit01" class="no-show-border">-->
+                <select id="audit01" name="audit01" style="width:150px;"></select>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" rowspan="7" align="center">
+                <p><b class="name">处理方式: <br>Disposal:</b></p>
+              </td>
+              <td colspan="4" rowspan="6" valign="top">
+                <p>
+                  <b class="name">评审意见: <br>Comment</b><br>
+                </p>
+                <!--<p contenteditable></p>-->
+
+                  <!--<label>评审意见: <br>Comment</b></label>-->
+                  <textarea name="comment" id="comment" style="width:350px;height:280px;"></textarea>
+
+              </td>
+              <td colspan="1">
+                <p><span class="pull-right"><input type="checkbox" name="isSorting" id="isSorting" style="margin-top: 10px;" value="1"></span>
+                  <b class="name">挑选<br>Sorting</b>
+                </p>
+              </td>
+              <td colspan="4">
+                <p><b class="name">可接受数量:</b>
+
+                  <input id="sortingQty" name="sortingQty" class="no-show-border">
+                  <!--<span contenteditable>&nbsp;</span>-->
+                </p>
+                <p><b class="name">OK parts Qty</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1">
+                <p><span class="pull-right"><input type="checkbox" name="isReworking" id="isReworking" style="margin-top: 10px;" value="2"></span>
+                  <b class="name">返工<br>Rework</b>
+                </p>
+              </td>
+              <td colspan="4">
+                <p><b class="name">返工数量:</b>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                  <input id="reworkingQty" name="reworkingQty" class="no-show-border">
+                </p>
+                <p><b class="name">Rework Qty</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1">
+                <p><span class="pull-right"><input type="checkbox" name="isScrap" id="isScrap" style="margin-top: 10px;"  value="3"></span>
+                  <b class="name">报废<br>Scrap</b>
+                </p>
+              </td>
+              <td colspan="4">
+                <p><b class="name">报废数量:</b>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                  <input id="scrapQty" name="scrapQty" class="no-show-border">
+                </p>
+                <p><b class="name">Scrap Qty</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1">
+                <p><span class="pull-right"><input type="checkbox" name="isReject" id="isReject" style="margin-top: 10px;" value="4"></span>
+                  <b class="name">退货<br>reject</b>
+                </p>
+              </td>
+              <td colspan="4">
+                <p><b class="name">挑选/返工工时:</b>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                  <input id="manHour" name="manHour" class="no-show-border">
+                </p>
+                <p><b class="name">Man Hour</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" rowspan="2">
+                <p><span class="pull-right"><input type="checkbox" name="isDeviation" id="isDeviation" style="margin-top: 10px;" value="5"></span>
+                  <b class="name">让步接收<br>Deviation</b>
+                </p>
+              </td>
+              <td colspan="2">
+                <p><b class="name">让步接收数量:</b>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                </p>
+                <p><b class="name">Deviation Qty</b></p>
+              </td>
+              <td colspan="2">
+                <input id="deviationQty" name="deviationQty" class="no-show-border">
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p><b class="name">偏差申请单号:</b>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                </p>
+                <p><b class="name">Deviation Request No</b></p>
+              </td>
+              <td colspan="2" id="deviationNo">
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p><b class="name">责任人Owner:</b></p>
+                <!--<input id="owner" name="owner" class="no-show-border">-->
+                <select id="owner" name="owner" style="width:150px;"></select>
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><b class="name">审核Audit:</b></p>
+                <!--<input id="audit02" name="audit02" class="no-show-border">-->
+                <select id="audit02" name="audit02" style="width:150px;"></select>
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><b class="name">会签Countersign:</b></p>
+                <!--<input id="countersign" name="countersign" class="no-show-border">-->
+                <select id="countersign" name="countersign" style="width:150px;"></select>
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="3">
+                <p><b class="name">批准Approval:</b></p>
+                <!--<input id="approval02" name="approval02" class="no-show-border">-->
+                <select id="approval02" name="approval02" style="width:150px;"></select>
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1" rowspan="3" align="center">
+                <p><b class="name">整改措施<br>Improvement <br>Action</b></p>
+              </td>
+              <!--<td colspan="9">-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              <!--</td>-->
+            </tr>
+            <tr>
+              <td colspan="4">
+                <p><b class="name">是否生成正式抱怨<br>Create Official concern or not?</b></p>
+              </td>
+              <td colspan="1">
+                <p><input type="radio" class="radio-w" name="concernOrNot" id="concern0" value="0"><b class="name">是</b></p>
+                <p><input type="radio" class="radio-w" name="concernOrNot" id="concern1" value="1"><b class="name">否</b></p>
+              </td>
+              <td colspan="2">
+                <p><b class="name">抱怨号：<br>Concern No.</b></p>
+              </td>
+              <td colspan="3" id="concernNo">
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="1">
+                <p><b class="name">责任人：<br>Response</b></p>
+              </td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <!--<input id="Response" name="Response" class="no-show-border" style="width:130px;">-->
+                <select id="response" name="response" style="width:150px;"></select>
+              </td>
+              <td colspan="1">
+                <p><b class="name">审核：<br>Audit</b></p>
+              </td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <!--<input id="Audit03" name="Audit03" class="no-show-border" style="width:130px;">-->
+                <select id="audit03" name="audit03" style="width:150px;"></select>
+              </td>
+              <td colspan="1">
+                <p><b class="name">批准：<br>Approval</b></p>
+              </td>
+              <td colspan="2">
+                <!--<p contenteditable></p>-->
+                <!--<input id="Approval03" name="approval03" class="no-show-border" style="width:130px;">-->
+                <select id="approval03" name="approval03" style="width:150px;"></select>
+              </td>
+            </tr>
+          </table>
+          <input id="idNoProcess" name="idNoProcess" type="hidden">
+        </div>
+        <!--<div class="ui-text">-->
+          <!--<p><br></p>-->
+          <!--<p class="nopl">第一联；物料所属或数据维护部门（白色）第二联：物料所属或数据维护部门（蓝色）；第三联财务会签（粉色），第四联黄：质量部门（黄色）；第五联：实物（红色）</p>-->
+          <!--<p><br></p>-->
+          <!--<p><b>说明：</b></p>-->
+          <!--<p>1、 发现可疑产品时由质检员填写不合格处理单并经过Team leader批准后正式发布，若Team leader 无法判定则由QE判定</p>-->
+          <!--<p>2、 不合格处理单共一式无联，第一联为白色，在发布之初提交至物料所属或者数据维护部门，用于数据维护，第一联仅有隔离产品的信息</p>-->
+          <!--<p>3、 确定不良品的处理方式后填写剩余四联，相关部门按照处理方案处置产品，并将处置结果填写到结果栏中，检验员确认产品和处理单后将第二联传递至物料所属或者数据维护部门，第二联完成处理方式栏，若产生报废则需要提交至财务会签，且第三联交财务存档，第二及第三联完成围堵措施</p>-->
+          <!--<p>4、 第四和第五联由质量部主导，相应部门提交改进方案，完成单据剩余部分，第四联由质量部存档，第五联附于产品上。</p>-->
+          <!--<p><br></p>-->
+        <!--</div>-->
+      </div>
+        <div class="clearfix"></div>
+        <div class="foot-btn-box">
+          <div class="form-group">
+            <button class="btn btn-primary" id="save01">保存</button>
+            <button class="btn  btn-info" type="button" id="return01">返回</button>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <!-------------------------------------- 内容结束 -------------------------------------->
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+    <footer>
+      <div class="container1">
+        
+      </div>
+    </footer>
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+  </body>
+<!--</html>-->
+<style>
+  .no-show-border{
+    border-left:0px;border-top:0px;border-right:0px;border-bottom:1px;
+  }
+  /*.textarea-noborder{*/
+    /*overflow:auto; */
+    /*background-attachment:fixed;*/
+    /*background-repeat:no-repeat;*/
+    /*border-style:solid;*/
+    /*border-color:#FFFFFF;*/
+    /*width:510px;height: 202px;*/
+  /*}*/
+</style>
+<script type="text/javascript">
+  var jmstoken= store.get('JMS-TOKEN');
+
+  function formatRepo (repo) {
+    if (repo.loading) return repo.text;
+
+    var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+    return markup;
+  }
+
+  function formatRepoSelection (repo) {
+    return repo.name || repo.text;
+  }
+  var noProcessingCreate={
+    init:function(){
+      var self = this;
+      var params = this.params = RouterManager.getParams();
+      var action = params['action'];
+      var orderId = params['idNoProcess'];
+      if(orderId){
+        this.loadDetail(orderId,action,function(){
+        });
+      }
+//      else{
+        this.autoFill();
+//      }
+      this.bindEvents(orderId,action);
+      this.form();
+    },
+    autoFill:function(){
+      var self = this;
+      self.fillMaterialId();
+      self.fillUser($('#release1'));
+      self.fillUser($('#audit01'));
+      self.fillUser($('#owner'));
+      self.fillUser($('#audit02'));
+      self.fillUser($('#countersign'));
+      self.fillUser($('#approval02'));
+      self.fillUser($('#response'));
+      self.fillUser($('#audit03'));
+      self.fillUser($('#approval03'));
+      var dataPickerOpt = {
+        format: "YYYY-MM-DD",
+      };
+      $('#time').datetimepicker(dataPickerOpt);
+    },
+    loadDetail: function(orderId,action, callback) {
+      var self = this;
+      $.noProcessingInfo(orderId,jmstoken,function(data){
+        debugger;
+        $('#noProcessForm').populate(data,true);
+        var materialId = data.idMaterial;
+        self.fillMaterialId(function(){
+//                    var materialId = parseInt($('#materialId').data('id'));
+          $('#idMaterial').append('<option value="'+materialId+'"></option>');
+          $('#idMaterial').val(materialId);
+        });
+        $('#select2-idMaterial-container').text(data.material);
+
+        var material = data.material;
+        arr = material.split('_');
+        $('#material').val(arr[2]);
+
+        var $release1 = $('#release1');
+        self.fillUser($release1,function(){
+          $release1.append('<option value="'+data.release1+'"></option>');
+          $release1.val(data.realease1Name);
+        });
+        $('#select2-release1-container').text(data.realease1Name);
+
+        var $audit01 = $('#audit01');
+        self.fillUser($audit01,function(){
+          $audit01.append('<option value="'+data.audit01+'"></option>');
+          $audit01.val(data.audit01Name);
+        });
+        $('#select2-audit01-container').text(data.audit01Name);
+
+        var $owner = $('#owner');
+        self.fillUser($owner,function(){
+          $owner.append('<option value="'+data.owner+'"></option>');
+          $owner.val(data.ownerName);
+        });
+        $('#select2-owner-container').text(data.ownerName);
+
+        var $audit02 = $('#audit02');
+        self.fillUser($audit02,function(){
+          $audit02.append('<option value="'+data.audit02+'"></option>');
+          $audit02.val(data.audit02Name);
+        });
+        $('#select2-audit02-container').text(data.audit02Name);
+
+        var $countersign = $('#countersign');
+        self.fillUser($countersign,function(){
+          $countersign.append('<option value="'+data.countersign+'"></option>');
+          $countersign.val(data.countersignName);
+        });
+        $('#select2-countersign-container').text(data.countersignName);
+
+        var $approval02 = $('#approval02');
+        self.fillUser($approval02,function(){
+          $approval02.append('<option value="'+data.approval02+'"></option>');
+          $approval02.val(data.approval02Name);
+        });
+        $('#select2-approval02-container').text(data.approval02Name);
+
+        var $Response = $('#response');
+        self.fillUser($Response,function(){
+          $Response.append('<option value="'+data.response+'"></option>');
+          $Response.val(data.responseName);
+        });
+        $('#select2-response-container').text(data.responseName);
+
+        var $Audit03 = $('#audit03');
+        self.fillUser($Audit03,function(){
+          $Audit03.append('<option value="'+data.audit03+'"></option>');
+          $Audit03.val(data.audit03Name);
+        });
+        $('#select2-audit03-container').text(data.audit03Name);
+
+        var $approval03 = $('#approval03');
+        self.fillUser($approval03,function(){
+          $approval03.append('<option value="'+data.approval03+'"></option>');
+          $approval03.val(data.approval03Name);
+        });
+        $('#select2-approval03-container').text(data.approval03Name);
+
+
+        if(data.idLocation == 0){
+          $('#location0').attr('checked',true);
+        }
+        else if(data.idLocation == 1){
+          $('#location1').attr('checked',true);
+        }
+        else if(data.idLocation == 2){
+          $('#location2').attr('checked',true);
+        }
+        else{
+          $('#location3').attr('checked',true);
+        }
+
+        if(data.isSorting == 1){
+          $('#isSorting').attr('checked',true);
+        }
+
+        if(data.isReworking == 2){
+          $('#isReworking').attr('checked',true);
+        }
+
+        if(data.isScrap == 3){
+          $('#isScrap').attr('checked',true);
+        }
+
+        if(data.isReject == 4){
+          $('#isReject').attr('checked',true);
+        }
+
+        if(data.isDeviation == 5){
+          $('#isDeviation').attr('checked',true);
+          if(data.idDeviation){
+//            $('#deviationNo').html('<a>'+data.deviationNo +'</a>');
+            $('#deviationNo').html('<button type="button" class="btn btn-info" id="deviation">'+ data.deviationNo +'</button>' +
+                    '<input id="idDeviation" name="idDeviation" type="hidden" value="'+ data.idDeviation +'">');
+          }
+          else{
+            $('#deviationNo').html('<button type="button" class="btn btn-info" id="createDeviation">新建偏差申请</button>');
+          }
+        }
+
+
+        if(data.concernOrNot == 0){
+          $('#concern0').attr('checked',true);
+          if(data.idNcr){
+//            $('#concernNo').html('<a>'+data.concernNo +'</a>');
+            $('#concernNo').html('<button type="button" class="btn btn-info" id="ncr">'+ data.ncrNo +'</button>' +
+                    '<input id="idNcr" name="idNcr" type="hidden" value="'+ data.idNcr +'">');
+          }
+          else{
+            $('#concernNo').html('<button type="button" class="btn btn-info" id="createConcern">新建抱怨单</button>');
+          }
+        }
+        else{
+          $('#concern1').attr('checked',true);
+        }
+
+        self.dealAction(action);
+        callback;
+      });
+    },
+    dealAction:function(action){
+//      $('.remark01').show();
+      if(action == 'detail'){
+        $('input,select,textarea', $('#noProcessForm')).prop('readonly', true);
+        $("input:not(:button,:hidden)").prop("disabled", 'disabled');
+        $('select', $('#noProcessForm')).prop("disabled", 'disabled');
+        $('.clearfix').remove();
+        $('.foot-btn-box').remove();
+      }
+    },
+    fillMaterialId: function(callback) {
+      $('#idMaterial').select2({
+        ajax: {
+          url: $clientURL + 's/getMaterialListObjs',
+          dataType: 'json',
+          headers: {'JMS-TOKEN': jmstoken},
+          delay: 200,
+          data: function (params) {
+            var paramsObj ={
+              q: params.term,
+              types:[1,2,3]
+            };
+            var params = $.param(paramsObj,true);
+            return params;
+//                        return {
+//                            q: params.term,
+//                            types: [2, 3]
+//                        }
+          },
+          processResults: function (data, params) {
+            return {
+              results: data,
+              pagination: null
+            }
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        },
+        minimumInputLength: 1,
+        width: 140,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      }).on('select2:open',function(evt){
+        $('#select2-js-data-example-ajax-container').html('');
+        $('#js-data-example-ajax').empty();
+      });
+      callback && callback();
+    },
+    fillUser: function($user,callback) {
+      $user.select2({
+        ajax: {
+          url: $clientURL + 'u/getUsersByQ',
+          dataType: 'json',
+          headers: {'JMS-TOKEN': jmstoken},
+          delay: 200,
+          data: function (params) {
+            return {
+              q: params.term
+            }
+          },
+          processResults: function (data, params) {
+            return {
+              results: data,
+              pagination: null
+            }
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        },
+        minimumInputLength: 1,
+        width: 120,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      }).on('select2:open',function(evt){
+        $('#select2-js-data-example-ajax-container').html('');
+        $('#js-data-example-ajax').empty();
+      });
+      callback && callback();
+    },
+    bindEvents:function(orderId,action){
+      var self = this;
+      var $form = $('#noProcessForm');
+      $form.on('change','#idMaterial',function(){
+        var material = $('#select2-idMaterial-container').html();
+        arr = material.split('_');
+        $('#material').val(arr[2]);
+      });
+
+      $form.on('click','#deviation',function(){
+        var idNoProcess = $('#idNoProcess').val();
+        var idDeviation = $('#idDeviation').val();
+        var materialId = $('#idMaterial').val();
+        var material = $('#select2-idMaterial-container').html();
+        var historyOption = {
+          groupId :'q-noProcessingSheetList',
+          viewId:'q-deviation-create',
+          idNoprocess:idNoProcess,
+          idDeviation:idDeviation,
+          materialId:materialId,
+          material:material
+        };
+        $.get("views/q-deviation-create.html",function(data){
+          if(action){
+            historyOption.action = 'detail';
+          }
+          RouterManager.setUrl(historyOption);
+          $("#body").html(data);
+        });
+      });
+
+
+      $form.on('click','#ncr',function(){
+        var idNoProcess = $('#idNoProcess').val();
+        var idNcr = $('#idNcr').val();
+        var materialId = $('#idMaterial').val();
+        var material = $('#select2-idMaterial-container').html();
+        var historyOption = {
+          groupId :'q-noProcessingSheetList',
+          viewId:'q-ncr-create',
+          idNoprocess:idNoProcess,
+          idNcr:idNcr,
+          materialId:materialId,
+          material:material
+        };
+        $.get("views/q-ncr-create.html",function(data){
+          if(action){
+            historyOption.action = 'detail';
+          }
+          RouterManager.setUrl(historyOption);
+          $("#body").html(data);
+        });
+      });
+
+      $form.on('click','#return01',function(){
+        $.get("views/q-noProcessingSheetList.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList'
+          });
+          $("#body").html(data);
+        });
+      });
+
+
+      $form.on('click','#createDeviation',function(){
+        var materialId = $('#idMaterial').val();
+        var material = $('#select2-idMaterial-container').html();
+        $.get("views/q-deviation-create.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList',
+            viewId:'q-deviation-create',
+            idNoProcess:orderId,
+            materialId:materialId,
+            material:material
+          });
+          $("#body").html(data);
+        });
+      });
+
+      $form.on('click','#createConcern',function(){
+        var materialId = $('#idMaterial').val();
+        var material = $('#select2-idMaterial-container').html();
+        $.get("views/q-ncr-create.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList',
+            viewId:'q-ncr-create',
+            idNoProcess:orderId,
+            materialId:materialId,
+            material:material
+          });
+          $("#body").html(data);
+        });
+      });
+
+    },
+    form:function(){
+      $('#noProcessForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+          'idMaterial': {
+            validators: {
+              notEmpty: {
+                message: '零件不能为空'
+              }
+            }
+          }
+        }
+      }).on('success.form.bv', function (e) {
+        e.preventDefault();
+        var $form = $(e.target),
+        validator = $form.data('bootstrapValidator');
+        var noProcessing = JSON.stringify($('#noProcessForm').serializeJSON());
+        debugger;
+        $.saveNoProcessing(noProcessing, jmstoken, function (data) {
+          debugger;
+          $.get("views/q-noProcessingSheetList.html", function (data) {
+            $("#body").html(data);
+            RouterManager.setUrl({
+              groupId:'q-noProcessingSheetList'
+            });
+          });
+        });
+      });
+    }
+  };
+  noProcessingCreate.init();
+
+</script>

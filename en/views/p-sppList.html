@@ -1,0 +1,283 @@
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).show();
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+var spp= {
+	init: function () {
+		$('#body').html($('#pSppListMain').html());
+		this.bindEvents();
+		this.autoFill();
+	},
+	autoFill:function(){
+		var jmstoken = store.get('JMS-TOKEN');
+		$('#st').datetimepicker();
+		$('#ft').datetimepicker();
+
+		$('#idWo').selectautofill('p/getWoObjsList', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+		$("#lineId").selectautofill('p/m/findWSPLines', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
+		$('#statusId').selectautofill('p/getPStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'p_s_pp'}});
+
+		var frameContainer = $('.container-fluid');
+		frameContainer.on("change","#idWo",function(){
+			var idWo = $(this).val();
+			$.cppWoInfo(idWo,jmstoken,function(data){
+				$('#pno').val(data.pno);
+				$('#rev').val(data.rev);
+				$('#des').val(data.des);
+			});
+		});
+	},
+	bindEvents: function(){
+		var jmstoken = store.get('JMS-TOKEN')
+		 var table =$('#tableSppList').DataTable( {
+		 		"processing": true,
+		 		"serverSide": true,
+		 		"ajax": {
+		 			"url": $clientURL + "s/getSppList",
+		 			"dataType": "json",
+		 			headers: {'JMS-TOKEN':jmstoken}
+		 		},
+		 		"columnDefs": [ {
+		 			"targets": -1,
+		 			"data": null,
+		 			"defaultContent": '<button class=button-bin>编辑</button><button class=button-delete>删除</button>'
+		 		} ],
+		 		"language": {
+		 			"url": "js/datatable/chinese.json"
+		 		},
+		 		dom: "tip",
+		 		pageLength:"50"
+		 } );
+		 $('#tableCppList tbody').on( 'click', 'button', function () {
+			 var data = table.row( $(this).parents('tr') ).data();
+			 var clazz =$(this).attr('class');
+		 	if(clazz=='button-bin'){
+		 		showObj('.tcbox');
+		 		$.sppInfo(data[9],jmstoken,function(data){
+		 			$('#sppForm').populate(data,true);
+		 		});
+			}
+		 	else {
+		 		$.deleteSpp(data[9],jmstoken,function(data){
+		 			$.get("views/p-sppList.html",function(data){
+		 				$("#body").html(data);
+		 			});
+		 		});
+		 	}
+		 });
+		$('#sppForm').bootstrapValidator({
+					message: 'This value is not valid',
+					feedbackIcons: {
+						valid: 'glyphicon glyphicon-ok',
+						invalid: 'glyphicon glyphicon-remove',
+						validating: 'glyphicon glyphicon-refresh'
+					},
+					fields: {
+						'idWo': {
+							validators: {
+								notEmpty: {
+									message: '工单号不能为空'
+								}
+							}
+						}
+						,
+						'line': {
+							validators: {
+								notEmpty: {
+									message: '生产线不能为空'
+								}
+							}
+						},
+						'st': {
+							validators: {
+								notEmpty: {
+									message: '开始时间不能为空'
+								}
+							}
+						},
+						'ft': {
+							validators: {
+								notEmpty: {
+									message: '停止时间不能为空'
+								}
+							}
+						}
+					}
+				}).on('success.form.bv',function(e) {
+					e.preventDefault();
+					var $form     = $(e.target),
+					validator = $form.data('bootstrapValidator');
+					var spp =JSON.stringify($('#sppForm').serializeJSON());
+					$.saveSpp(spp,jmstoken,function(data){
+						$.get("views/p-sppList.html", function(data){
+							$("#body").html(data);
+						});
+					});
+				});
+
+		$('#cpp').click(function (){
+			$.get("views/p-cppList.html", function(data){
+				RouterManager.setUrl({
+					groupId: 'p-cppList'
+				});
+				$("#body").html
+				(data);
+			});
+		});
+		$('#cp').click(
+				function() {
+					$.get(
+							"views/p-checkPlan.html",function(data){
+								RouterManager.setUrl({
+									groupId:'p-cppList',
+									viewId: 'p-checkPlan'
+								});
+								$("#body").html(data);
+							});
+				});
+		$('#set').click(function(){
+			$.get("views/p-checkSet.html",function(data){
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-checkSet'
+				});
+				$("#body").html(data);
+			});
+		});
+		$('#sp').click(function(){
+			$.get("views/p-stopPlanList.html",function(data){
+				RouterManager.setUrl({
+					groupId:'p-cppList',
+					viewId:'p-stopPlanList'
+				});
+				$("#body").html(data);
+			});
+		});
+
+		$('#return').click(function(){
+			$.get("views/p-cppList.html",function(data){
+				$("#body").html(data);
+			});
+		});
+	}
+};
+spp.init();
+</script>
+
+<script type="text/html" id="pSppListMain">
+<div class="body-head-title">
+	<span class="h-title" id="cpp">日计划</span>
+	<span class="h-title"><b>总计划</b></span>
+	<span class="h-title" id="cp">检查计划</span>
+	<span class="h-title" id="set">检查设置</span>
+    <span class="h-title" id="sp">停工计划</span>
+</div>
+
+<div class="cont">
+<div class="r-header-body">
+  <div class="right-list">
+    <!--搜索框-->
+    <div class="sousuo">
+    	<div class="ss-input">    		
+    	<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>
+    	</div>
+    	<a href=""><span class="icon-ss-bg"></span>搜索</a>
+    </div><!--检索结束-->
+    
+    <input type="button" class="button-sytle1" id="create" value="新建" onClick="javascript:showObj('.tcbox');">
+  </div>
+</div>  
+<table id="tableSppList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>工作单</th>
+                <th>产品</th> 
+                <th>版本</th>
+                <th>数量</th>
+                <th>生产线</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>状态</th>
+                <th>操作</th>   
+            </tr>
+        </thead>
+</table>
+</div>
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">新建总计划</span>
+		</div>
+      <input type="button" class="tc_close" onClick="javascript:hideObj('.tcbox');">
+     <form id="sppForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>编号</label>
+				    	<input type="text" class="form-control"  name="sppCode" id="sppCode">
+				    </div>
+					<div class="form-group">
+				    	<label>工单</label>
+				    	<select  class="form-control" name="idWo" id="idWo">
+							<option>工单</option>
+                        </select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>产品</label>
+                        <input type="text" class="form-control"  name="pno" id="pno" readOnly="true">
+				    </div>
+					<div class="form-group">
+				    	<label>版本</label>
+				    	<input type="text" class="form-control" name="rev" id="rev" readOnly="true">
+					</div>
+                </div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label>数量</label>
+                        <input type="text" class="form-control"  name="qty" id="qty">
+				    </div>
+					<div class="form-group">
+				    	<label>生产线</label>
+				    	<select  class="form-control" name="lineId" id="lineId">
+                        </select>
+					</div>
+                </div>
+                <div class="col-xs-12 mar-top-20px"> 
+					<div class="form-group">
+				    	<label>开始时间</label>
+				    	<input type="text" class="form-control"  name="st" id="st">
+				    </div>
+					<div class="form-group">
+				    	<label>停止时间</label>
+				    	<input type="text" class="form-control"  name="ft" id="ft">
+					</div>
+				</div>
+                <div class="col-xs-12 mar-top-20px"> 
+					<div class="form-group">
+				    	<label>状态</label>
+				    	<select  class="form-control" name="statusId" id="statusId">
+                        </select>
+				    </div>
+				</div>
+				
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary">保存</button>
+                 		<button id="return" type="reset" class="btn  btn-info">返回</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idSpp" name="idSpp:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+</script>

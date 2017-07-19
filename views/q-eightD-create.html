@@ -1,0 +1,777 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="zh-CN">-->
+  <!--<head>-->
+    <!--<meta charset="utf-8">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--&lt;!&ndash;-->
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <!--<meta name="format-detection" content="telephone=no">-->
+    <!--&ndash;&gt;-->
+    <!--<title>表格页面</title>-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/bootstrap-customize.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/style.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="js/quality/css/pages.css">-->
+    <!--<script type="text/javascript" src="js/quality/js/html5.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/jquery.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/bootstrap.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/respond.src.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/base.js"></script>-->
+    <!--<script type="text/javascript" src="js/quality/js/main.js"></script>-->
+    <!--&lt;!&ndash;plugin&ndash;&gt;-->
+  <!--</head>-->
+  <body>
+    <!-------------------------------------- 头部开始 -------------------------------------->
+    <header>
+      <div class="container1">
+        
+      </div>
+    </header>
+    <!-------------------------------------- 头部结束 -------------------------------------->
+    <!-------------------------------------- 内容开始 -------------------------------------->
+    <main>
+      <form  id="eightDForm" method="post" action="index.html">
+      <div class="container1">
+        <div class="ui-table1">
+          <table>
+            <tr>
+              <td colspan="4" class="nobr">
+                <!--<img src="img/logo1.png" alt="" class="logo">-->
+              </td>
+              <td colspan="2" class="nobr" align="center" valign="bottom">
+                <b style="font-size: 22px;">G8D REPORT</b>
+              </td>
+              <td colspan="4" valign="bottom" class="text-center">
+                <span class="name">文件编号 Document No.: FM-08-54 Rev.:00</span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <p><b class="name">Title标题:</b></p>
+                <textarea  class="input-line" id="title" name="title" style="width:485px;height:60px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><span class="name">Date Opened发起日期:</span></p>
+                <input id="dateOpened" name="dateOpened" class="no-show-border">
+                <!--<input id="dateOpened" name="dateOpened" style="width:155px;height:60px;">-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><span class="name">Last Updated更新日期:</span></p>
+                <input id="lastUpdated" name="lastUpdated" class="no-show-border">
+                <!--<textarea  class="input-line" id="lastUpdated" name="lastUpdated" style="width:165px;height:60px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <p><span class="name">Product/Process Information产品/过程信息:</span></p>
+                <select id="idMaterial" name="idMaterial:number" style="width:150px;"></select>
+                <select id="idRoutineD" name="idRoutineD:number" style="width:150px;"></select>
+                <!--<textarea  class="input-line" style="width:335px;height:40px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="6">
+                <p><span class="name">Organisation Information组织信息:</span></p>
+                <textarea  class="input-line" id="organisationInfo" name="organisationInfo" style="width:519px;height:40px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <p><b class="name">DØ Emergency Response Action(s)紧急反应措施:</b></p>
+                <textarea  id="emergencyResponseAction" name="emergencyResponseAction" style="width:485px;height:140px;">
+                </textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><span class="name">% Effective效力:</span></p>
+                <textarea id="effective1" name="effective1" class="input-line" style="width:155px;height:140px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><span class="name">Date Implemented执行日期:</span></p>
+                <input id="dateImplemented1" name="dateImplemented1" class="no-show-border">
+                <!--<textarea id="dateImplemented1" name="dateImplemented1"  class="input-line" style="width:165px;height:140px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" rowspan="2" valign="top">
+                <table style="width: 100%;" id="team">
+                  <tr>
+                    <td><b class="name">D1 Team</b></td>
+                    <td><b class="name">Name</b></td>
+                    <td><b class="name">Dept</b></td>
+                    <td><b class="name">Phone</b></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;小组</td>
+                    <td>&nbsp;姓名</td>
+                    <td>&nbsp;部门</td>
+                    <td>&nbsp;电话</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="name">Team Leader组长:</span>
+                      <!--<span contenteditable>&nbsp;</span>-->
+                    </td>
+                    <td>
+                      <select id="idLeader" name="idLeader:number" style="width:80px;"></select>
+                    </td>
+                    <!--<td>-->
+                      <!--<select id="idDept" name="idMaterial:number" style="width:80px;"></select>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                      <!--<input id="info" name="info" class="no-show-border" style="width:80px;">-->
+                    <!--</td>-->
+                  </tr>
+                  <tr>
+                    <td><span class="name">Team Members组员:</span>
+                      <span contenteditable>&nbsp;</span>
+                    </td>
+                    <td>
+                      <select id="users0" name="users0:number" style="width:80px;"></select>
+                    </td>
+                    <!--<td>-->
+                      <!--<select id="idDept1" name="idMaterial:number" style="width:80px;"></select>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                      <!--<input id="info1" name="ncrNo" class="no-show-border" style="width:80px;">-->
+                    <!--</td>-->
+                  </tr>
+                  <tr>
+                    <td>
+                    </td>
+                    <td>
+                      <select id="users1" name="users1:number" style="width:80px;"></select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                    </td>
+                    <td>
+                      <select id="users2" name="users2:number" style="width:80px;"></select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                    </td>
+                    <td>
+                      <select id="users3" name="users3:number" style="width:80px;"></select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                    </td>
+                    <td>
+                      <select id="users4" name="users4:number" style="width:80px;"></select>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td colspan="5">
+                <p>&nbsp;</p>
+                <p><b class="name">D2 Problem Statement问题陈述:</b></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <textarea id="problemState" name="problemState"  class="input-line" style="width:420px;height:160px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <p><b class="name">D3 Interim Containment Action(s)临时措施:</b></p>
+              </td>
+              <td colspan="2">
+                <p><span class="name">% Effective效力:</span></p>
+              </td>
+              <td colspan="2" align="center">
+                <p><span class="name">Date Implemented执行日期:</span></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <textarea id="interimContainmentAction" name="interimContainmentAction" class="input-line" style="width:480px;height:140px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <textarea id="effective2" name="effective2" class="input-line" style="width:155px;height:140px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <input id="dateImplemented2" name="dateImplemented2" class="no-show-border">
+                <!--<textarea id="dateImplemented2" name="dateImplemented2"  class="input-line" style="width:165px;height:140px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <p><b class="name">D4 Root Cause(s) and Escape Point(s)根本原因和逃逸点分析:</b></p>
+              </td>
+              <td colspan="2" align="center">
+                <p><span class="name">% Contribution贡献率:</span></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <textarea id="rootCause" name="rootCause" class="input-line" style="width:660px;height:80px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <p>
+                  <span class="name">Verification确认:</span>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                  <select id="verification1" name="verification1:number" style="width:120px;">
+                  </select>
+                </p>
+              </td>
+              <td colspan="2">
+                <textarea  class="input-line" id="contribution" name="contribution" style="width:165px;height:100px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <p><b class="name">D5 Chosen Permanent Corrective Action(s)可选择的永久性措施:</b></p>
+              </td>
+              <td colspan="2" align="center">
+                <p><span class="name">% Effective效力:</span></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <textarea  id="chosenPermanentAction" name="chosenPermanentAction" class="input-line" style="width:660px;height:80px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <p>
+                  <span class="name">Verification确认:</span>
+                  <select id="verification2" name="verification2:number" style="width:120px;">
+                  </select>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                </p>
+              </td>
+              <td colspan="2">
+                <textarea id="effective3" name="effective3"  class="input-line" style="width:165px;height:100px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <p><b class="name">D6 Implemented Permanent Corrective Action(s)执行的永久性措施:</b></p>
+              </td>
+              <td colspan="2" align="center">
+                <p><span class="name">Date Implemented执行日期:</span></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <textarea id="implementedPermanentAction"  name="implementedPermanentAction"  class="input-line" style="width:660px;height:80px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <p>
+                  <span class="name">Verification确认:</span>
+                  <select id="verification3" name="verification3:number" style="width:120px;">
+                  </select>
+                  <!--<span contenteditable>&nbsp;</span>-->
+                </p>
+              </td>
+              <td colspan="2">
+                <input id="dateImplemented3" name="dateImplemented3" class="no-show-border">
+                <!--<textarea id="dateImplemented3" name="dateImplemented3" class="input-line" style="width:160px;height:100px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="8">
+                <p><b class="name">D7 Prevent Actions预防措施:</b></p>
+                <textarea id="prevenAction" name="prevenAction"  class="input-line" style="width:660px;height:60px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <p><b class="name">D7 Systemic Prevent Recommendations系统性预防:</b></p>
+                <textarea id="systemicPrevent" name="systemicPrevent"  class="input-line" style="width:660px;height:40px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p class="text-center"><span class="name">Date Implemented执行日期:</span></p>
+                <input id="dateImplemented4" name="dateImplemented4" class="no-show-border">
+                <!--<textarea id="dateImplemented4" name="dateImplemented4"  class="input-line" style="width:165px;height:60px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+                <p class="text-center"><span class="name">Responsibility责任人:</span></p>
+                <!--<textarea id="responsibility" name="responsibility" class="input-line" style="width:165px;height:40px;"></textarea>-->
+                <select id="responsibility" name="responsibility:number" style="width:120px;">
+                </select>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6">
+                <p><b class="name">D8 Team and Individual Recognition团队&个人表彰:</b></p>
+                <textarea id="tiRecognition" name="tiRecognition"  class="input-line" style="width:485px;height:40px;"></textarea>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><b class="name">Date Closed关闭日期:</b></p>
+                <input id="dateClosed" name="dateClosed" class="no-show-border">
+                <!--<textarea id="dateClosed" name="dateClosed"  class="input-line" style="width:165px;height:40px;"></textarea>-->
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+              <td colspan="2">
+                <p><span class="name">Reported by报告人:</span></p>
+                <!--<textarea id="reportedBy" name="reportedBy" class="input-line" style="width:165px;height:40px;"></textarea>-->
+                <select id="reportedBy" name="reportedBy:number" style="width:120px;">
+                </select>
+                <!--<p contenteditable></p>-->
+                <!--<p contenteditable></p>-->
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+        <div class="clearfix"></div>
+        <div class="foot-btn-box">
+          <div class="form-group">
+            <button class="btn btn-primary" id="save01">保存</button>
+            <button class="btn  btn-info" type="button" id="return01">返回</button>
+          </div>
+        </div>
+        <input id="idNcr" name="idNcr" type="hidden">
+        <input id="idG8d" name="idG8d" type="hidden">
+      </form>
+    </main>
+    <!-------------------------------------- 内容结束 -------------------------------------->
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+    <footer>
+      <div class="container1">
+        
+      </div>
+    </footer>
+    <!-------------------------------------- 尾部开始 -------------------------------------->
+  </body>
+<!--</html>-->
+<style>
+  .no-show-border{
+    border-left:0px;border-top:0px;border-right:0px;border-bottom:1px;
+  }
+  
+</style>
+
+<!--<script type="text/html" id="userItem">-->
+  <!--<tr class="team">-->
+    <!--<td></td>-->
+    <!--<td>-->
+      <!--<select id="users<%= item %>" name="users<%= item %>:number" class="user" style="width:80px;"></select>-->
+    <!--</td>-->
+    <!--<td>-->
+      <!--<a class="button-sytle1 add">+</a>-->
+      <!--<a class="button-sytle1 del">-</a>-->
+    <!--</td>-->
+  <!--</tr>-->
+<!--</script>-->
+<script type="text/javascript">
+  var jmstoken= store.get('JMS-TOKEN');
+  function formatRepo (repo) {
+    if (repo.loading) return repo.text;
+
+    var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+    return markup;
+  }
+
+  function formatRepoSelection (repo) {
+    return repo.name || repo.text;
+  }
+  var eightDCreate={
+    init:function(){
+      var self = this;
+      var params = this.params = RouterManager.getParams();
+      var action = params['action'];
+      var ncrId = params['idNcr'];
+      var idQ8d = params['idQ8d'];
+      $('#idNcr').val(ncrId);
+      if(idQ8d){
+        this.loadDetail(idQ8d,action);
+      }
+//      this.userItem = _.template($('#userItem').html());
+//      this.$team = $('#team');
+      this.bindEvents();
+      this.autoFill();
+      this.form();
+    },
+    loadDetail:function(idQ8d,action,callback){
+      var self = this;
+      $.eightDInfo(idQ8d,jmstoken,function(data){
+        $('#eightDForm').populate(data,true);
+
+        var materialId = data.idMaterial;
+        self.fillMaterialId(function(){
+//                    var materialId = parseInt($('#materialId').data('id'));
+          $('#idMaterial').append('<option value="'+materialId+'"></option>');
+          $('#idMaterial').val(materialId);
+        });
+        $('#select2-idMaterial-container').text(data.material);
+
+
+        $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{materialId:materialId}},function(){
+          $('#idRoutineD').val(data.idRoutineD)
+        });
+
+        var $idLeader = $('#idLeader');
+        self.fillUser($idLeader,function(){
+          $idLeader.append('<option value="'+data.idLeader+'"></option>');
+          $idLeader.val(data.idLeaderName);
+        });
+        $('#select2-idLeader-container').text(data.idLeaderName);
+
+        var $verification1 = $('#verification1');
+        self.fillUser($verification1,function(){
+          $verification1.append('<option value="'+data.verification1+'"></option>');
+          $verification1.val(data.verification1Name);
+        });
+        $('#select2-verification1-container').text(data.verification1Name);
+
+        var $verification2 = $('#verification2');
+        self.fillUser($verification2,function(){
+          $verification2.append('<option value="'+data.verification2+'"></option>');
+          $verification2.val(data.verification2Name);
+        });
+        $('#select2-verification2-container').text(data.verification2Name);
+
+        var $verification3 = $('#verification3');
+        self.fillUser($verification3,function(){
+          $verification3.append('<option value="'+data.verification3+'"></option>');
+          $verification3.val(data.verification3Name);
+        });
+        $('#select2-verification3-container').text(data.verification3Name);
+
+        var $responsibility = $('#responsibility');
+        self.fillUser($responsibility,function(){
+          $responsibility.append('<option value="'+data.responsibility+'"></option>');
+          $responsibility.val(data.responsibilityName);
+        });
+        $('#select2-responsibility-container').text(data.responsibilityName);
+
+        var $reportedBy= $('#reportedBy');
+        self.fillUser($reportedBy,function(){
+          $reportedBy.append('<option value="'+data.reportedBy+'"></option>');
+          $reportedBy.val(data.reportedByName);
+        });
+        $('#select2-reportedBy-container').text(data.reportedByName);
+
+//        var size = data.users.length;
+
+        $.each(data.users,function(i, o){
+          var $user= $('#user'+i);
+          self.fillUser($user,function(){
+            $user.append('<option value="'+o.idUser+'"></option>');
+            $user.val(o.name);
+          });
+          $('#select2-users'+i+'-container').text(o.name);
+//          j++;
+        });
+        self.dealAction(action);
+        callback;
+      });
+    },
+    dealAction:function(action){
+//      $('.remark01').show();
+      if(action == 'detail'){
+        $('input,select,textarea', $('#eightDForm')).prop('readonly', true);
+        $("input:not(:button,:hidden)").prop("disabled", 'disabled');
+        $('select', $('#eightDForm')).prop("disabled", 'disabled');
+        $('.clearfix').remove();
+        $('.foot-btn-box').remove();
+      }
+    },
+    fillUser: function($user,callback) {
+      $user.select2({
+        ajax: {
+          url: $clientURL + 'u/getUsersByQ',
+          dataType: 'json',
+          headers: {'JMS-TOKEN': jmstoken},
+          delay: 200,
+          data: function (params) {
+            return {
+              q: params.term
+            }
+          },
+          processResults: function (data, params) {
+            return {
+              results: data,
+              pagination: null
+            }
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        },
+        minimumInputLength: 1,
+        width: 150,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      }).on('select2:open',function(evt){
+        $('#select2-js-data-example-ajax-container').html('');
+        $('#js-data-example-ajax').empty();
+      });
+      callback && callback();
+    },
+    fillMaterialId: function(callback) {
+      $('#idMaterial').select2({
+        ajax: {
+          url: $clientURL + 's/getMaterialListObjs',
+          dataType: 'json',
+          headers: {'JMS-TOKEN': jmstoken},
+          delay: 200,
+          data: function (params) {
+            var paramsObj ={
+              q: params.term,
+              types:[1,2,3]
+            };
+            var params = $.param(paramsObj,true);
+            return params;
+//                        return {
+//                            q: params.term,
+//                            types: [2, 3]
+//                        }
+          },
+          processResults: function (data, params) {
+            return {
+              results: data,
+              pagination: null
+            }
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        },
+        minimumInputLength: 1,
+        width: 150,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+      }).on('select2:open',function(evt){
+        $('#select2-js-data-example-ajax-container').html('');
+        $('#js-data-example-ajax').empty();
+      });
+      callback && callback();
+    },
+    autoFill:function(){
+      var self = this;
+      self.fillMaterialId();
+      self.fillUser($('#idLeader1'));
+      self.fillUser($('#users0'));
+      self.fillUser($('#users1'));
+      self.fillUser($('#users2'));
+      self.fillUser($('#users3'));
+      self.fillUser($('#users4'));
+      self.fillUser($('#verification1'));
+      self.fillUser($('#verification2'));
+      self.fillUser($('#verification3'));
+      self.fillUser($('#responsibility'));
+      self.fillUser($('#reportedBy'));
+      var dataPickerOpt = {
+        format: "YYYY-MM-DD"
+      };
+      $('#dateOpened').datetimepicker(dataPickerOpt);
+      $('#lastUpdated').datetimepicker(dataPickerOpt);
+      $('#dateImplemented1').datetimepicker(dataPickerOpt);
+      $('#dateImplemented2').datetimepicker(dataPickerOpt);
+      $('#dateImplemented3').datetimepicker(dataPickerOpt);
+      $('#dateImplemented4').datetimepicker(dataPickerOpt);
+      $('#dateClosed').datetimepicker(dataPickerOpt);
+    },
+    /*
+    defaultData: { },
+    createRow: function(data) {
+      var self = this;
+      var row = parseInt(self.$team.data('row'));
+      if(!row) {
+        row = 1;
+      }
+
+      if(!data) {
+        data = self.defaultData;
+      }
+      var param = {
+        data: data,
+        item: row,
+        action: self.params.action
+      }
+      var html = self.userItem(param);
+      self.$team.data('row', row + 1);
+
+      return html;
+    },
+    addRow: function(e) {
+      e.stopPropagation();
+
+      var $t = $(e.target);
+      var html = this.createRow();
+
+      $t.closest('tr').after(html);
+
+      this.fillUser($t.closest('tr').next());
+    },
+    delRow: function(e) {
+      var $t = $(e.target);
+      if(this.$team.find('.team').length == 1) {
+        return;
+      }
+      $t.closest('tr').remove();
+      sum();
+    },*/
+    bindEvents(){
+      var self = this;
+      var $form = $('#eightDForm');
+
+      //增加行
+//      $form.on('click','.add',self.addRow.bind(self));
+      //删除行
+//      $form.on('click','.del', self.delRow.bind(self));
+
+      $form.on('change','#idMaterial',function(){
+        var materialId = $('#idMaterial').val();
+        $('#idRoutineD').empty();
+        $('#idRoutineD').selectautofill('p/findRoutineDObjsByMaterialId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{materialId:materialId}});
+      });
+
+      $('#eightDForm').on('click','#return01',function(){
+        $.get("views/q-eightDList.html",function(data){
+          RouterManager.setUrl({
+            groupId :'q-noProcessingSheetList',
+            viewId:'q-eightDList'
+          });
+          $("#body").html(data);
+        });
+      });
+    },
+    form:function(){
+
+      var self = this;
+      $('#eightDForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+//          'idMaterial:number': {
+//            validators: {
+//              notEmpty: {
+//                message: '物料编码不能为空'
+//              }
+//            }
+//          }
+        }
+      }).on('success.form.bv', function (e) {
+        e.preventDefault();
+        var $form = $(e.target),
+        validator = $form.data('bootstrapValidator');
+        var eightD = $('#eightDForm').serializeJSON();
+//        var eightD = JSON.stringify($('#eightDForm').serializeJSON());
+        debugger;
+        var users = '[{"idUser":'+eightD.users0+'},' +
+                '{"idUser":'+eightD.users1+'},' +
+                '{"idUser":'+eightD.users2+'},' +
+                '{"idUser":'+eightD.users3+'},' +
+                '{"idUser":'+eightD.users4+'}]';
+        eightD.users = $.parseJSON(users);
+        var eightD1 =JSON.stringify(eightD);
+
+        debugger;
+        $.saveEightD(eightD1, jmstoken, function (data) {
+          debugger;
+          history.go(-1);
+//          $.get("views/q-deviationList.html", function (data) {
+//            $("#body").html(data);
+//            RouterManager.setUrl({
+//              groupId:'q-deviationList'
+//            });
+//          });
+        });
+      });
+    }
+  };
+  eightDCreate.init();
+
+</script>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MTBF</title>
+<link rel="stylesheet" type="text/css" href="../css/jms.css">
+<link rel="stylesheet" type="text/css" href="../css/datatable/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.css"/>
+<script type="text/javascript" charset="UTF-8" src="../js/jquery/jquery.js"></script>
+</head>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    
+		$('.button').click(function(){
+	 		// 显示保养单
+	 	});
+    $('.mbr_tablefoot tr:even').css("color","#0b6bf9");	
+    $('.mbr_tablefoot tr:odd').css("color","#f00");	
+} );
+</script>
+
+</head>
+<body>
+	<div class="cont">
+       <button id="print" class="button-sytle1">打印</button>
+	</div>
+<div class="mbr_cont">
+     <table cellpadding="0" cellspacing="0" width="100%">
+     <thead>
+        <tr>
+            <th colspan="2">Sandvik</th>
+            <th colspan="2">MTBF&MTTR <br/> 平均故障间隔时间和平均故障修复时间 </th>
+            <th>Roller Line</th>
+        </tr> 
+        <tr>
+           <td>Unit：%</td>
+           <td>Year：<input type="text"></td>
+           <td>Month：<input type="text"></td>
+           <td>Prepared by：<input type="text"></td>
+           <td>Period：monthly</td>
+        </tr>
+     </thead>
+     </table>
+     <div class="mbr_boxmid"></div>
+     <table cellpadding="0" cellspacing="0" width="100%" class="mbr_tablefoot">
+         <tbody>
+            <tr>
+                <th>Month</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+            </tr>
+            <tr>
+                <td><b>MTBF<br/>Actual (H)</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+             <tr>
+                <td><b>MTBF<br/>Target (H)</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td><b>MTTR<br/>Actual (M)</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+             <tr>
+                <td><b>MTTR<br/>Target (M)</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+         </tbody>
+     </table>
+</div>
+</body>
+</html>

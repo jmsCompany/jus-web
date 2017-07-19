@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no">
+		-->
+		<title>PulleyLine</title>
+		<link rel="stylesheet" type="text/css" href="css/jms.css">
+
+
+
+		<script type="text/javascript" charset="UTF-8" src="js/jquery/jquery.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/jquery/jquery-ui.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/layout/jquery.layout.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/form/jquery.serializejson.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/datatable/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/datatable/dataTables.scroller.js"></script>
+		<script type="text/javascript" charset="UTF-8" src='js/textarea/jquery.autosize.js'></script>
+		<script type="text/javascript" charset="UTF-8" src="js/bootstrap/bootstrap.min.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/bootstrap/bootstrapValidator.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/bootstrap/language/zh_CN.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/bootstrap/moment-with-locales.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/bootstrap/bootstrap-datetime.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/jms/jmsclient.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/jms/jsonform.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/jms/jscroll.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/jms/utils.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/lib/jquery.blockUI.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/lib/underscore.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/store/store.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="js/jquery.dateFormat.js"></script>
+		<!--plugin-->
+		<style type="text/css">
+
+ .div1 {        
+ /*width: 25px;*/
+ 
+ transform:rotate(-90deg);        
+ -ms-transform:rotate(-90deg); 
+ /* Internet Explorer 9*/        
+ -moz-transform:rotate(-90deg); 
+ /* Firefox */        
+ -webkit-transform:rotate(-90deg); 
+ /* Safari 和 Chrome */        
+ -o-transform:rotate(-90deg); 
+ /* Opera */        
+ filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1); 
+ padding:0;
+ }
+ table th {
+    background: #f4f7fa none repeat scroll 0 0;
+    border-bottom: 1px solid #e7e9ed;
+    border-right: 1px solid #e7e9ed;
+	}
+#pulleylcdshowTable thead th{color:#000;vertical-align:bottom;font-size:1.2em;margin:0;padding:0;line-height:99%;text-align:center;}
+
+		</style>
+	</head>
+	<body>
+	<div class="cont" style="position:relative;">
+		<!--<div class="r-header-body">-->
+			<!--仓库-->
+			<!--<div class="btn-group btn-group-left" id="stk-group">
+				<label>update:</label><input type="text" id='date'>
+			</div>
+		</div>-->
+		
+		<table id="pulleylcdshowTable" cellspacing="0" cellpadding="0" width="100%">
+			<thead>
+			<tr style="height:155px;">
+				<th><div class="div1" style="width:40px;margin:0 auto 15px auto">Pulley No.</div></th>
+				<th ><div class="div1" style="width:30px;margin:0 auto 10px auto;">Order</div></th>
+				<th><div class="div1" style="width:30px;margin:0 auto 10px auto;">BP No.</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 14px auto;">Line Pipe<br/>Cutting</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 15px auto">Shell<br/>machining</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 15px auto">END Disc<br/>machine</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 15px auto">END Disc<br/>fitting</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 15px auto">END Disc<br/>Welding</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 23px auto">Sandblasting</div></th>
+				<th><div class="div1" style="width:50px;margin:0 auto 18px auto">Lagging</div></th>
+				<th><div class="div1" style="width:50px;margin:0 auto 18px auto">Autoclave</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 13px auto">Cooling<br/>Time</div></th>
+				<th><div class="div1" style="width:50px;margin:0 auto 16px auto">Grooving</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 13px auto">Shaft<br/>assembly</div></th>
+				<th><div class="div1" style="width:50px;margin:0 auto 17px auto">Balancing</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 14px auto">Bearing housing<br/>sandblasting</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 14px auto">Final<br/>assembly</div></th>
+				<th><div class="div1" style="width:50px;margin:0 auto 17px auto">Painting</div></th>
+				<th><div class="div1" style="width:60px;margin:0 auto 17px auto">Waiting curing<br/>for painting</div></th>
+			</tr>
+
+			</thead>
+		</table>
+	</div>
+	<script type="text/template" id="pulleylcdTmpl">
+		<% for(var i=0; i<data.length; i++) { %>
+		<tr style="background-color: <%= i % 2 == 0 ? '#eee' : '#fff' %>">
+			<td><%= data[i].id %></td>
+			<td><%= data[i].woNo %></td>
+			<!--<td><img height="42px" width="44px" src="images/smile.png"/></td>-->
+			<!--<td><img height="42px" width="44px" src="images/ok.png"/></td>-->
+			<td><%= data[i].pNo %></td>
+			<% for(var j=1; j<=16; j++) { %>
+			<td style="text-align:center;"><%= data[i]['r'+j].status ? '<img width="32" height="30" src="images/' + data[i]['r'+j].status + '">' : '' %><%= data[i]['r'+j].delay ? '<p style="color: #f00;">' + data[i]['r'+j].delay + 'H</p>' : '<p>&nbsp;</p>' %><%= data[i]['r'+j].delayStart ? '<p style="color: #f00;">' + data[i]['r'+j].delayStart + 'H</p>' : '<p>&nbsp;</p>' %></td>
+			<% } %>
+
+		</tr>
+		<% } %>
+
+
+</script>
+	</body>
+
+	<script>
+		var jmstoken= store.get('JMS-TOKEN');
+		function count(o){
+			var t = typeof o;
+			if(t == 'string'){
+				return o.length;
+			}else if(t == 'object'){
+				var n = 0;
+				for(var i in o){
+					n++;
+				}
+				return n;
+			}
+			return false;
+		}
+		var pulleylcdshow={
+			init:function(){
+				var self = this;
+				var i = 0;
+				this.pulleylcdTmpl = _.template($('#pulleylcdTmpl').html());
+				$.pulleylcdshowTable(8,4,function(data){
+					$('#pulleylcdshowTable tr td').empty();
+					$('#pulleylcdshowTable').append(self.pulleylcdTmpl({data: data}));
+					var n = count(data);
+				});
+				math.ceil(n/7);//向上取整
+				debugger;
+				setInterval(function() {
+					self.push();
+				},1e3  * 30);
+			},
+			push:function(){
+				var self = this;
+				$.ajax({
+//					type: "POST",
+					url: $clientURL + "check/findWSPwoStatus",
+					data: {
+						companyId: 8, delay: 4
+					},
+					beforeSend: function () {
+					},
+					success: function (data) {
+						$('#pulleylcdshowTable').append(self.pulleylcdTmpl({data: data}));
+					}
+				});
+			}
+		};
+		pulleylcdshow.init();
+//		setInterval(function() {
+//			window.location.reload();
+//		}, 1e3  * 5);
+	</script>
+</html>

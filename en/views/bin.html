@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>货架信息</title>
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>Information of bin</b></span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+<div class="btn-group btn-group-left">
+       <label>Stock：</label>
+       <input name="stkName" readonly id="stkName" type="text"/>
+</div>
+<div class="right-list">
+       <button id="create" class="button-sytle1">Create</button>
+</div>
+
+</div> <!--检索结束-->
+    <!--<form id="binForm" method="post" action="index.html" class="form-horizontal">-->
+        
+        <table id="binList" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Bin</th>
+				<th>Description</th>
+                <th>Return shelves or not</th>
+                <th>Status</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        </table>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="button" class="btn btn-info" id="return2">Return</button>
+                 	</div>
+                 </div>
+    <!--</form>-->
+</div>
+
+<!-- 弹窗 start -->
+<div class="tcbox container-fluid" id="draggable1">
+   <div class="tcbox_cont row">
+        <div class="body-head-title">
+					<span class="h-title">Create/edit bin</span>
+		</div>
+      <input type="button" class="tc_close">
+     <form id="binForm" method="post" action="index.html" class="form-inline">
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Bin name</label>
+						<!--<input type="text" class="form-control input-w-3"  name="bin" id="bin" onfocus= "focus_last(this)">-->
+						<input type="text" class="form-control input-w-3"  name="bin" id="bin"/>
+				    </div>
+				</div>
+				 <div class="col-xs-12 mar-top-20px">
+					 <div class="form-group">
+						 <label class="input-w-160">Description</label>
+						 <textarea class="form-control" rows="3" name="des" id="des" style="width:180px"></textarea>
+					 </div>
+				 </div>
+				<div class="col-xs-12 mar-top-20px">  
+					<div class="form-group">
+				    	<label for="" class="input-w-160">Return shelves or not</label>
+				    	<select  class="input-w-3 select-cs1 form-control" name="isReturnShelf" id="isReturnShelf">
+                		</select>
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px"> 
+				    <div class="form-group">
+				    	<label for="exampleInputEmail1" class="input-w-160">Status</label>
+				    	<input type="radio" name="status:number" id='status27' class="radio-w" value="27" checked/><label for="stateOn">有效</label>
+				    	<input type="radio" name="status:number" id='status28' class="radio-w" value="28" /><label for="stateOoff">无效</label>
+					</div>
+				</div>
+            <div class="aligncenter">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">Save</button>
+                 		<button id="return1" type="button" class="btn  btn-info">Return</button>
+                 	</div>
+           </div>
+                 <input type="hidden" id="idBin" name="idBin:number"/>
+       			 <input type="hidden" id="idStk" name="idStk:number"/>
+           </form>          
+   </div>  
+</div>
+
+<!-- 弹窗 over -->
+<!-- 错误提示弹窗 start -->
+<div class="tcbox container-fluid" id="draggable2">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+		</div>
+		<input type="button" class="tc_close" onClick="javascript:hideObj('#draggable2');">
+		<div class="col-xs-12 mar-top-20px">
+			<div class="form-group">
+				<label>The bin cannot be deleted！</label>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+//弹窗
+function showObj(objid){
+	$(objid).show();
+	$(objid).draggable();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+$.fn.dataTable.ext.errMode = 'throw';
+var jmstoken= store.get('JMS-TOKEN');
+var app = {
+	init:function(){
+		var self = this;
+
+		var params = this.params = RouterManager.getParams();
+		var idStk = params['stkId'];
+		$('#idStk').val(idStk);
+		var stkName = params['stkName'];
+		$('#stkName').val(stkName);
+		$('#isReturnShelf').selectautofill('s/getIsReturnShelfList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+			$("#isReturnShelf").val(2);
+		});
+		this.loadTable(idStk);
+		this.bindEvents();
+	},
+	loadTable:function(idStk){
+		var self = this;
+		var table= $('#binList').DataTable( {
+//      deferRender:  true,
+			"processing": true,
+			"serverSide": true,
+			"stateSave": true,
+			"stateDuration": -1,
+//      scrollY:"350px",
+//      scrollCollapse: true,
+			"ajax": {
+				"type": 'POST',
+				"url": $clientURL+"s/getBinList",
+				"dataType": "json",
+				data: {"idStk":idStk},
+				headers: {'JMS-TOKEN':jmstoken}
+			},
+			"columnDefs": [ {
+				"targets": -1,
+				"data": null,
+				"defaultContent": '<button class=button-edit>Edit</button><button class=button-delete>Delete</button>'
+			} ],
+			"language": {
+				"url": "js/datatable/chinese.json"
+			},
+			dom: "tip",
+			pageLength:"50"
+		} );
+
+		$('#binList tbody').on( 'click', 'button', function () {
+			var data = table.row( $(this).parents('tr') ).data();
+			var clazz=$(this).attr('class');
+			if(clazz=='button-edit'){
+				var top = $('#body').scrollTop();
+				$('#draggable1').css({
+					top: $(window).height() * 0.2 + top
+				}).draggable().show();
+				var idBin = data[4];
+				$.binInfo(idBin,jmstoken,function(data){
+					$('#binForm').populate(data,true);
+					if(data.status==27){
+						$('#status27').attr('checked',true);
+					}
+					else{
+						$('#status28').attr('checked',true);
+					}
+					var idBin = $('#idBin').val();
+					self.form(idBin);
+				});
+			}
+			else{
+				$.deleteBin(data[4],jmstoken,function(data){
+					if(data.valid == false){
+						var top = $('#body').scrollTop();
+						$('#draggable2').css({
+							top: $(window).height() * 0.2 + top
+						}).show();
+//					showObj('#draggable2');
+					}
+					else{
+						$.get("views/bin.html",function(data){
+							$("#body").html(data);
+						});
+					}
+				});
+			}
+		} );
+	},
+	form:function(idBin){
+		$('#binForm').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				'bin': {
+					validators: {
+						notEmpty: {
+							message: 'Bin name can not be empty.'
+						},
+						remote: {
+							type: 'GET',
+							url: $clientURL+'s/checkBinName',
+							"headers":{'JMS-TOKEN':jmstoken},
+							data:{idBin:idBin},
+							message: 'The bin already exists.',
+							delay: 1000
+						}
+					}
+				}
+
+			}
+		}).on('success.form.bv', function (e) {
+			e.preventDefault();
+			var $form = $(e.target),
+			validator = $form.data('bootstrapValidator');
+			var bin = JSON.stringify($('#binForm').serializeJSON());
+			$.saveBin(bin, jmstoken, function (data) {
+				$.get("views/bin.html", function (data) {
+					$("#body").html(data);
+				});
+			});
+
+		});
+	},
+	bindEvents:function(){
+		var self = this;
+		$('#return1').click(function(){
+			$.get("views/bin.html",function(data){
+				$("#body").html(data);
+			});
+		});
+
+		$('#return2').click(function(){
+			history.go(-1);
+		});
+
+		$('#create').on('click',function(){
+			var top = $('#body').scrollTop();
+			$('#draggable1').css({
+				top: $(window).height() * 0.2 + top
+			}).draggable().show();
+			var idBin = $('#idBin').val();
+			self.form(idBin);
+		});
+
+		$('.tcbox').on('click','.tc_close',function(){
+			$.get("views/bin.html",function(data){
+				$("#body").html(data);
+			});
+		});
+	}
+};
+app.init();
+
+
+// 弹窗拖拽
+/*$(function () {
+ $('#draggable1').draggabilly();
+ });*/
+</script>
+<script language="javascript">
+
+//	function focus_last(obj){
+//
+//		var text = obj.createTextRange();
+//
+//		text.collapse(false);text.select();
+//
+//	}
+
+</script>
+</body>
+</html>
+

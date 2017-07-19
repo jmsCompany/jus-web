@@ -1,0 +1,36 @@
+[2017-04-01 11:20:42.821] log4j2 - 7218  INFO [main] --- Application: Starting Application on renhongtaodeMacBook-Pro.local with PID 7218 (/Users/renhongtao/gitrepos/jms-server/jms-integration/target/classes started by renhongtao in /Users/renhongtao/gitrepos/jms-server/jms-integration)
+[2017-04-01 11:20:42.843] log4j2 - 7218 DEBUG [main] --- Application: Running with Spring Boot v1.2.4.RELEASE, Spring v4.1.6.RELEASE
+[2017-04-01 11:21:08.248] log4j2 - 7218 DEBUG [localhost-startStop-1] --- AuthenticationTokenProcessingFilter: Initializing filter 'authenticationTokenProcessingFilter'
+[2017-04-01 11:21:08.252] log4j2 - 7218 DEBUG [localhost-startStop-1] --- AuthenticationTokenProcessingFilter: Filter 'authenticationTokenProcessingFilter' configured successfully
+[2017-04-01 11:21:14.709] log4j2 - 7218  INFO [main] --- Application: Started Application in 32.28 seconds (JVM running for 33.844)
+[2017-04-01 13:21:24.355] log4j2 - 7218 DEBUG [http-nio-9998-exec-7] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/s/materialTypes
+[2017-04-01 13:21:59.463] log4j2 - 7218 DEBUG [http-nio-9998-exec-9] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:22:09.032] log4j2 - 7218 DEBUG [http-nio-9998-exec-2] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:25:20.473] log4j2 - 7218 DEBUG [http-nio-9998-exec-5] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:25:30.295] log4j2 - 7218 DEBUG [http-nio-9998-exec-7] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:25:40.238] log4j2 - 7218 DEBUG [http-nio-9998-exec-1] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:39:39.701] log4j2 - 7939  INFO [main] --- Application: Starting Application on renhongtaodeMacBook-Pro.local with PID 7939 (/Users/renhongtao/gitrepos/jms-server/jms-integration/target/classes started by renhongtao in /Users/renhongtao/gitrepos/jms-server/jms-integration)
+[2017-04-01 13:39:39.704] log4j2 - 7939 DEBUG [main] --- Application: Running with Spring Boot v1.2.4.RELEASE, Spring v4.1.6.RELEASE
+[2017-04-01 13:40:01.284] log4j2 - 7939 DEBUG [localhost-startStop-1] --- AuthenticationTokenProcessingFilter: Initializing filter 'authenticationTokenProcessingFilter'
+[2017-04-01 13:40:01.289] log4j2 - 7939 DEBUG [localhost-startStop-1] --- AuthenticationTokenProcessingFilter: Filter 'authenticationTokenProcessingFilter' configured successfully
+[2017-04-01 13:40:08.046] log4j2 - 7939  INFO [main] --- Application: Started Application in 28.698 seconds (JVM running for 29.973)
+[2017-04-01 13:40:21.397] log4j2 - 7939 DEBUG [http-nio-9998-exec-3] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:40:29.883] log4j2 - 7939 DEBUG [http-nio-9998-exec-7] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:44:37.563] log4j2 - 7939 DEBUG [http-nio-9998-exec-10] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:44:45.120] log4j2 - 7939 DEBUG [http-nio-9998-exec-4] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:50:58.977] log4j2 - 7939 DEBUG [http-nio-9998-exec-9] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:53:47.101] log4j2 - 7939 DEBUG [http-nio-9998-exec-1] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/user/updateInfo
+[2017-04-01 13:53:47.489] log4j2 - 7939 DEBUG [http-nio-9998-exec-4] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:53:53.533] log4j2 - 7939 DEBUG [http-nio-9998-exec-8] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:54:57.505] log4j2 - 7939 DEBUG [http-nio-9998-exec-10] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/user/updateUserPasswordByAdmin
+[2017-04-01 13:55:14.393] log4j2 - 7939 DEBUG [http-nio-9998-exec-3] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:55:45.968] log4j2 - 7939 DEBUG [http-nio-9998-exec-3] --- AuthenticationTokenProcessingFilter: userid:105, ip: 192.168.1.106, path: /jms/s/materialTypes
+[2017-04-01 13:56:06.961] log4j2 - 7939 DEBUG [http-nio-9998-exec-3] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/s/materialTypes
+[2017-04-01 13:56:14.974] log4j2 - 7939 DEBUG [http-nio-9998-exec-5] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:57:27.190] log4j2 - 7939 DEBUG [http-nio-9998-exec-10] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/user/save
+[2017-04-01 13:57:27.500] log4j2 - 7939 DEBUG [http-nio-9998-exec-1] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:57:27.524] log4j2 - 7939 DEBUG [http-nio-9998-exec-3] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/userTable
+[2017-04-01 13:57:33.040] log4j2 - 7939 DEBUG [http-nio-9998-exec-7] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:58:30.736] log4j2 - 7939 DEBUG [http-nio-9998-exec-10] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/user/updateUserPasswordByAdmin
+[2017-04-01 13:58:32.715] log4j2 - 7939 DEBUG [http-nio-9998-exec-1] --- AuthenticationTokenProcessingFilter: userid:10, ip: 192.168.1.106, path: /jms/u/getUserByUserId
+[2017-04-01 13:58:55.097] log4j2 - 7939 DEBUG [http-nio-9998-exec-1] --- AuthenticationTokenProcessingFilter: userid:215, ip: 192.168.1.106, path: /jms/s/materialTypes

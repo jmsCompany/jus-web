@@ -1,0 +1,111 @@
+	    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+        <div class="col-lg-8 col-lg-offset-2">
+        <form id="MCateForm" method="post" action="index.html" class="form-horizontal">
+
+        <table id="table1" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>类别名称</th>
+                <th>父类名称</th>
+                <th>描述</th>
+                <th>状态</th>
+                <th></th>
+             </tr>
+                <tr>
+                	<td>
+                	    <div class="col-lg-5">
+                          <input type="text" class="form-control" name="name" id="name"/>
+                        </div>
+                    </td>
+          	        <td>
+                	    <div class="col-lg-5">
+                            <select class="form-control" name="materialListCategory[idDic]:number" id="materialListCategory.idDic">
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                	    <div class="col-lg-5">
+                            <textarea name="des" class="autosizejs"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                	    <div class="col-lg-5">
+                            <div class="col-lg-5">
+                                    <select class="form-control" name="status[idDic]:number" id="status.idDic">
+                                    </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                    	<div class="col-lg-9 col-lg-offset-3">
+                            <button type="submit" class="btn btn-primary">保存</button>
+                            <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                        </div>
+                    </td>
+                </tr>
+        </thead>
+        </table>
+		</form>
+        </div>
+      </section>
+      <!-- :form -->
+    </div>
+</div>
+ 
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#materialCategory\\.idDic').selectautofill('dic/materialCategory');
+    $('#sstatus\\.idDic').selectautofill('dic/sstatus');
+	
+    $('#MCateForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'name': {
+                validators: {
+                    notEmpty: {
+                        message: '类别名称不能为空'
+                    },
+                    remote: {
+                        type: 'GET',
+                         url: $clientURL+'check/name',
+                        name:'materialCategory',
+                        message: '该类别名称已存在',
+                        delay: 1000
+                    }   
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var category =JSON.stringify($('#MCateForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createMCate(category,jmstoken,function(data){
+			      	$.get("views/materialListCategory.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+      });
+	  
+	  $('#cancel').click(function(){
+	 	$.get("views/material.html",function(data){
+	         $("#body").html(data);
+	    });
+	 });
+});
+</script>

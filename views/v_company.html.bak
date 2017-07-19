@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+
+} );
+</script>
+
+</head>
+<body>
+        <table id="table1" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>名</th>
+                <th>姓</th>
+                <th>邮编</th>
+                <th>国家</th>
+          
+            </tr>
+        </thead>
+ 
+    </table>
+</body>
+</html>

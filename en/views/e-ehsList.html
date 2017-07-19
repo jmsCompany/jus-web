@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+    var jmstoken= store.get('JMS-TOKEN');
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+    var ehsList = {
+        init:function(){
+            var self = this;
+            this.bindEvents();
+            this.loadTable();
+            this.autoFill();
+            this.form();
+        },
+        loadTable: function() {
+            var self = this;
+//            var self = this;
+//            var q = $('#q').val();
+//            if(this.table) {
+//                this.table.destroy();
+//            }
+            this.table = $('#ehsList').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "stateSave": true,
+                "stateDuration": -1,
+                "ajax": {
+                    "type": 'POST',
+                    "url": $clientURL + "e/getWSEHSRecordList",
+                    "dataType": "json",
+                    headers: {'JMS-TOKEN': jmstoken},
+                    "beforeSend": jmsGlobalBlock,
+                    "complete": jmsGlobalUnBlock,
+                    "error": jmsGlobalUnBlock,
+//                    data: {q:q},
+                },
+                "columnDefs": [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": '<button class=button-bin>Edit</button>'
+                }],
+                "language": {
+                    "url": "js/datatable/chinese.json"
+                },
+                dom: "tip",
+                pageLength: "50"
+            });
+//            $('#ehsList').on('xhr.dt', function ( e, settings, json, xhr ) {
+//                if(json.jmsError) {
+//				    alert(json.jmsError)
+//                }
+//            } );
+
+            $('#ehsList tbody').on('click', 'button', function () {
+                var data = self.table.row($(this).parents('tr')).data();
+                var clazz = $(this).attr('class');
+                var top = $('#body').scrollTop();
+                $('#tcbox-pcpplist').css({
+                    top: $(window).height() * 0.2 + top
+                }).draggable().show();
+                var idEhsRecord = data[8];
+
+                $.ehsRecordInfo(idEhsRecord, jmstoken, function (data) {
+                    debugger;
+                    $('#ehsRecordForm').populate(data, true);
+                    var $idSup = $('#idSup');
+                    self.fillUser($idSup,function(){
+                        $idSup.append('<option value="'+data.idSup+'">'+data.sup+'</option>');
+                        $idSup.val(data.sup);
+                    });
+                });
+            });
+        },
+        autoFill:function(){
+            var self =this;
+            self.fillUser($('#idSup'));
+        },
+        fillUser: function($user,callback) {
+            $('#idSup').select2({
+                ajax: {
+                    url: $clientURL + 'u/getUsersByQ',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 150,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+            callback && callback();
+        },
+        bindEvents:function(){
+            var self = this;
+            $('#idSup').select2({
+                ajax: {
+                    url: $clientURL + 'u/getUsersByQ',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 120,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+
+            $('#ehsItem01').click(function(){
+                $.get("views/e-ehs-item.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'e-ehsList',
+                        viewId:'e-ehs-item'
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#tcbox-pcpplist').on('click','.tc_close,#tc_close',function(){
+                $.get("views/e-ehsList.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+        },
+        form:function(){
+            $('#ehsRecordForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'idSup': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Manager cannot be empty.'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var ehsRecord =JSON.stringify($('#ehsRecordForm').serializeJSON());
+                debugger;
+                $.saveEhsRecord(ehsRecord,jmstoken,function(data){
+                    debugger;
+                    $.get("views/e-ehsList.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+        }
+    };
+    ehsList.init();
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+    <span class="h-title-selected"><b>EHS Solution</b></span>
+    <span class="h-title" id="ehsItem01">EHS Project</span>
+</div>
+<div class="cont">
+    <div class="r-header-body">
+        <div class="right-list">
+            <input type="text" id='q' placeholder="employee">
+            <button id="search" class="button-sytle1">Search</button>
+        </div>
+    </div>
+    <!--检索结束-->
+
+    <table id="ehsList" class="display" cellspacing="0" width="100%">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Operator</th>
+            <th>EHS Project</th>
+            <th>Shift</th>
+            <th>Creation Time</th>
+            <th>Manager</th>
+            <th>Description</th>
+            <th>Solute Date</th>
+            <th>Status</th>
+            <th>Opeartion</th><!--详情、处理-->
+        </tr>
+        </thead>
+    </table>
+</div>
+<!-- 弹窗1 start -->
+<div class="tcbox container-fluid" id="tcbox-pcpplist" style="overflow: visible;">
+    <div class="tcbox_cont row">
+        <div class="body-head-title">
+            <span class="h-title">EHS Solution</span>
+        </div>
+        <input type="button" class="tc_close">
+        <form id="ehsRecordForm" method="post" action="index.html" class="form-inline">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="text" class="form-control"  name="date" id="date" readonly  unselectable="on">
+                </div>
+                <div class="form-group">
+                    <label>Operator</label>
+                    <input type="text" class="form-control"  name="op" id="op" readonly  unselectable="on">
+                    <input type="hidden" class="form-control"  name="idOp" id="idOp">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+
+                <div class="form-group">
+                    <label>EHS Project</label>
+                    <input type="text" class="form-control"  name="ehsItem" id="ehsItem" readonly  unselectable="on">
+                </div>
+                <div class="form-group">
+                    <label>Shift</label>
+                    <input type="text" class="form-control"  name="shiftD" id="shiftD" readonly  unselectable="on">
+                    <input type="hidden" class="form-control"  name="idShiftD" id="idShiftD" readonly  unselectable="on">
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>Craetion Time</label>
+                    <input type="text" class="form-control"  name="creationTime" id="creationTimeop" readonly  unselectable="on">
+                </div>
+                <div class="form-group">
+                    <label>Manager</label>
+                    <select  class="form-control" name="idSup" id="idSup">
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" class="form-control"  name="remark" id="remark">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select  class="form-control" name="status" id="status">
+                        <option value=0>Open</option>
+                        <option value=1>Close</option>
+                    </select>
+                </div>
+            </div>
+            <!--<div class="col-xs-12 mar-top-20px">-->
+                <!--<div class="form-group">-->
+                <!--<label>处理日期</label>-->
+                <!--<input type="text" class="form-control"  name="remark" id="remark">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary " id="save">Save</button>
+                    <button id="return01" type="button" class="btn  btn-info">Return</button>
+                </div>
+            </div>
+            <input type="hidden" id="idEhsRecord" name="idEhsRecord:number"/>
+            <input type="hidden" id="idEhs" name="idEhs:number"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="routineForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idRoutine" />  <!-- 工艺路线编号-->
+							<fieldset>
+							<legend>编辑工艺路线</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">产品编号</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="pno:number" id="pno">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">产线</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="pLine" id="pLine"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">描述</label>
+                                <div class="col-lg-5">
+                                    <textarea name="des" id="des" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">图纸编号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="drawNo" id="drawNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">图纸版本</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="drawVer" id="drawVer"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <img src="" width="105" height="30" name="idPic" id="idPic"/></img>
+                                <input name="idPic" id="idPic" type="file" value="添加图片">
+                            </div> 
+<br> 
+<br> 
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        	<th>生产路线</th>
+                                            <th>工作中心</th>
+                                            <th>描述</th>
+                                            <th>标准劳工工时</th>
+                                            <th>标准机械工时</th>
+                                            <th>标准设置工时</th>
+                                            <th>附件</th>
+                                            <th>检查列表</th>
+                                            <th>
+                                                <button type="button" class="btn btn-primary" id="add">添加</button>	
+                                            </th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            
+                            
+                            <div class="form-group"> 
+                            	<div class="col-lg-9 col-lg-offset-3">
+                                	<button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                            	</div>
+                       		</div>
+<br>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#pno\\.idDic').selectautofill('dic/pno');
+		
+	var idRoutine = $('#_key11').val();
+	$.routineInfo({"id":idRoutine},token,function(data){
+		$('#routineForm').populate(data,true);
+	});
+		
+		$('#table1').DataTable( {
+        	deferRender:  true,
+        	"processing": true,
+			"serverSide": true,
+        	scrollY:"350px",
+        	scrollCollapse: true,
+        	"ajax": {
+           	 	"url": "http://192.168.30.110:9999/jms/s/routine",
+            	"dataType": "json",
+			 	headers: {'JMS-TOKEN':jmstoken}
+        	},
+       		"language": {
+                "url": "js/datatable/chinese.json"
+            },
+       		// dom: "rtif",
+        	scroller: {
+           		loadingIndicator: true
+        	}
+    	} );
+		
+		$('add').click(function(){
+	 		$.get("views/p-routine-create.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+	    
+    	$('#routineForm').bootstrapValidator({
+       		message: 'This value is not valid',
+        	feedbackIcons: {
+           		valid: 'glyphicon glyphicon-ok',
+            	invalid: 'glyphicon glyphicon-remove',
+            	validating: 'glyphicon glyphicon-refresh'
+        	},
+        	fields: {
+            	'pno': {
+                    	notEmpty: {
+                        	message: '生产编号不能为空'
+                    	}
+                	}
+            	},
+            	'pLine': {
+                	validators: {
+                    	notEmpty: {
+                        	message: '产线不能为空'
+                    	}
+                	}	
+            	}
+			}
+    	}).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var routine =JSON.stringify($('#routineForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createRoutine(routine,jmstoken,function(data){
+			      	$.get("views/p-routineList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+	   
+	   $('cancel').click(function(){
+	 		$.get("views/p-routineList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+    	
+    	
+	});
+	</script>
+

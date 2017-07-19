@@ -1,0 +1,214 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="faiForm" method="post" action="index.html" class="form-horizontal">
+                        
+                            <input type="hidden" id="idFai" />  
+							<fieldset>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">工单号</label>
+                                <div class="col-lg-5">
+                                    <select class="form-control" name="woNo" id="woNo">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">零件名称</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="matDes" id="matDes"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">图纸号</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="drawNo" id="drawNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">项目名称</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="projectName" id="projectName"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">工序</label>
+                                <div class="col-lg-5">
+                                	<select class="form-control" name="routeDes" id="routeDes">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">设备</label>
+                                <div class="col-lg-5">
+                                	<select class="form-control" name="machineName" id="machineName">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">生产批次</label>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" name="lotNo" id="lotNo"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>检查项目</th>
+                                            <th>检验方法</th>
+                                            <th>规格</th>
+                                            <th>作业员/检验员</th>
+                                            <th>作业员/检验结果</th>
+                                            <th>判定</th>
+                                            <th>检验员/检验结果</th>
+                                            <th>判定</th>
+                                            <th>+</th>
+                                            <th>-</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">作业员</label>
+                                <div class="col-lg-5">
+                                    <textarea name="op" id="op" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<textarea name="opDate" id="opDate" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">班长</label>
+                                <div class="col-lg-5">
+                                    <textarea name="shiftLeader" id="shiftLeader" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<textarea name="slDate" id="slDate" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">检验员</label>
+                                <div class="col-lg-5">
+                                    <textarea name="inspector" id="inspector" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">日期</label>
+                                <div class="col-lg-5">
+                                	<textarea name="inspectorDate" id="inspectorDate" class="autosizejs"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" id="cancel">取消</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->  
+        </div>
+    </div>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$('#woNo\\.idDic').selectautofill('dic/woNo');
+	$('#routeNo\\.idDic').selectautofill('dic/routeNo');
+	$('#machineName\\.idDic').selectautofill('dic/machineName');
+    
+    var idFai = $('#_key22').val();
+	$.faiInfo({"id":idFai},token,function(data){
+		$('#faiForm').populate(data,true);
+	});
+    
+    $('#table1').DataTable( {
+        deferRender:  true,
+        "processing": true,
+        "serverSide": true,
+        scrollY:"350px",
+        scrollCollapse: true,
+        "ajax": {
+            "url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            "dataType": "json"
+        },
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+      
+        dom: "rtiS",
+        scroller: {
+           loadingIndicator: true
+        }
+    } );
+    
+    $('#faiForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'woNo': {
+                validators: {
+                    notEmpty: {
+                        message: '工单号不能为空'
+                    }
+                }
+            },
+            'routeDes': {
+                validators: {
+                    notEmpty: {
+                        message: '工序不能为空'
+                    } 
+                }
+            },
+            'machine': {
+                validators: {
+                    notEmpty: {
+                        message: '设备不能为空'
+                    } 
+                }
+            }
+            //检查项目必须有一行记录？
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var fai =JSON.stringify($('#faiForm').serializeJSON());
+		 	var jmstoken= store.get('JMS-TOKEN');
+		 	$.createFai(fai,jmstoken,function(data){
+			      	$.get("views/q-faiList.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+ 	   
+ 	   $('#cancel').click(function(){
+	 		$.get("views/q-faiList.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+} );
+</script>
+    
+
+
+

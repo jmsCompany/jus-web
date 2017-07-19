@@ -1,0 +1,397 @@
+<script type="text/html" id="sparePartMain">
+<div class="body-head-title">
+	<span class="h-title-selected"><b>备件列表</b></span>
+</div>
+<div class="cont">
+	<div class="r-header-body">
+		<div class="btn-group btn-group-left" id="machine-group">
+			<select name="none" id="machine-select" style="display: none;"></select>
+			<button class="btn btn-default" type="button" name="machineNo:number" id="machineNo">设备</button>
+			<button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+				<span class="caret"></span>
+				<span class="sr-only">设备编号</span>
+			</button>
+			<ul class="dropdown-menu">
+			</ul>
+		</div>
+		<!--搜索框-->
+		<!--<div class="sousuo">-->
+			<!--<div class="ss-input">-->
+				<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+			<!--</div>-->
+			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+		<!--</div>-->
+		<div class="right-list">
+
+			<input type="button" class="button-sytle1" id="create" value="新建">
+			<input type="button" class="button-sytle1" id="add" value="添加备件">
+			<!--<input type="button" class="button-sytle1" id="add" value="添加备件">-->
+			<input type="button" class="button-sytle1" id="output" value="导出">
+		</div>
+	</div>
+
+	<table id="sparePartList" class="display" cellspacing="0" width="100%">
+		<thead>
+		<tr>
+			<th>备件</th>
+			<!--<th>备件名称</th>-->
+			<th>安全库存</th>
+			<th>实际库存</th>
+			<th>进货数量</th>
+			<th>出货数量</th>
+			<th>备注</th>
+			<th>状态</th>
+			<th style="min-width:100px;">操作</th>
+		</tr>
+		</thead>
+	</table>
+</div>
+<div class="aligncenter">
+	<div class="form-group">
+		<button id="return01" type="button" class="btn  btn-info" style="VISIBILITY: hidden">返回</button>
+	</div>
+</div>
+
+<!-- 弹窗 start -->
+<!--<div class="tcbox container-fluid" id="tcbox-pcpplist" style="display:block;">-->
+<div class="tcbox container-fluid" id="tcbox-pcpplist">
+	<div class="tcbox_cont row">
+		<div class="body-head-title">
+			<span class="h-title">添加备件</span>
+		</div>
+		<input type="button" class="tc_close">
+		<form id="spareForm" method="post" action="index.html" class="form-inline">
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label>备件</label>
+					<select  class="form-control" name="idMaterial:number" id="idMaterial">
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label>设备</label>
+					<select  class="form-control" name="idMachine:number" id="idMachine">
+					</select>
+				</div>
+				<div class="form-group">
+					<label>安全库存</label>
+					<input type="text" class="form-control" name="safetyQty" id="safetyQty" readonly  unselectable="on"/>
+				</div>
+			</div>
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label>实际库存</label>
+					<input type="text" class="form-control"  name="qty" id="qty" readonly  unselectable="on"/>
+				</div>
+				<div class="form-group">
+					<label>进货数量</label>
+					<input type="text" class="form-control"  name="incoming" id="incoming" readonly  unselectable="on"/>
+				</div>
+			</div>
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label>出货数量</label>
+					<input type="text" class="form-control"  name="outgoing" id="outgoing" readonly  unselectable="on"/>
+				</div>
+				<div class="form-group">
+					<label>备注</label>
+					<input type="text" class="form-control"  name="remark" id="remark" readonly  unselectable="on"/>
+				</div>
+			</div>
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label>状态</label>
+					<select  class="form-control" name="idStatus:number" id="idStatus">
+					</select>
+				</div>
+			</div>
+			<div class="aligncenter">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary ">保存</button>
+					<button id="return02" type="button" class="btn  btn-info">返回</button>
+				</div>
+			</div>
+			<input type="hidden" id="idPart" name="idPart:number"/>
+		</form>
+	</div>
+</div>
+</script>
+
+
+
+<script type="text/javascript">
+
+$('#create').poshytip({
+	content: '添加系统中没有的设备',
+});	
+$('#add').poshytip({
+	content: '添加已有备件到此设备',
+});	
+
+//弹窗
+function showObj(objid){
+	$(objid).draggable().show();
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+function formatRepo (repo) {
+	if (repo.loading) return repo.text;
+
+	var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+	return markup;
+}
+
+function formatRepoSelection (repo) {
+	return repo.name || repo.text;
+}
+	var jmstoken = store.get('JMS-TOKEN');
+
+	var sparePart = {
+		init:function(){
+			$('#body').html($('#sparePartMain').html());
+			this.bindEvens();
+			this.form();
+//			this.autoFill();
+		},
+		autoFill:function(){
+			var self = this;
+			var $el = $('#idMaterial');
+			self.fillMaterialId($el);
+			$('#idStatus').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_spare_part'}});
+		},
+		fillMaterialId: function($el,callback) {
+			$el.select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {'JMS-TOKEN': jmstoken},
+					delay: 200,
+					data: function (params) {
+						var paramsObj ={
+							q: params.term,
+							types:[5]
+						};
+						var params = $.param(paramsObj,true);
+						return params;
+					},
+					processResults: function (data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function (markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 150,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open',function(evt){
+				$('#select2-js-data-example-ajax-container').html('');
+				$('#js-data-example-ajax').empty();
+			});
+			callback && callback();
+		},
+		updateSpartInfo:function(){
+			var $mat = $('#idMaterial');
+			var materialId = $mat.val() || $mat.data('id');
+			if(!$mat.val()){
+				$mat.append('<option value="'+materialId+'"></option>');
+				$mat.val(materialId);
+			}
+
+		},
+		bindEvens:function(){
+			var self = this;
+			var $cnt = $('#tcbox-pcpplist');
+			$cnt.on("change","#idMaterial",function () {
+				self.updateSpartInfo();
+			});
+			$('#machine-select').selectautofill('m/getMachinesObjs', {headers: {'JMS-TOKEN': jmstoken}}, function (data) {
+//				var _html = '';
+//				_(data).each(function (d, i) {
+//					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+//				});
+//				$('#machine-group').find('.dropdown-menu').append(_html);
+				var routeParams = RouterManager.getParams();
+				var machineId = routeParams.machineId;
+				var _html = '';
+				_(data).each(function(d, i) {
+					_html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';
+					if(machineId == d.id){
+						$('#machine-select').val(parseInt(machineId));
+						$('#machineNo').html(d.name);
+						self.loadTable();
+					}
+				});
+				$('#machine-group').find('.dropdown-menu').append(_html);
+			});
+
+
+			$('#machine-group').on('click', 'li a', function (e) {
+				var $t = $(this);
+				var id = $t.data('id');
+				$('#machine-select').val(parseInt(id));
+				$('#machineNo').html($t.text());
+				self.loadTable();
+				RouterManager.setUrl({
+					groupId:'m-sparePartList',
+					machineId:id
+				});
+			});
+
+			//点击新建备件
+			$('#create').click(function(){
+				$.get("views/m-sparePart-create.html",function(data){
+					RouterManager.setUrl({
+						groupId:'m-sparePartList',
+						viewId:'m-sparePart-create',
+						action:'createMaterial'
+					});
+					$("#body").html(data);
+				});
+			});
+			$('#add').click(function(){
+				showObj('#tcbox-pcpplist');
+				var idMachine = $('#machine-select').val();
+				$('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+					if(idMachine){
+						$('#idMachine').val(idMachine);
+					}
+				});
+				self.autoFill();
+			});
+
+			$('#tcbox-pcpplist').on('click','.tc_close',function(){
+				$.get("views/m-sparePartList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+			$('#return02').click(function(){
+				$.get("views/m-sparePartList.html",function(data){
+					$("#body").html(data);
+				});
+			});
+		},
+		loadTable:function(){
+			var self = this;
+			var data = {};
+			var idMachine = $('#machine-select').val();
+			if (idMachine) {
+				data.idMachine = idMachine;
+			}
+			if (this.table) {
+				this.table.destroy();
+			}
+			this.table = $('#sparePartList').DataTable( {
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "m/sparePartsList",
+					"dataType": "json",
+					"data":data,
+					"headers":{'JMS-TOKEN':jmstoken}
+				},
+				"columnDefs": [ {
+					"targets": -1,
+					"data": null,
+					"defaultContent": '<button class=button-edit>编辑</button><button class=button-delete>删除</button>'
+				} ],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+				dom: "tip",
+				pageLength:"50"
+			} );
+			$('#sparePartList tbody').on( 'click', 'button', function () {
+				var data = self.table.row( $(this).parents('tr') ).data();
+				var clazz =$(this).attr('class');
+				if(clazz=='button-edit'){
+					showObj('#tcbox-pcpplist');
+					$.sparePartInfo(data[7],jmstoken,function(data){
+						$('#spareForm').populate(data,true);
+						var materialId = data.materialId;
+						var $mat = $('#idMaterial');
+						self.fillMaterialId($mat,function(){
+							$mat.append('<option value="'+materialId+'"></option>');
+							$mat.val(materialId);
+							$('#select2-idMaterial-container').text(data.material);
+						});
+						$('#idStatus').selectautofill('m/getMStatusList',{headers:{'JMS-TOKEN':jmstoken},data:{'source':'m_spare_part'}},function(){
+							$('#idStatus').val(data.idStatus);
+						});
+						$('#idMachine').selectautofill('m/getMachinesObjs',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}},function(){
+							$('#idMachine').val(data.idMachine);
+						});
+					});
+				}
+				else {
+					$.deleteSparePart(data[7],jmstoken,function(data){
+						var machineId = $('#machine-select').val();
+						$.get("views/m-sparePartList.html",function(data){
+							$("#body").html(data);
+							RouterManager.setUrl({
+								groupId:'m-sparePartList',
+								machineId:machineId
+							});
+						});
+					});
+				}
+			} );
+		},
+		form:function(){
+
+			$('#spareForm').bootstrapValidator({
+				message: 'This value is not valid',
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+					'idMaterial': {
+						validators: {
+							notEmpty: {
+								message: '设备不能为空'
+							}
+						}
+					}
+				}
+			}).on('success.form.bv', function(e) {
+				e.preventDefault();
+				var $form     = $(e.target),
+				validator = $form.data('bootstrapValidator');
+				var sparePart =JSON.stringify($('#spareForm').serializeJSON());
+				var machineId = $('#idMachine').val();
+				$.saveSparePart(sparePart,jmstoken,function(data){
+					$.get("views/m-sparePartList.html",function(data){
+						RouterManager.setUrl({
+							groupId:'m-sparePartList',
+							machineId:machineId
+						});
+						$("#body").html(data);
+					});
+				});
+
+			});
+		}
+	};
+	sparePart.init();
+
+</script>
+
+
+    
+
+
+

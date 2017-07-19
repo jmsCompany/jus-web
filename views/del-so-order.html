@@ -1,0 +1,298 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="soForm" method="post" action="index.html" class="form-inline">
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title" id="so01">销售订单</span>
+    				<span class="h-title"><b>新建销售订单</b></span>
+					<span class="h-title" id="coCompany">客户</span>
+					<span class="h-title" id="createCocompany">新建客户</span>
+				</div>
+  
+                <div class="col-xs-12 mar-top-20px">
+                     <div class="btn-group btn-group-left">
+                		<label for="" class="input-w-160">订单编码</label>
+                        <input type="text" class="form-control input-w-3" name="codeSo" id="codeSo"/>
+                	</div>
+                    <label for="" class="col-xs-2 input-w-160" style="line-height:30px;margin-right:-10px">客户</label>
+					<select class="input-w-3 select-cs1 form-control" name="sCompanyCoId:number" id="sCompanyCoId">
+						<option value="">请选择</option>
+					</select>
+                </div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="btn-group btn-group-left">
+						<label for="" class="input-w-160">客户订单号</label>
+						<input type="text" class="form-control input-w-3" name="coOrderNo" id="coOrderNo">
+					</div>
+				</div>
+                <div class="col-xs-12 mar-top-20px" id="order" style="display: none;">
+                		<label for="" class="input-w-160">下单日期</label>
+                		<input type="date" class="form-control input-w-3" name="dateOrder" id="dateOrder"> 
+                		<label for="" class="input-w-160">下单员</label>
+                		<input type="text" class="form-control input-w-3" name="userName" id="userName" readOnly="true">
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+					<label for="" class="input-w-160">货运条款</label>
+					<select class="input-w-3 select-cs1 form-control" name="freightTermId:number" id="freightTermId">
+						<option value="">货运条款</option>
+					</select>
+					<label for="" class="input-w-160">付款条件</label>
+					<select  class="input-w-3 select-cs1 form-control" name="paymentTermId:number" id="paymentTermId">
+						<option value="">付款条件</option>
+					</select>
+				</div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">总价</label>
+                		<input type="text" class="form-control input-w-3 pay" name="totalAmount:number" id="totalAmount" readonly="true"/>
+                		<label for="" class="input-w-160">税率</label>
+                        <input type="text" class="form-control input-w-3" name="taxRate" id="taxRate"> %
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">汇率</label>
+                		<input type="text" class="form-control input-w-3" name="exchange" id="exchange"> 
+                		<label for="" class="input-w-160">状态</label>
+					<select  class="input-w-3 select-cs1 form-control" name="sStatusId:number" id="sStatusId">
+                		</select> 
+                </div>
+                <!--<div class="col-xs-12 mar-top-20px">                	-->
+                    <!--<label for="" class="input-w-160">上传附件</label>-->
+                	<!--<input type="file"   value=""  class="inherit " name="idAttachment" id="idAttachment"/> -->
+                <!--</div>-->
+
+					<div class="col-xs-12 mar-top-20px">
+						<div class="form-group" id="matlist">
+                                <ul class="new-income-list-nav">
+                                    <li style="width:117px;">物料</li>
+                                    <li>单位</li>
+                                    <li>单价</li>
+                                    <li>数量</li>
+                                    <li>交货日期</li>
+                                    <li>备注</li>
+                                    <li>已发货数量</li>
+                                </ul>
+							<dl class="matlist" id="item0">
+								<!--<dt>物料</dt>-->
+								<dd>
+									<select class="select-cs1 j" name="materialId:number" id="materialId"><option value="">请选择</option></select>
+									<input type="text" class="a" name="unitPur" id="unitPur" placeholder="单位" readonly="true">
+									<input type="text" class="b pay" name="uprice:number" id="uprice" placeholder="单价"/>
+									<input type="text" class="c pay" name="qtySo:number" id="qtySo" placeholder="数量"/>
+									<input type="text" class="e" name="deliveryDate" id="deliveryDate" placeholder="交货日期">
+									<input type="text" class="f" name="remark" id="remark" placeholder="备注">
+									<input type="text" style="width:85px;" class="k" name="qtyDelivered:number" id="qtyDelivered" placeholder="已发货数量" readonly="true">
+								</dd>
+							</dl>
+						</div>
+					</div>
+
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">                 		
+                 		<button class="btn btn-primary">保存</button>
+                 		<button class="btn  btn-info" type="reset" id="return">返回</button>
+                 	</div>
+                 </div>
+				  <input type="hidden" id="idSo" name="idSo:number"/>
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+
+    
+<script type="text/javascript">
+$(document).ready(function() {
+	var historyOptions={
+		groupId:'so'
+	};
+	$('#coCompany').click(function(){
+		$.get("views/cocompany.html",function(data){
+			historyOptions.viewId='cocompany';
+			historyOptions.companyCoTypeId = 2;
+			RouterManager.setUrl(historyOptions);
+			$("#body").html(data);
+		});
+	});
+	$('#createCocompany').click(function(){
+		$.get("views/cocompany-create-body.html",function(data){
+			historyOptions.viewId='cocompany-create-body';
+			historyOptions.companyCoTypeId = 2;
+			RouterManager.setUrl(historyOptions);
+			$("#body").html(data);
+		});
+	});
+	$('#so01').click(function(){
+	 		$.get("views/so.html",function(data){
+				RouterManager.setUrl(historyOptions);
+	             $("#body").html(data);
+	     	});
+	 	});
+
+	//计算
+	function pay() {
+		var uprice = $("#uprice");
+		var qtySo = $("#qtySo");
+		var totalAmount = $("#totalAmount");
+		if(uprice.val() == "") {
+//                                      alert("物品单价不能为空!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		if(isNaN(uprice.val()) || uprice.val() < 0) {
+//                                      alert("非法的商品单价!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		if(qtySo.val() == "") {
+//                                      alert("物品数量不能为空!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		if(!checkNum(qtySo.val())) {
+//                                      alert("非法的商品数量!");
+			//document.getElementById("totalPrice").value = "";
+			totalAmount.val("");
+			return false;
+		}
+		var total = parseFloat(uprice.val())*parseInt(qtySo.val());
+		totalAmount.val(total);
+	}
+	function checkNum(num) {
+		var re = /^\d+$/;
+		return re.exec(num) != null;
+
+	}
+
+
+	//在物料框回车跳转到物料界面
+	$('#sCompanyCoId').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coCompanyType':2}});
+	$('#freightTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'freight'}});
+	$('#paymentTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'payment'}});
+	$('#sStatusId').selectautofill('s/getSStatusList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'s_po'}});
+	$('#materialId').selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+	//日期控件
+	$(document).on("click",".e",function () {
+		$("input[name*='deliveryDate']").datetimepicker({
+			format:"YYYY-MM-DD"
+		});
+		$(this).focus();
+	});
+
+	$(document).on("change",".pay",function(){
+		pay();
+	});
+
+	$(document).on("change",".j",function () {
+//		var materialInput = $(this).next();
+		var materialInput = $(this).closest('dl').find('.a');
+		var materialId=$(this).val();
+		$.materialInfo(materialId,jmstoken,function(data){
+			materialInput.val(data.sUnitDicByUnitInf);
+		});
+	});
+
+	var jmstoken= store.get('JMS-TOKEN');
+	var params=RouterManager.getParams();
+	var action=params['action'];
+	var idSo = params['soId'];
+	if(idSo && idSo.length>0) {
+		$('#order').show();
+		$.soInfo(idSo, jmstoken, function (data) {
+			var mapPool = function () {
+				$('#soForm').populate(data, true);
+				var $materialInput =$('.matlist').find('.a');
+				var materialId = $('.matlist').find('.j').val();
+				$.materialInfo(materialId, jmstoken, function (data) {
+					$materialInput.val(data.sUnitDicByUnitInf);
+				});
+
+				if (action == 'detail') {
+					$('input,select,textarea', $('#soForm')).prop('readonly', true);
+					$("input:not(:button,:hidden)").prop("readonly", true);
+					$('#save').hide();
+					$('#createSo').html('<b>销售单详情</b>');
+				}
+				else {
+					$('#createSo').html('<b>编辑销售单</b>');
+				}
+			}
+			$('#materialId').selectautofill('s/materials', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}}, mapPool);
+		});
+	}
+
+
+    $('#soForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+			'codeSo': {
+				validators: {
+					notEmpty: {
+						message: '请填写订单编码'
+					}
+				}
+			},
+			'sCompanyCoId:number': {
+				validators: {
+					notEmpty: {
+						message: '请选择供应商'
+					}
+				}
+			},
+            'materialId:number': {
+                validators: {
+                    notEmpty: {
+                        message: '物料编号不能为空'
+                    }
+                }
+            },
+			'uprice:number': {
+				validators: {
+					notEmpty: {
+						message: '单价不能为空'
+					}
+				}
+			},
+			'qtySo:number': {
+				validators: {
+					notEmpty: {
+						message: '数量不能为空'
+					}
+				}
+			},
+			'deliveryDate': {
+				validators: {
+					notEmpty: {
+						message: '请填写交货日期'
+					}
+				}
+			}
+        }
+    }).on('success.form.bv', function(e) {
+            e.preventDefault();
+            var $form     = $(e.target),
+            validator = $form.data('bootstrapValidator');
+       		var so =JSON.stringify($('#soForm').serializeJSON());
+		 	$.saveSo(so,jmstoken,function(data){
+			      	$.get("views/so.html",function(data){
+	                    $("#body").html(data);
+	             	});
+			});
+ 	   });
+
+ 	   $('#return').click(function(){
+	 		history.go(-1);
+	 	});
+
+
+} );
+</script>

@@ -1,0 +1,715 @@
+<script type="text/html" id="mftListbody">
+    <div class="container-fluid" id="container-mtf-list-create-body">
+        <div class="row">
+            <!-- form: -->
+            <section>
+                <form id="mtfForm" method="post" action="index.html" class="form-inline">
+                    <div class="body-head-title">
+                        <span class="h-title" id="mtf">物流查询</span>
+                        <!--<span class="h-title" id="kanban">看板信息</span>-->
+                        <span class="h-title" id="woMtf">工单流转</span>
+                        <span class="h-title-selected" id="createMtf"><b>手动创建</b></span>
+                        <span class="h-title" id="issueList">计划发料</span>
+                        <span class="h-title" id="mtfDetail">物流详情</span>
+                    </div>
+                    <div id="printarea">
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">流转单号</label>
+                            <input type="text" class="form-control input-w-3" name="mtNo" id="mtNo" readonly unselectable="on"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group order">
+                            <label for="" class="input-w-160">流转人</label>
+                            <input type="text" class="form-control input-w-3" name="empMtUser" id="empMtUser" readOnly="true">
+                        </div>
+                        <div class="form-group order">
+                        <!--<div class="form-group order" style="display: none;">-->
+                            <label for="" class="input-w-160">流转日期</label>
+                            <input type="date" class="form-control input-w-3" name="creationTime" id="creationTime" readOnly="true">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 mar-top-20px">
+                        <div class="form-group">
+                            <label for="" class="input-w-160">从仓库</label>
+                            <select class="input-w-3 select-cs1 form-control" name="fromStkId:number" id="fromStkId">
+                                <option value="">从仓库</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="input-w-160">到仓库</label>
+                            <select class="input-w-3 select-cs1 form-control" name="toStkId:number" id="toStkId">
+                                <option value="">到仓库</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- +\- start -->
+                    <!--<div class="col-xs-12 mar-top-20px"  style="text-align: center;">-->
+                        <!--<div class="form-group" id="matlist">-->
+                                <!--<ul class="new-income-list-nav">-->
+                                    <!--<li style="width:173px;">物料</li>-->
+                                    <!--<li>数量</li>-->
+                                    <!--<li>从货架</li>-->
+                                    <!--<li>到货架</li>-->
+                                <!--</ul>-->
+
+                        <!--</div>-->
+                    <!--</div> -->
+                    <!-- +\- over -->
+
+                    <div class="col-xs-12 mar-top-20px changerep_cont">
+                        <table id="" cellpadding="0" cellspacing="0" width="698px">
+                            <tr>
+                                <th width="200px"> 物料</th>
+                                <th width="105px"> 从货架</th>
+                                <th width="160px" id="tobin01"> 到货架</th>
+                                <th width="127px"> 批号</th>
+                                <th width="106px"> 数量</th>
+                            </tr>
+                        </table>
+
+                        <div class="form-group" id="matlist">
+                        </div>   <!-- +\- over -->
+                    </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group add-button">
+                            <button type="submit" class="btn btn-primary" id="save">保存</button>
+                            <button type="button" class="btn  btn-info" id="return01">返回</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="idMt" name="idMt:number" />
+                    <input type="hidden" id="typeId" name="typeId:number" value="3" />
+                </form>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+    <!-- 弹窗 start -->
+    <div class="tcbox container-fluid matLocCreate" id="draggable1">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">新建或编辑物料库位</span>
+            </div>
+            <input type="button" class="tc_close">
+            <form id="matLocForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-80">物料</label>
+                        <select  class="js-data-example-ajax" name="idMaterial:number" id="idMaterial">
+                            <option value="">选择物料</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-80">仓库</label>
+                        <select  class="form-control" style="width:198px;"  name="idStk:number" id="idStk">
+                            <option value="">选择仓库</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="input-w-80">货架</label>
+                        <select  class="form-control" style="width:198px;" name="idBin:number" id="idBin">
+                            <option value="">选择货架</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="aligncenter">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary ">保存</button>
+                        <button id="return1" type="button" class="btn  btn-info">返回</button>
+                    </div>
+                </div>
+                <input type="hidden" id="id" name="id:number"/>
+            </form>
+        </div>
+    </div>
+    <!-- 弹窗 over -->
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label id="info"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="mftListItem">
+    <dl class="matlist" id="item<%= item %>">
+        <dd class="income-create-list">
+            <select class="select-cs1 a" style="width:198px" data-id="<%= data.materialId %>" name="smtfItems[item<%= item %>][materialId]:number" id="smtfItems.item<%= item %>.materialId">
+                <% if(data.materialId) { %>
+                <option value="<%= data.materialId %>"><%= data.materialPno+'-'+data.materialRev+'-'+data.materialDes %></option>
+                <% }else{ %>
+                <option value="">请选择物料</option>
+                <% } %>
+            </select>
+            <select class="select-cs1 b" style="width:103px" data-id="<%= data.fromBinId %>" name="smtfItems[item<%= item %>][fromBinId]:number" id="smtfItems.item<%= item %>.fromBinId">
+                <% if(data.fromBinId) { %>
+                <option value="<%= data.fromBinId %>"><%= data.fromBin %></option>
+                <% } else { %>
+                <option value="">从货架</option>
+                <% } %>
+            </select>
+            <% if(!data.fromBinId) { %>
+            <select class="select-cs1 c" style="width:103px" data-id="<%= data.toBinId %>" name="smtfItems[item<%= item %>][toBinId]:number" id="smtfItems.item<%= item %>.toBinId"><option value="">到货架</option></select>&nbsp&nbsp&nbsp&nbsp&nbsp<button class="btn btn-primary goto" type="button" style="width:45px">新增</button>
+            <% } else { %>
+            <select class="select-cs1 c" style="width:103px" data-id="<%= data.toBinId %>" name="smtfItems[item<%= item %>][toBinId]:number" id="smtfItems.item<%= item %>.toBinId"><option value="<%= data.toBinId %>"><%= data.toBin %></option></select>
+            <% } %>
+            <input style="width:124px" type="text" class="e" name="smtfItems[item<%= item %>][lotNo]" id="smtfItems.item<%= item %>.lotNo" placeholder="批号"  value="<%= data.lotNo %>"/>
+            <input style="width:103px" type="text" class="d" name="smtfItems[item<%= item %>][qty]" id="smtfItems.item<%= item %>.qty" placeholder="数量"  value="<%= data.qty %>"/>
+        </dd>
+    </dl>
+</script>
+<script type="text/javascript">
+    var jmstoken = store.get('JMS-TOKEN');
+    function showObj(objid){
+        $(objid).draggable().show();
+
+    }
+    function hideObj(objid){
+        $(objid).hide();
+    }
+    function formatRepo (repo) {
+        if (repo.loading) return repo.text;
+
+        var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+        return markup;
+    }
+
+    function formatRepoSelection (repo) {
+        return repo.name || repo.text;
+    }
+//
+//    var global_Html = "";
+//    function printme() {
+//        global_Html = document.body.innerHTML;
+//        document.body.innerHTML = document.getElementById('printarea').innerHTML;
+//
+//        window.print();
+//        window.setTimeout(function () {
+//            document.body.innerHTML = global_Html;
+//        }, 1500);
+//    }
+
+    var app= {
+        init: function () {
+            var self = this;
+            this.mftListItem = _.template($('#mftListItem').html());
+            $('#body').html($('#mftListbody').html());
+            var params = this.params = RouterManager.getParams();
+            var action = params['action'];
+            var mtfId = params['mtfId'];
+            var groupId = params['groupId'];
+            this.$matList = $('#matlist');
+            if(mtfId) {
+                this.loadDetail(mtfId,action);
+            }else {
+                // 新建入库
+                $(".order").hide();
+                this.$matList.append(this.createRow());
+                this.$matList.find('.c').combobox();
+                $('#idStk').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
+            }
+            //绑定事件
+            this.bindEvents(groupId);
+            this.form();
+            this.form1();
+            this.fillMaterialId();
+        },
+        loadDetail: function(mtfId,action, callback) {
+            var self = this;
+            $.mtfInfo(mtfId, jmstoken, function(data) {
+                var smtfItems = '';
+                _(data.smtfItems).each(function(item) {
+                    smtfItems += self.createRow(item);
+                });
+                self.$matList.append(smtfItems);
+                $('#mtfForm').populate(data, true);
+                $('#creationTime').val($.dateFormat.date(new Date(data.creationTime), 'yyyy-MM-dd'));
+                $('#fromStkId').html('<option value="' + data.fromStkId + '">' + data.fromStk + '</option>');
+                $('#toStkId').html('<option value="' + data.toStkId + '">' + data.toStk + '</option>');
+//                self.fillToBin(null, function() {
+//                    self.$matList.find('.income-create-list').each(function(i, ml) {
+//                        $(ml).find('.c').val(parseInt($(ml).find('.c').data('id')));
+//                    });
+//                });
+//                self.fillFromBin(null, function() {
+//                    self.$matList.find('.income-create-list').each(function(i, ml) {
+//                        $(ml).find('.b').val(parseInt($(ml).find('.b').data('id')));
+//                    });
+//                });
+//                self.fillMaterial(null, function() {
+//                    self.$matList.find('.income-create-list').each(function(i, ml) {
+//                        $(ml).find('.a').val(parseInt($(ml).find('.a').data('id')));
+//                    });
+//                });
+                self.dealAction();
+            });
+        },
+        dealAction: function() {
+            $('.order').show();
+            $("input:not(:button, :hidden)").prop("disabled", true);
+            $('#createMtf').html('<b>手动流转</b>');
+            $("select").prop("disabled", true);
+            $('#save').hide();
+            $('#tobin01').attr('width','107px');
+            $('table','#mtfForm').attr('width','645px');
+            $('.add-button').append('<button type="button" class="btn btn-primary" id="print01">打印</button>');
+//            $('.add-button').append('<a href="javascript:printme()" target="_self" class="btn btn-primary">打印</a>');
+        },
+//        fillFromBin: function($el, callback) {
+//            var idStk = $('#fromStkId').val();
+//            var $a = $el.find('.a');
+//            var $b = $el.find('.b');
+//            var idMaterial = $a.val();
+//            if (!idMaterial || !idStk) {
+//                return;
+//            }
+//            $b.empty();
+////            $el.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, function() {});
+//            $b.selectautofill('s/getBinsByStkIdAndMaterialIdBMethod',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk,'idMaterial':idMaterial}}, callback);
+//        },
+        fillFromBin: function($el, callback) {
+            var idStk = $('#fromStkId').val();
+            var $b = $el.find('.b');
+            $b.empty();
+//            $el.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, function() {});
+            $b.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, callback);
+        },
+//        fillFromBin: function($el, callback) {
+//            var idStk = $('#fromStkId').val();
+//
+//            if(!$el) {
+//                $el = $('.b');
+//            } else {
+//                $el = $el.find('.b');
+//            }
+//
+//            $el.empty();
+//            $el.html("<option>从货架</option>");
+//            $el.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, callback);
+//            $b.selectautofill('s/getBinsByStkIdAndMaterialIdBMethod',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk,'idMaterial':idMaterial}}, callback);
+//        },
+        fillToBin: function($el, callback) {
+
+            var idStk = $('#toStkId').val();
+            var $a = $el.find('.a');
+            var $c = $el.find('.c');
+            var idMaterial = $a.val();
+            if (!idMaterial || !idStk) {
+                return;
+            }
+            $c.empty();
+            $c.selectautofill('s/getBinsByStkIdAndMaterialIdAMethod',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk,'idMaterial':idMaterial}},function(){
+                var bin = $c.find("option:selected").text();
+                $('.matlist .custom-combobox input').val(bin);
+                callback;
+            });
+        },
+//        fillMaterial: function($el, callback) {
+//            if(!$el) {
+//                $el = $('.a');
+//            } else {
+//                $el = $el.find('.a');
+//            }
+//            $el.empty();
+//            $el.html("<option value=''>请选择物料</option>");
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+//        },
+
+        fillBin: function(callback) {
+            var idStk = $('#idStk').val();
+            $('#idBin').empty();
+//            $('#idBin').html("<option value=''>接收货架</option>");
+            $('#idBin').selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, function(){
+                $('#idBin').combobox();
+                var bin = $('#idBin').find("option:selected").text();
+                $('.matLocCreate .custom-combobox input').val(bin);
+                callback;
+            });
+        },
+        fillMaterial: function($el, callback) {
+            if(!$el) {
+                $el = $('.a');
+            } else {
+                $el = $el.find('.a');
+            }
+            $el.select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            callback && callback();
+        },
+        fillMaterialId: function(callback) {
+            $('.js-data-example-ajax').select2({
+                ajax: {
+                    url: $clientURL + 's/getMaterialListObjs',
+                    dataType: 'json',
+                    headers: {'JMS-TOKEN': jmstoken},
+                    delay: 200,
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        }
+                    },
+                    processResults: function (data, params) {
+                        return {
+                            results: data,
+                            pagination: null
+                        }
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+                width: 200,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            }).on('select2:open',function(evt){
+                $('#select2-js-data-example-ajax-container').html('');
+                $('#js-data-example-ajax').empty();
+            });
+//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
+            callback && callback();
+        },
+        defaultData: { },
+        createRow: function(data) {
+            var self = this;
+            var row = parseInt(self.$matList.data('row'));
+            if(!row) {
+                row = 1;
+            }
+
+            if(!data) {
+                data = self.defaultData;
+            }
+
+            var param = {
+                data: data,
+                item: row,
+                action: self.params.action
+            }
+
+            var html = self.mftListItem(param);
+            self.$matList.data('row', row + 1);
+
+            return html;
+        },
+        bindEvents: function (groupId) {
+            var self = this;
+            var frameContainer = $('#container-mtf-list-create-body');
+            frameContainer.on("change","#fromStkId", function(){
+                var $list = $('#matlist');
+                var $items = $list.find('.matlist');
+                $items.each(function(i) {
+                    var $dl = $(this);
+                    self.fillFromBin($dl);
+                });
+            });
+//            frameContainer.on("change","#fromStkId", self.fillFromBin.bind(self, null));
+//            frameContainer.on("change","#toStkId", self.fillToBin.bind(self, null));
+            frameContainer.on("change","#toStkId", function(){
+                var $list = $('#matlist');
+                var $items = $list.find('.matlist');
+                $items.each(function(i) {
+                    var $dl = $(this);
+                    self.fillToBin($dl);
+                });
+            });
+            $('#matlist').on("change",".a", function() {
+                var $t = $(this);
+                var $dl = $t.closest('dl');
+                self.fillFromBin($dl);
+                self.fillToBin($dl);
+            });
+            frameContainer.on('click','.goto',function(){
+                showObj('#draggable1');
+                self.fillBin();
+            });
+            $('#matLocForm').on("change","#idStk", self.fillBin.bind());
+            $('#draggable1').on('click','.tc_close, #return1',function(){
+                $('#draggable1').hide();
+                $('#matLocForm')[0].reset();
+                $('.select2-selection__rendered').html('选择物料');
+            });
+//            $('#return1').click(function(){
+//                $.get("views/mtfList-body.html", function (data) {
+//                    $("#body").html(data);
+//                });
+//            });
+
+//            打印
+//            $("#print01").on('click',function(){
+//                debugger;
+//                $("#printarea").printArea();
+//            });
+
+
+
+            frameContainer.on("click","#print01", function(){
+                debugger;
+                $("#printarea").printArea();
+            });
+
+
+            var historyOptions={
+                    groupId:'mtfList'
+                };
+                // 看板信息
+                $('#kanban').click(function () {
+                    $.get("views/p-kanban.html", function (data) {
+                        historyOptions.viewId='p-kanban';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                //物流查询
+                $('#mtf').click(function () {
+                    $.get("views/mtfList.html", function (data) {
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+                //工单流转
+                $('#woMtf').click(function () {
+                    $.get("views/s-wo-mtf.html", function (data) {
+                        historyOptions.viewId='s-wo-mtf';
+                        RouterManager.setUrl(historyOptions);
+                        $("#body").html(data);
+                    });
+                });
+            // 物流详情
+            $('#mtfDetail').click(function () {
+                $.get("views/s-mtfDetailList.html", function (data) {
+                    historyOptions.viewId = 's-mtfDetailList';
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+            $('#return01').click(function () {
+                if(groupId == 'mtfList'){
+                    var typeId = $('#typeId').val();
+                    $.get("views/mtfList.html", function (data) {
+                        $("#body").html(data);
+                        RouterManager.setUrl({
+                            groupId:'mtfList',
+                            typeId:typeId
+                        });
+                    });
+                }
+                else{
+                    history.go(-1);
+                }
+            });
+            // 发料清单
+            $('#issueList').click(function () {
+                $.get("views/s-issueList.html", function (data) {
+                    historyOptions.viewId = 's-issueList';
+                    RouterManager.setUrl(historyOptions);
+                    $("#body").html(data);
+                });
+            });
+//            $(document).on("change","#fromStkId",function(){
+//                $('#fromBinId').empty();
+//                var idStk = $(this).val();
+//                $(".b").selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}});
+//            });
+//
+//            $(document).on("change","#toStkId",function(){
+//                $('#toBinId').empty();
+//                var idStk = $(this).val();
+//                $(".c").selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}});
+//            });
+            self.fillMaterial();
+//            $('.a').selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+
+            $('#fromStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
+            $('#toStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
+    },
+        form:function(){
+            var self = this;
+            $('#mtfForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+//                    'mtNo': {
+//                        validators: {
+//                            notEmpty: {
+//                                message: '流转单号不能为空'
+//                          }
+//                      }
+//                  },
+                    'fromStkId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '从仓库不能为空'
+                            }
+                        }
+                    },
+                    'toStkId:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '到仓库不能为空'
+                            }
+                        }
+                    },
+                }
+            }).on('success.form.bv', function (e) {
+                e.preventDefault();
+                if(!self.validateMatlist()) {
+                    var top = $('#body').scrollTop();
+                    $('#nullAlert').css({
+                        top: $(window).height() * 0.2 + top
+                    }).draggable().show();
+                    $('#info').empty();
+                    $('#info').append('验证不通过');
+//                    alert('验证不通过');
+                    return;
+                }
+                var $form = $(e.target),
+                validator = $form.data('bootstrapValidator');
+                var mtf = JSON.stringify($('#mtfForm').serializeJSON());
+                $.saveMtf(mtf, jmstoken, function (data) {
+                    $.get("views/mtfList-body.html", function (data) {
+                        $("#body").html(data);
+                    });
+                });
+            });
+        },
+        form1:function(){
+            var self = this;
+            $('#matLocForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'idMaterial:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '物料不能为空'
+                            }
+                        }
+                    },
+                    'idStk:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '仓库不能为空'
+                            }
+                        }
+                    },
+                    'idBin:number': {
+                        validators: {
+                            notEmpty: {
+                                message: '货架不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var matBin =JSON.stringify($('#matLocForm').serializeJSON());
+                $.saveMatBin(matBin,jmstoken,function(data){
+                    $.get("views/mtfList-body.html", function (data) {
+                        $("#body").html(data);
+                    });
+                });
+
+            });
+        },
+    validateMatlist: function() {
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            var flag = true;
+            var reg =/^[0-9a-zA-z-_]+$/;
+
+            if(!$items.length) {
+                flag = false;
+            }
+
+            $items.each(function(i) {
+                var $t = $(this);
+
+                if(!$t.find('.a').val()) {
+                    $t.find('.a').addClass('error');
+                    flag = false;
+                }
+                if(!parseInt($t.find('.b').val())) {
+                    $t.find('.b').addClass('error');
+                    flag = false;
+                }
+                if(!parseInt($t.find('.c').val())) {
+                    $t.find('.c').addClass('error');
+                    flag = false;
+                }
+                if(!parseInt($t.find('.d').val())||isNaN($t.find('.d').val())) {
+                    $t.find('.d').addClass('error');
+                    flag = false;
+                }
+//                var lot = $t.find('.e').val();
+//                if(reg.test(lot)==false) {
+//                    $t.find('.e').addClass('error');
+//                    flag = false;
+//                }
+            });
+
+            return flag;
+        }
+    };
+    app.init();
+</script>
+
+

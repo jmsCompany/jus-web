@@ -1,0 +1,134 @@
+ <div class="container-fluid">
+    <div class="row">
+        <!-- form: -->
+            <section>
+            	<form id="materialForm" method="post" action="index.html" class="form-inline"> 
+            	<div class="alert alert-success" style="display: none;"></div>
+				<div class="body-head-title">
+					<span class="h-title">物料详情</span>
+				</div>
+				<div class="ht25"></div>
+                <div class="col-xs-8">
+                	<div class="form-group mar-top-20px">
+					    <label for="" class="input-w-160">物料编码</label>
+					    <input type="text" class="form-control input-w-300" name="pno" id="pno" readOnly="true">
+					</div>
+					<div class="form-group mar-top-20px">
+					    <label for="" class="input-w-160">版本</label>
+					    <input type="text" class="form-control input-w-300" name="rev" id="rev" readOnly="true">
+					</div>
+					<div class="form-group mar-top-20px">
+					    <label for="" class="input-w-160">描述</label>
+					    <textarea class="form-control input-w-300" rows="3" name="des" id="des" readOnly="true"></textarea>
+					</div>
+                </div>
+                <div class="col-xs-4">
+                	<a href="" class="a-upload bg-img">
+                		<input type="file" src="" name="idPic" id="idPic" class="form-control" readOnly="true"/>
+                		<!--<img src="images/wuliao.png"/>-->
+                	</a>
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">大类</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="materialType[idDic]:number" id="materialType.idDic"  readOnly="true">
+                			<option value="">大类</option>
+                		</select> 
+                		<label for="" class="input-w-160">小类</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="materialCategory[idDic]:number" id="materialCategory.idDic"  readOnly="true">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">品牌</label>
+                		<input type="text" class="form-control input-w-3" name="" id="" readOnly="true"> 
+                		<label for="" class="input-w-160">重量</label>
+                		<input type="text" class="form-control input-w-3" name="weight" id="weight" readOnly="true">
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">采购单位</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="unit[idDic]:number" id="unitPur" readOnly="true">
+                			<option value="">大类</option>
+                		</select> 
+                		<label for="" class="input-w-160">库存单位</label>
+                		<select name="" class="input-w-3 select-cs1 form-control" name="unit[idDic]:number" id="unitInf" readOnly="true">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">单价</label>
+                		<input type="text" class="form-control input-w-3 " name="unit[idDic]:number" id="unitPur" readOnly="true">
+                		<label for="" class="input-w-160">状态</label>
+                		<select name="" class="form-control select-cs1 " name="status[idDic]:number" id="status.idDic" readOnly="true">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">最小起订量</label>
+                		<input type="text" class="form-control input-w-3" name="" id="" readOnly="true"> 
+                		<label for="" class="input-w-160">最小包装量</label>
+                		<input type="text" class="form-control input-w-3" name="mpq" id="mpq" readOnly="true">
+                </div>
+                <div class="col-xs-12 mar-top-20px">                	
+                		<label for="" class="input-w-160">安全库存</label>
+                		<input type="text" class="form-control input-w-3" name="safetyInv" id="safetyInv" readOnly="true">
+                		<label for="" class="input-w-160">成本中心</label>
+                		<select name="costCenter" id="costCenter" class="form-control select-cs1 " name="cost" id="cost" readOnly="true">
+                			<option value="">小类</option>
+                		</select> 
+                </div>
+                <div class="col-xs-12 mar-top-20px"> 
+                	<label for="" class="input-w-160">附件</label>
+                	<input type="button" name="" id="" value="附件1"  class="inherit " name="idAttachment" id="idAttachment"/>
+                </div>
+                 <div class="col-xs-12 mar-top-20px"> 
+                 	<label for="" class="input-w-160">备注</label>
+                 	<textarea class="form-control input-w-300" rows="3" name="remark" id="remark" readOnly="true"></textarea>
+                 </div>
+                 <div class="col-xs-12 mar-top-20px"> 
+                 	<label for="" class="input-w-160">自动备注</label>
+                 	<textarea class="form-control input-w-300" rows="3" name="remark" id="remark" readOnly="true"></textarea>
+                 </div>
+                 <div class="clearfix"></div>
+                 <div class="foot-btn-box">
+                 	<div class="form-group">
+                 		<button type="submit" class="btn btn-primary ">保存</button>
+                 		<button type="reset" class="btn  btn-info">取消</button>
+                 	</div>
+                 </div>
+                 
+                </form>
+            </section>
+        <!-- :form -->
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() { 
+    var idMat = $('#_key1').val();
+	$.materialInfo({"id":idMat},token,function(data){
+		$('#pno').html(data.pno);
+		$('#idPic').html(data.idPic);
+		$('#rev').html(data.rev);
+		$('#des').html(data.des);
+		$('#materialType').html(data.materialType);
+		$('#materialCategory').html(data.materialCategory);
+		$('#brand').html(data.brand);
+		$('#unitInf').html(data.unitInf);
+		$('#unitPur').html(data.unitPur);
+		$('#moq').html(data.moq);
+		$('#idStk').html(data.idStk);
+		$('#idBin').html(data.idBin);
+		$('#weight').html(data.weight);
+		$('#cost').html(data.cost);
+		$('#mpq').html(data.mpq);
+		$('#sstatus').html(data.sstatus);
+		$('#remark').html(data.remark);
+		$('#autoRemark').html(data.autoRemark);
+		$('#idAttachment').html(data.idAttachment);
+	});
+	$('return').click(function(){
+	 		$.get("views/materialList.html",function(data){
+	             $("#body").html();
+	     	});
+	 	});
+});
+</script>

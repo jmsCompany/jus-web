@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+//弹窗
+function showObj(objid){
+	$(objid).show();	
+	
+}
+function hideObj(objid){
+	$(objid).hide();	
+}
+
+$(document).ready(function() {
+    var jmstoken= store.get('JMS-TOKEN');
+    var table=$('#tablePersonnel').DataTable( {
+        "processing": true,
+        "serverSide": true,
+        "stateSave": true,
+        "stateDuration": -1,
+        "ajax": {
+            "type": 'POST',
+            "url": $clientURL + "p/getShiftPlanList",
+            "dataType": "json",
+			headers: {'JMS-TOKEN':jmstoken}
+        },
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '<button class=button-edit>Edit</button><button class=button-bin>Detail</button><button class=button-delete>Delete</button>'
+        } ],
+       "language": {
+                        "url": "js/datatable/chinese.json"
+                   },
+        dom: "tip",
+		pageLength:"50"
+    } );
+    $('#tablePersonnel tbody').on( 'click', 'button', function () {
+        var data = table.row( $(this).parents('tr') ).data();
+     	var clazz =$(this).attr('class');
+        var historyParams = {
+            groupId:'p-personnelPlanList',
+            viewId:'p-personnel-create',
+            shiftId:data[4]
+        }
+     	if(clazz=='button-edit'){
+            historyParams.action = 'edit'
+     		$.get("views/p-personnel-create.html",function(data){
+                RouterManager.setUrl(historyParams);
+	            $("#body").html(data);
+	        });
+     	}
+     	else if (clazz=='button-bin'){
+            historyParams.action = 'detail'
+     		$.get("views/p-personnel-create.html",function(data){
+                RouterManager.setUrl(historyParams);
+	            $("#body").html(data);
+	        });
+     	}
+        else{
+            $.deleteShiftPlan(data[4],jmstoken,function(data){
+                $.get("views/p-personnelPlanList.html",function(data){
+                    $("#body").html(data);
+                });
+            });
+        }
+    } );
+    
+		// 点击新建
+		$('#create').click(function(){
+	 		$.get("views/p-personnel-create.html",function(data){
+                RouterManager.setUrl({
+                    groupId:'p-personnelPlanList',
+                    viewId:'p-personnel-create'
+                });
+	             $("#body").html(data);
+	     	});
+	 	});
+		
+	
+
+} );
+</script>
+
+</head>
+<body>
+<div class="body-head-title">
+	<span class="h-title-selected"><b>Produce Shift</b></span>
+</div>
+<div class="cont">
+<div class="r-header-body">
+<div class="right-list">
+        <!--搜索框-->
+    		<!--<div class="sousuo">-->
+    			<!--<div class="ss-input">    		-->
+    				<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+    			<!--</div>-->
+    			<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+    		<!--</div>-->
+
+    <input type="button" class="button-sytle1" id="create" value="Create">
+</div>
+</div>
+<table id="tablePersonnel" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Effective time</th>
+                <th>Failure time</th>
+                <th>Status</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+</table>
+
+
+
+</div>
+</body>
+</html>

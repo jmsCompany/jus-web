@@ -1,0 +1,131 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="mrbForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           
+							<fieldset>
+							<legend>采购退货单</legend>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">退货单编码</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="codeMrb:number" id="codeMrb"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">下单日期</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="dateOrder" id="dateOrder"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">下单员</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="empOrder" id="empOrder"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">供应商</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="codeCo:number" id="codeCo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">采购订单</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="poNo:number" id="poNo"></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">批号</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="lotNo:number" id="lotNo"></label>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group"> 
+                            	<div class="col-lg-9 col-lg-offset-3">
+                                    <button type="button" class="btn btn-primary" id="return">返回</button>
+                            	</div>
+                       		</div>
+<br> 
+<br> 
+	                        <div class="form-group">
+                                <table id="table1" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                        	<th>行号</th>
+                                            <th>物料名称</th>
+                                            <th>版本</th>
+                                            <th>描述</th>
+                                            <th>单位</th>
+                                            <th>采购数量</th>
+                                            <th>交货日期</th>
+                                            <th>收货日期</th>
+                                            <th>备注</th>
+                                            <th>已退货数量</th>
+                                            <th>退货数量</th>
+                                        </tr>
+                                    </thead> 
+                                </table>
+                            </div>
+
+<br>
+                       
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+
+	$(document).ready(function() {
+		
+	    $('#table1').DataTable( {
+       		deferRender:  true,
+        	"processing": true,
+        	"serverSide": true,
+        	scrollY:"350px",
+        	scrollCollapse: true,
+        	"ajax": {
+            	"url": "http://115.28.24.76:8080/jms-integration-1.0/dic/test",
+            	"dataType": "json"
+            	
+        	},
+       		"language": {
+                "url": "js/datatable/chinese.json"
+            },
+      		dom: "rtiS",
+        	scroller: {
+           		loadingIndicator: true
+        	}
+    	} );
+    	
+		var idMrb = $('#_key14').val();
+	$.mrbInfo({"id":idMrb},token,function(data){
+		$('#codeCo').html(data.codeCo);
+		$('#poNo').html(data.poNo);
+		$('#lotNo').html(data.lotNo);
+	});
+    	
+	   
+	   $('cancel').click(function(){
+	   	//返回上一页面？
+	 		//$.get("views/po.html",function(data){
+	          //   $("#body").html(data);
+	     	//});
+	 	});
+    	
+	});
+	</script>

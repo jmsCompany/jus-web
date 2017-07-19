@@ -1,0 +1,205 @@
+<script type="text/template" id="companyCreate">
+    <div class="container-fluid">
+        <div class="row">
+            <section>
+
+                <div class="body-head-title">
+                    <span class="h-title" id="createCo"><b>新建消息</b></span>
+                </div>
+                <form id="notificationForm" method="post" action="index.html" class="form-inline">
+                    <div class="form-box">
+                        <div class="clearfix"></div>
+                        <div class="col-xs-12 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">事件</label>
+                                <input class="form-control input-w-300"  placeholder="" name="code" id="code">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">间隔时间</label>
+                                <input class="form-control input-w-300"  placeholder="" name="shortName" id="shortName">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">相关人员</label>
+                                <input class="form-control input-w-300" placeholder="" name="name" id="name">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">工号</label>
+                                <select  class="input-w-3 select-cs1 form-control" name="lvlId:number" id="lvlId">
+                                </select>
+                                <!--<select name="公司类别" class="form-control  select-cs1 input-w-300">
+                                    <option value="">公司类别1</option>
+                                </select>-->
+                            </div>
+                        </div>
+                        <div class="col-xs-12 mar-top-20px">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">邮件</label>
+                                <input class="form-control input-w-3" placeholder="" name="tel" id="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="input-w-160">通知方式</label>
+                                <input class="form-control input-w-3" placeholder="" name="fax" id="fax">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                    <div class="foot-btn-box">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" id="save">保存</button>
+                            <button type="reset" class="btn  btn-info" id="return">返回</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="id" name="id:number"/>
+                </form>
+            </section>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var params = RouterManager.getParams();
+    var app={
+        init:function(){
+            $('#body').html($('#companyCreate').html())
+            this.bindEvents();
+        },
+        bindEvents:function(){
+            var id = params['coCompanyId'];
+            var companyCoTypeId = params['companyCoTypeId'];
+            if(companyCoTypeId == 2){
+                $('#po1').html('销售订单');
+                $('#createPo').html('新建销售订单');
+                $('#cocoMpany').html('客户');
+                $('#createCo').html('<b>新建客户</b>');
+                $('#po1').click(function(){
+                    $.get("views/so.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'so'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                $('#createPo').click(function(){
+                    $.get("views/so-order.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'so',
+                            viewId:'so-order'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+            }
+            else{
+                // 采购订单
+                $('#po1').click(function(){
+                    $.get("views/po.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                //	创建采购订单
+                $('#createPo').click(function(){
+                    $.get("views/po-order.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            viewId:'po-order'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+            }
+
+            $('#cocoMpany').click(function(){
+                $.get("views/cocompany.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'po',
+                        viewId:'cocompany',
+                        companyCoTypeId:companyCoTypeId
+                    });
+                    $("#body").html(data);
+                });
+            });
+
+            $('#typeId').selectautofill('s/companyCoTypes',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('#lvlId').selectautofill('s/companyCoLevels',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('#freightTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'freight'}});
+            $('#paymentTermId').selectautofill('s/terms',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'source':'payment'}});
+            $('#countryId').selectautofill('s/countries',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+
+
+            var isEdit = params['action']=='edit';
+            $('#id').val(id);
+            var jmstoken= store.get('JMS-TOKEN');
+            if(id!=null){
+
+                $.cocompanyInfo(id,jmstoken,function(data){
+                    $('#cocompanyForm').populate(data,true);
+                });
+                if(!isEdit){
+                    $('input,select,textarea').prop('readonly',true);
+                    $('select').prop('disabled',true);
+                    $("input:not(:button,:hidden)").prop("readonly", true);
+                    $('#save').hide();
+                }
+            }
+
+            $('#cocompanyForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    'code': {
+                        validators: {
+                            notEmpty: {
+                                message: '公司编码不能为空'
+                            }
+                        }
+                    },
+                    'shartName': {
+                        validators: {
+                            notEmpty: {
+                                message: '公司简称不能为空'
+                            }
+                        }
+                    },
+                    'name': {
+                        validators: {
+                            notEmpty: {
+                                message: '公司名称不能为空'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function(e) {
+                e.preventDefault();
+                var $form     = $(e.target),
+                        validator = $form.data('bootstrapValidator');
+                var cocompany =JSON.stringify($('#cocompanyForm').serializeJSON());
+                var jmstoken= store.get('JMS-TOKEN');
+                $.saveCocompany(cocompany,jmstoken,function(data){
+                    $.get("views/cocompany.html",function(data){
+                        $("#body").html(data);
+                    });
+                });
+            });
+
+            $('#return').click(function(){
+                history.go(-1);
+            });
+
+        }
+    };
+    app.init();
+    //	}
+</script>

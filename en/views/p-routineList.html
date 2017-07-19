@@ -1,0 +1,171 @@
+<script type="text/html" id="pRoutineMain">
+	<div class="body-head-title">
+		<span class="h-title-selected"><b>Routine List</b></span>
+		<span class="h-title" id="route">Create Routine</span>
+		<span class="h-title" id="standardRoute">Standard Routine</span>
+	</div>
+	<div class="cont">
+		<!--<div class="r-header-body">-->
+			<!--&lt;!&ndash;搜索框&ndash;&gt;-->
+			<!--<div class="sousuo">-->
+				<!--<div class="ss-input">-->
+					<!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+				<!--</div>-->
+				<!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+			<!--</div>-->
+		<!--</div>-->
+		<table id="tableRoutine" class="display" cellspacing="0" width="100%">
+			<thead>
+			<tr>
+				<th>Material/ NO.</th>
+				<th>Version</th>
+				<th>Description</th>
+				<th>Produce Line</th>
+				<th>Draw/ No.</th>
+				<th>Operation</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="tcbox container-fluid" id="deleteRoutine">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+				<span class="h-title">Delete BOM</span>
+			</div>
+			<input type="button" class="tc_close"  onClick="javascript:hideObj('#deleteRoutine');">
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label for="" class="input-w-200">Please make sure you wantto delete this routine！</label>
+				</div>
+			</div>
+			<div class="aligncenter">
+				<div class="form-group">
+					<button type="button" id="delete01" class="btn btn-primary ">Yes</button>
+					<button id="return01" type="button" class="btn  btn-info"  onClick="javascript:hideObj('#deleteRoutine');">No</button>
+				</div>
+			</div>
+			<input type="hidden" id="idRoutine" name="idRoutine:number"/>
+		</div>
+	</div>
+	<div class="tcbox container-fluid" id="nullAlert">
+		<div class="tcbox_cont row">
+			<div class="body-head-title">
+			</div>
+			<input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+			<div class="col-xs-12 mar-top-20px">
+				<div class="form-group">
+					<label id="info"></label>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/javascript">
+	var jmstoken= store.get('JMS-TOKEN');
+	//弹窗
+	function showObj(objid){
+		$(objid).show();
+	}
+	function hideObj(objid){
+		$(objid).hide();
+	}
+	$('#body').html($('#pRoutineMain').html())
+	var app={
+		init:function(){
+			this.bindEvents();
+		},
+		bindEvents:function(){
+			var table =$('#tableRoutine').DataTable( {
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"stateDuration": -1,
+				"ajax": {
+					"type": 'POST',
+					"url": $clientURL + "p/getRoutineList",
+					"dataType": "json",
+					headers: {'JMS-TOKEN':jmstoken}
+				},
+				"columnDefs": [ {
+					"targets": -1,
+					"data": null,
+					"defaultContent": '<button class=button-edit>Edit</button><button class=button-bin>Detail</button><button class=button-delete>Delete</button>'
+				} ],
+				"language": {
+					"url": "js/datatable/chinese.json"
+				},
+				dom: "tip",
+				pageLength:"50"
+			} );
+			$('#tableRoutine tbody').on( 'click', 'button', function () {
+				var rowData = table.row( $(this).parents('tr') ).data();
+				var clickOption={
+					groupId:'p-routineList',
+					routineId:rowData[5]
+				};
+				var clazz =$(this).attr('class');
+				if(clazz=='button-edit'){
+					clickOption.action='edit';
+					clickOption.viewId='p-routine-create';
+					$.get("views/p-routine-create.html",function(data){
+						RouterManager.setUrl(clickOption);
+						$("#body").html(data);
+					});
+				}
+				else if(clazz=='button-bin'){
+					clickOption.action='detail';
+					clickOption.viewId='p-routine-create';
+					$.get("views/p-routine-create.html",function(data){
+						RouterManager.setUrl(clickOption);
+						$("#body").html(data);
+					});
+				}
+				else {
+					$('#deleteRoutine').show();
+					$('#idRoutine').val(rowData[5]);
+				}
+			} );
+			$('#deleteRoutine').on('click','#delete01',function(){
+				var idRoutine = $('#idRoutine').val();
+				$.deleteRoutine(idRoutine,jmstoken,function(data){
+					if(data.valid == false){
+						var top = $('#body').scrollTop();
+						$('#nullAlert').css({
+							top: $(window).height() * 0.2 + top
+						}).show();
+						$('#info').empty();
+						$('#info').append('This routine has been used，cannot be deleted!');
+						return;
+					}
+					$.get("views/p-routineList.html",function(data){
+						$("#body").html(data);
+					});
+				});
+			});
+
+			$('#route').click(function(){
+				$.get("views/p-routine-create.html",function(data){
+                    RouterManager.setUrl({
+                        groupId:'p-routineList',
+                        viewId:'p-routine-create'
+                    });
+					$("#body").html(data);
+				});
+			});
+
+			$('#standardRoute').click(function(){
+				$.get("views/p-standardRoute.html",function(data){
+					RouterManager.setUrl({
+						groupId:'p-routineList',
+						viewId:'p-standardRoute'
+					});
+					$("#body").html(data);
+				});
+			});
+		}
+	};
+	app.init();
+
+</script>
+

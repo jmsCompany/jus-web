@@ -1,0 +1,118 @@
+    <div class="container">
+
+        <div class="row">
+            <!-- form: -->
+
+            <section>
+
+
+
+<br>
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form id="defaultForm" method="post" action="index.html" class="form-horizontal">
+                        
+                           
+							<fieldset>
+							<legend>联系人</legend>
+							<div class="form-group">
+                                <label class="col-lg-3 control-label">姓名</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="name" id="name"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">性别</label>
+                                <div class="col-lg-5">
+                                	<label class="col-lg-3 control-label" name="gender" id="gender"/></label>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">职务</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="position" id="position"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">电话</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="tel" id="tel"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">邮箱</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="email" id="email"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">QQ</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="QQ" id="QQ"/></label>
+                                </div>
+                            </div>			
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">微信</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="weChat" id="weChat"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">旺旺</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="wangwang" id="wangwang"/></label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">状态</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="status" id="status"/></label>
+                                </div>
+                            </div>	
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">备注</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="remark" id="remark"></label>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">自动备注</label>
+                                <div class="col-lg-5">
+                                    <label class="col-lg-3 control-label" name="autoRemark" id="autoRemark"></label>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <div class="col-lg-9 col-lg-offset-3">
+                                    <button type="submit" class="btn btn-primary" id="cancel">取消</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </section>
+            <!-- :form -->
+        </div>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() { 
+    var idLinkman = $('#_key6').val();
+	$.linkmanInfo({"id":idLinkman},token,function(data){
+		$('#name').html(data.name);
+		$('#gender').html(data.gender);
+		$('#position').html(data.position);
+		$('#tel').html(data.tel);
+		$('#email').html(data.email);
+		$('#QQ').html(data.QQ);
+		$('#weChat').html(data.weChat);
+		$('#wangwang').html(data.wangwang);
+		$('#status').html(data.status);
+		$('#remark').html(data.remark);
+		$('#autoRemark').html(data.autoRemark);
+	});
+	$('cancel').click(function(){
+	 		$.get("views/linkman-body.html",function(data){
+	             $("#body").html(data);
+	     	});
+	 	});
+});
+</script>
+

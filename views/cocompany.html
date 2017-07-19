@@ -1,0 +1,262 @@
+<script type="text/template" id="coCompanyMain">
+    <div class="body-head-title">
+        <span class="h-title" id="po1">采购订单</span>
+        <span class="h-title" id="createPo">新建采购订单</span>
+        <span class="h-title-selected" id="supplier"><b>供应商</b></span>
+        <span class="h-title" id="createCocompany">新建供应商</span>
+        <span class="h-title" id="importPo">采购订单导入</span>
+        <span class="h-title" id="imporCo">供应商导入</span>
+    </div>
+    <div class="cont">
+            <!--<div class="r-header-body">-->
+                <!--<div class="right-list">-->
+                    <!--&lt;!&ndash;搜索框&ndash;&gt;-->
+                    <!--<div class="sousuo">-->
+                        <!--<div class="ss-input">-->
+                            <!--<input type="text" name="" id="" value="" class="border-none" placeholder="输入要查询的内容"/>-->
+                        <!--</div>-->
+                        <!--<a href=""><span class="icon-ss-bg"></span>搜索</a>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div> &lt;!&ndash;检索结束&ndash;&gt;-->
+
+                        <table id="tableCocompany" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>公司编码</th>
+                                    <th>公司简称</th>
+                                    <th>公司类别</th>
+                                    <th>公司电话</th>
+                                    <th>公司传真</th>
+                                    <th>实际地址</th>
+                                    <th style="min-width:220px;">操作</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        </div>
+    <!-- 弹窗 start -->
+    <div class="tcbox container-fluid" id="draggable1">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+                <span class="h-title">删除公司</span>
+            </div>
+            <input type="button" class="tc_close">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label for="" class="input-w-200">请确认是否删除公司！</label>
+                </div>
+            </div>
+            <div class="aligncenter">
+                <div class="form-group">
+                    <button type="button" id="delete01" class="btn btn-primary ">是</button>
+                    <button id="return01" type="button" class="btn  btn-info">否</button>
+                </div>
+            </div>
+            <input type="hidden" id="idCompany" name="idCompany:number"/>
+        </div>
+    </div>
+
+
+    <div class="tcbox container-fluid" id="nullAlert">
+        <div class="tcbox_cont row">
+            <div class="body-head-title">
+            </div>
+            <input type="button" class="tc_close" onClick="javascript:hideObj('#nullAlert');">
+            <div class="col-xs-12 mar-top-20px">
+                <div class="form-group">
+                    <label id="info"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+        $('#body').html($('#coCompanyMain').html());
+        var app ={
+            init:function(){
+                this.bindEvents();
+            },
+            bindEvents:function(){
+                var jmstoken= store.get('JMS-TOKEN');
+                var params = RouterManager.getParams();
+                var companyCoTypeId = params['companyCoTypeId'];
+
+                var groupId = params['groupId'];
+                if(companyCoTypeId == 2){
+                    $('#po1').html('销售订单');
+                    $('#createPo').html('新建销售订单');
+                    $('#supplier').html('<b>客户</b>');
+                    $('#createCocompany').html('新建客户');
+                    $('#importPo').remove();
+                    $('#imporCo').html('客户导入');
+                }
+
+                var table =$('#tableCocompany').DataTable( {
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "s/companyCoList",
+                        "dataType": "json",
+                        headers:{'JMS-TOKEN':jmstoken},
+                        data: {"companyCoTypeId":companyCoTypeId}
+                    },
+                    "columnDefs": [ {
+                        "targets": -1,
+                        "data": null,
+                        "defaultContent": '<button class=button-bin>联系人</button><button class=button-edit>编辑</button><button class=button-finish>详情</button><button class=button-delete>删除</button>'
+                    } ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+
+                    dom: "tip",
+                    pageLength:"50"
+                } );
+                $('#tableCocompany tbody').on( 'click', 'button', function () {
+                    var rowData = table.row( $(this).parents('tr') ).data();
+                    params.coCompanyId = rowData[6];
+                    params.shortName = rowData[1];
+//                    var historyOptions={
+//                        groupId:'cocompany',
+//                        coCompanyId:rowData[7],
+//                        shortName:rowData[1]
+//                    };
+                    var clazz =$(this).attr('class');
+                    if(clazz=='button-bin'){
+                        params.viewId='linkman-body';
+                        $.get("views/linkman-body.html",function(data){
+                            RouterManager.setUrl(params);
+                            $("#body").html(data);
+                        });
+                    }
+                    else if(clazz=='button-edit'){
+                        params.action='edit';
+                        params.viewId='cocompany-create-body';
+                        $.get("views/cocompany-create-body.html",function(data){
+                            RouterManager.setUrl(params);
+                            $("#body").html(data);
+                        });
+                    }
+                    else if(clazz=='button-finish'){
+                        params.action='detail';
+                        params.viewId='cocompany-create-body';
+                        $.get("views/cocompany-create-body.html",function(data){
+                            RouterManager.setUrl(params);
+                            $("#body").html(data);
+                        });
+                    }
+                    else{
+                        $('#draggable1').show();
+                        $('#idCompany').val(rowData[6]);
+                    }
+                } );
+                if(companyCoTypeId == 1) {
+                    $('#po1').click(function () {
+                        $.get("views/po.html", function (data) {
+                            RouterManager.setUrl({
+                                groupId: 'po'
+                            });
+                            $("#body").html(data);
+                        });
+                    });
+                    $('#createPo').click(function () {
+                        $.get("views/po-order.html", function (data) {
+                            RouterManager.setUrl({
+                                groupId: 'po',
+                                viewId: 'po-order'
+                            });
+                            $("#body").html(data);
+                        });
+                    });
+                }
+                else{
+                    $('#po1').click(function () {
+                        $.get("views/so.html", function (data) {
+                            RouterManager.setUrl({
+                                groupId: 'so'
+                            });
+                            $("#body").html(data);
+                        });
+                    });
+                    $('#createPo').click(function () {
+                        $.get("views/so-order.html", function (data) {
+                            RouterManager.setUrl({
+                                groupId: 'so',
+                                viewId: 'so-order'
+                            });
+                            $("#body").html(data);
+                        });
+                    });
+                }
+
+
+                $('#draggable1').on('click','#return01',function(){
+                    $('#draggable1').hide();
+                });
+                $('#draggable1').on('click','.tc_close',function(){
+                    $('#draggable1').hide();
+                });
+
+                $('#draggable1').on('click','#delete01',function(){
+                    var idCompany = $('#idCompany').val();
+                    $.deleteCocompany(idCompany,jmstoken,function(data){
+                        debugger;
+                        if(data.valid == false){
+                            var top = $('#body').scrollTop();
+                            $('#nullAlert').css({
+                                top: $(window).height() * 0.2 + top
+                            }).show();
+                            $('#info').empty();
+                            $('#info').append('该公司已被使用，不能删除');
+                            return;
+                        }
+                        $.get("views/cocompany.html",function(data){
+                            $("#body").html(data);
+                        });
+                    });
+                });
+
+                // 新建供应商
+                $('#createCocompany').click(function(){
+                    $.get("views/cocompany-create-body.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:groupId,
+                            viewId:'cocompany-create-body',
+                            companyCoTypeId:companyCoTypeId
+                        });
+                        $("#body").html(data);
+                    });
+                });
+
+                // 采购订单导入
+                $('#importPo').click(function(){
+                    $.get("views/po-import.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:'po',
+                            companyCoTypeId:'1',
+                            viewId:'po-import'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+                $('#imporCo').click(function(){
+                    $.get("views/co-import.html",function(data){
+                        RouterManager.setUrl({
+                            groupId:groupId,
+                            companyCoTypeId:companyCoTypeId,
+                            viewId:'co-import'
+                        });
+                        $("#body").html(data);
+                    });
+                });
+            }
+        };
+        app.init();
+</script>
+
+
+
+
