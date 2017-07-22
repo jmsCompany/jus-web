@@ -3,10 +3,10 @@
 
      //$clientURL = "http://192.168.1.105:9998/jms/"
 
-     $clientURL = "http://118.178.94.7:9998/jms/"
+     //$clientURL = "http://118.178.94.7:9998/jms/"
 	//$.fn.dataTable.ext.errMode = 'throw';
 
-	//$clientURL = "http://localhost:9998/jms/"
+	$clientURL = "http://localhost:9998/jms/"
 
     $.JMSClient = function (path,opt,callback) {
       var defaults = {
