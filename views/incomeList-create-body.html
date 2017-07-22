@@ -732,7 +732,16 @@
 //                        $.get("views/incomeList.html",function(data){
 //                            $("#body").html(data);
 //                        });
+                        if (!data.valid){
+                            var top = $('#body').scrollTop();
+                            $('#nullAlert').css({
+                                top: $(window).height() * 0.2 + top
+                            }).draggable().show();
+                            $('#info').empty();
+                            $('#info').append(data.msg);
+                        }else{
                         history.go(-1);
+                        }
                     });
                 }
             });
@@ -778,6 +787,7 @@
 //                    $.get("views/incomeList-create-body.html",function(data){
 //                        $("#body").html(data);
 //                    });
+
                     history.go(-1);
                 });
 

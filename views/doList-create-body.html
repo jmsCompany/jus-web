@@ -332,7 +332,17 @@
 
             $a.empty();
             $a.append('<option value="">销售订单编码</option>');
-            $a.selectautofill('s/getSoListByCompanyCoIdAndOrderNo',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'companyCoId':coId,'orderNo':coOrderNo}});
+            $a.selectautofill(
+                's/getSoListByCompanyCoIdAndOrderNo',
+                {headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'companyCoId':coId,'orderNo':coOrderNo}},
+                function name(data) {
+                    if (data.length==0){
+                        $a.empty();
+                        $a.append('<option value="">销售订单编码</option>');
+                    }
+                }
+
+            );
         },
         loadBins: function($cnt) {
             if(!$cnt) {

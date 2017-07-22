@@ -123,6 +123,7 @@
 
 <script type="text/javascript">
 	var jmstoken = store.get('JMS-TOKEN');
+    var autoPo = store.get('userProfile').autoPo;
 
 	function formatRepo(repo) {
 		if (repo.loading) return repo.text;
@@ -142,6 +143,12 @@
 			var params = RouterManager.getParams();
 			var action = params['action'];
 			var idSo = params['soId'];
+            if(autoPo=='1'){
+                $("#codeSo").attr('disabled',true);
+                $("#codeSo").attr('placeholder','自动编码');
+            }else {
+                $("#codeSo").removeAttr('disabled');
+            }
 			if (idSo) {
 				this.loadDetail(idSo, function() {
 					self.dealAction(action);

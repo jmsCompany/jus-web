@@ -159,11 +159,37 @@
 				$.saveMatReportList(JSON.stringify(data),jmstoken,function(data){
 					if(data.valid){
 						alert('保存成功')
+                        table.destroy()
+                        loadTable()
 					}else {
 						alert(data.msg)
 					}
 				})
 			})
+            $(".del").on('click',function(){
+                var data = []
+                $('.checkbox').each(function(){
+                    var rowData = table.row($(this).parents('tr')).data()
+                    data.push({
+                        materia:rowData[2],
+                        invUnit:rowData[3],
+                        reqDate:rowData[4],
+                        finDate:rowData[5],
+                        reqQty:rowData[6],
+                        buyQty:rowData[7],
+                        status:rowData[8],
+                    })
+                })
+                $.deleteMatPrice(JSON.stringify(data),jmstoken,function(data){
+                    if(data.valid){
+                        alert('删除成功')
+                        table.destroy()
+                        loadTable()
+                    }else {
+                        alert(data.msg)
+                    }
+                })
+            })
 			$(".create").on('click',function(){
 				var data = []
 				$('.checkbox').each(function(){
@@ -181,6 +207,8 @@
 				$.exportMatReportList(JSON.stringify(data),jmstoken,function(data){
 					if(data.valid){
 						alert('生成成功')
+                        table.destroy()
+                        loadTable()
 					}else {
 						alert(data.msg)
 					}
@@ -229,16 +257,12 @@
 	</div>
 	<div class="cont">
 		<div class="r-header-body">
-			<div class="right-list">
-				<div class="btn-group btn-group-left">
-					<label>日期：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
-				</div>
-				<select class="mat-ajax" id="mat-ajax">
-					<option value="">选择原料</option>
-				</select>
+			<div class="left-list" style="margin-top: 10px">
+
 				<label>
 					采购分期：
-					<select class="select" name="time" id="time">
+					<input type="text" id='supplier' style="width: 90px">
+					<select class="select" name="time" id="time" style="width: 58px">
 						<option value="">无</option>
 						<option value="1">天</option>
 						<option value="2">周</option>
@@ -247,7 +271,8 @@
 						<option value="5">年</option>
 					</select>
 				</label>
-				<label>
+
+				<label style="margin-left: 40px">
 					分期物料级别：
 					<select class="select" name="level" i="level">
 						<option value="">全部</option>
@@ -256,8 +281,21 @@
 						<option value="3">C</option>
 					</select>
 				</label>
-				<button id="search" class="button-sytle1">查询</button>
-				<button id="refresh" class="button-sytle1">刷新</button>
+
+
+
+
+
+				<button id="refresh" class="button-sytle1" style="margin-left: 70px">刷新</button>
+			</div>
+			<div class="left-list" style="margin-top: 20px">
+				<div class="btn-group btn-group-left"  style="margin-left:30px">
+					<label>日期：</label><input type="text" id='datetimepicker1' style="width:90px"> -- <input type="text" id='datetimepicker2' style="width:90px">
+				</div>
+				<select class="mat-ajax" id="mat-ajax">
+					<option value="">选择原料</option>
+				</select>
+				<button id="search" class="button-sytle1" style="margin-left: 40px">查询</button>
 				<button id="export" class="button-sytle1">导出</button>
 			</div>
 		</div>
@@ -284,8 +322,11 @@
 	</table>
 	</div>
 	<div class="btns">
-		<button type="button" class="btn btn-primary check-btn save" name="button" disabled>保存确认</button>
-		<button type="button" class="btn btn-primary check-btn create" name="button" disabled>生成临时PO</button>
+		<button type="button" class="btn btn-primary check-btn save" name="button">保存确认</button>
+		<button type="button" class="btn btn-primary check-btn del" name="button">删除确认</button>
+		<input type="radio" name="receive" id='Rset1' class="radio-w" value="1" checked/><label for="stateOn">按主供应商(默认)</label>
+		<input type="radio" name="receive" id='Rset2' class="radio-w" value="0" /><label for="stateOn">百分比</label>
+		<button type="button" class="btn btn-primary check-btn create" name="button" >生成临时PO</button>
 	</div>
 </body>
 
