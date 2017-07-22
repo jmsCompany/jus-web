@@ -105,7 +105,9 @@
             $(objid).hide();
         }
     $(function () {
-        $('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
+        $('#datetimepicker1').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
         $('#datetimepicker2').datetimepicker({format:"YYYY-MM-DD"});
     });
         var jmstoken= store.get('JMS-TOKEN');
@@ -157,6 +159,7 @@
                     "serverSide": true,
                     "stateSave": true,
                     "stateDuration": -1,
+                    "bStateSave":false,
                     "ajax": {
                         "type": 'POST',
                         "url": $clientURL+"s/spoMaterialList",

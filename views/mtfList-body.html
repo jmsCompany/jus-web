@@ -61,13 +61,14 @@
                     <!-- +\- over -->
 
                     <div class="col-xs-12 mar-top-20px changerep_cont">
-                        <table id="" cellpadding="0" cellspacing="0" width="698px">
+                        <table id="" cellpadding="0" cellspacing="0" width="800px">
                             <tr>
                                 <th width="200px"> 物料</th>
                                 <th width="105px"> 从货架</th>
                                 <th width="160px" id="tobin01"> 到货架</th>
                                 <th width="127px"> 批号</th>
                                 <th width="106px"> 数量</th>
+                                <th width="102px" id="operation"> 操作</th>
                             </tr>
                         </table>
 
@@ -172,6 +173,9 @@
             <% } %>
             <input style="width:124px" type="text" class="e" name="smtfItems[item<%= item %>][lotNo]" id="smtfItems.item<%= item %>.lotNo" placeholder="批号"  value="<%= data.lotNo %>"/>
             <input style="width:103px" type="text" class="d" name="smtfItems[item<%= item %>][qty]" id="smtfItems.item<%= item %>.qty" placeholder="数量"  value="<%= data.qty %>"/>
+            <span class="action">
+                <a class="button-sytle1 new-income-add">+</a><a class="button-sytle1 new-income-delete">-</a>
+            </span>
         </dd>
     </dl>
 </script>
@@ -269,7 +273,6 @@
             $("select").prop("disabled", true);
             $('#save').hide();
             $('#tobin01').attr('width','107px');
-            $('table','#mtfForm').attr('width','645px');
             $('.add-button').append('<button type="button" class="btn btn-primary" id="print01">打印</button>');
 //            $('.add-button').append('<a href="javascript:printme()" target="_self" class="btn btn-primary">打印</a>');
         },
@@ -440,9 +443,32 @@
 
             return html;
         },
+        addRow: function(e) {
+            this.$matList = $('#matlist');
+            var $t = $(e.target);
+
+            var html = this.createRow();
+
+            $t.closest('dl').after(html);
+
+            this.$matList.find('.c').combobox();
+            $('#idStk').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
+            this.fillMaterial($t.closest('dl').next());
+        },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
         bindEvents: function (groupId) {
             var self = this;
             var frameContainer = $('#container-mtf-list-create-body');
+            frameContainer.on('click','.new-income-add',self.addRow.bind(self));
+            //删除行
+            frameContainer.on('click','.new-income-delete', self.delRow.bind(self));
+
             frameContainer.on("change","#fromStkId", function(){
                 var $list = $('#matlist');
                 var $items = $list.find('.matlist');
@@ -612,12 +638,14 @@
                     }).draggable().show();
                     $('#info').empty();
                     $('#info').append('验证不通过');
+                    $("#save").attr("disabled",false)
 //                    alert('验证不通过');
                     return;
                 }
                 var $form = $(e.target),
                 validator = $form.data('bootstrapValidator');
                 var mtf = JSON.stringify($('#mtfForm').serializeJSON());
+                console.log(mtf)
                 $.saveMtf(mtf, jmstoken, function (data) {
                     $.get("views/mtfList-body.html", function (data) {
                         $("#body").html(data);
