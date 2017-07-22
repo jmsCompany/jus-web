@@ -1019,11 +1019,15 @@
 		$.JMSClient('s/mrp/deletesourcingPrice',{'type':'GET',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
 	};
 	$.saveMatReportList  = function(data,jmstoken,callback){
-		$.JMSClient('s/mrp/saveMatReportList ',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
+		$.JMSClient('s/mrp/handleNoMatReportSum ',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
 	};
-	$.exportMatReportList  = function(data,jmstoken,callback){
-		$.JMSClient('s/mrp/exportMatReportList ',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
-	};
+    $.refreshMatReportList  = function(data,jmstoken,callback){
+        $.JMSClient('s/mrp/refreshMatReportList',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
+    };
+    $.sureMatReportList  = function(data,jmstoken,callback){
+        $.JMSClient('s/mrp/generatePo',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
+    };
+
 
 
 

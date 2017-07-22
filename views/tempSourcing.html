@@ -57,6 +57,8 @@
 			</tr>
 		</thead>
 	</table>
+	<div class="btns">
+		<button type="button" class="btn btn-primary check-btn save" name="button">确定</button>
 	</div>
 	<script type="text/javascript">
 		function showObj(objid) {
@@ -64,86 +66,83 @@
 
 		}
 
+
 		function hideObj(objid) {
 			$(objid).hide();
 		}
 
-		//	function startrequest()
-		//	{
-		//		$("#date").text((new date()).tostring());
-		//	}
+
 		$(document).ready(function() {
-			var jmstoken = store.get('JMS-TOKEN');
+            var jmstoken = store.get('JMS-TOKEN');
+            var table = {}
+            function loadTable() {
+                table = $('#material').DataTable({
 
-			//	setinterval("startrequest()",3000);
-			var table = $('#material').DataTable({
+                    //  deferRender:  true,
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    "bStateSave": false,
+                    //scrollY:"350px",
+                    //scrollCollapse: true,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "s/mrp/tempSourcingList",
+                        "dataType": "json",
+                        headers: {
+                            'JMS-TOKEN': jmstoken
+                        },
+                        "data": {
+                            q: $("#supplier").val()
+                        },
+                    },
+                    "columnDefs": [
+                        {
+                            "targets": 0,
+                            "data": null,
+                            "defaultContent": '<input class="checkbox" type="checkbox"/>'
+                        }
+                    ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
 
-				//  deferRender:  true,
-				"processing": true,
-				"serverSide": true,
-				"stateSave": true,
-				"stateDuration": -1,
-                "bStateSave":false,
-				//scrollY:"350px",
-				//scrollCollapse: true,
-				"ajax": {
-					"type": 'POST',
-					"url": $clientURL + "s/mrp/tempSourcingList",
-					"dataType": "json",
-					headers: {
-						'JMS-TOKEN': jmstoken
-					},
-					"data": {
-						q:$("#supplier").val()
-					},
-				},
-				"columnDefs": [
-				],
-				"language": {
-					"url": "js/datatable/chinese.json"
-				},
+                    dom: "tip",
+                    pageLength: "50"
 
-				dom: "tip",
-				pageLength: "50"
-
-			});
+                });
+            }
+            loadTable()
 			$("#search").on("click",function(){
 				table.destroy()
-				table = $('#material').DataTable({
-
-					//  deferRender:  true,
-					"processing": true,
-					"serverSide": true,
-					"stateSave": true,
-					"stateDuration": -1,
-                    "bStateSave":false,
-					//scrollY:"350px",
-					//scrollCollapse: true,
-					"ajax": {
-						"type": 'POST',
-						"url": $clientURL + "s/mrp/tempSourcingList",
-						"dataType": "json",
-						headers: {
-							'JMS-TOKEN': jmstoken
-						},
-						"data": {
-							q:$("#supplier").val()
-						},
-					},
-					"columnDefs": [
-					],
-					"language": {
-						"url": "js/datatable/chinese.json"
-					},
-
-					dom: "tip",
-					pageLength: "50"
-
-				});
+                loadTable()
 			})
 			var historyOptions = {
 				groupId: 'mrp'
 			};
+
+            $(".save").on('click',function(){
+                var obj = {};
+                var data = []
+                $('.checkbox').each(function(){
+                    if($(this).is(':checked')){
+                        var rowData = table.row($(this).parents('tr')).data()
+                        data.push(parseInt(rowData[0]))
+                    }
+                })
+                obj.ids = data;
+
+                $.sureMatReportList(JSON.stringify(obj),jmstoken,function(data){
+                    if(data.valid){
+                        alert('生成成功')
+//                    table.destroy()
+//                    loadTable()
+                    }else {
+                        alert(data.message)
+                    }
+                })
+            })
 			$('#stkList tbody').on('click', 'button', function() {
 				var rowData = table.row($(this).parents('tr')).data();
 				historyOptions.stkId = rowData[5];

@@ -73,32 +73,45 @@
 				$('#mat-ajax').empty();
 			});
 			$.fn.dataTable.ext.errMode = 'throw';
-			var table = $('#materialListDetail').DataTable({
+            function loadTable(){
+                table = $('#materialListDetail').DataTable({
+                    //  deferRender:  true,
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
+                    //scrollY:"350px",
+                    //scrollCollapse: true,
+                    "ajax": {
+                        "type": 'POST',
+                        "url": $clientURL + "s/mrp/noMatDetailReportList",
+                        "dataType": "json",
+                        headers: {
+                            'JMS-TOKEN': jmstoken
+                        },
+                        data:{
+                            idMat:$('#mat-ajax').val(),
+                            type:$('#type').val(),
+                            q:$("#q").val()
+                        }
+                        // "data":data
+                    },
+                    "columnDefs": [
+                        {
+                            "targets": 0,
+                            "data": null,
+                            "defaultContent": '<input class="checkbox" type="checkbox"/>'
+                        }
+                    ],
+                    "language": {
+                        "url": "js/datatable/chinese.json"
+                    },
+                    dom: "tip",
+                    pageLength: "50"
 
-				//  deferRender:  true,
-				"processing": true,
-				"serverSide": true,
-				"stateSave": true,
-				"stateDuration": -1,
-				//scrollY:"350px",
-				//scrollCollapse: true,
-				"ajax": {
-					"type": 'POST',
-					"url": $clientURL + "s/mrp/noMatDetailReportList",
-					"dataType": "json",
-					headers: {
-						'JMS-TOKEN': jmstoken
-					},
-				},
-				"columnDefs": [],
-				"language": {
-					"url": "js/datatable/chinese.json"
-				},
-
-				dom: "tip",
-				pageLength: "50"
-
-			});
+                });
+            }
+            loadTable()
 
 			var historyOptions = {
 				groupId: 'stk'
@@ -170,6 +183,10 @@
 					$("#body").html(data);
 				});
 			});
+            $("#search").on('click',function(){
+                table.destroy()
+                loadTable()
+            })
 		});
 	</script>
 
@@ -178,7 +195,7 @@
 <body>
 	<div class="body-head-title">
 		<span class="h-title" id="sourcingPrice"><b>采购价格</b></span>
-		<span class="h-title" id="purchaseDict">采购字典</span>
+		<!--<span class="h-title" id="purchaseDict">采购字典</span>-->
 		<span class="h-title-selected">缺料报告</span>
 		<span class="h-title" id="tempsrc">临时采购单</span>
 	</div>
@@ -190,8 +207,8 @@
 				<select id="mat-ajax">
 					<option value="">选择原料/成品</option>
 				</select>
-				<input type="text" name="" placeholder="工单/计划单" value="">
-				<select class="form-inline" name="type">
+				<input type="text" name="" placeholder="工单/计划单" id="q" value="">
+				<select class="form-inline" id="type" name="type">
 					<option value="">选择类别</option>
 					<option value="1">生产原料数</option>
 					<option value="2">库存</option>
@@ -202,8 +219,8 @@
 					<option value="7">采购申请</option>
 				</select>
 				<button id="search" class="button-sytle1">查询</button>
-				<button id="refresh" class="button-sytle1">刷新</button>
-				<button id="export" class="button-sytle1">导出</button>
+				<!--<button id="refresh" class="button-sytle1">刷新</button>-->
+				<!--<button id="export" class="button-sytle1">导出</button>-->
 			</div>
 		</div>
 		<!--检索结束-->

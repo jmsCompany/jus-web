@@ -23,41 +23,34 @@
       <file leaf-file-name="jmsclient.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/jms/jmsclient.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="492">
-              <caret line="1023" column="18" lean-forward="true" selection-start-line="1023" selection-start-column="18" selection-end-line="1023" selection-end-column="18" />
+            <state relative-caret-position="345">
+              <caret line="1023" column="28" lean-forward="false" selection-start-line="1023" selection-start-column="28" selection-end-line="1023" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mrp2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/mrp2.html">
+      <file leaf-file-name="tempSourcing.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/tempSourcing.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="310" column="35" lean-forward="false" selection-start-line="310" selection-start-column="35" selection-end-line="310" selection-end-column="35" />
+            <state relative-caret-position="206">
+              <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
               <folding>
-                <element signature="n#script#0;n#!!top" expanded="false" />
+                <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+                <element signature="n#div#2;n#body#0;n#html#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mrp.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/mrp.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="50" column="16" lean-forward="false" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="67" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="noMatReport.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="noMatReport.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/noMatReport.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="193" column="29" lean-forward="true" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
+            <state relative-caret-position="186">
+              <caret line="144" column="0" lean-forward="false" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
               <folding>
+                <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#0;n#label#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#select#0;n#label#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -68,6 +61,7 @@
                 <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#1;n#div#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#div#2;n#body#0;n#html#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -77,35 +71,35 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>data</find>
-      <find>select2</find>
-      <find>mat-ajax-create</find>
-      <find>selectInit</find>
-      <find>tbody</find>
-      <find>编辑</find>
-      <find>button-edit</find>
-      <find>请选择</find>
-      <find>-edit</find>
-      <find>b</find>
-      <find>materialId</find>
-      <find>保存</find>
-      <find>onsole.log(rowData[row</find>
-      <find>destroy</find>
+      <find>level</find>
+      <find>查询</find>
+      <find>mat-ajax</find>
+      <find>datetimepicker1</find>
+      <find>export</find>
+      <find>$('#mat-ajax').val()</find>
+      <find>ajax</find>
+      <find>search</find>
+      <find>exportMatReportList</find>
+      <find>c</find>
+      <find>cau</find>
+      <find>ca</find>
+      <find>cai'gou</find>
+      <find>cai'gou'zi</find>
+      <find>cai'gou'zi'd</find>
+      <find>cai'gou'zi'dian</find>
+      <find>采购字典</find>
+      <find>materials</find>
+      <find>checkbox</find>
       <find>#save</find>
-      <find>del</find>
-      <find>alert</find>
-      <find>input</find>
-      <find>noMatReport</find>
-      <find>stateDuration</find>
-      <find>radi</find>
-      <find>radio</find>
-      <find>='radio</find>
-      <find>=radio</find>
-      <find>=&quot;radio</find>
-      <find>create</find>
-      <find>datatab</find>
-      <find>DataTable</find>
+      <find>sureMatReportList</find>
       <find>loadTable</find>
+      <find>table.row</find>
+      <find>historyOptions</find>
+      <find>jmstoken</find>
+      <find>material</find>
+      <find>table.row($(this).parents('tr')).data()</find>
+      <find>table</find>
+      <find>formatRepo</find>
       <find>save</find>
     </findStrings>
     <dirStrings>
@@ -126,7 +120,6 @@
         <option value="$PROJECT_DIR$/views/materialList-create-body.html" />
         <option value="$PROJECT_DIR$/views/comprice-import.html" />
         <option value="$PROJECT_DIR$/views/sys-code.html" />
-        <option value="$PROJECT_DIR$/views/noMatReport-detail.html" />
         <option value="$PROJECT_DIR$/js/RefreshManager.js" />
         <option value="$PROJECT_DIR$/layout/menu.html" />
         <option value="$PROJECT_DIR$/views/s-wo-mtf.html" />
@@ -152,9 +145,11 @@
         <option value="$PROJECT_DIR$/views/incomeList-checked-body.html" />
         <option value="$PROJECT_DIR$/views/po-order.html" />
         <option value="$PROJECT_DIR$/views/mrp2.html" />
-        <option value="$PROJECT_DIR$/js/jms/jmsclient.js" />
         <option value="$PROJECT_DIR$/views/mrp.html" />
+        <option value="$PROJECT_DIR$/views/noMatReport-detail.html" />
+        <option value="$PROJECT_DIR$/js/jms/jmsclient.js" />
         <option value="$PROJECT_DIR$/views/noMatReport.html" />
+        <option value="$PROJECT_DIR$/views/tempSourcing.html" />
       </list>
     </option>
   </component>
@@ -256,7 +251,7 @@
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="noMatReport&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/noMatReport.html&#10;po&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po-order.html&#10;po-&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po-order.html&#10;po.html&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po.html&#10;po.ht&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po.html&#10;po-order&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po-order.html&#10;mrp&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/mrp.html&#10;incomeList-checked-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/incomeList-checked-body.html&#10;doList-create-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/doList-create-body.html&#10;incomeList-create-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/incomeList-create-body.html&#10;applyDo&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract-applyDo.html&#10;applySo&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract-applySo.html&#10;applyPo&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract-applyPo.html&#10;subcontract&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract.html&#10;subcontract.html&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract.html&#10;so.html&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/so.html&#10;incomeList&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/incomeList.html&#10;mtfList&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/mtfList.html&#10;mtfList-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/mtfList-body.html&#10;datetimejs&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/js/bootstrap/bootstrap-datetime.js&#10;datetimepicker&#9;null&#9;null&#10;p-workorder&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/p-workorder.html&#10;s-wo-mtf&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/s-wo-mtf.html" />
+    <property name="SearchEverywhereHistoryKey" value="noMatReport&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/noMatReport.html&#10;tempSourcing&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/tempSourcing.html&#10;noMatReport-detail&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/noMatReport-detail.html&#10;po&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po-order.html&#10;po-&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po-order.html&#10;po.html&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po.html&#10;po.ht&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po.html&#10;po-order&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/po-order.html&#10;mrp&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/mrp.html&#10;incomeList-checked-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/incomeList-checked-body.html&#10;doList-create-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/doList-create-body.html&#10;incomeList-create-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/incomeList-create-body.html&#10;applyDo&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract-applyDo.html&#10;applySo&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract-applySo.html&#10;applyPo&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract-applyPo.html&#10;subcontract&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract.html&#10;subcontract.html&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/subcontract.html&#10;so.html&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/so.html&#10;incomeList&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/incomeList.html&#10;mtfList&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/mtfList.html&#10;mtfList-body&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/mtfList-body.html&#10;datetimejs&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/js/bootstrap/bootstrap-datetime.js&#10;datetimepicker&#9;null&#9;null&#10;p-workorder&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/p-workorder.html&#10;s-wo-mtf&#9;FILE&#9;file:///Users/yh-ued/Desktop/jus-web/views/s-wo-mtf.html" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
   </component>
   <component name="RecentsManager">
@@ -370,12 +365,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1497049999985</updated>
-      <workItem from="1500685479060" duration="25163000" />
+      <workItem from="1500685479060" duration="29554000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25163000" />
+    <option name="totallyTimeSpent" value="29554000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -410,7 +405,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22274326" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17638889" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27916667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13486843" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24939467" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -440,19 +435,18 @@
           <url>file://$PROJECT_DIR$/views/incomeList-create-body.html</url>
           <line>687</line>
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/views/noMatReport.html</url>
+          <line>39</line>
+          <properties />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/layout/top_right.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="12" column="31" lean-forward="false" selection-start-line="12" selection-start-column="31" selection-end-line="12" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/layout/top.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -548,14 +542,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="48" column="18" lean-forward="false" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/noMatReport-detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5184">
-          <caret line="216" column="27" lean-forward="false" selection-start-line="216" selection-start-column="27" selection-end-line="216" selection-end-column="27" />
           <folding />
         </state>
       </provider>
@@ -844,19 +830,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/views/noMatReport-detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="94">
+          <caret line="64" column="19" lean-forward="true" selection-start-line="64" selection-start-column="19" selection-end-line="64" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/jms/jmsclient.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="1023" column="18" lean-forward="true" selection-start-line="1023" selection-start-column="18" selection-end-line="1023" selection-end-column="18" />
+        <state relative-caret-position="345">
+          <caret line="1023" column="28" lean-forward="false" selection-start-line="1023" selection-start-column="28" selection-end-line="1023" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/noMatReport.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="193" column="29" lean-forward="true" selection-start-line="193" selection-start-column="29" selection-end-line="193" selection-end-column="29" />
+        <state relative-caret-position="186">
+          <caret line="144" column="0" lean-forward="false" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
           <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
             <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#label#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#select#0;n#label#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -867,6 +862,19 @@
             <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#1;n#div#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/tempSourcing.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
+          <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
