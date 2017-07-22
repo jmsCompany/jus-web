@@ -219,6 +219,7 @@
 </script>
 <script type="text/javascript">
 	//    var jmstoken = store.get('JMS-TOKEN');
+    var autoPo = store.get('userProfile').autoPo;
 	//弹窗
 	function showObj(objid) {
 		$(objid).show();
@@ -252,6 +253,13 @@
 				var params = this.params = RouterManager.getParams();
 				var action = params['action'];
 				var idPo = params.orderId;
+
+                if(autoPo=='1'){
+                    $("#codePo").attr('disabled',true);
+                    $("#codePo").attr('placeholder','自动编码');
+                }else {
+                    $("#codePo").removeAttr('disabled');
+                }
 				if (idPo) {
 					this.loadDetail(idPo, function() {
 						self.dealAction(action);

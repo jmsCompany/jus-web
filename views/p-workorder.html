@@ -10,6 +10,11 @@
 
 		}
 
+        $(function () {
+            $('#st').datetimepicker({format:"YYYY-MM-DD"});
+            $('#ft').datetimepicker({format:"YYYY-MM-DD"});
+        });
+
 		function hideObj(objid) {
 			$(objid).hide();
 		}
@@ -55,16 +60,13 @@
 				if (q) {
 					data.q = q;
 				}
-
-				if (this.table) {
-					this.table.destroy();
-				}
 				this.table = $('#tableWorkorder').DataTable({
 
 					"processing": true,
 					"serverSide": true,
 					"stateSave": true,
 					"stateDuration": -1,
+                    "bStateSave":false,
 					"ajax": {
 						"type": 'POST',
 						"url": $clientURL + "p/getWoList",
@@ -108,6 +110,8 @@
 						// showObj('#tcbox-pcpplist');
 						$.woInfo(data[6], jmstoken, function(data) {
 							$('#woForm').populate(data, true);
+                            $('#st').val($.dateFormat.date(new Date(data.st), 'yyyy-MM-dd'));
+                            $('#ft').val($.dateFormat.date(new Date(data.ft), 'yyyy-MM-dd'));
 						});
 						$('#woNo').prop('readonly', true);
 						$('#soId').prop('disabled', true);
@@ -305,8 +309,6 @@
 					var wo = JSON.stringify($('#woForm').serializeJSON());
 					var form = JSON.parse(JSON.stringify(wo));
 					form.soId = $('#soId').val();
-					console.log($('#soId').val());
-
 					$.saveWo(form, jmstoken, function(data) {
 						$.get("views/p-workorder.html", function(data) {
 							$("#body").html(data);
@@ -422,6 +424,16 @@
 					<div class="form-group">
 						<label>原工单</label>
 						<input type="text" class="form-control" name="orgWo" id="orgWo" />
+					</div>
+				</div>
+				<div class="col-xs-12 mar-top-20px">
+					<div class="form-group">
+						<label>开始时间</label>
+						<input type="text" id='st' name="st">
+					</div>
+					<div class="form-group">
+						<label>结束时间</label>
+						<input type="text" id='ft' name="ft">
 					</div>
 				</div>
 				<!--<div class="col-xs-12 mar-top-20px">

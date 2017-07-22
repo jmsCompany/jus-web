@@ -142,6 +142,7 @@
     </dl>
 </script>
 <script type="text/javascript">
+    var autoPo = store.get('userProfile').autoPo;
     var historyOptions={
         groupId:'doList'
     };
@@ -162,7 +163,12 @@
             var self = this;
             this.incomeListItemTmpl = _.template($('#incomeListItemTmpl').html());
 //            $('#body').html($('#incomeListEntryTmpl').html());
-
+            if(autoPo=='1'){
+                $("#mtNo").attr('disabled',true);
+                $("#mtNo").attr('placeholder','自动编码');
+            }else {
+                $("#mtNo").removeAttr('disabled');
+            }
             var params = this.params = RouterManager.getParams();
             var doListId = params['incomeId'];
             var groupId = params['groupId'];

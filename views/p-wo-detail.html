@@ -96,6 +96,7 @@
             $('#tableWoBom').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "bStateSave":false,
                 "ajax": {
                     "type": 'POST',
                     "url": $clientURL + "p/getBomByWoId",
@@ -114,6 +115,7 @@
             $('#tableWoRoutine').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "bStateSave":false,
                 "ajax": {
                     "type": 'POST',
                     "url": $clientURL + "p/getRoutineDByWoId",

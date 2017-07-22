@@ -163,6 +163,7 @@ debugger;
               this.table = $('#tableMtf').DataTable({
                   "processing": true,
                   "serverSide": true,
+                  "bStateSave":false,
                   "ajax": {
                       "type": 'POST',
                       "url": $clientURL + "s/getSmtfMaterialList",
