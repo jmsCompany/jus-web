@@ -86,6 +86,7 @@
 			};
 			var table = {}
 			function loadTable(){
+				//alert("load");
 				table = $('#materials').DataTable({
 					//  deferRender:  true,
 					"processing": true,
@@ -150,7 +151,7 @@
                     }
                 })
                 obj.ids = data;
-                obj.type = parseInt(1);
+                obj.type = parseInt(2);
                 obj.poType = $('input:radio:checked').val();
 
 				$.saveMatReportList(JSON.stringify(obj),jmstoken,function(data){
@@ -167,8 +168,8 @@
             $("#refresh").on('click',function(){
                 var obj = {};
                 obj.time = $("#supplier").val();
-                obj.timeType = $("#time").val()
-                obj.level = $("#level").val()
+                obj.timeType = $("#time").val();
+                obj.level = $("#level").val();
                 $.refreshMatReportList(obj,jmstoken,function(data){
                     if(data.valid){
                         alert('刷新成功')
@@ -189,7 +190,7 @@
                     }
                 })
                 obj.ids = data;
-                obj.type = parseInt(2);
+                obj.type = parseInt(1);
                 obj.poType = $('input:radio:checked').val();
                 $.saveMatReportList(JSON.stringify(obj),jmstoken,function(data){
                     if(data.valid){
@@ -285,9 +286,9 @@
 					分期物料级别：
 					<select class="select" name="level" id="level">
 						<option value="">全部</option>
-						<option value="1">A</option>
-						<option value="2">B</option>
-						<option value="3">C</option>
+						<option value="A">A</option>
+						<option value="B">B</option>
+						<option value="C">C</option>
 					</select>
 				</label>
 

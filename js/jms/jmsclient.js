@@ -4,7 +4,7 @@
    //  $clientURL = "http://192.168.1.101:9998/jms/"
 
 
-     //$clientURL = "http://118.178.94.7:9998/jms/"
+    // $clientURL = "http://118.178.94.7:9998/jms/"
 	//$.fn.dataTable.ext.errMode = 'throw';
 
     // $clientURL = "http://118.178.94.7:9998/jms/"
@@ -1026,7 +1026,7 @@
 		$.JMSClient('s/mrp/handleNoMatReportSum ',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
 	};
     $.refreshMatReportList  = function(data,jmstoken,callback){
-        $.JMSClient('s/mrp/refreshMatReportList',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
+        $.JMSClient('s/mrp/refreshMatReportList',{'type':'GET',headers:{'JMS-TOKEN':jmstoken},data:data},callback);
     };
     $.sureMatReportList  = function(data,jmstoken,callback){
         $.JMSClient('s/mrp/generatePo',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:data},callback);

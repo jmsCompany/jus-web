@@ -48,8 +48,8 @@
 					delay: 200,
 					data: function(params) {
 						var paramsObj = {
-							q: params.term,
-							types: [2]
+							q: params.term
+							//,types: [2]
 						};
 						var params = $.param(paramsObj, true);
 						return params;
@@ -78,7 +78,7 @@
                     //  deferRender:  true,
                     "processing": true,
                     "serverSide": true,
-                    "stateSave": true,
+                    "stateSave": false,
                     "stateDuration": -1,
                     //scrollY:"350px",
                     //scrollCollapse: true,
@@ -96,13 +96,13 @@
                         }
                         // "data":data
                     },
-                    "columnDefs": [
-                        {
-                            "targets": 0,
-                            "data": null,
-                            "defaultContent": '<input class="checkbox" type="checkbox"/>'
-                        }
-                    ],
+//                    "columnDefs": [
+//                        {
+//                            "targets": 0,
+//                            "data": null,
+//                            "defaultContent": '<input class="checkbox" type="checkbox"/>'
+//                        }
+//                    ],
                     "language": {
                         "url": "js/datatable/chinese.json"
                     },
@@ -237,8 +237,7 @@
 				<th>工单完成日期</th>
 				<th>缺料数量</th>
 				<th>状态</th>
-				<th>采购单号</th>
-				<th>工单号码</th>
+				<th>采购单号/工单号码</th>
 				<th>工单数</th>
 				<th>OPEN WO</th>
 				<th>成品/半成品</th>

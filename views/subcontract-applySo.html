@@ -500,6 +500,7 @@
 				var $form = $(e.target),
 					validator = $form.data('bootstrapValidator');
 				var so = JSON.stringify($('#soForm').serializeJSON());
+				debugger;
 				$.saveSo(so, jmstoken, function(data) {
 					history.go(-1)
 					//					$.get("views/so.html",function(data){
