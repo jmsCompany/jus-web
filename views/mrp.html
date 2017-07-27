@@ -211,8 +211,8 @@
 						delay: 200,
 						data: function(params) {
 							var paramsObj = {
-								q: params.term,
-								types: [2]
+								q: params.term
+							//	,types: [2]
 							};
 							var params = $.param(paramsObj, true);
 							return params;
