@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no">
+		-->
+		<title>表格</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-customize.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/pages.css">
+		<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+
+		<script language="javascript" src="js/jquery.jqprint-0.3.js"></script>
+		<script language="javascript">
+
+function aa(){
+    $.print("#ddd")
+
+}
+</script>
+
+	</head>
+	<body style="text-align: center">
+		<!-------------------------------------- 头部开始 -------------------------------------->
+		<header>
+			<div class="container">
+				
+			</div>
+		</header>
+		<!-------------------------------------- 头部结束 -------------------------------------->
+		<!-------------------------------------- 内容开始 -------------------------------------->
+		<main id="ddd">
+
+			<div class="container">
+				<div class="ht10"></div>
+				<div class="ui-tablehead">
+					<table>
+						<tr>
+							<td colspan="2"><img id="url" alt="" class="logo">
+								<h3 id="companyName"></h3>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h3><span style="font-size: 28px;">出货单</span></h3>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="ht10"></div>
+				<div class="ui-tablemain">
+					<table>
+						<tr style="border-bottom-width: 2px;">
+							<td colspan="1" style="border-right: none;">
+								客户：
+							</td>
+							<td colspan="2" style="border-right: none;">
+								<font id="customerName" style="width: 100%;display: inline-block">
+
+								</font>
+							</td>
+							<td colspan="1" style="border-right: none;" align="right">
+								出货编号：
+							</td>
+							<td colspan="2" style="border-right: none;">
+								<font id="doCode" style="border-bottom: 1px solid #000; width: 100%;display: inline-block">
+
+								</font>
+							</td>
+							<td colspan="1" style="border-right: none;" align="right">
+								出货日期：
+							</td>
+							<td colspan="2" style="border-right: none;">
+
+								<font id="doDate" style="border-bottom: 1px solid #000; width: 100%;display: inline-block">
+
+								</font>
+							</td>
+						</tr>
+						<tr id="dolist">
+							<td>成品料号</td>
+							<td>品名规格</td>
+							<td>订单号</td>
+							<td>订单量</td>
+							<td>单位</td>
+							<td>出货数量</td>
+							<td>累计出货</td>
+							<td>工单号码</td>
+							<td>备注</td>
+						</tr>
+
+						<tr>
+							<td colspan="3" align="center">车牌号码</td>
+							<td colspan="3" align="center">司机</td>
+							<td colspan="3" align="center">实际出货时间</td>
+						</tr>
+						<tr>
+							<td colspan="3" align="center"><input type="text" id="carcode"></td>
+							<td colspan="3" align="center"><input type="text"></td>
+							<td colspan="3" align="center"><input type="text">时<input type="text">分	</td>
+						</tr>
+						<tr>
+							<td>核准</td>
+							<td colspan="2">审核	</td>
+							<td colspan="2">生管	</td>
+							<td>品管</td>
+							<td colspan="2">经办人</td>
+							<td>保安</td>
+						</tr>
+						<tr>
+							<td><input type="text"></td>
+							<td colspan="2"><input type="text"></td>
+							<td colspan="2"><input type="text"></td>
+							<td><input type="text"></td>
+							<td colspan="2"><input type="text"></td>
+							<td><input type="text"></td>
+						</tr>
+						<tr style="border-bottom-width: 0;">
+							<td style="border-right-width: 0;">Remarks：</td>
+							<td style="border-right-width: 0;" colspan="5"></td>
+							<td style="border-right-width: 0;">客户签章：</td>
+							<td colspan="2"></td>
+						</tr>
+						<tr>
+							<td colspan="9" align="center">
+								<p style="font-size: 18px;">
+									以上数量&nbsp;&nbsp;敬请查核<br>
+									确认无误&nbsp;&nbsp;签名作实
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="ui-tablehead">
+					<table>
+						<tr>
+							<td>
+								<p>
+									<span class="pull-right">保存期限：3年</span>
+									<span class="pull-left" id="footerdoCode"></span>
+								</p>
+								<div class="clearfix"></div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p><span class="pull-left" id="address"></span></p>
+								<div class="clearfix"></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</main>
+		<input type="button" onclick="aa()" value="打印" style=""/>
+		<!-------------------------------------- 内容结束 -------------------------------------->
+		<!-------------------------------------- 尾部开始 -------------------------------------->
+		<footer>
+			<div class="container">
+				
+			</div>
+		</footer>
+		<!-------------------------------------- 尾部开始 -------------------------------------->
+	</body>
+</html>
+<script type="text/javascript" charset="UTF-8" src="../js/jms/jmsclient.js"></script>
+
+
+<script>
+
+    function getUrlQuery(name,url) {
+        if(!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return results[2].replace(/\+/g, " ")
+    }
+
+    var jmstoken= localStorage.getItem('JMS-TOKEN').split('"')[1];
+    console.log(jmstoken)
+    $.ajax({
+        type: "GET",
+        url: getUrlQuery('ip') + "s/printDoSmtf",
+        headers:{'JMS-TOKEN':jmstoken},
+        data: "smtfId="+getUrlQuery('id'),
+        beforeSend: function(request) {
+            request.setRequestHeader("JMS-TOKEN", jmstoken);
+        },
+        success: function(data){
+            var uri = getUrlQuery('ip') + 'getImage/' + data.url + '/';
+			$("#address").html('公司地址：'+ data.address ||'');
+            $("#companyName").html(data.companyName ||'');
+            $("#customerName").html(data.customerName ||'');
+            $("#doCode").html(data.doCode ||'');
+            $("#footerdoCode").html('表单编号：'+data.doCode ||'');
+            $("#doDate").html(data.doDate ||'');
+            $("#url").attr('src',uri)
+
+			data.items.forEach(function (data,index) {
+                var html = ''
+                html +='<tr>'
+                html +='<td>'+ data.pno ||'' +'</td>'
+                html +='<td>'+ data.name ||'' +'</td>'
+                html +='<td>'+ data.coOrderNo ||'' +'</td>'
+                html +='<td>'+ data.qty +'</td>'
+                html +='<td>'+ data.unit ||'' +'</td>'
+                html +='<td>'+ data.doQty ||'' +'</td>'
+                html +='<td>'+ data.doQtySum ||'' +'</td>'
+                html +='<td>'+ data.woNo ||'' +'</td>'
+                html +='<td>'+ data.remark ||'' +'</td>'
+                html +='</tr>'
+                $("#dolist").after(html)
+			})
+
+
+
+        }
+    });
+
+</script>

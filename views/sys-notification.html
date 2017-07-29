@@ -128,13 +128,20 @@
                     $("#body").html(data);
                 });
             });
-						$('#code').click(function(){
-							$.get("views/sys-code.html",function(data){
-								historyParams.viewId = 'sys-code';
-								RouterManager.setUrl(historyParams);
-								$("#body").html(data);
-							});
-						});
+            $('#code').click(function(){
+                $.get("views/sys-code.html",function(data){
+                    historyParams.viewId = 'sys-code';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
+            $('#companyinfo').click(function(){
+                $.get("views/v_company_info.html",function(data){
+                    historyParams.viewId = 'v_company_info';
+                    RouterManager.setUrl(historyParams);
+                    $("#body").html(data);
+                });
+            });
         } );
     </script>
 
@@ -149,7 +156,8 @@
     <span class="h-title" id="costCenter">成本中心</span>
     <span class="h-title" id="stopDes">停机描述</span>
     <span class="h-title" id="doSet">收、出货设置</span>
-		<span class="h-title" id="code">自动编码设置</span>
+    <span class="h-title" id="code">自动编码设置</span>
+    <span class="h-title" id="companyinfo">公司信息</span>
 </div>
 <div class="cont">
     <div class="r-header-body">

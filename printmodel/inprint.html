@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=no">
+		-->
+		<title>表格</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-customize.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/pages.css">
+		<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+
+		<script language="javascript" src="js/jquery.jqprint-0.3.js"></script>
+		<script language="javascript">
+
+function aa(){
+    $.print("#ddd")
+}
+</script>
+	</head>
+	<body style="text-align: center">
+		<!-------------------------------------- 头部开始 -------------------------------------->
+		<header>
+			<div class="container">
+				
+			</div>
+		</header>
+		<!-------------------------------------- 头部结束 -------------------------------------->
+		<!-------------------------------------- 内容开始 -------------------------------------->
+		<main id="ddd">
+			<div class="container">
+				<div class="ht10"></div>
+				<div class="ui-tablehead">
+					<table>
+						<tr>
+							<td colspan="2"><img id="url" alt="" class="logo">
+								<h3 id="companyName"></h3>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h3><span style="font-size: 28px;">入库验收单</span></h3>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="ht10"></div>
+				<div class="ui-tablemain">
+					<table>
+						<tr style="border-bottom-width: 0;">
+							<td style="border-right-width: 0;">供应商：</td>
+							<td colspan="2"><span type="text" id="customerName"></span></td>
+							<td rowspan="2" style="border-right-width: 0;" align="right">货品性质</td>
+							<td><input type="checkbox" name="" id="">自购</td>
+							<td align="right" style="border-right-width: 0;">入库编号:</td>
+							<td colspan="2"><span type="text" style="border-bottom: 1px solid #000; width: 100%;" id="doCode"></span></td>
+						</tr>
+						<tr>
+							<td style="border-right-width: 0;">订单号码：</td>
+							<td colspan="2"><span type="text" id="poCode"></span></td>
+							<td><input type="checkbox" name="" id="">客供</td>
+							<td align="right" style="border-right-width: 0;">入库日期:</td>
+							<td colspan="2"><span type="text" style="border-bottom: 1px solid #000; width: 100%;" id="doDate"></span></td>
+						</tr>
+						<tr>
+							<td colspan="8">
+								物料种类：
+								<input type="radio" name="" id=""> 原料
+								<span class="wh40"></span>
+								<input type="radio" name="" id=""> 辅料
+								<span class="wh40"></span>
+								<input type="radio" name="" id=""> 工具
+								<span class="wh40"></span>
+								<input type="radio" name="" id=""> 其它
+							</td>
+						</tr>
+						<tr id="dolist">
+							<td align="center">序号</td>
+							<td align="center">名称</td>
+							<td align="center">规格/型号</td>
+							<td align="center">数量</td>
+							<td align="center">单位</td>
+							<td align="center">库位</td>
+							<td align="center">判定结果</td>
+							<td align="center">备注</td>
+						</tr>
+
+						<tr>
+							<td style="border-right-width: 0;"></td>
+							<td style="border-right-width: 0;">审核：</td>
+							<td style="border-right-width: 0;"><input type="text"></td>
+							<td style="border-right-width: 0;">入库：</td>
+							<td style="border-right-width: 0;"><input type="text"></td>
+							<td style="border-right-width: 0;">IQC：</td>
+							<td style="border-right-width: 0;" colspan="2"><input type="text"></td>
+						</tr>
+					</table>
+				</div>
+				<div class="ui-tablehead">
+					<table>
+						<tr>
+							<td>
+								<p>
+									<span class="pull-right">保存期限：3年</span>
+									<span class="pull-left" id="footerdoCode">表单编号：OLQ-B-10 A/0</span>
+								</p>
+								<div class="clearfix"></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</main>
+
+		<!-------------------------------------- 内容结束 -------------------------------------->
+		<!-------------------------------------- 尾部开始 -------------------------------------->
+		<footer>
+			<div class="container">
+				
+			</div>
+		</footer>
+
+		<!-------------------------------------- 尾部开始 -------------------------------------->
+	</body>
+	<input type="button" onclick="aa()" value="打印"/>
+</html>
+<script>
+    function getUrlQuery(name,url) {
+        if(!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return results[2].replace(/\+/g, " ")
+    }
+
+    var jmstoken= localStorage.getItem('JMS-TOKEN').split('"')[1];
+    console.log(jmstoken)
+    $.ajax({
+        type: "GET",
+        url: getUrlQuery('ip') + "s/printIqcSmtf",
+        headers:{'JMS-TOKEN':jmstoken},
+        data: "smtfId="+getUrlQuery('id'),
+        beforeSend: function(request) {
+            request.setRequestHeader("JMS-TOKEN", jmstoken);
+        },
+        success: function(data){
+            var uri = getUrlQuery('ip') + 'getImage/' + data.url + '/';
+            $("#address").html('公司地址：'+ data.address ||'');
+            $("#companyName").html(data.companyName ||'');
+            $("#customerName").html(data.customerName);
+            $("#doCode").html(data.doCode ||'');
+            $("#footerdoCode").html('表单编号：'+data.poCode ||'');
+            $("#doDate").html(data.doDate ||'');
+            $("#poCode").html(data.poCode ||'');
+            $("#url").attr('src',uri)
+
+            data.items.forEach(function (data,index) {
+                var html = ''
+                html +='<tr>'
+                html +='<td>'+ data.c1 ||'' +'</td>'
+                html +='<td>'+ data.c2 ||'' +'</td>'
+                html +='<td>'+ data.c3 ||'' +'</td>'
+                html +='<td>'+ data.c4 +'</td>'
+                html +='<td>'+ data.c5 ||'' +'</td>'
+                html +='<td>'+ data.c6 ||'' +'</td>'
+                html +='<td>'+ data.c7 ||'' +'</td>'
+                html +='<td>'+ data.c8 ||'' +'</td>'
+                html +='</tr>'
+                $("#dolist").after(html)
+            })
+        }
+    });
+
+</script>

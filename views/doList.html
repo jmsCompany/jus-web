@@ -39,19 +39,14 @@ $(document).ready(function() {
      	if(clazz=='button-bin'){
 			clickOption.action='detail';
 			clickOption.viewId='doList-create-body';
-     			$.get("views/doList-create-body.html",function(data){
-						RouterManager.setUrl(clickOption);
-	                   $("#body").html(data);
-	            });
+            $.get("views/doList-create-body.html",function(data){
+                    RouterManager.setUrl(clickOption);
+                   $("#body").html(data);
+            });
 
      	}
      	else{
-     		$.get("views/print-do.html",function(data){
-				clickOption.action='print';
-				clickOption.viewId='print-do';
-				RouterManager.setUrl(clickOption);
-	        	$("#body").html(data);
-	      });
+            window.open("../printmodel/dolist.html?id="+rowData[9]+"&ip="+$clientURL);
      	}
     });
 	var historyOptions={

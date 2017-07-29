@@ -317,7 +317,15 @@
             }
             $('#coOrderNo').empty();
             $('#coOrderNo').append('<option value="">客户订单号</option>');
-            $('#coOrderNo').selectautofill2('s/findCoOrderNosByCompanyCoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coId':coId}});
+            $('#coOrderNo').selectautofill2('s/findCoOrderNosByCompanyCoId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coId':coId}},
+                function name(data) {
+                    if (data.length==0){
+                        $('.a').val('')
+                        $('.b').val('')
+                    }
+                }
+
+            );
         },
         loadSoList: function($cnt) {
             if(!$cnt) {

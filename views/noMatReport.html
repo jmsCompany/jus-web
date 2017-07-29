@@ -89,10 +89,12 @@
 				//alert("load");
 				table = $('#materials').DataTable({
 					//  deferRender:  true,
-					"processing": true,
-					"serverSide": true,
-					"stateSave": true,
-					"stateDuration": -1,
+                    "ordering": false,
+                    "bDestroy": true,
+                    "processing": true,
+                    "serverSide": true,
+                    "stateSave": true,
+                    "stateDuration": -1,
 					//scrollY:"350px",
 					//scrollCollapse: true,
 					"ajax": {
@@ -109,6 +111,20 @@
 						}
 						// "data":data
 					},
+                    initComplete: function(){
+
+                        $('#materials tr td:nth-child(9)').each(function(i,k){
+							console.log($(k).text())
+                            if($(k).text() == '未确认') {
+
+                                $(k).prev().html(
+                                    '<input value='+$(k).prev().html() +' type="number" id='+ $(k).prev().prev().prev().prev().prev().prev().prev().html() +'>'
+								)
+
+                            }
+
+                        });
+                    },
 					"columnDefs": [
 						{
 							"targets": 0,
@@ -143,6 +159,7 @@
 			$(".save").on('click',function(){
                 var obj = {};
                 var data = []
+                var aqtys = []
                 $('.checkbox').each(function(){
 
                     if($(this).is(':checked')){
@@ -150,7 +167,13 @@
                         data.push(parseInt(rowData[1]))
                     }
                 })
+
+                data.forEach(function(date){
+					var rowData = $('#'+date).val();
+                    aqtys.push(parseInt(rowData))
+                })
                 obj.ids = data;
+                obj.aqtys =aqtys
                 obj.type = parseInt(2);
                 obj.poType = $('input:radio:checked').val();
 
@@ -183,13 +206,17 @@
             $(".del").on('click',function(){
                 var obj = {};
                 var data = []
+                var aqtys = []
                 $('.checkbox').each(function(){
                     if($(this).is(':checked')){
                         var rowData = table.row($(this).parents('tr')).data()
+                        aqtys.push(parseInt(rowData[7]))
                         data.push(parseInt(rowData[1]))
                     }
                 })
+
                 obj.ids = data;
+                obj.aqtys = aqtys
                 obj.type = parseInt(1);
                 obj.poType = $('input:radio:checked').val();
                 $.saveMatReportList(JSON.stringify(obj),jmstoken,function(data){
@@ -198,20 +225,23 @@
                         table.destroy()
                         loadTable()
                     }else {
-                        alert(data.msg)
+                        alert(data.message)
                     }
                 })
             })
 			$(".create").on('click',function(){
 			    var obj = {};
 				var data = []
+                var aqtys = []
 				$('.checkbox').each(function(){
 				    if($(this).is(':checked')){
 						var rowData = table.row($(this).parents('tr')).data()
+                        aqtys.push(parseInt(rowData[7]))
 						data.push(parseInt(rowData[1]))
                     }
 				})
                 obj.ids = data;
+                obj.aqtys = aqtys;
                 obj.type = parseInt(3);
                 obj.poType = $('input:radio:checked').val();
 				$.saveMatReportList(JSON.stringify(obj),jmstoken,function(data){
@@ -333,7 +363,7 @@
 	<div class="btns">
 		<button type="button" class="btn btn-primary check-btn save" name="button">保存确认</button>
 		<button type="button" class="btn btn-primary check-btn del" name="button">删除确认</button>
-		<input type="radio" name="receive" id='Rset1' class="radio-w" value="0" checked/><label for="stateO	n">按主供应商(默认)</label>
+		<input type="radio" name="receive" id='Rset1' class="radio-w" value="0" checked/><label for="stateOn">按主供应商(默认)</label>
 		<input type="radio" name="receive" id='Rset2' class="radio-w" value="1" /><label for="stateOn">百分比</label>
 		<button type="button" class="btn btn-primary check-btn create" name="button" >生成临时PO</button>
 	</div>

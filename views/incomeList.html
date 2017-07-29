@@ -81,6 +81,7 @@ var app={
         $('#body').html($('#incomeListBody').html());
         this.bindEvents();
         this.autoFill();
+
     },
     autoFill:function(){
         $('#datetimepicker1').datetimepicker({format:"YYYY-MM-DD"});
@@ -159,11 +160,12 @@ var app={
             this.table.destroy();
         }
         this.table=$('#income').DataTable( {
+            "ordering": false,
+            "bDestroy": true,
             "processing": true,
             "serverSide": true,
             "stateSave": true,
             "stateDuration": -1,
-            "bStateSave":false,
             "ajax": {
                 "type": 'POST',
                 "url": $clientURL+"s/smtfMaterialList",
@@ -174,20 +176,43 @@ var app={
                 "complete": jmsGlobalUnBlock,
                 "error": jmsGlobalUnBlock
             },
-            "columnDefs": [ {
+            "columnDefs": [  {
+                "targets": -2,
+                "visible": false
+            },{
                 "targets": -1,
                 "data": null,
-                "defaultContent": '<button class=button-bin>检验</button>' +
+                "defaultContent":
+				'<button class=button-print>打印</button>'+
+				'<button class=button-bin>检验</button>' +
                 '<button class=button-edit>详情</button>' +
                 '<button class=button-finish>状态</button>'
             } ],
             "language": {
                 "url": "js/datatable/chinese.json"
             },
+            initComplete: function(){
 
+                $('#income tr td:nth-child(9)').each(function(i,k){
+
+                    if($(k).text() == '未检') {
+
+                        console.log($(k).next().html())
+                        $(k).next().html(
+                            '<button class=button-sytle1 style="background-color:#ccc">打印</button>'+
+							'<button class=button-bin>检验</button>' +
+							'<button class=button-edit>详情</button>' +
+							'<button class=button-finish>状态</button>'
+						)
+                    }
+
+                });
+            },
             dom: "tip",
             pageLength:"50"
         } );
+
+
         $('#income tbody').on( 'click', 'button', function () {
             var rowData = self.table.row( $(this).parents('tr') ).data();
             var clazz =$(this).attr('class');
@@ -206,6 +231,11 @@ var app={
                         $("#body").html(data);
                     });
                 },
+                'button-print':function(){
+                    window.open("../printmodel/inprint.html?id="+rowData[10]+"&ip="+$clientURL);
+                },
+                'button-show':function(){
+                },
                 'button-edit':function(){
                     historyOptions.action='detail';
                     $.get("views/incomeList-create-body.html",function(data){
@@ -214,6 +244,9 @@ var app={
                         );
                         $("#body").html(data);
                     });
+                },
+                "button-sytle1":function () {
+					return false
                 },
                 'button-finish':function(){
                     var top = $('#body').scrollTop();

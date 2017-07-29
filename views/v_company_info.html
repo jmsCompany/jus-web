@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>成本中心</title>
+    <style>
+        #doSetForm input+label {
+            padding: 6px 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="body-head-title">
+    <span class="h-title" id="position">职位</span>
+    <span class="h-title" id="dep">部门</span>
+    <span class="h-title" id="emp">员工</span>
+    <span class="h-title" id="role">角色</span>
+    <span class="h-title" id="notification">消息中心</span>
+    <span class="h-title" id="costCenter">成本中心</span>
+    <span class="h-title" id="stopDes">停机描述</span>
+    <span class="h-title" id="doSet">收、出货设置</span>
+    <span class="h-title" id="code">自动编码设置</span>
+    <span class="h-title" id="companyinfo">公司信息</span>
+</div>
+<div class="cont">
+    <form id="doSetForm" method="post" action="index.html" class="form-inline">
+
+        <label class="input-w-200">公司名称：</label>
+        <input type="text" readonly  id="companyName">
+        <br>
+
+        <label class="input-w-200">公司地址：</label>
+        <input type="text" id="address">
+        <br>
+
+        <label class="input-w-200">公司电话：</label>
+        <input type="text" id="telephone">
+        <br>
+
+        <label class="input-w-200">公司传真：</label>
+        <input type="text" id="fax">
+        <br>
+
+        <label class="input-w-200">公司邮箱：</label>
+        <input type="text" id="email">
+        <br>
+
+        <label class="input-w-200">公司logo：</label>
+            <div class="a-upload bg-img dropzone"  id="material-list-uploader"></div>
+        <br>
+
+
+        <div class="clearfix"></div>
+        <div class="foot-btn-box">
+            <div class="form-group">
+                <button type="button" id="save" class="btn btn-primary ">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 弹窗 start -->
+
+<!-- 弹窗 over -->
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var jmstoken = store.get('JMS-TOKEN');
+        var idCompany = ''
+        var fileName = ''
+        $.companyInfo( jmstoken, function(data) {
+            console.log(data)
+            idCompany = data.idCompany;
+            $('#address').val(data.address);
+            $('#companyName').val(data.companyName);
+            $('#telephone').val(data.telephone);
+            $('#fax').val(data.fax);
+            $('#email').val(data.email);
+            if(data.url) {
+                var uri = $clientURL + 'getImage/' + data['url'] + '/';
+                $('div#material-list-uploader').append('<div class="preview-node"><img height="120px" width="120px" src="' + uri + '"/></div>');
+                setTimeout(function(){
+                    $('.preview-node').click(function(){
+                        $('div#material-list-uploader').click();
+                    });
+                },0)
+            }
+        });
+        $('#save').on('click',function(e){
+            var numSet = {
+                url:fileName,
+                idCompany:idCompany,
+                companyName:$('#companyName').val(),
+                telephone:$("#telephone").val(),
+                fax:$("#fax").val(),
+                email:$("#email").val(),
+                address:$("#address").val(),
+            }
+            $.updataCompanyList(JSON.stringify(numSet), jmstoken, function(data) {
+                if(data){
+                    alert('更新成功')
+                }else{
+                    alert('更新失败')
+                }
+            });
+        })
+        var historyParams = {
+            groupId: 'system'
+        }
+        $('#position').click(function() {
+            $.get("views/sys-position.html", function(data) {
+                historyParams.viewId = 'sys-position';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#emp').click(function() {
+            $.get("views/sys-employee.html", function(data) {
+                historyParams.viewId = 'sys-employee';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#role').click(function() {
+            $.get("views/sys-role.html", function(data) {
+                historyParams.viewId = 'sys-role';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#notification').click(function() {
+            $.get("views/sys-notification.html", function(data) {
+                historyParams.viewId = 'sys-notification';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#dep').click(function() {
+            $.get("views/sys-dept.html", function(data) {
+                historyParams.viewId = 'sys-dept';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#stopDes').click(function() {
+            $.get("views/sys-stopDes.html", function(data) {
+                historyParams.viewId = 'sys-stopDes';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#costCenter').click(function() {
+            $.get("views/sys-costCenter.html", function(data) {
+                historyParams.viewId = 'sys-costCenter';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#doSet').click(function() {
+            $.get("views/sys-doSet.html", function(data) {
+                historyParams.viewId = 'sys-doSet';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#code').click(function() {
+            $.get("views/sys-code.html", function(data) {
+                historyParams.viewId = 'sys-code';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+        $('#companyinfo').click(function(){
+            $.get("views/v_company_info.html",function(data){
+                historyParams.viewId = 'v_company_info';
+                RouterManager.setUrl(historyParams);
+                $("#body").html(data);
+            });
+        });
+
+
+        //仅对编辑和新建存在动作
+        (function(){
+            var uploadUrl = 's/uploadMaterialImage';
+            Dropzone.autoDiscover = false;
+            Dropzone.options.materialListUploader = {
+                paramName: "fileName", // The name that will be used to transfer the file
+                maxFilesize: 10, // MB
+                acceptedFiles: ".jpg,.gif,.png",
+                dictDefaultMessage:'点击或将文件拖拽至此处上传',
+                headers: {'JMS-TOKEN':jmstoken},
+                init: function() {
+                    //发送请求时，挂载数据
+                    var self =this;
+                    this.on("sending", function(file, xhr, formData) {
+                        formData.append("materialId",0);
+                        // formData.append("materialId",idMaterial?idMaterial:0);
+                    });
+                    this.on("addedfile", function(file) {
+                        //限制只能有一张图片
+                        if (self.files[1]!=null){
+                            this.removeFile(this.files[0]);
+                        };
+                        //移除预览
+                        $('.preview-node') && $('.preview-node').remove();
+                        file.previewElement.addEventListener("click", function() {
+                            if(window.confirm('是否重新上传?')){
+                                self.removeFile(file);
+                                $('div#material-list-uploader').click();
+                            }
+                            else{
+
+                            }
+                        });
+                    });
+                },
+                success:function(file,res){
+                    /*图片上传后端错误处理@TODO hxg*/
+                    var uri = $clientURL+'getFile/'+res['fileName']+'/orgFileName/';
+                    //替换图片
+                    $('div#material-list-uploader').find('[data-dz-thumbnail]').attr('src',uri).css({
+                        width:'inherit',
+                        height:'inherit'
+                    });
+                    fileName = res['fileName']
+                    if (file.previewElement) {
+                        return file.previewElement.classList.add("dz-success");
+                    }
+
+                },
+                error:function(file){
+                    var  _ref;
+                    if (file.previewElement) {
+                        file.previewElement.classList.add("dz-error");
+                        _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                        _ref[0].innerHTML='上传失败，请重新上传';
+                    }
+                }
+            };
+            new Dropzone("div#material-list-uploader",{
+                url:$clientURL+uploadUrl
+            });
+        }());
+        // 弹窗拖拽
+        //	$(function () {
+        //		$('#draggable1').draggabilly();
+        //	});
+    });
+    //function focus_last(obj){
+    //
+    //	var text = obj.createTextRange();
+    //
+    //	text.collapse(false);text.select();
+    //
+    //}
+</script>
+</body>
+
+
+
+</html>
