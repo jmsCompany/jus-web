@@ -51,8 +51,8 @@
 					delay: 200,
 					data: function(params) {
 						var paramsObj = {
-							q: params.term,
-							types: [2]
+							q: params.term
+							//,types: [2]
 						};
 						var params = $.param(paramsObj, true);
 						return params;
@@ -236,10 +236,17 @@
 				$('.checkbox').each(function(){
 				    if($(this).is(':checked')){
 						var rowData = table.row($(this).parents('tr')).data()
-                        aqtys.push(parseInt(rowData[7]))
+                     //   aqtys.push(parseInt(rowData[7]))
 						data.push(parseInt(rowData[1]))
                     }
 				})
+
+				data.forEach(function(date){
+					var rowData = $('#'+date).val();
+					aqtys.push(parseInt(rowData))
+				})
+
+
                 obj.ids = data;
                 obj.aqtys = aqtys;
                 obj.type = parseInt(3);
@@ -299,6 +306,7 @@
 		<div class="r-header-body">
 			<div class="left-list" style="margin-top: 10px">
 
+				<!--
 				<label>
 					采购分期：
 					<input type="text" id='supplier' style="width: 90px">
@@ -311,7 +319,7 @@
 						<option value="5">年</option>
 					</select>
 				</label>
-
+     -->
 				<label style="margin-left: 40px">
 					分期物料级别：
 					<select class="select" name="level" id="level">
@@ -336,7 +344,7 @@
 					<option value="">选择原料</option>
 				</select>
 				<button id="search" class="button-sytle1" style="margin-left: 40px">查询</button>
-				<button id="export" class="button-sytle1">导出</button>
+			<!--	<button id="export" class="button-sytle1">导出</button>-->
 			</div>
 		</div>
 		<div class="tab-btns">
