@@ -123,10 +123,10 @@
                 if (this.table) {
                     this.table.destroy();
                 }
-                this.table = $('#tableMatLoc').DataTable( {
+                 this.table = $('#tableMatLoc').DataTable( {
                     "processing": true,
                     "serverSide": true,
-                    "stateSave": true,
+                    "stateSave": false,
                     "stateDuration": -1,
                     "ajax": {
                         "type": 'POST',
@@ -147,13 +147,14 @@
                     pageLength:"50"
                 } );
                 $('#tableMatLoc tbody').on( 'click', 'button', function () {
-                    var data = table.row( $(this).parents('tr') ).data();
+                    var data = self.table.row( $(this).parents('tr') ).data();
                     var matLoc = data[3];
                     arr = matLoc.split('_');
                     var matBin = {};
                     matBin.materialId = parseInt(arr[0]);
                     matBin.binId = parseInt(arr[1]);
                     $.deleteMatBin(matBin,jmstoken,function(data){
+                        alert("删除成功！");
                         $.get("views/matLocList.html",function(data){
                             $("#body").html(data);
                         });

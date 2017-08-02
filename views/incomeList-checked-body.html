@@ -231,7 +231,7 @@
             if(action == 'detail') {
                 $('#detail02').remove();
             } else {
-                $('#toStkId').selectautofill('s/getStksByTypes?statusId=27&types=1&types=3',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+                $('#toStkId').selectautofill('s/getStksByTypes?statusId=27&types=1&types=3&types=5',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
 //                $('#fromStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
                 $('#fromStkId').selectautofill('s/getStksByTypes?statusId=27&types=4',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
                 $('#idR').selectautofill('s/getIncomeList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'typeId':1}});
