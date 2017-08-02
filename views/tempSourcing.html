@@ -18,7 +18,12 @@
 				<!--<select class="js-data-example-ajax" id="js-data-example-ajax">-->
 				<!--<option value="">选择物料</option>-->
 				<!--</select>-->
-				<input type="text" id='q' placeholder="物料编码/物料描述/版本">
+				<!--<input type="text" id='q' placeholder="物料编码/物料描述/版本">-->
+
+				<select class="mat-ajax" id="mat-ajax">
+					<option value="">选择物料</option>
+				</select>
+
 				<button id="search" class="button-sytle1">查询</button>
 			</div>
 		</div>
@@ -70,6 +75,60 @@
 
 		$(document).ready(function() {
             var jmstoken = store.get('JMS-TOKEN');
+
+
+
+
+			$('#mat-ajax').select2({
+				ajax: {
+					url: $clientURL + 's/getMaterialListObjs',
+					dataType: 'json',
+					headers: {
+						'JMS-TOKEN': jmstoken
+					},
+					delay: 200,
+					data: function(params) {
+						var paramsObj = {
+							q: params.term
+							//,types: [2]
+						};
+						var params = $.param(paramsObj, true);
+						return params;
+					},
+					processResults: function(data, params) {
+						return {
+							results: data,
+							pagination: null
+						}
+					},
+					cache: true
+				},
+				escapeMarkup: function(markup) {
+					return markup;
+				},
+				minimumInputLength: 1,
+				width: 182,
+				templateResult: formatRepo,
+				templateSelection: formatRepoSelection
+			}).on('select2:open', function(evt) {
+				$('#mat-ajax').empty();
+			});
+
+			function formatRepo(repo) {
+				if (repo.loading) return repo.text;
+
+				var markup = '<div data-id="' + repo.id + '">' + repo.name + '</div>';
+
+				return markup;
+			}
+
+			function formatRepoSelection(repo) {
+				return repo.name || repo.text;
+			}
+
+
+
+
             var table = {}
             function loadTable() {
                 table = $('#material').DataTable({
@@ -91,7 +150,7 @@
                             'JMS-TOKEN': jmstoken
                         },
                         "data": {
-                            q: $("#supplier").val()
+                            q: $("#mat-ajax").val()
                         },
                     },
                     "columnDefs": [

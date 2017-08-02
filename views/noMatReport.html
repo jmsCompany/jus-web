@@ -225,7 +225,7 @@
                         table.destroy()
                         loadTable()
                     }else {
-                        alert(data.message)
+                        alert(data.msg)
                     }
                 })
             })
@@ -237,17 +237,21 @@
 				    if($(this).is(':checked')){
 						var rowData = table.row($(this).parents('tr')).data()
                      //   aqtys.push(parseInt(rowData[7]))
+						//alert(rowData[7]);
 						data.push(parseInt(rowData[1]))
                     }
 				})
 
 				data.forEach(function(date){
+					//alert(date);
 					var rowData = $('#'+date).val();
 					aqtys.push(parseInt(rowData))
 				})
 
 
-                obj.ids = data;
+
+
+				obj.ids = data;
                 obj.aqtys = aqtys;
                 obj.type = parseInt(3);
                 obj.poType = $('input:radio:checked').val();

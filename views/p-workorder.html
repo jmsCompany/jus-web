@@ -60,13 +60,18 @@
 				if (q) {
 					data.q = q;
 				}
-				this.table = $('#tableWorkorder').DataTable({
+				if(this.table) {
+					this.table.destroy();
+				}
+
+				this.table = $('#tableWorkorder1').DataTable({
 
 					"processing": true,
 					"serverSide": true,
-					"stateSave": true,
+					//"stateSave": false,
 					"stateDuration": -1,
                     "bStateSave":false,
+					//"retrieve": true,
 					"ajax": {
 						"type": 'POST',
 						"url": $clientURL + "p/getWoList",
@@ -87,7 +92,7 @@
 					dom: "tip",
 					pageLength: "50"
 				});
-				$('#tableWorkorder tbody').on('click', 'button', function() {
+				$('#tableWorkorder1 tbody').on('click', 'button', function() {
 					var data = self.table.row($(this).parents('tr')).data();
 					var clazz = $(this).attr('class');
 					if (clazz == 'button-bin') {
@@ -356,7 +361,7 @@
 			</div>
 		</div>
 
-		<table id="tableWorkorder" class="display" cellspacing="0" width="100%">
+		<table id="tableWorkorder1" class="display" cellspacing="0" width="100%">
 			<thead>
 				<tr>
 					<th>工单号</th>
