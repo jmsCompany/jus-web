@@ -57,7 +57,7 @@
                             <!--<ul class="new-income-list-nav">-->
                                 <!--<li style="width:104px">工艺序号</li>-->
                                 <!--<li style="width:104px">描述</li>-->
-                                <!--<li style="width:104px">车间</li>-->
+                                <!--<li style="width:104px">工作中心</li>-->
                                 <!--<li style="width:104px">劳动工时</li>-->
                                 <!--<li style="width:104px">设备工时</li>-->
                                 <!--<li style="width:104px">装载工时</li>-->
@@ -72,7 +72,7 @@
                             <tr>
                                 <th width="117px"> 工艺序号</th>
                                 <th width="117px"> 描述</th>
-                                <th width="117px"> 车间</th>
+                                <th width="117px"> 工作中心</th>
                                 <th width="100px"> 劳动工时</th>
                                 <th width="100px"> 设备工时</th>
                                 <th width="100px"> 装载工时</th>
@@ -143,7 +143,7 @@
                 </div>
                 <div class="col-xs-12 mar-top-20px">
                     <div class="form-group">
-                        <label class="input-w-160">车间</label>
+                        <label class="input-w-160">工作中心</label>
                         <select  class="form-control" style="width:182px;" name="workCenterId:number" id="workCenterId">
                         </select>
                     </div>
@@ -211,7 +211,7 @@
             <input style="width:110px" type="text" class="b" name="wsRoutineDs[item<%= item %>][des]" id="wsRoutineDs.item<%= item %>.des"
                 placeholder="描述" value="<%= data.des %>" />
             <select style="width:109px" data-id="<%= data.workCenterId %>" class="select-cs1 c" name="wsRoutineDs[item<%= item %>][workCenterId]:number"
-                id="wsRoutineDs.item<%= item %>.workCenterId"><option>车间</option></select>
+                id="wsRoutineDs.item<%= item %>.workCenterId"><option>工作中心</option></select>
             <input style="width:95px" type="text" class="d" name="wsRoutineDs[item<%= item %>][stdWtLabor]:number" id="wsRoutineDs.item<%= item %>.stdWtLabor"
                 placeholder="劳工工时" value="<%= data.stdWtLabor %>">
             <input style="width:95px" type="text" class="e" name="wsRoutineDs[item<%= item %>][stdWtMachine]:number" id="wsRoutineDs.item<%= item %>.stdWtMachine"

@@ -66,7 +66,7 @@
                                 <th width="61px"> 重量</th>
                                 <th width="61px"> 成本</th>
                                 <th width="87px"> 工序</th>
-                                <th width="105px"> 工作中心</th>
+                                <th width="105px"> 车间</th>
                                 <th width="56px"> 级别</th>
                                 <th width="56px"> 排序</th>
                                 <th width="71px"> 单位用料</th>
@@ -160,7 +160,7 @@
             <input type="text" class="c" style="width:57px" name="bomItems[item<%= item %>][weight]" id="bomItems.item<%= item %>.weight" placeholder="重量" value="<%= data.weight %>" readOnly="true"/>
             <input type="text" class="d" style="width:57px" name="bomItems[item<%= item %>][cost]" id="bomItems.item<%= item %>.cost" placeholder="成本" value="<%= data.cost %>" readOnly="true"/>
             <select data-id="<%= data.idRoutineD %>" class="select-cs1 j" style="width:80px" name="bomItems[item<%= item %>][idRoutineD]:number" id="bomItems.item<%= item %>.idRoutineD"><option value="" >工序</option></select>
-            <select data-id="<%= data.workCenterId %>" class="select-cs1 e" style="width:101px" name="bomItems[item<%= item %>][workCenterId]:number" id="bomItems.item<%= item %>.workCenterId"><option value="">工作中心</option></select>
+            <select data-id="<%= data.workCenterId %>" class="select-cs1 e" style="width:101px" name="bomItems[item<%= item %>][workCenterId]:number" id="bomItems.item<%= item %>.workCenterId"><option value="">车间</option></select>
             <input type="text" class="f" style="width:52px" name="bomItems[item<%= item %>][lvl]:number" id="bomItems.item<%= item %>.lvl" value="<%= data.lvl %>" placeholder="级别"/>
             <input type="text" class="g" style="width:52px" name="bomItems[item<%= item %>][orderBy]:number" id="bomItems.item<%= item %>.orderBy" value="<%= data.orderBy %>" placeholder="排序"/>
             <input type="text" class="h" style="width:67px" name="bomItems[item<%= item %>][qpu]:number" id="bomItems.item<%= item %>.qpu" value="<%= data.qpu %>" placeholder="单位用料"/>
