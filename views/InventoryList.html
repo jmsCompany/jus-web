@@ -132,7 +132,7 @@
         },
         bindEvents:function(){
             var self = this;
-            $('#stk-select').selectautofill('s/getStksByTypes?statusId=27&types=4&types=1&types=2&types=3&types=5&types=6&types=7&types=9',{headers:{'JMS-TOKEN': jmstoken}}, function(data) {
+            $('#stk-select').selectautofill('s/getStksByTypes?statusId=27&types=4&types=1&types=2&types=3&types=5&types=6&types=7&types=10&types=9',{headers:{'JMS-TOKEN': jmstoken}}, function(data) {
                 var _html = '';
                 _(data).each(function(d, i) {
                     _html += '<li><a href="javascript:;" data-id="' + d.id + '">' + d.name + '</a></li>';

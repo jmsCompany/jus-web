@@ -41,12 +41,15 @@
                             <select class="input-w-3 select-cs1 form-control" name="idCustomerCompany:number" id="idCustomerCompany">
                                 <option value="">客户</option>
                             </select>
+
+                            <input type="text" class="form-control input-w-3" name="idCustomerCompany" id="idCustomerCompany2">
                         </div>
                         <div class="form-group">
                             <label for="" class="input-w-160">客户订单号</label>
                             <select class="input-w-3 select-cs1 form-control" name="coOrderNo:number" id="coOrderNo">
                                 <option value="">客户订单号</option>
                             </select>
+                            <input type="text" class="form-control input-w-3" name="coOrderNo2" id="coOrderNo2">
                         </div>
                     </div>
                     <div class="col-xs-12 mar-top-20px">
@@ -55,6 +58,8 @@
                             <select class="input-w-3 select-cs1 form-control" name="idToCompany:number" id="idToCompany">
                                 <option value="">往来公司</option>
                             </select>
+                            <input type="text" class="form-control input-w-3" name="idToCompany2" id="idToCompany2">
+
                         </div>
                     </div>
                     <!--<div class="col-xs-12 mar-top-20px">-->
@@ -183,6 +188,25 @@
             this.loadDetail();
             this.doForm();
 						this.loadSoList();
+            var routeParams = RouterManager.getParams();
+            var action = routeParams.action;
+            if(action =='detail'){
+                $('#idCustomerCompany2').show()
+                $('#idCustomerCompany').hide()
+                $('#coOrderNo2').show()
+                $('#coOrderNo').hide()
+                $('#idToCompany2').show()
+                $('#idToCompany').hide()
+
+
+            }else{
+                $('#idCustomerCompany').show()
+                $('#idCustomerCompany2').hide()
+                $('#coOrderNo').show()
+                $('#coOrderNo2').hide()
+                $('#idToCompany').show()
+                $('#idToCompany2').hide()
+            }
 //            $('#matlist').append(this.createRow());
         },
         /**
@@ -465,7 +489,13 @@
 //                cm = '0' + cm;
 //            }
 //            $('#creationTime').val([creation.getFullYear(), cm, creation.getDate()].join('-'));
+            console.log(data)
             $('#creationTime').val($.dateFormat.date(new Date(data.creationTime), 'yyyy-MM-dd'));
+            $('#idCustomerCompany2').val(data.customerCompany);
+            $('#coOrderNo2').val(data.coOrderNo);
+            $('#idToCompany2').val(data.toCompany);
+
+
 
                 //如果是详情页面的话
 //                $('input,select,textarea',$('#doForm')).prop('disabled',true);

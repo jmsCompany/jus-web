@@ -323,7 +323,7 @@ var newIncomeListEntry = {
     },
     fillFromStk: function(callback) {
         $('#fromStkId').selectautofill('s/getStksByTypes?statusId=27&types=4&types=1&types=5',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
-        $('#toStkId').selectautofill('s/getStksByTypes?statusId=27&types=5&types=10',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+        $('#toStkId').selectautofill('s/getStksByTypes?statusId=27&types=5&types=8&types=10',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
 
 //        $('#fromStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}}, callback);
     },
@@ -520,9 +520,9 @@ var newIncomeListEntry = {
         $items.each(function(i) {
             var $t = $(this);
             var inventory = $t.find('.n').val();
+            var alo = $('.o').val()
             var $qty = $t.find('.h');
-            if(!$qty.val()|| !parseInt($qty.val())||parseInt($qty.val())>parseInt(inventory)) {
-                debugger;
+            if(!$qty.val() || !parseInt($qty.val()) || parseInt($qty.val()) > parseInt(inventory)|| parseInt($qty.val()) > parseInt(alo)) {
                 $t.find('.h').addClass('error');
                 flag = false;
             }

@@ -1,106 +1,131 @@
 
-    <div class="container-fluid" id="incomeListEntryCnt">
-        <div class="row">
-            <!-- form: -->
-            <section>
+<div class="container-fluid" id="incomeListEntryCnt">
+    <div class="row">
+        <!-- form: -->
+        <section>
 
-                <form id="doForm" method="post" action="index.html" class="form-inline">
-                    <div class="col-xs-12 mar-top-20px">
-                        <div class="form-group">
-                            <label for="" class="input-w-160">流转单号</label>
-                            <input type="text" class="form-control input-w-3 g" name="mtNo1" id="mtNo1"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="" class="input-w-160">出货单号</label>
-                            <input type="text" class="form-control input-w-3" name="mtNo" id="mtNo"/>
-                        </div>
-                        <div class="form-group" style="display:none">
-                            <label for="" class="input-w-160">从仓库</label>
-                            <input type="text" class="form-control input-w-3" name="fromStkId:number">
-                        </div>
+            <form id="doForm" method="post" action="index.html" class="form-inline">
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">流转单号</label>
+                        <input type="text" class="form-control input-w-3" name="mtNo" id="mtNo"/>
                     </div>
-                    <div class="col-xs-12 mar-top-20px"  id="order" style="display: none;">
-                        <div class="form-group">
-                            <label for="" class="input-w-160">出货日期</label>
-                            <input type="date" class="form-control input-w-3" name="creationTime" id="creationTime">
-                        </div>
-                        <div class="form-group">
-                            <label for="" class="input-w-160">出货员</label>
-                            <input type="text" class="form-control input-w-3" name="recMtUser" id="recMtUser">
-                        </div>
-                    </div>
-                    <div class="col-xs-12 mar-top-20px">
-                        <div class="form-group">
-                            <label for="" class="input-w-160">客户</label>
-                            <select class="input-w-3 select-cs1 form-control" name="idCustomerCompany:number" id="idCustomerCompany">
-                                <option value="">客户</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="" class="input-w-160">客户订单号</label>
-                            <select class="input-w-3 select-cs1 form-control" name="coOrderNo" id="coOrderNo">
-                                <option value="">客户订单号</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 mar-top-20px">
-                        <div class="form-group">
-                            <!--<div class="form-group">-->
-                            <label for="" class="input-w-160 g">到仓库</label>
-                            <select class="input-w-3 select-cs1 form-control g" name="toStkId:number" id="toStkId">
-                                <option value="">到仓库</option>
-                            </select>
-                            <!--<select class="input-w-3 select-cs1 form-control" name="toStkId:number" id="toStkId">-->
-                            <!--<option value="">到仓库</option>-->
-                            <!--</select>-->
-                        </div>
-                    </div>
-                    <div class="col-xs-12 mar-top-20px changerep_cont">
-                        <table id="" cellpadding="0" cellspacing="0" width="701px">
-                            <tr>
-                                <!--<th width="116"> 销售单号 </th>-->
-                                <th width="160px"> 物料</th>
-                                <!--<th width="170px"> 从货架</th>-->
-                                <th width="170px"> 到货架</th>
-                                <th width="91px"> 发货数量</th>
-                                <th width="169px"> 备注 </th>
-                                <th width="101px" id="operation"> 操作</th>
-                            </tr>
-                        </table>
 
-                        <div class="form-group" id="matlist">
-                        </div>   <!-- +\- over -->
+                </div>
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">出货单号</label>
+                        <input type="text" class="form-control input-w-3" name="mtNo" id="mtNo"/>
                     </div>
-					
-                    <!-- +\- over -->
-                    <div class="clearfix"></div>
-                    <div class="foot-btn-box">
-                        <div class="form-group">
-                            <button class="btn btn-primary" id="save">保存</button>
-                            <button class="btn  btn-info" type="button" id="return01">返回</button>
-                        </div>
+                    <!--<div class="form-group">-->
+                        <!--<label for="" class="input-w-160">从仓库</label>-->
+                        <!--<select class="input-w-3 select-cs1 form-control" name="fromStkId:number" id="fromStkId">-->
+                            <!--&lt;!&ndash;<option value="">从仓库</option>&ndash;&gt;-->
+                        <!--</select>-->
+                    <!--</div>-->
+                    <div class="form-group">
+                        <!--<div class="form-group">-->
+                        <label for="" class="input-w-160">到仓库</label>
+                        <input type="text" class="form-control input-w-3" name="toStkId:number" id="toStkId">
+                        <!--<select class="input-w-3 select-cs1 form-control" name="toStkId:number" id="toStkId">-->
+                        <!--<option value="">到仓库</option>-->
+                        <!--</select>-->
                     </div>
-                    <input type="hidden" id="idMt" name="idMt:number" />
-                    <input type="hidden" name="typeId:number" value="10" />
-                </form>
-            </section>
-            <!-- :form -->
-        </div>
+                </div>
+                <!--<div class="col-xs-12 mar-top-20px"  id="order" style="display: none;">-->
+                    <!--<div class="form-group">-->
+                        <!--<label for="" class="input-w-160">出货日期</label>-->
+                        <!--<input type="date" class="form-control input-w-3" name="creationTime" id="creationTime">-->
+                    <!--</div>-->
+                    <!--<div class="form-group">-->
+                        <!--<label for="" class="input-w-160">出货员</label>-->
+                        <!--<input type="text" class="form-control input-w-3" name="recMtUser" id="recMtUser">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="col-xs-12 mar-top-20px">
+                    <div class="form-group">
+                        <label for="" class="input-w-160">客户</label>
+                        <select class="input-w-3 select-cs1 form-control" name="idCustomerCompany:number" id="idCustomerCompany">
+                            <option value="">客户</option>
+                        </select>
+                        <input type="text" class="form-control input-w-3" name="idCustomerCompany" id="idCustomerCompany2">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="input-w-160">客户订单号</label>
+                        <select class="input-w-3 select-cs1 form-control" name="coOrderNo:number" id="coOrderNo">
+                            <option value="">客户订单号</option>
+                        </select>
+                        <input type="text" class="form-control input-w-3" name="coOrderNo2" id="coOrderNo2">
+                    </div>
+                </div>
+                <!--<div class="col-xs-12 mar-top-20px">-->
+                    <!--<div class="form-group">-->
+                        <!--<label for="" class="input-w-160">往来公司</label>-->
+                        <!--<select class="input-w-3 select-cs1 form-control" name="idToCompany:number" id="idToCompany">-->
+                            <!--<option value="">往来公司</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="col-xs-12 mar-top-20px">-->
+                <!--<div class="form-group">-->
+                <!--<label for="" class="input-w-160">物流公司</label>-->
+                <!--<select class="input-w-2 select-cs1 form-control" name="codeCo" id="codeCo">-->
+                <!--</select>-->
+                <!--</div>-->
+                <!--<div class="form-group">-->
+                <!--<label for="" class="input-w-160">运单号</label>-->
+                <!--<input  class="form-control input-w-2" name="codePo" id="codePo">-->
+                <!--</div>-->
+                <!--</div>-->
+                <!-- +\- start -->
+                <div class="col-xs-12 mar-top-20px changerep_cont">
+                    <table id="" cellpadding="0" cellspacing="0">
+                        <tr>
+
+                            <th width="130px"> 物料</th>
+                            <th width="170px"> 到货架</th>
+                            <th width="91px"> 发货数量</th>
+                            <th width="169px"> 备注 </th>
+                            <th width="101px" id="operation"> 操作</th>
+                        </tr>
+                    </table>
+
+                    <div class="form-group" id="matlist">
+                    </div>   <!-- +\- over -->
+                </div>
+
+                <!-- +\- over -->
+                <div class="clearfix"></div>
+                <div class="foot-btn-box">
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="save">保存</button>
+                        <button class="btn  btn-info" type="button" id="return01">返回</button>
+                    </div>
+                </div>
+                <input type="hidden" id="idMt" name="idMt:number" />
+                <input type="hidden" id="typeId" name="typeId:number" value="9" />
+                <input type="hidden" id="statusId" name="statusId:number" value="4" />
+            </form>
+        </section>
+        <!-- :form -->
     </div>
+</div>
 
 
 <script type="text/html" id="incomeListItemTmpl">
     <dl class="matlist" id="item<%= item %>">
         <dd class="income-create-list">
 
-            <input type="text" class="b" name="smtfItems[item<%= item %>][materialPno]" id="smtfItems.item<%= item %>.materialPno;"  value="<%= data.materialPno %>" style="width:156px" />
+            <input class="g" name="smtfItems[item<%= item %>][materialId]:number" id="smtfItems.item<%= item %>.materialId;" type="hidden" />
 
-            <select class="select-cs1 g d" name="smtfItems[item<%= item %>][toBinId]:number" id="smtfItems.item<%= item %>.toBinId" style="width:168px">
-                <option value="">到货架</option>
-            </select>
-            <input type="text" class="c" name="smtfItems[item<%= item %>][qty]:number" value="<%= data.qty %>" id="smtfItems.item<%= item %>.qty" placeholder="发货数量" style="width:85px">
+            <input type="text" class="b" name="smtfItems[item<%= item %>][materialPno]:number" value="<%= data.materialPno %>" placeholder="物料" style="width:150px" readonly="true" />
 
-            <input type="text" class="e" name="smtfItems[item<%= item %>][remark]" value="<%= data.remark %>" id="smtfItems.item<%= item %>.remark" placeholder="备注" style="width:166px">
+
+            <input class="h" type="text" name="smtfItems[item<%= item %>][toStk]:number" value="<%= data.toStk %>" id="smtfItems.item<%= item %>.toStk" placeholder="到货架" style="width:225px">
+
+            <input type="text" class="c" name="smtfItems[item<%= item %>][qty]:number" value="<%= data.qty %>" id="smtfItems.item<%= item %>.qty" style="width:114px" placeholder="发货数量" style="width:85px">
+
+            <input type="text" class="e" name="smtfItems[item<%= item %>][remark]" value="<%= data.remark %>" id="smtfItems.item<%= item %>.remark" placeholder="备注" style="width:210px">
             <span class="action">
                 <a class="button-sytle1  new-income-add">+</a>
                 <a class="button-sytle1 new-income-delete">-</a>
@@ -109,10 +134,11 @@
     </dl>
 </script>
 <script type="text/javascript">
+    var autoPo = store.get('userProfile').autoPo;
     var historyOptions={
         groupId:'doList'
     };
-    
+
     var jmstoken= store.get('JMS-TOKEN');
     //弹窗
     function showObj(objid){
@@ -129,21 +155,46 @@
             var self = this;
             this.incomeListItemTmpl = _.template($('#incomeListItemTmpl').html());
 //            $('#body').html($('#incomeListEntryTmpl').html());
-            
+            if(autoPo=='1'){
+                $("#mtNo").attr('disabled',true);
+                $("#mtNo").attr('placeholder','自动编码');
+            }else {
+                $("#mtNo").removeAttr('disabled');
+            }
             var params = this.params = RouterManager.getParams();
-            var doListId = params['orderId'];
+            var doListId = params['incomeId'];
             var groupId = params['groupId'];
             this.$matList = $('#matlist');
             if(doListId){
-                this.loadDetail();
-                this.bindEvents1();
             }
             else{
                 this.$matList.append(this.createRow());
-                this.bindEvents(groupId);
             }
             //绑定事件
+            this.bindEvents(groupId);
+            this.loadDetail();
             this.doForm();
+            this.loadSoList();
+            var routeParams = RouterManager.getParams();
+            var action = routeParams.action;
+            if(action =='detail'){
+                $('#idCustomerCompany2').show()
+                $('#idCustomerCompany').hide()
+                $('#coOrderNo2').show()
+                $('#coOrderNo').hide()
+                $('#idToCompany2').show()
+                $('#idToCompany').hide()
+
+
+            }else{
+                $('#idCustomerCompany').show()
+                $('#idCustomerCompany2').hide()
+                $('#coOrderNo').show()
+                $('#coOrderNo2').hide()
+                $('#idToCompany').show()
+                $('#idToCompany2').hide()
+            }
+//            $('#matlist').append(this.createRow());
         },
         /**
          * 绑定事件逻辑
@@ -155,24 +206,6 @@
             }).show();
             $('#info').empty();
             $('#info').append(information);
-        },
-        bindEvents1:function(groupId){
-            var self = this;
-            var frameContainer = $('#incomeListEntryCnt');
-            //下拉框
-            self.loadStk();
-
-            frameContainer.on("change","#toStkId", function(){
-                var $list = $('#matlist');
-                var $items = $list.find('.matlist');
-                $items.each(function(i) {
-                    var $dl = $(this);
-                    self.loadBins($dl);
-                });
-            });
-            $("#return01").click(function(){
-                    history.go(-1);
-            });
         },
         bindEvents:function(groupId){
             var self = this;
@@ -277,19 +310,22 @@
         },
         loadStk: function() {
 //            $('#fromStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}});
-            $('#toStkId').selectautofill('s/getStksByTypes?statusId=27&types=1&types=3',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+            $('#fromStkId').selectautofill('s/getStksByTypes?statusId=27&types=1&types=3',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
         },
         loadCompany2:function(){
             $('#idToCompany').selectautofill('s/myCompanies', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}});
         },
         loadCoOrderNos: function() {
+            var self = this;
             var coId=$('#idCustomerCompany').val();
             if(!coId) {
                 return;
             }
             $('#coOrderNo').empty();
             $('#coOrderNo').append('<option value="">客户订单号</option>');
-            $('#coOrderNo').selectautofill2('s/findCoOrderNosByCompany2Id',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idCompany2':coId}});
+            $('#coOrderNo').selectautofill2('s/findCoOrderNosByCompany2Id',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idCompany2':coId}},function(){
+                self.loadSoList();
+            });
         },
         loadSoList: function($cnt) {
             if(!$cnt) {
@@ -301,10 +337,9 @@
             if(!coOrderNo) {
                 return;
             }
-
             $a.empty();
             $a.append('<option value="">销售订单编码</option>');
-            $a.selectautofill('s/getSoListByCompany2IdAndOrderNo',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'company2Id':coId,'orderNo':coOrderNo}});
+            $a.selectautofill('s/getSoListByCompany2IdAndOrderNo1',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'company2Id':coId,'orderNo':coOrderNo}});
         },
         loadBins: function($cnt) {
             if(!$cnt) {
@@ -312,18 +347,19 @@
             }
             var $d = $cnt.find('.d');
 
-            var idStk = $('#toStkId').val();
+            var idStk = $('#fromStkId').val();
 
             if(!idStk) {
                 return;
             }
+
             $d.empty();
-            $d.append('<option value="">到货架</option>');
+            $d.append('<option value="">从货架</option>');
             $d.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}});
         },
         fillFromBin: function($dl,callback) {
             var self = this;
-            var idStk = $('#toStkId').val();
+            var idStk = $('#fromStkId').val();
             var $g = $dl.find('.g');
             var $f = $dl.find('.f');
             var idMaterial = $g.val();
@@ -332,7 +368,8 @@
             }
             $f.empty();
 //            $f.selectautofill('s/findInventoryDetailsObjsByMaterialIdAndStkId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':idMaterial,'stkId':idStk}}, callback);
-            $f.selectautofill('s/findInventoryDetailsObjsByMaterialIdAndStkId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':idMaterial,'stkId':idStk}}, function(){
+            $f.selectautofill('s/findInventoryDetailsObjsByMaterialIdAndStkId',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'materialId':idMaterial,'stkId':idStk}}, function(data){
+                console.log(data);
                 self.loadInventoryQty($dl);
             });
 
@@ -389,15 +426,22 @@
             this.loadBins($t.closest('dl').next());
             this.loadToBin($t.closest('dl').next());
         },
+        delRow: function(e) {
+            var $t = $(e.target);
+            if(this.$matList.find('.matlist').length == 1) {
+                return;
+            }
+            $t.closest('dl').remove();
+        },
         loadDetail: function() {
             var self = this;
 
-            if(!self.params.orderId) {
+            if(!self.params.incomeId) {
                 return;
             }
-            
+
             $("#order").show();
-            $.mtfInfo(self.params.orderId, jmstoken, function(data) {
+            $.mtfInfo(self.params.incomeId, jmstoken, function(data) {
                 self.parseDetail(data);
             });
         },
@@ -405,28 +449,46 @@
             var self = this;
             $('#doForm').populate(data, true);
             $.each(data.smtfItems, function(key, item) {
-                debugger;
                 var html = self.createRow(item);
                 $('#matlist').append(html);
+                self.loadMaterial($('#matlist').children().eq(-1));
             });
+            $('#fromStkId').html('<option value="' + data.fromStkId + '">' + data.fromStk + '</option>');
             $('#coOrderNo').html('<option value="' + data.coOrderNo + '">' + data.coOrderNo + '</option>');
+            self.loadSCompanyCo(function(){
+                $('#idCustomerCompany').val(data.idCustomerCompany);
+            });
             $('#idToCompany').selectautofill('s/myCompanies', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}},function(){
                 $('#idToCompany').val(data.idToCompany);
             });
-            $('#idCustomerCompany').selectautofill('s/myCompanies', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}}, function() {
-                $('#idCustomerCompany').val(data.idCustomerCompany);
-            });
+//            $('#idToCompany').html('<option value="' + data.idToCompany + '">' + data.idToCompany + '</option>');
+//            $('#sCompanyCoId').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coCompanyType':2}}, function() {
+//                $('#sCompanyCoId').val(data.coCompanyId);
+//            });
 
+//            $('#idCustomerCompany').selectautofill('s/myCompanies', {headers: {'JMS-TOKEN': store.get('JMS-TOKEN')}}, function() {
+//                $('#idCustomerCompany').val(data.idCustomerCompany);
+//            });
+
+//            var creation = new Date(data.creationTime);
+//            var cm = creation.getMonth() + 1;
+//            if(cm < 10) {
+//                cm = '0' + cm;
+//            }
+//            $('#creationTime').val([creation.getFullYear(), cm, creation.getDate()].join('-'));
             $('#creationTime').val($.dateFormat.date(new Date(data.creationTime), 'yyyy-MM-dd'));
+            $('#idCustomerCompany2').val(data.customerCompany);
+            $('#coOrderNo2').val(data.coOrderNo);
+            $('#idToCompany2').val(data.toCompany);
 
-                //如果是详情页面的话
-//                $('select:not(.g),textarea' ,$('#doForm')).prop('disabled',true);
-//                $(':not(.g) ' ,$('#doForm')).prop('disabled',false);
-                $("input:not(:button,:hidden,.g)").prop("readonly", true);
-                $('.new-income-delete').remove();
-                $('.new-income-add').remove();
-                $('#operation').remove();
-                $('table','#doForm').attr('width','590px');
+            //如果是详情页面的话
+//                $('input,select,textarea',$('#doForm')).prop('disabled',true);
+            $("input:not(:button,:hidden)").prop("readonly", true);
+            $('.new-income-delete').remove();
+            $('.new-income-add').remove();
+            $('#save').remove();
+            $('#operation').remove();
+            $('table','#doForm').attr('width','706px');
 
         },
         DefaultRowData: {
@@ -481,17 +543,17 @@
             var self = this;
             var $list = $('#matlist');
             var row = parseInt($list.data('row'));
-            
+
             if(!row) {
                 row = 1;
             }
-            
+
             if(!data) {
                 data = {};
             }
-            
+
 //            data = $.extend({}, self.DefaultRowData, data);
-            
+
 //            var compiled = _.template(self.incomeListItemTmpl);
             var param = {
                 data: data,
@@ -521,6 +583,13 @@
                             }
                         }
                     },
+                    'coOrderNo':{
+                        validators: {
+                            notEmpty: {
+                                message: '请选择客户订单号'
+                            }
+                        }
+                    },
                     'idCustomerCompany:number': {
                         validators: {
                             notEmpty: {
@@ -531,23 +600,30 @@
                 }
             }).on('success.form.bv', function(e) {
                 e.preventDefault();
-                var $form     = $(e.target);
-                var validator = $form.data('bootstrapValidator');
-                var doform =JSON.stringify($('#doForm').serializeJSON());
-                    debugger;
-                $.saveMtf(doform,jmstoken,function(data){
-                    debugger;
-                    if(data.valid) {
+                if(!self.validateMatlist()) {
+                    var information = '验证不通过！';
+                    self.nullAlertShow(information);
+                    //alert('验证不通过');
+                    return;
+                }
+                else{
+                    console.log($('#coOrderNo').val());
+                    var $form     = $(e.target);
+                    var validator = $form.data('bootstrapValidator');
+                    var doform =JSON.stringify($('#doForm').serializeJSON());
+                    $.saveMtf(doform,jmstoken,function(data){
+                        if(data.valid) {
 //                        $.get("views/doList.html",function(data){
 //                            $("#body").html(data);
 //                        });
-                        history.go(-1);
-                    } else {
-                        var information = data.msg;
-                        self.nullAlertShow(information);
-//                        alert(data.msg);
-                    }
-                });
+                            history.go(-1);
+                        } else {
+                            var information = data.msg;
+                            self.nullAlertShow(information);
+                            //        alert(data.msg);
+                        }
+                    });
+                }
             });
         },
         validateMatlist: function() {
@@ -556,6 +632,7 @@
             var flag = true;
 
             if(!$items.length) {
+                //alert('item.length'+flag);
                 flag = false;
             }
 
@@ -568,11 +645,12 @@
                 }
 
                 var inventoryQty = $t.find('.i').val();
-                var $qty = $t.find('.c')
-                if(!parseInt($qty.val())||isNaN($qty.val())||$qty.val()>inventoryQty) {
-                    $t.find('.c').addClass('error');
-                    flag = false;
-                }
+                var $qty = $t.find('.c');
+//alert('qty:' + $qty.val() + 'inv: ' + inventoryQty);
+                //  if(!parseInt($qty.val())||isNaN($qty.val())||$qty.val()>inventoryQty) {
+                //     $t.find('.c').addClass('error');
+                //    flag = false;
+                //}
 
 
                 if(!parseInt($t.find('.f').val())) {
@@ -580,10 +658,9 @@
                     flag = false;
                 }
             });
-
             return flag;
         }
     };
-    
+
     app.init();
 </script>
