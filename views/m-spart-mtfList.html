@@ -176,7 +176,7 @@ debugger;
                   },
                   "aoColumns": [ null,null,null,null,null,null,null,null,null,null,{"bSearchable": false,"bVisible":false}],
                   dom: "tip",
-                  pageLength: "50"
+                  "iDisplayLength":"50"
               });
           }else{
          this.table = $('#tableMtf').DataTable({
@@ -199,7 +199,7 @@ debugger;
               },
 
               dom: "tip",
-              pageLength: "50"
+             "iDisplayLength":"50"
           });
           };
           $('#tableMtf').on('xhr.dt', function (e, settings, json, xhr) {

@@ -122,6 +122,13 @@
 								)
 
                             }
+                            if($(k).text() == '已确认') {
+
+                                $(k).prev().html(
+                                    '<input disabled value='+$(k).prev().html() +' type="number" id='+ $(k).prev().prev().prev().prev().prev().prev().prev().html() +'>'
+                                )
+
+                            }
                             if($(k).text() == '临时PO'){
                                 $(k).prev().prev().prev().prev().prev().prev().prev().prev().html('<input class="checkbox" disabled type="checkbox">')
 							}
@@ -139,7 +146,7 @@
 						"url": "js/datatable/chinese.json"
 					},
 					dom: "tip",
-					pageLength: "50"
+                    "iDisplayLength":"50"
 
 				});
 			}
