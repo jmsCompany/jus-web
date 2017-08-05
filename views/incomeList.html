@@ -195,12 +195,8 @@ var app={
                 "url": "js/datatable/chinese.json"
             },
             initComplete: function(){
-
                 $('#income tr td:nth-child(10)').each(function(i,k){
-
                     if($(k).text() == '未检') {
-
-                        console.log($(k).next().html())
                         $(k).next().html(
                             '<button class=button-sytle1 style="background-color:#ccc">打印</button>'+
 							'<button class=button-bin>检验</button>' +
@@ -211,11 +207,21 @@ var app={
 
                 });
             },
+            rowCallback:function (row, data) {
+                if ( data[9]  == '未检') {
+                    $('td:eq(10)', row).html(
+                        '<button class=button-sytle1 style="background-color:#ccc">打印</button>'+
+                        '<button class=button-bin>检验</button>' +
+                        '<button class=button-edit>详情</button>'
+//                            +'<button class=button-finish>状态</button>'
+                    );
+                }
+            },
             dom: "tip",
-            pageLength:"50"
+            pageLength:"10"
         } );
 
-
+        $('#income tbody').unbind( "click" );
         $('#income tbody').on( 'click', 'button', function () {
             var rowData = self.table.row( $(this).parents('tr') ).data();
             var clazz =$(this).attr('class');

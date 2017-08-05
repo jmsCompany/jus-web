@@ -152,14 +152,14 @@
                     data.q = q;
                 }
                 if (this.table) {
+                    this.table.clear();
                     this.table.destroy();
                 }
                 this.table = $('#tablePo').DataTable( {
                     "processing": true,
                     "serverSide": true,
-                    "stateSave": true,
+                    "stateSave": false,
                     "stateDuration": -1,
-                    "bStateSave":false,
                     "ajax": {
                         "type": 'POST',
                         "url": $clientURL+"s/spoMaterialList",
@@ -184,7 +184,7 @@
                         "url": "js/datatable/chinese.json"
                     },
                     dom: "tip",
-                    pageLength:"50"
+                    "iDisplayLength": 50,
                 } );
 
                 $('#tablePo').on( 'draw.dt', function (e, setting) {

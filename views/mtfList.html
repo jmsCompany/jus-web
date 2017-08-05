@@ -172,8 +172,10 @@
           if (q) {
               data.q = q;
           }
+
           if (this.table) {
               this.table.destroy();
+              this.table.clear().draw();
           }
           if(typeId == 7){
               this.table = $('#tableMtf').DataTable({
@@ -181,7 +183,7 @@
                   "serverSide": true,
                   "stateSave": true,
                   "stateDuration": -1,
-                  "bStateSave":false,
+                  "destroy": true,
                   "ajax": {
                       "type": 'POST',
                       "url": $clientURL + "s/getSmtfMaterialList",
@@ -198,13 +200,11 @@
               });
           }else{
          this.table = $('#tableMtf').DataTable({
-             "ordering": false,
-             "bDestroy": true,
              "processing": true,
              "serverSide": true,
              "stateSave": true,
+             "destroy": true,
              "stateDuration": -1,
-             "bStateSave":false,
               "ajax": {
                   "type": 'POST',
                   "url": $clientURL + "s/getSmtfMaterialList",
@@ -218,11 +218,8 @@
                   "defaultContent": '<button class=button-sytle1>详情</button>'
               } ],
              initComplete: function(){
-
                  $('#tableMtf tr td:nth-child(2)').each(function(i,k){
-                        console.log($(k).text())
                      if($(k).text() == '检验入库') {
-
                          $(k).next().next().next().next().next().next().next().next().next().html(
                              '<button class=button-print>打印</button>'+
                              '<button class=button-sytle1>详情</button>'
@@ -236,7 +233,8 @@
               },
 
               dom: "tip",
-              pageLength: "50"
+              pageLength: "50",
+             fnClearTable:false
           });
           };
           $('#tableMtf').on('xhr.dt', function (e, settings, json, xhr) {
@@ -264,6 +262,8 @@
 //              });
 //              $("table tr th:eq(10)").hide();
 //          }
+
+          $('#tableMtf tbody').unbind( "click" );
           $('#tableMtf tbody').on('click', 'button', function () {
           	if(!flag){
           	flag=0;
@@ -431,6 +431,7 @@
           });
 
           $('#search').on('click',function(){
+
               self.loadTable();
           });
 

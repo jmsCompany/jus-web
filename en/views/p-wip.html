@@ -38,7 +38,7 @@ $(document).ready(function() {
                         "url": "js/datatable/chinese.json"
                    },
       	dom: "tip",
-		pageLength:"50"
+		"iDisplayLength":"50"
     } );
     $('#tableWip tbody').on( 'click', 'button', function () {
 		var data = table.row( $(this).parents('tr') ).data();

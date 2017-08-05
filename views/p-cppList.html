@@ -317,7 +317,7 @@ var app= {
 //				alert(json.jmsError)
 			}
 		} );
-
+        $('#tableCppList tbody').unbind( "click" );
 		$('#tableCppList tbody').on('click', 'button', function () {
 			var data = self.table.row($(this).parents('tr')).data();
 			var clazz = $(this).attr('class');

@@ -92,6 +92,7 @@
 					dom: "tip",
 					pageLength: "50"
 				});
+                $('#tableWorkorder1 tbody').unbind( "click" );
 				$('#tableWorkorder1 tbody').on('click', 'button', function() {
 					var data = self.table.row($(this).parents('tr')).data();
 					var clazz = $(this).attr('class');

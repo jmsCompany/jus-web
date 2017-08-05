@@ -122,6 +122,9 @@
 								)
 
                             }
+                            if($(k).text() == '临时PO'){
+                                $(k).prev().prev().prev().prev().prev().prev().prev().prev().html('<input class="checkbox" disabled type="checkbox">')
+							}
 
                         });
                     },

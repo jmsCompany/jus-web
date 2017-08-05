@@ -72,7 +72,7 @@ var workorder={
 				"url": "js/datatable/chinese.json"
 			},
 			dom: "tip",
-			pageLength:"50"
+			"iDisplayLength":"50"
 		} );
 		$('#tableWorkorder tbody').on( 'click', 'button', function () {
 			var data = self.table.row( $(this).parents('tr') ).data();

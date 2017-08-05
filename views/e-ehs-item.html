@@ -61,6 +61,7 @@
                     }
                 } );
 
+                $('#ehsItemList tbody').unbind( "click" );
                 $('#ehsItemList tbody').on('click', 'button', function () {
                     var data = self.table.row($(this).parents('tr')).data();
                     var clazz = $(this).attr('class');

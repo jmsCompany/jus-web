@@ -35,7 +35,7 @@ $(document).ready(function() {
                         "url": "js/datatable/chinese.json"
                    },
       	dom: "tip",
-		pageLength:"50"
+		"iDisplayLength":"50"
 		
     } );
     $('#tableMcate tbody').on( 'click', 'button', function () {
@@ -58,9 +58,14 @@ $(document).ready(function() {
      	}
         else{
         	$.deleteMCate(data[3],jmstoken,function(data){
-     		  	$.get("views/materialListCategory.html",function(data){
-	                $("#body").html(data);
-	            });
+        	    if (!data.valid){
+        	        alert(data.msg)
+				}else{
+					$.get("views/materialListCategory.html",function(data){
+
+						$("#body").html(data);
+					});
+                }
      		});
         }
     } );

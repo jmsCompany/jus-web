@@ -199,6 +199,7 @@
                     }
                 })
             })
+            $('#stkList tbody').unbind( "click" );
 			$('#stkList tbody').on('click', 'button', function() {
 				var rowData = table.row($(this).parents('tr')).data();
 				historyOptions.stkId = rowData[5];

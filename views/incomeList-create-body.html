@@ -46,6 +46,9 @@
                             <select class="input-w-3 select-cs1 form-control" name="poId:number" id="poId">
                                 <option value="">采购订单编码</option>
                             </select>
+
+                            <input type="text" class="form-control input-w-3" name="recMtUser" id="poidinput" disabled>
+
                         </div>
                     </div>
                     <div class="col-xs-12 mar-top-20px" id="detail01">
@@ -300,11 +303,13 @@
             this.form();
             this.form1();
             this.fillMaterialId();
+            $('#poidinput').hide();
         },
         loadDetail: function(incomeId, callback) {
             var self = this;
-            
+
             $.mtfInfo(incomeId, jmstoken, function(data){
+                console.log(data)
 //                $("#order").show();
                 $('#incomeForm').populate(data,true);
 //                var smtfItems = '';
@@ -323,8 +328,26 @@
 
                 $('#sCompanyCoId').selectautofill('s/getCompanyCoList',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'coCompanyType':1}}, function() {
                     $('#sCompanyCoId').val(data.coCompanyId);
-                    self.fillCodePo(function() {
-                        $('#poId').val(data.poId);
+                    self.fillCodePo(function(date) {
+
+                        var flag = date.some(function (list) {
+                            if (list.id ==data.poId){
+                                return true
+                            }else{
+                                return false
+                            }
+                        })
+                        console.log(flag)
+                        if (flag){
+                            $('#poId').val(data.poId);
+                            $('#poidinput').hide()
+                        }else{
+                            $('#poId').hide();
+                            $('#poidinput').val(data.poCode)
+                            $('#poidinput').show()
+
+                        }
+
 //                        self.fillMaterial(null, function() {
 //                            self.$matList.find('.income-create-list').each(function(i, ml) {
 //                                $(ml).find('.a').val(parseInt($(ml).find('.a').data('id')));

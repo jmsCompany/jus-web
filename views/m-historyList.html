@@ -43,7 +43,7 @@ var mhistory={
 				"url": "js/datatable/chinese.json"
 			},
 			dom: "tip",
-			pageLength:"50"
+			"iDisplayLength":"50"
 		} );
 		$('#tableHistoryList tbody').on( 'click', 'button', function () {
 			var data = self.table.row( $(this).parents('tr') ).data();
