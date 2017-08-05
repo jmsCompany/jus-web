@@ -418,8 +418,8 @@
 		$.JMSClient('s/getMaterialDeliveredBySoId',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
 	};
 	  //根据采购订单显示出库具体信息
-	$.poIncomeMatInfo = function(spoId,stkId,jmstoken,callback){
-		$.JMSClient('s/findWSSMtfMaterialBySpoIdAndStkId',{headers:{'JMS-TOKEN':jmstoken},data:{'spoId':spoId, 'stkId': stkId}},callback);
+	$.poIncomeMatInfo = function(spoId,stkId,idStk,jmstoken,callback){
+		$.JMSClient('s/findWSSMtfMaterialBySpoIdAndStkId',{headers:{'JMS-TOKEN':jmstoken},data:{'spoId':spoId, 'stkId': stkId,'idStk':idStk}},callback);
 	};
 
     //保存工作中心

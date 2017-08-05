@@ -45,11 +45,14 @@
                                 <option value="">从仓库</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="" class="input-w-160">到仓库</label>
+                            <select class="input-w-3 select-cs1 form-control toStkSelect" name="toStkId:number" id="toStkId">
+                                <option value="">到仓库</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group" style="display:none">
-                        <label for="" class="input-w-160">到仓库</label>
-                        <input type="text" class="form-control input-w-3" name="toStkId:number" id="toStkId">
-                    </div>
+
                     <!--<div class="col-md-10 col-md-offset-1 mar-top-20px">-->
                         <!--<div class="form-group">-->
                             <!--<ul class="new-income-list-nav" id="matlist-ul">-->
@@ -77,6 +80,7 @@
                                 <th width="69px"> 已收数量</th>
                                 <th width="87px"> 批号 </th>
                                 <th width="88px"> 从货架</th>
+                                <th width="88px"> 到货架</th>
                                 <th width="88px"> 备注</th>
                                 <th width="80px"> 库存</th>
                                 <th width="81px"> 退货数量</th>
@@ -124,16 +128,28 @@
 <dl class="matlist" id="item<%= item %>">
     <!--<dd class="income-create-list" style="width: 100%;padding-left: 58px;">-->
     <dd class="income-create-list">
-            <input style="width:168px" readonly type="text" class="a" name="smtfItems[item<%= item %>][material]" id="smtfItems.item<%= item %>.material" placeholder="物料" value="<%= data.materialPno %>-<%= data.materialDes %>-<%= data.materialRev %>"/>
+            <input style="width:128px" readonly type="text" class="a" name="smtfItems[item<%= item %>][material]" id="smtfItems.item<%= item %>.material" placeholder="物料" value="<%= data.materialPno %>-<%= data.materialDes %>-<%= data.materialRev %>"/>
             <input style="width:68px" readonly type="text" class="i" name="smtfItems[item<%= item %>][unitPur]:number" id="smtfItems.item<%= item %>.unitPur" placeholder="单位" value="<%= data.marterialUnit %>"/>
             <input style="width:86px" readonly type="text" class="b" name="smtfItems[item<%= item %>][deliveryDate]:number" id="smtfItems.item<%= item %>.deliveryDate" placeholder="交货日期" value="<%= data.deliveryDate %>"/>
             <input style="width:67px" type="text" readonly class="o" name="smtfItems[item<%= item %>][qtyReceived]" id="smtfItems.item<%= item %>.qtyReceived" value="<%= data.qtyReceived %>"/>
             <!--<input style="width:67px" readonly type="text" class="c" name="smtfItems[item<%= item %>][qtyPo]:number" id="smtfItems.item<%= item %>.qtyPo" placeholder="数量" value="<%= data.qtyPo %>"/>-->
-            <input style="width:82px" readonly type="text" class="d" name="smtfItems[item<%= item %>][lotNo]" id="smtfItems.item<%= item %>.lotNo" placeholder="批号" value="<%= data.lotNo %>"/>
-            <input style="width:85px" readonly type="text" class="e" name="smtfItems[item<%= item %>][fromBin]" id="smtfItems.item<%= item %>.fromBin" placeholder="从货架" value="<%= data.fromBin %>"/>
+            <input style="width:72px" readonly type="text" class="d" name="smtfItems[item<%= item %>][lotNo]" id="smtfItems.item<%= item %>.lotNo" placeholder="批号" value="<%= data.lotNo %>"/>
+            <input style="width:70px" readonly type="text" class="e" name="smtfItems[item<%= item %>][fromBin]" id="smtfItems.item<%= item %>.fromBin" placeholder="从货架" value="<%= data.fromBin %>"/>
             <input type="hidden" readonly class="k" name="smtfItems[item<%= item %>][fromBinId]" id="smtfItems.item<%= item %>.fromBinId" placeholder="从货架" value="<%= data.fromBinId %>"/>
-            <input type="hidden" readonly class="g" name="smtfItems[item<%= item %>][toBinId]" id="smtfItems.item<%= item %>.toBinId" placeholder="到货架" value="<%= data.toBinId %>"/>
-            <input style="width:85px" readonly type="text" class="f" name="smtfItems[item<%= item %>][remark]" id="smtfItems.item<%= item %>.remark" placeholder="备注" value="<%= data.remark %>"/>
+
+
+
+
+        <select class="select-cs1 b" style="width:83px" data-id="<%= data.toBinId %>" name="smtfItems[item<%= item %>][toBinId]:number" id="smtfItems.item<%= item %>.toBinId">
+            <% if(data.fromBinId) { %>
+            <option value="<%= data.toBinId %>"><%= data.toBin %></option>
+            <% } else { %>
+            <option value="">从货架</option>
+            <% } %>
+        </select>
+
+
+            <input style="width:75px" readonly type="text" class="f" name="smtfItems[item<%= item %>][remark]" id="smtfItems.item<%= item %>.remark" placeholder="备注" value="<%= data.remark %>"/>
             <input style="width:77px" readonly type="text" class="n" name="smtfItems[item<%= item %>][inventoryQty]:number" id="smtfItems.item<%= item %>.inventoryQty" placeholder="库存" value="<%= data.inventoryQty %>"/>
             <input style="width:77px" type="text" class="h" name="smtfItems[item<%= item %>][qty]:number" id="smtfItems.item<%= item %>.qty" placeholder="退货数量" value="<%= data.qty %>"/>
             <input type="hidden" readonly class="j" name="smtfItems[item<%= item %>][materialId]:number" id="smtfItems.item<%= item %>.materialId" value="<%= data.materialId %>"/>
@@ -167,7 +183,7 @@ var newIncomeListEntry = {
         var groupId=params['groupId'];
 
         $('#body').html($('#mrbBody').html());
-        
+
         this.$matList = $('#matlist');
         this.initData();
         //绑定事件
@@ -180,7 +196,7 @@ var newIncomeListEntry = {
         var params=RouterManager.getParams();
         var action=params['action'];
         var idMt = params['mrbId'];
-        
+
         if(idMt) {
             this.loadDetail(idMt, function() {
                 self.dealAction(action);
@@ -202,7 +218,7 @@ var newIncomeListEntry = {
                 smtfItems += self.createRow(item);
             });
             self.$matList.append(smtfItems);
-            
+
             self.fillSCompanyCo(function() {
                 $('#sCompanyCoId').val(data.coCompanyId);
                 self.fillCodePo(function() {
@@ -212,10 +228,12 @@ var newIncomeListEntry = {
 
 
             $('#fromStkId').html('<option value="' + data.fromStkId + '">' + data.fromStk + '</option>');
+            $('#toStkId').html('<option value="' + data.toStkId + '">' + data.toStk + '</option>');
+
 //            self.fillFromStk(function() {
 //                $('#fromStkId').val(data.fromStkId);
 //            });
-            
+
             callback && callback();
         });
     },
@@ -224,7 +242,7 @@ var newIncomeListEntry = {
         //如果是编辑页面，去除收货数量显示
 //        $('[id*="inspection"]').remove();
         self.fillSCompanyCo();
-        
+
         self.fillFromStk();
         $.mtfStkInfo('PO',jmstoken,function(data) {
             $('#toStkId').val(data.idStk);
@@ -246,21 +264,21 @@ var newIncomeListEntry = {
     createRow: function(data) {
         var self = this;
         var row = parseInt(self.$matList.data('row'));
-        
+
         if(!row) {
             row = 1;
         }
-        
+
         if(!data) {
             data = self.defaultData;
         }
-        
+
         var param = {
             data: data,
             item: row,
             action: self.params.action
         }
-        
+
         var html = self.mrbItem(param);
         self.$matList.data('row', row + 1);
 
@@ -268,7 +286,7 @@ var newIncomeListEntry = {
     },
     addRow: function(e) {
         e.stopPropagation();
-        
+
         var $t = $(e.target);
         var html = this.createRow();
 
@@ -305,6 +323,8 @@ var newIncomeListEntry = {
     },
     fillFromStk: function(callback) {
         $('#fromStkId').selectautofill('s/getStksByTypes?statusId=27&types=4&types=1&types=5',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+        $('#toStkId').selectautofill('s/getStksByTypes?statusId=27&types=5&types=10',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}});
+
 //        $('#fromStkId').selectautofill('s/getStks',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'statusId':27}}, callback);
     },
     bindEvents: function (groupId) {
@@ -395,6 +415,22 @@ var newIncomeListEntry = {
         $mrbForm.on("change.changeSupplier", "#sCompanyCoId", function () {
             self.fillCodePo();
         });
+
+        $mrbForm.on("change","#toStkId", function(){
+            var $list = $('#matlist');
+            var $items = $list.find('.matlist');
+            $items.each(function(i) {
+                var $dl = $(this);
+                self.fillFromBin($dl);
+            });
+        });
+    },
+    fillFromBin: function($el, callback) {
+        var idStk = $('#toStkId').val();
+        var $b = $el.find('.b');
+        $b.empty();
+//            $el.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, function() {});
+        $b.selectautofill('s/getBins',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')},data:{'idStk':idStk}}, callback);
     },
     form: function() {
         var self = this;
@@ -433,7 +469,15 @@ var newIncomeListEntry = {
                             message: '请选择从仓库'
                         }
                     }
+                },
+                'toStkId:number': {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择到仓库'
+                        }
+                    }
                 }
+
             }
         }).on('success.form.bv', function(e) {
             e.preventDefault();
@@ -451,7 +495,6 @@ var newIncomeListEntry = {
             validator = $form.data('bootstrapValidator');
             var mrb =JSON.stringify($('#mrbForm').serializeJSON());
             var jmstoken= store.get('JMS-TOKEN');
-            debugger;
             $.saveMtf(mrb,jmstoken,function(data){
                 debugger;
                 $.get("views/mrbList.html",function(data){
@@ -492,20 +535,21 @@ var newIncomeListEntry = {
         var self = this;
         var spoId = parseInt($.trim($('#codePo').val()));
         var stkId = parseInt($.trim($('#fromStkId').val()));
+        var toStkId = parseInt($.trim($('#toStkId').val()));
+
         var jmstoken= store.get('JMS-TOKEN');
-        
+
         if(!stkId) {
             return;
         }
-        
+
         if(stkId && !spoId) {
             return alert('请选择采购单编码');
         }
 
-        $.poIncomeMatInfo(spoId,stkId,jmstoken,function(data){
+        $.poIncomeMatInfo(spoId,stkId,toStkId,jmstoken,function(data){
             var smtfItems = '';
             _(data).each(function(item) {
-                debugger;
                 if(item.qty>item.qtyStored){
                     item.qty=item.qtyStored;
                 }
