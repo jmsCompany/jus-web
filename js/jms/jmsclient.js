@@ -1,10 +1,10 @@
 ﻿(function($, window, document,undefined) {
 
 
-    $clientURL = "http://192.168.1.101:9998/jms/"
+   // $clientURL = "http://192.168.1.101:9998/jms/"
 
 
-    // $clientURL = "http://118.178.94.7:9998/jms/"
+    $clientURL = "http://118.178.94.7:9998/jms/"
 	//$.fn.dataTable.ext.errMode = 'throw';
 
     // $clientURL = "http://118.178.94.7:9998/jms/"
