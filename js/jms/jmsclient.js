@@ -4,13 +4,13 @@
    // $clientURL = "http://192.168.1.101:9998/jms/"
 
 
-    $clientURL = "http://118.178.94.7:9998/jms/"
+    // $clientURL = "http://118.178.94.7:9998/jms/"
 	//$.fn.dataTable.ext.errMode = 'throw';
 
     // $clientURL = "http://118.178.94.7:9998/jms/"
 	 $.fn.dataTable.ext.errMode = 'throw';
 
-	// $clientURL = "http://localhost:9998/jms/"
+	 $clientURL = "http://localhost:9998/jms/"
 	//$clientURL = "http://192.168.1.103:9998/jms/"
 
     $.JMSClient = function (path,opt,callback) {
@@ -398,17 +398,29 @@
 		$.JMSClient('s/getSystemBinByStkTypeIdAndBinName',{headers:{'JMS-TOKEN':jmstoken},data:{stkTypeId:stkTypeId,binName:binName}},callback);
 	};
       //新增销售订单
-      $.saveSo=function(so,jmstoken,callback){
-          $.JMSClient('s/saveSo',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:so},callback);
-      };
+	$.saveSo=function(so,jmstoken,callback){
+		$.JMSClient('s/saveSo',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:so},callback);
+	};
+	//新增销售订单
+	$.saveSo1=function(so,jmstoken,callback){
+		$.JMSClient('s/saveSo1',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:so},callback);
+	};
 	//保存销售订单备注
 	$.saveSsoRemark=function(WSSSoRemark,jmstoken,callback){
 		$.JMSClient('s/saveSSoAutoRemark',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:WSSSoRemark},callback);
+	};
+	//保存销售订单备注
+	$.saveSsoRemark1=function(WSSSoRemark,jmstoken,callback){
+		$.JMSClient('s/saveSSoAutoRemark1',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:WSSSoRemark},callback);
 	};
       //显示销售订单信息
       $.soInfo = function(soId,jmstoken,callback){
           $.JMSClient('s/findSo',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
       };
+	//显示销售订单信息
+	$.soInfo1 = function(soId,jmstoken,callback){
+		$.JMSClient('s/findSo1',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
+	};
 	//显示销售订单物料信息
 	$.soMatInfo = function(soId,jmstoken,callback){
 		$.JMSClient('s/getMaterialBySoId',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
@@ -419,6 +431,7 @@
 	};
 	  //根据采购订单显示出库具体信息
 	$.poIncomeMatInfo = function(spoId,stkId,idStk,jmstoken,callback){
+		//alert(jmstoken);
 		$.JMSClient('s/findWSSMtfMaterialBySpoIdAndStkId',{headers:{'JMS-TOKEN':jmstoken},data:{'spoId':spoId, 'stkId': stkId,'idStk':idStk}},callback);
 	};
 

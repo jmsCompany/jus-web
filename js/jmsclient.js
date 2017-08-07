@@ -396,10 +396,18 @@
 	$.saveSsoRemark=function(WSSSoRemark,jmstoken,callback){
 		$.JMSClient('s/saveSSoAutoRemark',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:WSSSoRemark},callback);
 	};
+	//保存销售订单备注
+	$.saveSsoRemark1=function(WSSSoRemark,jmstoken,callback){
+		$.JMSClient('s/saveSSoAutoRemark1',{'type':'POST',headers:{'JMS-TOKEN':jmstoken},data:WSSSoRemark},callback);
+	};
       //显示销售订单信息
-      $.soInfo = function(soId,jmstoken,callback){
-          $.JMSClient('s/findSo',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
-      };
+	$.soInfo = function(soId,jmstoken,callback){
+		$.JMSClient('s/findSo',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
+	};
+	//显示销售订单信息
+	$.soInfo1 = function(soId,jmstoken,callback){
+		$.JMSClient('s/findSo1',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);
+	};
 	//显示销售订单物料信息
 	$.soMatInfo = function(soId,jmstoken,callback){
 		$.JMSClient('s/getMaterialBySoId',{headers:{'JMS-TOKEN':jmstoken},data:{soId:soId}},callback);

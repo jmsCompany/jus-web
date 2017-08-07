@@ -547,7 +547,7 @@ var newIncomeListEntry = {
             return alert('请选择采购单编码');
         }
 
-        $.poIncomeMatInfo(spoId,stkId,toStkId,jmstoken,function(data){
+        $.poIncomeMatInfo(spoId,stkId,toStkId,store.get('JMS-TOKEN'),function(data){
             var smtfItems = '';
             _(data).each(function(item) {
                 if(item.qty>item.qtyStored){
