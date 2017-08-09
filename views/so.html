@@ -54,12 +54,11 @@ var soList = {
 		this.table = $('#tableSo').DataTable( {
 			"processing": true,
 			"serverSide": true,
-			"stateSave": true,
+			"stateSave": false,
 			"stateDuration": -1,
-            "bStateSave":false,
 			"ajax": {
 				"type": 'POST',
-				"url": $clientURL+"s/getSoList",
+				"url": $clientURL+"s/getSoList1",
 				"dataType": "json",
 				"headers":{'JMS-TOKEN':jmstoken},
 				"beforeSend": jmsGlobalBlock,
@@ -206,7 +205,7 @@ var soList = {
 				var $form = $(e.target),
 						validator = $form.data('bootstrapValidator');
 				var remark = JSON.stringify($('#soForm').serializeJSON());
-				$.saveSsoRemark(remark, jmstoken, function (data) {
+				$.saveSsoRemark1(remark, jmstoken, function (data) {
 					$.get("views/so.html", function (data) {
 						$("#body").html(data);
 					});

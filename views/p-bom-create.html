@@ -125,7 +125,7 @@
             <div class="col-xs-12 mar-top-20px">
                 <div class="form-group">
                     <label class="input-w-160">损耗</label>
-                    <input type="text" class="form-control"  name="wastage" id="wastage">
+                    <input type="text" class="form-control"  name="wastage" id="wastage" value="0">
                 </div>
             </div>
             <div class="aligncenter">
@@ -572,16 +572,18 @@
                                 message: '单位用料不能为空'
                             },
                             regexp: {
-                                regexp: /^[1-9]\d*$/,
-                                message: '只能是正整数。'
+                                //regexp: /^[1-9]\d*$/,
+                                regexp:  /^\d+(\.\d+)?$/,
+                                message: '只能是数字。'
                             }
                         }
                     },
                     'wastage': {
                         validators: {
                             regexp: {
-                                regexp: /^\d+$/,
-                                message: '只能是自然数。'
+                               // regexp: /^\d+$/,
+                                regexp:  /^\d+(\.\d+)?$/,
+                                message: '只能是数字'
                             }
                         }
                     }
@@ -592,9 +594,9 @@
                 validator = $form.data('bootstrapValidator');
                 var bomD =JSON.stringify($('#bomDForm').serializeJSON());
                 var jmstoken= store.get('JMS-TOKEN');
-                debugger;
+                //debugger;
                 $.saveBomD(bomD,jmstoken,function(data){
-                    debugger;
+                  //  debugger;
                     $.get("views/p-bom-create.html",function(data){
                         $("#body").html(data);
                     });
@@ -636,7 +638,7 @@
                 var bom =JSON.stringify($('#bomForm').serializeJSON());
                 var edit = $('#edit').val();
                 if(edit == "true"){
-                    debugger;
+                    //debugger;
                     $.saveBom(bom,jmstoken,function(data){
                         if(data.saved == false){
                             var top = $('#body').scrollTop();
@@ -647,7 +649,7 @@
                             $('#info').append('该物料清单已存在');
                             return;
                         }
-                        debugger;
+                        //debugger;
                         history.go(-1);
                         $.get("views/p-bomList.html",function(data){
                             $("#body").html(data);
@@ -655,7 +657,7 @@
                     });
                 }
                 else{
-                    debugger;
+                    //debugger;
                     $.updateBom(bom,jmstoken,function(data){
                         history.go(-1);
                         $.get("views/p-bomList.html",function(data){
@@ -689,7 +691,7 @@
 //                }
 
                 var qpu = $t.find('.h').val();
-                if(!qpu||reg.test(qpu)==false) {
+                if(!qpu||reg1.test(qpu)==false) {
                     $t.find('.h').addClass('error');
                     flag = false;
                 }

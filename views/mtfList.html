@@ -217,17 +217,18 @@
                   "data": null,
                   "defaultContent": '<button class=button-sytle1>详情</button>'
               } ],
-             initComplete: function(){
-                 $('#tableMtf tr td:nth-child(2)').each(function(i,k){
-                     if($(k).text() == '检验入库') {
-                         $(k).next().next().next().next().next().next().next().next().next().html(
-                             '<button class=button-print>打印</button>'+
-                             '<button class=button-sytle1>详情</button>'
-                         )
-                     }
-
-                 });
-             },
+//             initComplete: function(){
+//                 $('#tableMtf tr td:nth-child(2)').each(function(i,k){
+//                     if($(k).text() == '检验入库') {
+//                       //  alert($(k).next().html())
+//                         $(k).next().next().next().next().next().next().next().next().next().html(
+//                             '<button class=button-print>打印</button>'+
+//                             '<button class=button-sytle1>详情</button>'
+//                         )
+//                     }
+//
+//                 });
+//             },
               "language": {
                   "url": "js/datatable/chinese.json"
               },
@@ -248,13 +249,16 @@
 //                  alert(json.jmsError)
               }
           });
-//          $('#tableMtf').on( 'draw.dt', function (e, setting) {
-//              $.each(setting.aoData, function(i, v) {
-//                  if($('#mtfType').html() == '发料') {
-//                      $(v.anCells[10]).find('.button-sytle1').remove();
-//                  }
-//              });
-//          } );
+          $('#tableMtf').on( 'draw.dt', function (e, setting) {
+              $.each(setting.aoData, function(i, v) {
+                  if($('#mtfType').html() == '检验入库') {
+                  //  alert(v.anCells[10]);
+                      $(v.anCells[10]).html('<button class=button-print>打印</button>'+
+                           '<button class=button-sytle1>详情</button>');
+
+                  }
+              });
+          } );
 //          if($('#mtfType').html() == '发料') {
 //              $("table tr").each(function () {
 //                  debugger;
@@ -265,99 +269,105 @@
 
           $('#tableMtf tbody').unbind( "click" );
           $('#tableMtf tbody').on('click', 'button', function () {
-          	if(!flag){
-          	flag=1;
-              var rowData = self.table.row( $(this).parents('tr') ).data();
-              var historyOptions = {
-                  groupId:'mtfList',
-                  action:'detail'
-              };
-              var type =rowData[1];
-                var clazz =$(this).attr('class');
-                if (clazz=='button-print'){
-                    window.open("printmodel/inprint.html?id="+rowData[10]+"&ip="+$clientURL);
-                }else{
-                  //手动完成
-                  var actions={
-                      '来料清单':function(){
-                          historyOptions.viewId='incomeList-create-body';
-                          historyOptions.incomeId=rowData[10];
-                          $.get("views/incomeList-create-body.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '采购退货':function(){
-                          historyOptions.viewId='mrb-body';
-                          historyOptions.mrbId=rowData[10];
-                          $.get("views/mrb-body.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '手动流转':function(){
-                          historyOptions.viewId='mtfList-body';
-                          historyOptions.mtfId=rowData[10];
-                          $.get("views/mtfList-body.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '工单流转':function(){
-                          historyOptions.viewId='s-wo-mtf';
-                          historyOptions.mtfId=rowData[10];
-                          $.get("views/s-wo-mtf.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '出货':function(){
-                          historyOptions.viewId='doList-create-body';
-                          historyOptions.doListId=rowData[10];
-                          $.get("views/doList-create-body.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '销售退货':function(){
-                          historyOptions.viewId='rma-body';
-                          historyOptions.rmaId=rowData[10];
-                          $.get("views/rma-body.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '检验入库':function(){
-                          historyOptions.viewId='incomeList-checked-body';
-                          historyOptions.incomeId=rowData[10];
-                          $.get("views/incomeList-checked-body.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '往来出货':function(){
-                          historyOptions.viewId='subcontract-applyDo';
-                          historyOptions.incomeId=rowData[10];
-                          $.get("views/subcontract-applyDo.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      },
-                      '往来收货':function(){
-                          historyOptions.viewId='subcontract-receiveDo';
-                          historyOptions.incomeId=rowData[10];
-                          $.get("views/subcontract-receiveDo.html",function(data){
-                              RouterManager.setUrl(historyOptions);
-                              $("#body").html(data);
-                          });
-                      }
+
+
+
+                  var rowData = self.table.row( $(this).parents('tr') ).data();
+                  var historyOptions = {
+                      groupId:'mtfList',
+                      action:'detail'
                   };
-                  actions[type]();
-                }
-          	}
-          	else{
-          		return false;
-          	}
+                  var type =rowData[1];
+                  var clazz =$(this).attr('class');
+                  if (clazz=='button-print'){
+                      window.open("printmodel/inprint.html?id="+rowData[10]+"&ip="+$clientURL);
+                  }else{
+                      //手动完成
+                      var actions={
+                          '来料清单':function(){
+                              historyOptions.viewId='incomeList-create-body';
+                              historyOptions.incomeId=rowData[10];
+                              $.get("views/incomeList-create-body.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '采购退货':function(){
+                              historyOptions.viewId='mrb-body';
+                              historyOptions.mrbId=rowData[10];
+                              $.get("views/mrb-body.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '手动流转':function(){
+                              historyOptions.viewId='mtfList-body';
+                              historyOptions.mtfId=rowData[10];
+                              $.get("views/mtfList-body.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '工单流转':function(){
+                              historyOptions.viewId='s-wo-mtf';
+                              historyOptions.mtfId=rowData[10];
+                              $.get("views/s-wo-mtf.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '出货':function(){
+                              historyOptions.viewId='doList-create-body';
+                              historyOptions.doListId=rowData[10];
+                              $.get("views/doList-create-body.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '销售退货':function(){
+                              historyOptions.viewId='rma-body';
+                              historyOptions.rmaId=rowData[10];
+                              $.get("views/rma-body.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '检验入库':function(){
+                              historyOptions.viewId='incomeList-checked-body';
+                              historyOptions.incomeId=rowData[10];
+                              $.get("views/incomeList-checked-body.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '往来出货':function(){
+                              historyOptions.viewId='subcontract-applyDo';
+                              historyOptions.incomeId=rowData[10];
+                              $.get("views/subcontract-applyDo.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          },
+                          '往来收货':function(){
+                              historyOptions.viewId='subcontract-receiveDo';
+                              historyOptions.incomeId=rowData[10];
+                              $.get("views/subcontract-receiveDo.html",function(data){
+                                  RouterManager.setUrl(historyOptions);
+                                  $("#body").html(data);
+                              });
+                          }
+                      };
+                      actions[type]();
+                  }
+
+
+
+
+
+
+
+
+
           });
       },
       bindEvens: function () {

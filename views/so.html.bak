@@ -58,7 +58,7 @@ var soList = {
 			"stateDuration": -1,
 			"ajax": {
 				"type": 'POST',
-				"url": $clientURL+"s/getSoList1",
+				"url": $clientURL+"s/getSoList",
 				"dataType": "json",
 				"headers":{'JMS-TOKEN':jmstoken},
 				"beforeSend": jmsGlobalBlock,
@@ -116,16 +116,16 @@ var soList = {
 			}
 			else if(clazz=='button-bin'){
 				clickOption.action='edit';
-				clickOption.viewId='so-order1';
-				$.get("views/so-order1.html",function(data){
+				clickOption.viewId='so-order';
+				$.get("views/so-order.html",function(data){
 					RouterManager.setUrl(clickOption);
 					$("#body").html(data);
 				});
 			}
 			else {
 				clickOption.action='detail';
-				clickOption.viewId='so-order1';
-				$.get("views/so-order1.html",function(data){
+				clickOption.viewId='so-order';
+				$.get("views/so-order.html",function(data){
 					RouterManager.setUrl(clickOption);
 					$("#body").html(data);
 				});
@@ -147,8 +147,8 @@ var soList = {
 		};
 		//	新建销售订单
 		$('#soOrder').click(function(){
-			$.get("views/so-order1.html",function(data){
-				historyOptions.viewId='so-order1';
+			$.get("views/so-order.html",function(data){
+				historyOptions.viewId='so-order';
 				RouterManager.setUrl(historyOptions);
 				$("#body").html(data);
 			});
@@ -178,7 +178,7 @@ var soList = {
 			});
 		});
 		$('#return').click(function(){
-			$.get("views/so1.html",function(data){
+			$.get("views/so.html",function(data){
 				$("#body").html(data);
 			});
 		});
@@ -205,8 +205,8 @@ var soList = {
 				var $form = $(e.target),
 						validator = $form.data('bootstrapValidator');
 				var remark = JSON.stringify($('#soForm').serializeJSON());
-				$.saveSsoRemark1(remark, jmstoken, function (data) {
-					$.get("views/so1.html", function (data) {
+				$.saveSsoRemark(remark, jmstoken, function (data) {
+					$.get("views/so.html", function (data) {
 						$("#body").html(data);
 					});
 				});
