@@ -167,12 +167,12 @@
     <dl class="matlist" id="item<%= item %>">
         <!--<dd class="income-create-list" style="width: 100%;padding-left: 58px;">-->
         <dd  class="income-create-list">
-            <select class="select-cs1 a" style="width:198px" data-id="<%= data.materialId %>" name="smtfItems[item<%= item %>][materialId]:number" id="smtfItems.item<%= item %>.material">
-                <% if(data.materialId) { %>
-                <option value="<%= data.materialId %>"><%= data.materialPno+'-'+data.materialRev+'-'+data.materialDes %></option>
-                <% }else{ %>
-                <option value="">请选择物料</option>
-                <% } %>
+            <select class="input-w-3 select-cs1 material-item-select material" style="width:181px" name="smtfItems[item<%= item %>][material]" id="smtfItems.item<%= item %>.material">
+            <% if (action == 'detail') { %>
+            <option value=""><%= data.materialPno %>-<%= data.materialRev %>-<%= data.materialDes %></option>
+            <% } else { %>
+            <option value="">请选择</option>
+            <% } %>
             </select>
             <input type="text" class="b" style="width:74px" value="<%= data.qty %>" name="smtfItems[item<%= item %>][qty]:number" id="smtfItems.item<%= item %>.qty" placeholder="数量">
             <select class="select-cs1 fromBinId c" style="width:103px" name="smtfItems[item<%= item %>][fromBinId]:number" id="smtfItems.item<%= item %>.fromBinId">
@@ -412,7 +412,7 @@
                 }
                 self.whether();
             });
-            self.fillMaterial();
+
         },
         whether: function() {
             var self = this;
@@ -431,7 +431,7 @@
         loadFromBin: function($el, callback) {
             var idStk = $('#fromStkId').val();
             var $a = $el.find('.materialId');
-            var $c = $el.find('.a');
+            var $c = $el.find('.c');
             var idMaterial = $a.val();
             if (!idMaterial || !idStk) {
                 return;
@@ -509,45 +509,6 @@
                 }
             }
         },
-        fillMaterial: function($el, callback) {
-            if(!$el) {
-                $el = $('.a');
-            } else {
-                $el = $el.find('.a');
-            }
-            $el.select2({
-                ajax: {
-                    url: $clientURL + 's/getMaterialListObjs',
-                    dataType: 'json',
-                    headers: {'JMS-TOKEN': jmstoken},
-                    delay: 200,
-                    data: function (params) {
-                        return {
-                            q: params.term
-                        }
-                    },
-                    processResults: function (data, params) {
-                        return {
-                            results: data,
-                            pagination: null
-                        }
-                    },
-                    cache: true
-                },
-                escapeMarkup: function (markup) {
-                    return markup;
-                },
-                minimumInputLength: 1,
-                width: 200,
-                templateResult: formatRepo,
-                templateSelection: formatRepoSelection
-            }).on('select2:open',function(evt){
-                $('#select2-js-data-example-ajax-container').html('');
-                $('#js-data-example-ajax').empty();
-            });
-//            $el.selectautofill('s/materials',{headers:{'JMS-TOKEN':store.get('JMS-TOKEN')}}, callback);
-            callback && callback();
-        },
         fillMaterialId: function(callback) {
             $('.js-data-example-ajax').select2({
                 ajax: {
@@ -601,7 +562,6 @@
             $t.closest('dl').next().find('.d').combobox();
             var $cnt = $t.closest('dl').next();
             this.loadMaterial($cnt.find('.material-item-select'));
-            this.fillMaterial($t.closest('dl').next());
 //            this.loadFromBin($cnt.find('.fromBinId'));
 //            this.loadToBin($cnt.find('.toBinId'));
         },
